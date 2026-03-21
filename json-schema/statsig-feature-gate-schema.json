@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.statsig.com/schemas/statsig/feature-gate.json",
+  "title": "Statsig Feature Gate",
+  "description": "A feature gate configuration that controls access to features based on targeting rules, conditions, and user properties. Feature gates are the core primitive for feature flagging in Statsig.",
+  "type": "object",
+  "required": ["name"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The unique identifier of the feature gate."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the feature gate, used as the key for SDK evaluation.",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[a-zA-Z0-9_\\-\\.]+$"
+    },
+    "description": {
+      "type": "string",
+      "description": "A human-readable description of the gate's purpose and the feature it controls.",
+      "maxLength": 4096
+    },
+    "isEnabled": {
+      "type": "boolean",
+      "description": "Whether the gate is currently enabled and actively evaluating rules. When disabled, the gate returns false for all users.",
+      "default": true
+    },
+    "status": {
+      "type": "string",
+      "description": "The current lifecycle status of the gate.",
+      "enum": ["active", "disabled", "launched", "archived"]
+    },
+    "rules": {
+      "type": "array",
+      "description": "The ordered list of targeting rules evaluated for this gate. Rules are evaluated top-to-bottom and the first matching rule determines the result.",
+      "items": {
+        "$ref": "#/$defs/Rule"
+      }
+    },
+    "overrides": {
+      "$ref": "#/$defs/Overrides"
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tags for organizing and categorizing the gate.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "targetApps": {
+      "type": "array",
+      "description": "Target applications this gate is scoped to.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "salt": {
+      "type": "string",
+      "description": "Salt value used for deterministic user assignment hashing."
+    },
+    "createdTime": {
+      "type": "integer",
+      "description": "Timestamp in milliseconds since epoch when the gate was created."
+    },
+    "lastModifiedTime": {
+      "type": "integer",
+      "description": "Timestamp in milliseconds since epoch when the gate was last modified."
+    }
+  },
+  "$defs": {
+    "Rule": {
+      "type": "object",
+      "description": "A targeting rule that defines conditions under which the gate passes or returns specific values.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier of the rule."
+        },
+        "name": {
+          "type": "string",
+          "description": "A human-readable name for the rule."
+        },
+        "passPercentage": {
+          "type": "number",
+          "description": "The percentage of users matching conditions who pass the rule.",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 100
+        },
+        "conditions": {
+          "type": "array",
+          "description": "The conditions that must all be met for this rule to apply. Conditions within a rule are ANDed together.",
+          "items": {
+            "$ref": "#/$defs/Condition"
+          }
+        },
+        "returnValue": {
+          "type": "object",
+          "description": "The value returned when this rule matches, used for dynamic configs."
+        },
+        "environments": {
+          "type": "array",
+          "description": "Environments where this rule is active (e.g., production, staging).",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Condition": {
+      "type": "object",
+      "description": "A condition within a targeting rule that evaluates user properties against specified criteria.",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The type of condition to evaluate.",
+          "enum": [
+            "user_id",
+            "email",
+            "ip_address",
+            "country",
+            "app_version",
+            "custom_field",
+            "browser_name",
+            "browser_version",
+            "os_name",
+            "os_version",
+            "passes_gate",
+            "fails_gate",
+            "environment",
+            "passes_segment",
+            "fails_segment",
+            "time",
+            "unit_id"
+          ]
+        },
+        "targetValue": {
+          "description": "The value or array of values to compare against."
+        },
+        "operator": {
+          "type": "string",
+          "description": "The comparison operator to use.",
+          "enum": [
+            "any",
+            "none",
+            "str_starts_with_any",
+            "str_ends_with_any",
+            "str_contains_any",
+            "str_contains_none",
+            "str_matches",
+            "gt",
+            "gte",
+            "lt",
+            "lte",
+            "version_gt",
+            "version_gte",
+            "version_lt",
+            "version_lte",
+            "before",
+            "after",
+            "on"
+          ]
+        },
+        "field": {
+          "type": "string",
+          "description": "The user field to evaluate, used with custom_field condition type."
+        }
+      }
+    },
+    "Overrides": {
+      "type": "object",
+      "description": "User and ID overrides that force specific evaluation results, bypassing normal rule evaluation.",
+      "properties": {
+        "userOverrides": {
+          "type": "array",
+          "description": "User-specific overrides by user ID.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "userID": {
+                "type": "string",
+                "description": "The user ID to override."
+              },
+              "value": {
+                "type": "boolean",
+                "description": "The forced evaluation result for this user."
+              }
+            },
+            "required": ["userID", "value"]
+          }
+        },
+        "idOverrides": {
+          "type": "array",
+          "description": "ID-based overrides for custom ID types.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ids": {
+                "type": "array",
+                "description": "The IDs to override.",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "value": {
+                "type": "boolean",
+                "description": "The forced evaluation result for these IDs."
+              }
+            },
+            "required": ["ids", "value"]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.statsig.com/schemas/statsig/event.json",
+  "title": "Statsig Event",
+  "description": "An event object used for logging exposure events, custom events, and webhook payloads in the Statsig analytics pipeline. Events power experiment analysis, product analytics, and metric computations.",
+  "type": "object",
+  "required": ["eventName", "user", "time"],
+  "properties": {
+    "eventName": {
+      "type": "string",
+      "description": "The name of the event. Exposure events use the format statsig::gate_exposure, statsig::config_exposure, or statsig::experiment_exposure. Config change events use statsig::config_change. Custom events use application-defined names.",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "user": {
+      "$ref": "#/$defs/StatsigUser"
+    },
+    "time": {
+      "type": "integer",
+      "description": "Timestamp of the event in milliseconds since epoch.",
+      "format": "int64"
+    },
+    "value": {
+      "description": "An optional value associated with the event, such as a revenue amount, duration, or string label.",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "number" }
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Optional metadata key-value pairs providing additional context for the event.",
+      "additionalProperties": true,
+      "properties": {
+        "gate": {
+          "type": "string",
+          "description": "The name of the gate, for gate exposure events."
+        },
+        "config": {
+          "type": "string",
+          "description": "The name of the config or experiment, for config or experiment exposure events."
+        },
+        "ruleID": {
+          "type": "string",
+          "description": "The rule that matched during evaluation."
+        },
+        "type": {
+          "type": "string",
+          "description": "The entity type for config_change events (e.g., Gate, Experiment, DynamicConfig)."
+        },
+        "name": {
+          "type": "string",
+          "description": "The entity name for config_change events."
+        },
+        "action": {
+          "type": "string",
+          "description": "The action performed for config_change events (e.g., created, updated, deleted)."
+        }
+      }
+    },
+    "statsigMetadata": {
+      "$ref": "#/$defs/StatsigMetadata"
+    },
+    "timeUUID": {
+      "type": "string",
+      "description": "A unique identifier for this event instance, combining timestamp and random components.",
+      "format": "uuid"
+    }
+  },
+  "$defs": {
+    "StatsigUser": {
+      "type": "object",
+      "description": "The user object representing the end user associated with the event.",
+      "properties": {
+        "userID": {
+          "type": "string",
+          "description": "A unique identifier for the user.",
+          "minLength": 1
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user.",
+          "format": "email"
+        },
+        "name": {
+          "type": "string",
+          "description": "The display name of the user."
+        },
+        "ip": {
+          "type": "string",
+          "description": "The IP address of the user."
+        },
+        "userAgent": {
+          "type": "string",
+          "description": "The user agent string."
+        },
+        "country": {
+          "type": "string",
+          "description": "The two-letter country code of the user.",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "locale": {
+          "type": "string",
+          "description": "The locale identifier for the user."
+        },
+        "appVersion": {
+          "type": "string",
+          "description": "The version of the application the user is running."
+        },
+        "custom": {
+          "type": "object",
+          "description": "Custom user properties used for targeting rules.",
+          "additionalProperties": true
+        },
+        "privateAttributes": {
+          "type": "object",
+          "description": "Private user attributes used for evaluation but not logged to Statsig servers.",
+          "additionalProperties": true
+        },
+        "customIDs": {
+          "type": "object",
+          "description": "Custom identifier mappings such as companyID, teamID, or other organizational units.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "StatsigMetadata": {
+      "type": "object",
+      "description": "Metadata about the SDK that generated the event.",
+      "properties": {
+        "sdkType": {
+          "type": "string",
+          "description": "The type of SDK (e.g., js-client, py-server, react-native, node-server)."
+        },
+        "sdkVersion": {
+          "type": "string",
+          "description": "The version of the SDK."
+        },
+        "sessionID": {
+          "type": "string",
+          "description": "The session identifier for client-side SDKs."
+        },
+        "stableID": {
+          "type": "string",
+          "description": "A stable device identifier for anonymous user tracking."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.statsig.com/schemas/statsig/experiment.json",
+  "title": "Statsig Experiment",
+  "description": "An A/B test experiment configuration with defined groups, parameter values, allocation percentages, and analysis settings. Experiments enable controlled testing of product changes by splitting users into groups and measuring metric impacts.",
+  "type": "object",
+  "required": ["name"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The unique identifier of the experiment."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the experiment, used as the key for SDK evaluation.",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "description": {
+      "type": "string",
+      "description": "A human-readable description of the experiment and what it tests.",
+      "maxLength": 4096
+    },
+    "hypothesis": {
+      "type": "string",
+      "description": "The hypothesis being tested, describing the expected outcome of the experiment.",
+      "maxLength": 4096
+    },
+    "status": {
+      "type": "string",
+      "description": "The current lifecycle status of the experiment.",
+      "enum": ["setup", "active", "decision_made", "abandoned"]
+    },
+    "groups": {
+      "type": "array",
+      "description": "The experiment groups defining parameter values for each user segment.",
+      "items": {
+        "$ref": "#/$defs/ExperimentGroup"
+      },
+      "minItems": 2
+    },
+    "allocation": {
+      "type": "number",
+      "description": "The percentage of eligible users allocated to the experiment.",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 100
+    },
+    "layerID": {
+      "type": "string",
+      "description": "The layer this experiment belongs to, enabling parameter sharing and mutual exclusivity with other experiments."
+    },
+    "targetingGateID": {
+      "type": "string",
+      "description": "The feature gate used to filter which users are eligible for the experiment."
+    },
+    "defaultValues": {
+      "type": "object",
+      "description": "The default parameter values returned when a user is not allocated to the experiment.",
+      "additionalProperties": true
+    },
+    "primaryMetrics": {
+      "type": "array",
+      "description": "The primary metrics used to evaluate the experiment hypothesis.",
+      "items": {
+        "$ref": "#/$defs/MetricReference"
+      }
+    },
+    "secondaryMetrics": {
+      "type": "array",
+      "description": "Secondary metrics monitored during the experiment for guardrail and exploratory analysis.",
+      "items": {
+        "$ref": "#/$defs/MetricReference"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tags for organizing and categorizing the experiment.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "targetApps": {
+      "type": "array",
+      "description": "Target applications this experiment is scoped to.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "startedTime": {
+      "type": "integer",
+      "description": "Timestamp in milliseconds since epoch when the experiment was started."
+    },
+    "createdTime": {
+      "type": "integer",
+      "description": "Timestamp in milliseconds since epoch when the experiment was created."
+    },
+    "lastModifiedTime": {
+      "type": "integer",
+      "description": "Timestamp in milliseconds since epoch when the experiment was last modified."
+    }
+  },
+  "$defs": {
+    "ExperimentGroup": {
+      "type": "object",
+      "description": "An experiment group that defines parameter values for a segment of allocated users.",
+      "required": ["name", "size"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the group (e.g., control, test, variant_a).",
+          "minLength": 1
+        },
+        "size": {
+          "type": "number",
+          "description": "The percentage of allocated users assigned to this group. All group sizes must sum to 100.",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "parameterValues": {
+          "type": "object",
+          "description": "The parameter key-value pairs for users in this group.",
+          "additionalProperties": true
+        }
+      }
+    },
+    "MetricReference": {
+      "type": "object",
+      "description": "A reference to a metric definition used in experiment analysis.",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the metric."
+        },
+        "type": {
+          "type": "string",
+          "description": "The metric type (e.g., event_count, ratio, funnel, mean)."
+        },
+        "direction": {
+          "type": "string",
+          "description": "The expected direction of change for this metric.",
+          "enum": ["increase", "decrease"]
+        }
+      }
+    }
+  }
+}

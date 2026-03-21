@@ -1,0 +1,277 @@
+asyncapi: 2.6.0
+info:
+  title: Statsig Webhook Events
+  description: >-
+    Statsig's webhook system provides real-time event-driven notifications for
+    exposure events and configuration changes. Webhooks are triggered at runtime
+    as users are assigned to gates and experiments, and events are sent in
+    batches in JSON format. Two main types of events are supported: Exposures
+    (events logged via the SDK such as gate checks and experiment evaluations)
+    and Config Changes (changelogs for Statsig Console actions). Webhook
+    delivery includes signature verification for security using HMAC-SHA256.
+  version: '1.0.0'
+  contact:
+    name: Statsig Support
+    url: https://statsig.com/support
+servers:
+  webhookReceiver:
+    url: '{webhookUrl}'
+    protocol: https
+    description: >-
+      Your webhook receiver endpoint configured in Statsig integration
+      settings. Statsig sends HTTP POST requests to this URL with batched
+      event payloads.
+    variables:
+      webhookUrl:
+        description: >-
+          The URL of your webhook endpoint registered in Statsig.
+    security:
+      - webhookSignature: []
+channels:
+  /webhook:
+    description: >-
+      Channel for receiving batched event notifications from Statsig. Events
+      are sent as HTTP POST requests with JSON payloads. The channel supports
+      event filtering to control which event types are forwarded.
+    publish:
+      operationId: receiveWebhookEvents
+      summary: Receive webhook event batches
+      description: >-
+        Receives batched event notifications from Statsig. Events are sent
+        in real-time as users interact with gates, experiments, and configs.
+        Batches contain one or more events of mixed types. Verify the
+        webhook signature using the X-Statsig-Signature header before
+        processing.
+      message:
+        oneOf:
+          - $ref: '#/components/messages/ExposureEvent'
+          - $ref: '#/components/messages/ConfigChangeEvent'
+          - $ref: '#/components/messages/EventBatch'
+components:
+  securitySchemes:
+    webhookSignature:
+      type: httpApiKey
+      name: X-Statsig-Signature
+      in: header
+      description: >-
+        HMAC-SHA256 signature for verifying webhook authenticity. The
+        signature is computed as v0= followed by the HMAC-SHA256 hex digest
+        of the signature basestring, which is constructed by concatenating
+        v0, the X-Statsig-Request-Timestamp header value, and the request
+        body, separated by colons. Compare this header value against your
+        locally computed signature using your webhook signing secret from
+        the Statsig integration settings.
+  messages:
+    ExposureEvent:
+      name: ExposureEvent
+      title: Exposure Event
+      summary: >-
+        An exposure event triggered when a user is evaluated against a gate,
+        experiment, or dynamic config via the SDK.
+      contentType: application/json
+      headers:
+        type: object
+        properties:
+          X-Statsig-Signature:
+            type: string
+            description: >-
+              HMAC-SHA256 webhook signature for verification.
+          X-Statsig-Request-Timestamp:
+            type: string
+            description: >-
+              Unix timestamp of when the request was sent, used in
+              signature verification.
+      payload:
+        $ref: '#/components/schemas/ExposureEventPayload'
+    ConfigChangeEvent:
+      name: ConfigChangeEvent
+      title: Config Change Event
+      summary: >-
+        A configuration change event triggered when a gate, experiment,
+        dynamic config, or other entity is created, updated, or deleted
+        through the Statsig Console or API.
+      contentType: application/json
+      headers:
+        type: object
+        properties:
+          X-Statsig-Signature:
+            type: string
+            description: >-
+              HMAC-SHA256 webhook signature for verification.
+          X-Statsig-Request-Timestamp:
+            type: string
+            description: >-
+              Unix timestamp of when the request was sent.
+      payload:
+        $ref: '#/components/schemas/ConfigChangeEventPayload'
+    EventBatch:
+      name: EventBatch
+      title: Event Batch
+      summary: >-
+        A batch of events containing one or more exposure or config change
+        events sent together for efficiency.
+      contentType: application/json
+      headers:
+        type: object
+        properties:
+          X-Statsig-Signature:
+            type: string
+            description: >-
+              HMAC-SHA256 webhook signature for verification.
+          X-Statsig-Request-Timestamp:
+            type: string
+            description: >-
+              Unix timestamp of when the request was sent.
+      payload:
+        $ref: '#/components/schemas/EventBatchPayload'
+  schemas:
+    ExposureEventPayload:
+      type: object
+      description: >-
+        Payload for an SDK exposure event triggered during gate checks,
+        experiment evaluations, or config fetches.
+      properties:
+        eventName:
+          type: string
+          description: >-
+            The event name, typically in the format statsig::gate_exposure,
+            statsig::config_exposure, or statsig::experiment_exposure.
+        user:
+          $ref: '#/components/schemas/WebhookUser'
+        timestamp:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp of the event in milliseconds since epoch.
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+          description: >-
+            The evaluation result value.
+        metadata:
+          type: object
+          properties:
+            gate:
+              type: string
+              description: >-
+                The name of the gate, if this is a gate exposure.
+            config:
+              type: string
+              description: >-
+                The name of the config or experiment, if applicable.
+            ruleID:
+              type: string
+              description: >-
+                The rule that matched during evaluation.
+          description: >-
+            Metadata about the exposure evaluation.
+        statsigMetadata:
+          type: object
+          properties:
+            sdkType:
+              type: string
+              description: >-
+                The type of SDK that generated the event.
+            sdkVersion:
+              type: string
+              description: >-
+                The version of the SDK.
+          description: >-
+            SDK metadata associated with the exposure.
+        timeUUID:
+          type: string
+          description: >-
+            A unique identifier for this event instance.
+    ConfigChangeEventPayload:
+      type: object
+      description: >-
+        Payload for a configuration change event triggered by console or
+        API actions.
+      properties:
+        eventName:
+          type: string
+          const: statsig::config_change
+          description: >-
+            The event name is always statsig::config_change for config
+            change events.
+        user:
+          $ref: '#/components/schemas/WebhookUser'
+        timestamp:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp of the change in milliseconds since epoch.
+        metadata:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Gate
+                - DynamicConfig
+                - Experiment
+                - Segment
+                - Layer
+                - Holdout
+                - Autotune
+              description: >-
+                The type of entity that was changed.
+            name:
+              type: string
+              description: >-
+                The name of the entity that was changed.
+            description:
+              type: string
+              description: >-
+                A description of the change, often including the entity
+                description.
+            action:
+              type: string
+              enum:
+                - created
+                - updated
+                - deleted
+                - enabled
+                - disabled
+                - launched
+                - archived
+              description: >-
+                The action that was performed on the entity.
+          description: >-
+            Metadata describing the configuration change.
+    EventBatchPayload:
+      type: object
+      description: >-
+        A batch of events sent in a single webhook request.
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/ExposureEventPayload'
+              - $ref: '#/components/schemas/ConfigChangeEventPayload'
+          minItems: 1
+          description: >-
+            An array of one or more events in the batch.
+    WebhookUser:
+      type: object
+      description: >-
+        User information associated with a webhook event.
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the user who triggered the event.
+        email:
+          type: string
+          format: email
+          description: >-
+            The email of the user who triggered the event.
+        userID:
+          type: string
+          description: >-
+            The unique identifier of the user.

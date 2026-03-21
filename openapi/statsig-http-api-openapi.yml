@@ -1,0 +1,608 @@
+openapi: 3.1.0
+info:
+  title: Statsig HTTP API
+  description: >-
+    The Statsig HTTP API allows developers to evaluate feature gates, dynamic
+    configs, and experiments for users via server-side HTTP requests. It
+    provides endpoints for checking gate values, fetching configuration data,
+    and logging custom events. All requests use the POST method with JSON
+    request bodies and require authentication via the statsig-api-key header.
+    While Statsig recommends using their official SDKs for most use cases, the
+    HTTP API is available for environments where an SDK is not available or
+    when direct HTTP integration is preferred.
+  version: '1.0.0'
+  contact:
+    name: Statsig Support
+    url: https://statsig.com/support
+  termsOfService: https://statsig.com/terms
+externalDocs:
+  description: Statsig HTTP API Documentation
+  url: https://docs.statsig.com/http-api/
+servers:
+  - url: https://api.statsig.com/v1
+    description: Statsig API Server
+tags:
+  - name: Feature Gates
+    description: >-
+      Endpoints for evaluating feature gates for users, returning boolean
+      pass/fail values along with rule identification.
+  - name: Dynamic Configs
+    description: >-
+      Endpoints for fetching dynamic configuration values for users, supporting
+      both dynamic configs and experiments.
+  - name: Experiments
+    description: >-
+      Endpoints for retrieving experiment configurations and group assignments
+      for users.
+  - name: Layers
+    description: >-
+      Endpoints for fetching layer parameter values, enabling shared parameters
+      across multiple experiments.
+  - name: Initialization
+    description: >-
+      Endpoints for initializing client SDKs with all evaluated gates, configs,
+      experiments, and layers for a given user.
+  - name: Events
+    description: >-
+      Endpoints for logging custom events and exposure data to Statsig for
+      analytics and experiment analysis.
+  - name: Configuration
+    description: >-
+      Endpoints for downloading full project configuration specs for server-side
+      local evaluation.
+security:
+  - statsigApiKey: []
+paths:
+  /check_gate:
+    post:
+      operationId: checkGate
+      summary: Check a feature gate
+      description: >-
+        Evaluates a single feature gate for the specified user and returns the
+        boolean pass/fail result along with rule identification. Statsig
+        automatically logs an exposure event for the gate check.
+      tags:
+        - Feature Gates
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user
+                - gateName
+              properties:
+                user:
+                  $ref: '#/components/schemas/StatsigUser'
+                gateName:
+                  type: string
+                  description: >-
+                    The name of the feature gate to evaluate.
+      responses:
+        '200':
+          description: Gate evaluation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: >-
+                      The name of the gate that was evaluated.
+                  value:
+                    type: boolean
+                    description: >-
+                      Whether the user passes the gate.
+                  rule_id:
+                    type: string
+                    description: >-
+                      The identifier of the rule that was matched.
+                  group_name:
+                    type: string
+                    description: >-
+                      The name of the group the user was assigned to.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /check_gate_multiple:
+    post:
+      operationId: checkGateMultiple
+      summary: Check multiple feature gates
+      description: >-
+        Evaluates multiple feature gates for the specified user in a single
+        request and returns the boolean pass/fail results for each gate.
+        Statsig automatically logs exposure events for each gate check.
+      tags:
+        - Feature Gates
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user
+                - gateNames
+              properties:
+                user:
+                  $ref: '#/components/schemas/StatsigUser'
+                gateNames:
+                  type: array
+                  items:
+                    type: string
+                  description: >-
+                    An array of feature gate names to evaluate.
+      responses:
+        '200':
+          description: Multiple gate evaluation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: >-
+                            The name of the gate that was evaluated.
+                        value:
+                          type: boolean
+                          description: >-
+                            Whether the user passes the gate.
+                        rule_id:
+                          type: string
+                          description: >-
+                            The identifier of the rule that was matched.
+                        group_name:
+                          type: string
+                          description: >-
+                            The name of the group the user was assigned to.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /get_config:
+    post:
+      operationId: getConfig
+      summary: Get a dynamic config or experiment
+      description: >-
+        Fetches the configuration values for a dynamic config or experiment for
+        the specified user. The system automatically determines whether the
+        requested name refers to a dynamic config or an experiment. An exposure
+        event is automatically logged.
+      tags:
+        - Dynamic Configs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user
+                - configName
+              properties:
+                user:
+                  $ref: '#/components/schemas/StatsigUser'
+                configName:
+                  type: string
+                  description: >-
+                    The name of the dynamic config or experiment to retrieve.
+      responses:
+        '200':
+          description: Dynamic config or experiment values
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: >-
+                      The name of the config that was retrieved.
+                  value:
+                    type: object
+                    description: >-
+                      The JSON object containing the configuration key-value
+                      pairs for this user.
+                  group:
+                    type: string
+                    description: >-
+                      The experiment group the user was assigned to, if
+                      applicable.
+                  rule_id:
+                    type: string
+                    description: >-
+                      The identifier of the rule that was matched.
+                  group_name:
+                    type: string
+                    description: >-
+                      The name of the group the user was assigned to.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /get_experiment:
+    post:
+      operationId: getExperiment
+      summary: Get an experiment configuration
+      description: >-
+        Fetches the experiment configuration and group assignment for the
+        specified user. This is functionally similar to get_config but
+        specifically targets experiments. An exposure event is automatically
+        logged for experiment analysis.
+      tags:
+        - Experiments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user
+                - experimentName
+              properties:
+                user:
+                  $ref: '#/components/schemas/StatsigUser'
+                experimentName:
+                  type: string
+                  description: >-
+                    The name of the experiment to retrieve.
+      responses:
+        '200':
+          description: Experiment configuration and group assignment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: >-
+                      The name of the experiment.
+                  value:
+                    type: object
+                    description: >-
+                      The JSON object containing the experiment parameter
+                      values for this user.
+                  group:
+                    type: string
+                    description: >-
+                      The experiment group the user was assigned to.
+                  rule_id:
+                    type: string
+                    description: >-
+                      The identifier of the rule that was matched.
+                  group_name:
+                    type: string
+                    description: >-
+                      The name of the group the user was assigned to.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /get_layer:
+    post:
+      operationId: getLayer
+      summary: Get layer parameters
+      description: >-
+        Fetches parameter values from a layer for the specified user. Layers
+        allow sharing parameters across multiple experiments. An exposure event
+        is logged only when a specific parameter is accessed.
+      tags:
+        - Layers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user
+                - layerName
+              properties:
+                user:
+                  $ref: '#/components/schemas/StatsigUser'
+                layerName:
+                  type: string
+                  description: >-
+                    The name of the layer to retrieve.
+      responses:
+        '200':
+          description: Layer parameter values
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: >-
+                      The name of the layer.
+                  value:
+                    type: object
+                    description: >-
+                      The JSON object containing the layer parameter values
+                      for this user.
+                  rule_id:
+                    type: string
+                    description: >-
+                      The identifier of the rule that was matched.
+                  group_name:
+                    type: string
+                    description: >-
+                      The name of the group the user was assigned to.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /initialize:
+    post:
+      operationId: initialize
+      summary: Initialize client SDK
+      description: >-
+        Returns all evaluated gates, configs, experiments, and layers for a
+        given user. This is the primary endpoint used by client SDKs for
+        initialization. The response contains hashed names for security,
+        and the client SDK decodes them locally.
+      tags:
+        - Initialization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user
+              properties:
+                user:
+                  $ref: '#/components/schemas/StatsigUser'
+      responses:
+        '200':
+          description: Full set of evaluated configurations for the user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  feature_gates:
+                    type: object
+                    description: >-
+                      A map of hashed gate names to their evaluation results.
+                  dynamic_configs:
+                    type: object
+                    description: >-
+                      A map of hashed config names to their evaluation results.
+                  layer_configs:
+                    type: object
+                    description: >-
+                      A map of hashed layer names to their evaluation results.
+                  has_updates:
+                    type: boolean
+                    description: >-
+                      Whether there are updates since the last initialization.
+                  time:
+                    type: integer
+                    format: int64
+                    description: >-
+                      Server timestamp of the evaluation.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /log_event:
+    post:
+      operationId: logEvent
+      summary: Log custom events
+      description: >-
+        Logs one or more custom events to Statsig for analytics and experiment
+        analysis. Events can include exposure events, custom events with
+        values, and metadata. The STATSIG-CLIENT-TIME header is required
+        to normalize timestamps.
+      tags:
+        - Events
+      parameters:
+        - name: STATSIG-CLIENT-TIME
+          in: header
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: >-
+            Client-side timestamp in milliseconds since epoch, used to
+            normalize event timestamps.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - events
+              properties:
+                events:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/StatsigEvent'
+                  description: >-
+                    An array of events to log.
+      responses:
+        '202':
+          description: Events accepted for processing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: >-
+                      Whether the events were successfully accepted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /download_config_specs:
+    post:
+      operationId: downloadConfigSpecs
+      summary: Download configuration specs
+      description: >-
+        Downloads the full project configuration for server-side local
+        evaluation. This endpoint is used by server SDKs to retrieve all gate,
+        config, experiment, and layer definitions for evaluating locally
+        without per-request network calls. This enables sub-millisecond
+        feature gate checks.
+      tags:
+        - Configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sinceTime:
+                  type: integer
+                  format: int64
+                  description: >-
+                    Timestamp of the last successful download, used for
+                    incremental updates.
+      responses:
+        '200':
+          description: Full project configuration specs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dynamic_configs:
+                    type: array
+                    items:
+                      type: object
+                    description: >-
+                      Array of dynamic config and experiment specifications.
+                  feature_gates:
+                    type: array
+                    items:
+                      type: object
+                    description: >-
+                      Array of feature gate specifications.
+                  layer_configs:
+                    type: array
+                    items:
+                      type: object
+                    description: >-
+                      Array of layer specifications.
+                  has_updates:
+                    type: boolean
+                    description: >-
+                      Whether the response contains updates since sinceTime.
+                  time:
+                    type: integer
+                    format: int64
+                    description: >-
+                      Server timestamp of this configuration snapshot.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    statsigApiKey:
+      type: apiKey
+      in: header
+      name: statsig-api-key
+      description: >-
+        API key for authentication. Use a Server Secret Key for secure
+        server-side requests or a Client-SDK Key for client-side applications.
+  schemas:
+    StatsigUser:
+      type: object
+      description: >-
+        The user object representing the end user being evaluated. At minimum,
+        a userID should be provided. Additional properties enable more
+        sophisticated targeting.
+      properties:
+        userID:
+          type: string
+          description: >-
+            A unique identifier for the user.
+        email:
+          type: string
+          format: email
+          description: >-
+            The email address of the user, used for email-based targeting.
+        ip:
+          type: string
+          description: >-
+            The IP address of the user, used for IP-based targeting.
+        userAgent:
+          type: string
+          description: >-
+            The user agent string, used for browser or device targeting.
+        country:
+          type: string
+          description: >-
+            The two-letter country code of the user.
+        locale:
+          type: string
+          description: >-
+            The locale identifier for the user.
+        appVersion:
+          type: string
+          description: >-
+            The version of the application the user is using.
+        custom:
+          type: object
+          additionalProperties: true
+          description: >-
+            Custom properties for the user, used for custom targeting rules.
+        privateAttributes:
+          type: object
+          additionalProperties: true
+          description: >-
+            Private user attributes used for evaluation but stripped before
+            logging to Statsig servers.
+        customIDs:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Custom identifier mappings for the user, such as companyID or
+            teamID.
+    StatsigEvent:
+      type: object
+      description: >-
+        An event object representing a custom event or exposure to log.
+      required:
+        - user
+        - eventName
+        - time
+      properties:
+        user:
+          $ref: '#/components/schemas/StatsigUser'
+        eventName:
+          type: string
+          description: >-
+            The name of the event being logged.
+        time:
+          type: integer
+          format: int64
+          description: >-
+            The timestamp of the event in milliseconds since epoch.
+        value:
+          oneOf:
+            - type: string
+            - type: number
+          description: >-
+            An optional value associated with the event.
+        metadata:
+          type: object
+          additionalProperties: true
+          description: >-
+            Optional metadata key-value pairs associated with the event.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: >-
+                  Error message describing the authentication failure.

@@ -1,0 +1,2480 @@
+openapi: 3.1.0
+info:
+  title: Statsig Console API
+  description: >-
+    The Statsig Console API enables developers to programmatically manage
+    their Statsig project configuration. It supports full CRUD operations on
+    feature gates, dynamic configs, experiments, segments, layers, holdouts,
+    autotunes, metrics, keys, users, tags, target apps, audit logs, and other
+    entities. The API requires a Console API Key and uses versioned endpoints
+    with the STATSIG-API-VERSION header. It is designed for automation
+    workflows such as bulk configuration edits, syncing definitions into
+    Statsig from external systems, and integrating Statsig management into
+    CI/CD pipelines.
+  version: '20240601'
+  contact:
+    name: Statsig Support
+    url: https://statsig.com/support
+  termsOfService: https://statsig.com/terms
+externalDocs:
+  description: Statsig Console API Documentation
+  url: https://docs.statsig.com/console-api/
+servers:
+  - url: https://statsigapi.net/console/v1
+    description: Statsig Console API Server
+tags:
+  - name: Gates
+    description: >-
+      Manage feature gates including creation, updates, rules, overrides,
+      enabling, disabling, launching, and archiving.
+  - name: Dynamic Configs
+    description: >-
+      Manage dynamic configurations with full CRUD operations for
+      server-driven configuration values.
+  - name: Experiments
+    description: >-
+      Manage A/B test experiments including creation, configuration,
+      starting, resetting, and analysis.
+  - name: Segments
+    description: >-
+      Manage user segments for targeting rules across gates, configs,
+      and experiments.
+  - name: Layers
+    description: >-
+      Manage layers that enable sharing parameters across multiple
+      experiments while maintaining mutual exclusivity.
+  - name: Holdouts
+    description: >-
+      Manage holdout groups that exclude users from receiving specific
+      features for measuring long-term impact.
+  - name: Autotunes
+    description: >-
+      Manage autotune configurations that automatically optimize
+      parameter values based on a target metric.
+  - name: Metrics
+    description: >-
+      Access and manage metric definitions and metric sources used
+      in experiment analysis.
+  - name: Keys
+    description: >-
+      Manage API keys for the project including server secret keys,
+      client SDK keys, and console API keys.
+  - name: Users
+    description: >-
+      Manage user data and lookup user properties within the Statsig
+      project.
+  - name: Tags
+    description: >-
+      Manage tags used for organizing and categorizing gates, configs,
+      experiments, and other entities.
+  - name: Target Apps
+    description: >-
+      Manage target application definitions that scope feature
+      configurations to specific applications.
+  - name: Audit Logs
+    description: >-
+      Access audit log entries tracking changes made to project
+      configuration through the console or API.
+security:
+  - consoleApiKey: []
+paths:
+  /gates:
+    get:
+      operationId: listGates
+      summary: List all gates
+      description: >-
+        Retrieves a list of all feature gates in the project with their
+        current status and configuration.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: List of feature gates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Gate'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createGate
+      summary: Create a gate
+      description: >-
+        Creates a new feature gate in the project with the specified
+        configuration, rules, and targeting conditions.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GateCreate'
+      responses:
+        '201':
+          description: Gate created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gate'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /gates/{id}:
+    get:
+      operationId: getGate
+      summary: Get a gate
+      description: >-
+        Retrieves the full configuration of a specific feature gate
+        including its rules, conditions, and overrides.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      responses:
+        '200':
+          description: Gate details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: partiallyUpdateGate
+      summary: Partially update a gate
+      description: >-
+        Updates specific fields of a feature gate without replacing the
+        entire configuration.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GateUpdate'
+      responses:
+        '200':
+          description: Gate updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gate'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteGate
+      summary: Delete a gate
+      description: >-
+        Permanently deletes a feature gate from the project. This action
+        cannot be undone.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      responses:
+        '200':
+          description: Gate deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /gates/{id}/enable:
+    put:
+      operationId: enableGate
+      summary: Enable a gate
+      description: >-
+        Enables a feature gate so that its rules are actively evaluated
+        for users.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      responses:
+        '200':
+          description: Gate enabled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /gates/{id}/disable:
+    put:
+      operationId: disableGate
+      summary: Disable a gate
+      description: >-
+        Disables a feature gate so that it returns false for all users
+        regardless of rules.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      responses:
+        '200':
+          description: Gate disabled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /gates/{id}/launch:
+    put:
+      operationId: launchGate
+      summary: Launch a gate
+      description: >-
+        Launches a feature gate, indicating the feature has been fully
+        rolled out and the gate can be cleaned up.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      responses:
+        '200':
+          description: Gate launched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /gates/{id}/archive:
+    put:
+      operationId: archiveGate
+      summary: Archive a gate
+      description: >-
+        Archives a feature gate, removing it from active use while
+        preserving its configuration for reference.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      responses:
+        '200':
+          description: Gate archived successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gate'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /gates/{id}/rules:
+    get:
+      operationId: listGateRules
+      summary: List gate rules
+      description: >-
+        Retrieves all rules configured for a specific feature gate.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      responses:
+        '200':
+          description: List of gate rules
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Rule'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      operationId: addGateRule
+      summary: Add a gate rule
+      description: >-
+        Adds a new targeting rule to a feature gate.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rule'
+      responses:
+        '201':
+          description: Rule added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateGateRules
+      summary: Update gate rules
+      description: >-
+        Replaces all rules for a feature gate with the provided set of rules.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rules:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Rule'
+      responses:
+        '200':
+          description: Rules updated successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /gates/{id}/rules/{ruleID}:
+    delete:
+      operationId: deleteGateRule
+      summary: Delete a gate rule
+      description: >-
+        Removes a specific targeting rule from a feature gate.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+        - name: ruleID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: >-
+            The identifier of the rule to delete.
+      responses:
+        '200':
+          description: Rule deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /gates/{id}/overrides:
+    get:
+      operationId: getGateOverrides
+      summary: Get gate overrides
+      description: >-
+        Retrieves the user and ID overrides configured for a feature gate.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      responses:
+        '200':
+          description: Gate overrides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Overrides'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      operationId: addGateOverrides
+      summary: Add gate overrides
+      description: >-
+        Adds user or ID overrides to a feature gate for forcing specific
+        evaluation results.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Overrides'
+      responses:
+        '200':
+          description: Overrides added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Overrides'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      operationId: updateGateOverrides
+      summary: Update gate overrides
+      description: >-
+        Replaces all overrides for a feature gate with the provided set.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Overrides'
+      responses:
+        '200':
+          description: Overrides updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Overrides'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteGateOverrides
+      summary: Delete gate overrides
+      description: >-
+        Removes all user and ID overrides from a feature gate.
+      tags:
+        - Gates
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/GateId'
+      responses:
+        '200':
+          description: Overrides deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /dynamic_configs:
+    get:
+      operationId: listDynamicConfigs
+      summary: List all dynamic configs
+      description: >-
+        Retrieves a list of all dynamic configurations in the project.
+      tags:
+        - Dynamic Configs
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: List of dynamic configs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DynamicConfig'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createDynamicConfig
+      summary: Create a dynamic config
+      description: >-
+        Creates a new dynamic configuration in the project with the
+        specified default values and rules.
+      tags:
+        - Dynamic Configs
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DynamicConfigCreate'
+      responses:
+        '201':
+          description: Dynamic config created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicConfig'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /dynamic_configs/{id}:
+    get:
+      operationId: getDynamicConfig
+      summary: Get a dynamic config
+      description: >-
+        Retrieves the full configuration of a specific dynamic config
+        including its default values, rules, and conditions.
+      tags:
+        - Dynamic Configs
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/DynamicConfigId'
+      responses:
+        '200':
+          description: Dynamic config details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicConfig'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: partiallyUpdateDynamicConfig
+      summary: Partially update a dynamic config
+      description: >-
+        Updates specific fields of a dynamic config without replacing
+        the entire configuration.
+      tags:
+        - Dynamic Configs
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/DynamicConfigId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DynamicConfigUpdate'
+      responses:
+        '200':
+          description: Dynamic config updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicConfig'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteDynamicConfig
+      summary: Delete a dynamic config
+      description: >-
+        Permanently deletes a dynamic config from the project.
+      tags:
+        - Dynamic Configs
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/DynamicConfigId'
+      responses:
+        '200':
+          description: Dynamic config deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /dynamic_configs/{id}/rules:
+    get:
+      operationId: getDynamicConfigRules
+      summary: Get dynamic config rules
+      description: >-
+        Retrieves all rules configured for a specific dynamic config.
+      tags:
+        - Dynamic Configs
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/DynamicConfigId'
+      responses:
+        '200':
+          description: List of dynamic config rules
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Rule'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /experiments:
+    get:
+      operationId: listExperiments
+      summary: List all experiments
+      description: >-
+        Retrieves a list of all experiments in the project with their
+        current status and configuration.
+      tags:
+        - Experiments
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: List of experiments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Experiment'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createExperiment
+      summary: Create an experiment
+      description: >-
+        Creates a new experiment in the project with the specified
+        hypothesis, groups, and parameter configuration.
+      tags:
+        - Experiments
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExperimentCreate'
+      responses:
+        '201':
+          description: Experiment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Experiment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /experiments/{id}:
+    get:
+      operationId: getExperiment
+      summary: Get an experiment
+      description: >-
+        Retrieves the full configuration of a specific experiment including
+        its groups, parameters, hypothesis, and status.
+      tags:
+        - Experiments
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/ExperimentId'
+      responses:
+        '200':
+          description: Experiment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Experiment'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: partiallyUpdateExperiment
+      summary: Partially update an experiment
+      description: >-
+        Updates specific fields of an experiment without replacing the
+        entire configuration.
+      tags:
+        - Experiments
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/ExperimentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExperimentUpdate'
+      responses:
+        '200':
+          description: Experiment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Experiment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteExperiment
+      summary: Delete an experiment
+      description: >-
+        Permanently deletes an experiment from the project.
+      tags:
+        - Experiments
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/ExperimentId'
+      responses:
+        '200':
+          description: Experiment deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /experiments/{id}/start:
+    put:
+      operationId: startExperiment
+      summary: Start an experiment
+      description: >-
+        Starts an experiment, beginning to allocate users to experiment
+        groups and logging exposures.
+      tags:
+        - Experiments
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/ExperimentId'
+      responses:
+        '200':
+          description: Experiment started successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Experiment'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /experiments/{id}/reset:
+    put:
+      operationId: resetExperiment
+      summary: Reset an experiment
+      description: >-
+        Resets an experiment, clearing all collected data and resetting
+        user assignments.
+      tags:
+        - Experiments
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/ExperimentId'
+      responses:
+        '200':
+          description: Experiment reset successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Experiment'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /segments:
+    get:
+      operationId: listSegments
+      summary: List all segments
+      description: >-
+        Retrieves a list of all user segments in the project.
+      tags:
+        - Segments
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: List of segments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Segment'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createSegment
+      summary: Create a segment
+      description: >-
+        Creates a new user segment in the project for targeting rules.
+      tags:
+        - Segments
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentCreate'
+      responses:
+        '201':
+          description: Segment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /segments/{id}:
+    get:
+      operationId: getSegment
+      summary: Get a segment
+      description: >-
+        Retrieves the full configuration of a specific user segment.
+      tags:
+        - Segments
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: >-
+            The name or identifier of the segment.
+      responses:
+        '200':
+          description: Segment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segment'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: partiallyUpdateSegment
+      summary: Partially update a segment
+      description: >-
+        Updates specific fields of a user segment.
+      tags:
+        - Segments
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: >-
+            The name or identifier of the segment.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentCreate'
+      responses:
+        '200':
+          description: Segment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteSegment
+      summary: Delete a segment
+      description: >-
+        Permanently deletes a user segment from the project.
+      tags:
+        - Segments
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: >-
+            The name or identifier of the segment.
+      responses:
+        '200':
+          description: Segment deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /layers:
+    get:
+      operationId: listLayers
+      summary: List all layers
+      description: >-
+        Retrieves a list of all layers in the project.
+      tags:
+        - Layers
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: List of layers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Layer'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createLayer
+      summary: Create a layer
+      description: >-
+        Creates a new layer in the project for sharing parameters across
+        multiple experiments.
+      tags:
+        - Layers
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LayerCreate'
+      responses:
+        '201':
+          description: Layer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Layer'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /layers/{id}:
+    get:
+      operationId: getLayer
+      summary: Get a layer
+      description: >-
+        Retrieves the full configuration of a specific layer including
+        its parameters and associated experiments.
+      tags:
+        - Layers
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: >-
+            The name or identifier of the layer.
+      responses:
+        '200':
+          description: Layer details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Layer'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteLayer
+      summary: Delete a layer
+      description: >-
+        Permanently deletes a layer from the project.
+      tags:
+        - Layers
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: >-
+            The name or identifier of the layer.
+      responses:
+        '200':
+          description: Layer deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /layers/{id}/experiments:
+    get:
+      operationId: listLayerExperiments
+      summary: List experiments in a layer
+      description: >-
+        Retrieves the list of experiments associated with a specific layer.
+      tags:
+        - Layers
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: >-
+            The name or identifier of the layer.
+      responses:
+        '200':
+          description: List of experiments in the layer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Experiment'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /holdouts:
+    get:
+      operationId: listHoldouts
+      summary: List all holdouts
+      description: >-
+        Retrieves a list of all holdout groups in the project.
+      tags:
+        - Holdouts
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      responses:
+        '200':
+          description: List of holdouts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Holdout'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createHoldout
+      summary: Create a holdout
+      description: >-
+        Creates a new holdout group in the project for measuring
+        long-term feature impact.
+      tags:
+        - Holdouts
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HoldoutCreate'
+      responses:
+        '201':
+          description: Holdout created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Holdout'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /autotunes:
+    get:
+      operationId: listAutotunes
+      summary: List all autotunes
+      description: >-
+        Retrieves a list of all autotune configurations in the project.
+      tags:
+        - Autotunes
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      responses:
+        '200':
+          description: List of autotunes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Autotune'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createAutotune
+      summary: Create an autotune
+      description: >-
+        Creates a new autotune configuration that automatically optimizes
+        parameter values based on a target metric.
+      tags:
+        - Autotunes
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutotuneCreate'
+      responses:
+        '201':
+          description: Autotune created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Autotune'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /metrics:
+    get:
+      operationId: listMetrics
+      summary: List all metrics
+      description: >-
+        Retrieves a list of all metric definitions in the project.
+      tags:
+        - Metrics
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: List of metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Metric'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /metrics/{id}:
+    get:
+      operationId: getMetric
+      summary: Get a metric
+      description: >-
+        Retrieves the definition of a specific metric.
+      tags:
+        - Metrics
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: >-
+            The name or identifier of the metric.
+      responses:
+        '200':
+          description: Metric details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metric'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /keys:
+    get:
+      operationId: listKeys
+      summary: List all API keys
+      description: >-
+        Retrieves a list of all API keys in the project including server
+        secret keys, client SDK keys, and console API keys.
+      tags:
+        - Keys
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      responses:
+        '200':
+          description: List of API keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ApiKey'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /users:
+    get:
+      operationId: listUsers
+      summary: List users
+      description: >-
+        Retrieves a list of users known to the Statsig project.
+      tags:
+        - Users
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /tags:
+    get:
+      operationId: listTags
+      summary: List all tags
+      description: >-
+        Retrieves a list of all tags used for organizing entities in
+        the project.
+      tags:
+        - Tags
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      responses:
+        '200':
+          description: List of tags
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tag'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createTag
+      summary: Create a tag
+      description: >-
+        Creates a new tag for organizing entities in the project.
+      tags:
+        - Tags
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCreate'
+      responses:
+        '201':
+          description: Tag created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /target_apps:
+    get:
+      operationId: listTargetApps
+      summary: List all target apps
+      description: >-
+        Retrieves a list of all target application definitions in the project.
+      tags:
+        - Target Apps
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+      responses:
+        '200':
+          description: List of target apps
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TargetApp'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /audit_logs:
+    get:
+      operationId: listAuditLogs
+      summary: List audit logs
+      description: >-
+        Retrieves audit log entries tracking changes made to the project
+        configuration through the console or API.
+      tags:
+        - Audit Logs
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: List of audit log entries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuditLogEntry'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    consoleApiKey:
+      type: apiKey
+      in: header
+      name: STATSIG-API-KEY
+      description: >-
+        Console API Key created in Project Settings > API Keys tab. Required
+        for all Console API requests.
+  parameters:
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: >-
+        The Console API version. Currently the only version is 20240601.
+    GateId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: >-
+        The name or identifier of the feature gate.
+    DynamicConfigId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: >-
+        The name or identifier of the dynamic config.
+    ExperimentId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: >-
+        The name or identifier of the experiment.
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: >-
+        Maximum number of items to return per page.
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: >-
+        Page number for paginated results.
+  schemas:
+    Gate:
+      type: object
+      description: >-
+        A feature gate configuration that controls access to features
+        based on targeting rules and conditions.
+      properties:
+        id:
+          type: string
+          description: >-
+            The unique identifier of the gate.
+        name:
+          type: string
+          description: >-
+            The name of the gate.
+        description:
+          type: string
+          description: >-
+            A human-readable description of the gate purpose.
+        isEnabled:
+          type: boolean
+          description: >-
+            Whether the gate is currently enabled and evaluating rules.
+        status:
+          type: string
+          enum:
+            - active
+            - disabled
+            - launched
+            - archived
+          description: >-
+            The current lifecycle status of the gate.
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+          description: >-
+            The targeting rules for this gate.
+        tags:
+          type: array
+          items:
+            type: string
+          description: >-
+            Tags associated with the gate for organization.
+        targetApps:
+          type: array
+          items:
+            type: string
+          description: >-
+            Target applications this gate is scoped to.
+        createdTime:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp when the gate was created.
+        lastModifiedTime:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp when the gate was last modified.
+    GateCreate:
+      type: object
+      description: >-
+        Request body for creating a new feature gate.
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the gate to create.
+        description:
+          type: string
+          description: >-
+            A human-readable description of the gate purpose.
+        isEnabled:
+          type: boolean
+          description: >-
+            Whether the gate should be enabled upon creation.
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+          description: >-
+            Initial targeting rules for the gate.
+        tags:
+          type: array
+          items:
+            type: string
+          description: >-
+            Tags to associate with the gate.
+        targetApps:
+          type: array
+          items:
+            type: string
+          description: >-
+            Target applications to scope this gate to.
+    GateUpdate:
+      type: object
+      description: >-
+        Request body for partially updating a feature gate.
+      properties:
+        description:
+          type: string
+          description: >-
+            Updated description of the gate purpose.
+        isEnabled:
+          type: boolean
+          description: >-
+            Whether the gate should be enabled.
+        tags:
+          type: array
+          items:
+            type: string
+          description: >-
+            Updated tags for the gate.
+        targetApps:
+          type: array
+          items:
+            type: string
+          description: >-
+            Updated target applications.
+    Rule:
+      type: object
+      description: >-
+        A targeting rule that defines conditions under which a gate passes
+        or a config returns specific values.
+      properties:
+        id:
+          type: string
+          description: >-
+            The unique identifier of the rule.
+        name:
+          type: string
+          description: >-
+            The name of the rule.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: >-
+            The percentage of users matching conditions who pass the rule.
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+          description: >-
+            The conditions that must be met for this rule to apply.
+        returnValue:
+          type: object
+          description: >-
+            The value returned when this rule matches, for dynamic configs.
+        environments:
+          type: array
+          items:
+            type: string
+          description: >-
+            Environments where this rule is active.
+    Condition:
+      type: object
+      description: >-
+        A condition within a targeting rule that evaluates user properties
+        against specified criteria.
+      properties:
+        type:
+          type: string
+          enum:
+            - user_id
+            - email
+            - ip_address
+            - country
+            - app_version
+            - custom_field
+            - browser_name
+            - browser_version
+            - os_name
+            - os_version
+            - passes_gate
+            - fails_gate
+            - environment
+            - passes_segment
+            - fails_segment
+            - time
+            - unit_id
+          description: >-
+            The type of condition to evaluate.
+        targetValue:
+          description: >-
+            The value or values to compare against.
+        operator:
+          type: string
+          enum:
+            - any
+            - none
+            - str_starts_with_any
+            - str_ends_with_any
+            - str_contains_any
+            - str_contains_none
+            - str_matches
+            - gt
+            - gte
+            - lt
+            - lte
+            - version_gt
+            - version_gte
+            - version_lt
+            - version_lte
+            - before
+            - after
+            - on
+          description: >-
+            The comparison operator to use.
+    Overrides:
+      type: object
+      description: >-
+        User and ID overrides for forcing specific evaluation results.
+      properties:
+        userOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              userID:
+                type: string
+                description: >-
+                  The user ID to override.
+              value:
+                type: boolean
+                description: >-
+                  The override value for this user.
+          description: >-
+            User-specific overrides by user ID.
+        idOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              ids:
+                type: array
+                items:
+                  type: string
+                description: >-
+                  The IDs to override.
+              value:
+                type: boolean
+                description: >-
+                  The override value for these IDs.
+          description: >-
+            ID-based overrides for custom ID types.
+    DynamicConfig:
+      type: object
+      description: >-
+        A dynamic configuration that provides key-value pairs to clients
+        based on targeting rules.
+      properties:
+        id:
+          type: string
+          description: >-
+            The unique identifier of the dynamic config.
+        name:
+          type: string
+          description: >-
+            The name of the dynamic config.
+        description:
+          type: string
+          description: >-
+            A human-readable description of the config purpose.
+        isEnabled:
+          type: boolean
+          description: >-
+            Whether the config is currently enabled.
+        defaultValue:
+          type: object
+          description: >-
+            The default key-value pairs returned when no rules match.
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+          description: >-
+            The targeting rules for this config.
+        tags:
+          type: array
+          items:
+            type: string
+          description: >-
+            Tags associated with the config.
+        createdTime:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp when the config was created.
+        lastModifiedTime:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp when the config was last modified.
+    DynamicConfigCreate:
+      type: object
+      description: >-
+        Request body for creating a new dynamic config.
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the dynamic config to create.
+        description:
+          type: string
+          description: >-
+            A human-readable description of the config purpose.
+        defaultValue:
+          type: object
+          description: >-
+            The default key-value pairs.
+        tags:
+          type: array
+          items:
+            type: string
+          description: >-
+            Tags to associate with the config.
+    DynamicConfigUpdate:
+      type: object
+      description: >-
+        Request body for partially updating a dynamic config.
+      properties:
+        description:
+          type: string
+          description: >-
+            Updated description.
+        isEnabled:
+          type: boolean
+          description: >-
+            Whether the config should be enabled.
+        defaultValue:
+          type: object
+          description: >-
+            Updated default key-value pairs.
+        tags:
+          type: array
+          items:
+            type: string
+          description: >-
+            Updated tags.
+    Experiment:
+      type: object
+      description: >-
+        An A/B test experiment with defined groups, parameters, and
+        analysis configuration.
+      properties:
+        id:
+          type: string
+          description: >-
+            The unique identifier of the experiment.
+        name:
+          type: string
+          description: >-
+            The name of the experiment.
+        description:
+          type: string
+          description: >-
+            A human-readable description of the experiment.
+        hypothesis:
+          type: string
+          description: >-
+            The hypothesis being tested by this experiment.
+        status:
+          type: string
+          enum:
+            - setup
+            - active
+            - decision_made
+            - abandoned
+          description: >-
+            The current status of the experiment.
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExperimentGroup'
+          description: >-
+            The experiment groups and their parameter configurations.
+        allocation:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: >-
+            The percentage of eligible users allocated to the experiment.
+        layerID:
+          type: string
+          description: >-
+            The layer this experiment belongs to, if any.
+        targetingGateID:
+          type: string
+          description: >-
+            The gate used to filter eligible users for the experiment.
+        tags:
+          type: array
+          items:
+            type: string
+          description: >-
+            Tags associated with the experiment.
+        createdTime:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp when the experiment was created.
+        lastModifiedTime:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp when the experiment was last modified.
+    ExperimentCreate:
+      type: object
+      description: >-
+        Request body for creating a new experiment.
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the experiment to create.
+        description:
+          type: string
+          description: >-
+            A human-readable description.
+        hypothesis:
+          type: string
+          description: >-
+            The hypothesis being tested.
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExperimentGroup'
+          description: >-
+            The experiment groups.
+        allocation:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: >-
+            The percentage of eligible users.
+        layerID:
+          type: string
+          description: >-
+            The layer to assign this experiment to.
+        targetingGateID:
+          type: string
+          description: >-
+            The gate used to filter eligible users.
+        tags:
+          type: array
+          items:
+            type: string
+          description: >-
+            Tags to associate with the experiment.
+    ExperimentUpdate:
+      type: object
+      description: >-
+        Request body for partially updating an experiment.
+      properties:
+        description:
+          type: string
+          description: >-
+            Updated description.
+        hypothesis:
+          type: string
+          description: >-
+            Updated hypothesis.
+        allocation:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: >-
+            Updated allocation percentage.
+        tags:
+          type: array
+          items:
+            type: string
+          description: >-
+            Updated tags.
+    ExperimentGroup:
+      type: object
+      description: >-
+        An experiment group defining parameter values for a set of users.
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the group (e.g., control, test).
+        size:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: >-
+            The percentage of allocated users assigned to this group.
+        parameterValues:
+          type: object
+          description: >-
+            The parameter key-value pairs for this group.
+    Segment:
+      type: object
+      description: >-
+        A user segment defining a group of users for targeting.
+      properties:
+        id:
+          type: string
+          description: >-
+            The unique identifier of the segment.
+        name:
+          type: string
+          description: >-
+            The name of the segment.
+        description:
+          type: string
+          description: >-
+            A human-readable description of the segment.
+        type:
+          type: string
+          description: >-
+            The type of segment (e.g., id_list, rule_based).
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+          description: >-
+            The rules defining segment membership.
+        tags:
+          type: array
+          items:
+            type: string
+          description: >-
+            Tags associated with the segment.
+        createdTime:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp when the segment was created.
+    SegmentCreate:
+      type: object
+      description: >-
+        Request body for creating a new user segment.
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the segment to create.
+        description:
+          type: string
+          description: >-
+            A human-readable description.
+        type:
+          type: string
+          description: >-
+            The type of segment.
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+          description: >-
+            The rules defining segment membership.
+        tags:
+          type: array
+          items:
+            type: string
+          description: >-
+            Tags to associate with the segment.
+    Layer:
+      type: object
+      description: >-
+        A layer that enables sharing parameters across multiple experiments
+        while maintaining mutual exclusivity.
+      properties:
+        id:
+          type: string
+          description: >-
+            The unique identifier of the layer.
+        name:
+          type: string
+          description: >-
+            The name of the layer.
+        description:
+          type: string
+          description: >-
+            A human-readable description of the layer.
+        parameters:
+          type: object
+          description: >-
+            The default parameter values for the layer.
+        experiments:
+          type: array
+          items:
+            type: string
+          description: >-
+            The IDs of experiments associated with this layer.
+        createdTime:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp when the layer was created.
+    LayerCreate:
+      type: object
+      description: >-
+        Request body for creating a new layer.
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the layer to create.
+        description:
+          type: string
+          description: >-
+            A human-readable description.
+        parameters:
+          type: object
+          description: >-
+            The default parameter values for the layer.
+    Holdout:
+      type: object
+      description: >-
+        A holdout group that excludes users from specific features to
+        measure long-term impact.
+      properties:
+        id:
+          type: string
+          description: >-
+            The unique identifier of the holdout.
+        name:
+          type: string
+          description: >-
+            The name of the holdout.
+        description:
+          type: string
+          description: >-
+            A human-readable description.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: >-
+            The percentage of users in the holdout group.
+        gateIDs:
+          type: array
+          items:
+            type: string
+          description: >-
+            The gates affected by this holdout.
+        isEnabled:
+          type: boolean
+          description: >-
+            Whether the holdout is currently active.
+    HoldoutCreate:
+      type: object
+      description: >-
+        Request body for creating a new holdout group.
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the holdout to create.
+        description:
+          type: string
+          description: >-
+            A human-readable description.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: >-
+            The percentage of users in the holdout group.
+        gateIDs:
+          type: array
+          items:
+            type: string
+          description: >-
+            The gates to include in the holdout.
+    Autotune:
+      type: object
+      description: >-
+        An autotune configuration that automatically optimizes parameter
+        values based on a target metric.
+      properties:
+        id:
+          type: string
+          description: >-
+            The unique identifier of the autotune.
+        name:
+          type: string
+          description: >-
+            The name of the autotune.
+        description:
+          type: string
+          description: >-
+            A human-readable description.
+        status:
+          type: string
+          description: >-
+            The current status of the autotune.
+        variants:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: >-
+                  The name of the variant.
+              parameterValues:
+                type: object
+                description: >-
+                  The parameter values for this variant.
+          description: >-
+            The variants being optimized.
+        successMetric:
+          type: string
+          description: >-
+            The metric being optimized for.
+    AutotuneCreate:
+      type: object
+      description: >-
+        Request body for creating a new autotune configuration.
+      required:
+        - name
+        - successMetric
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the autotune to create.
+        description:
+          type: string
+          description: >-
+            A human-readable description.
+        variants:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: >-
+                  The name of the variant.
+              parameterValues:
+                type: object
+                description: >-
+                  The parameter values for this variant.
+          description: >-
+            The variants to optimize.
+        successMetric:
+          type: string
+          description: >-
+            The metric to optimize for.
+    Metric:
+      type: object
+      description: >-
+        A metric definition used in experiment analysis.
+      properties:
+        id:
+          type: string
+          description: >-
+            The unique identifier of the metric.
+        name:
+          type: string
+          description: >-
+            The name of the metric.
+        description:
+          type: string
+          description: >-
+            A human-readable description of the metric.
+        type:
+          type: string
+          description: >-
+            The type of metric (e.g., event_count, ratio, funnel).
+        eventName:
+          type: string
+          description: >-
+            The event name this metric is derived from.
+        tags:
+          type: array
+          items:
+            type: string
+          description: >-
+            Tags associated with the metric.
+    ApiKey:
+      type: object
+      description: >-
+        An API key for accessing Statsig services.
+      properties:
+        key:
+          type: string
+          description: >-
+            The API key value (partially masked).
+        type:
+          type: string
+          enum:
+            - server
+            - client
+            - console
+          description: >-
+            The type of API key.
+        description:
+          type: string
+          description: >-
+            A description of the key purpose.
+        createdTime:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp when the key was created.
+    User:
+      type: object
+      description: >-
+        A user record in the Statsig project.
+      properties:
+        userID:
+          type: string
+          description: >-
+            The unique identifier of the user.
+        email:
+          type: string
+          format: email
+          description: >-
+            The user email address.
+        properties:
+          type: object
+          description: >-
+            Custom properties associated with the user.
+    Tag:
+      type: object
+      description: >-
+        A tag used for organizing and categorizing entities.
+      properties:
+        id:
+          type: string
+          description: >-
+            The unique identifier of the tag.
+        name:
+          type: string
+          description: >-
+            The name of the tag.
+        description:
+          type: string
+          description: >-
+            A human-readable description.
+        color:
+          type: string
+          description: >-
+            The color associated with the tag for display.
+    TagCreate:
+      type: object
+      description: >-
+        Request body for creating a new tag.
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the tag to create.
+        description:
+          type: string
+          description: >-
+            A human-readable description.
+        color:
+          type: string
+          description: >-
+            The color for the tag.
+    TargetApp:
+      type: object
+      description: >-
+        A target application definition that scopes feature configurations.
+      properties:
+        id:
+          type: string
+          description: >-
+            The unique identifier of the target app.
+        name:
+          type: string
+          description: >-
+            The name of the target app.
+        description:
+          type: string
+          description: >-
+            A human-readable description.
+    AuditLogEntry:
+      type: object
+      description: >-
+        An audit log entry recording a change to the project configuration.
+      properties:
+        id:
+          type: string
+          description: >-
+            The unique identifier of the log entry.
+        timestamp:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp when the change occurred.
+        user:
+          type: object
+          properties:
+            name:
+              type: string
+              description: >-
+                The name of the user who made the change.
+            email:
+              type: string
+              format: email
+              description: >-
+                The email of the user who made the change.
+          description: >-
+            The user who made the change.
+        action:
+          type: string
+          description: >-
+            The action performed (e.g., created, updated, deleted).
+        entityType:
+          type: string
+          description: >-
+            The type of entity that was changed (e.g., gate, experiment).
+        entityName:
+          type: string
+          description: >-
+            The name of the entity that was changed.
+        changes:
+          type: object
+          description: >-
+            Details of the changes made.
+    Pagination:
+      type: object
+      description: >-
+        Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: >-
+            Total number of items available.
+        page:
+          type: integer
+          description: >-
+            Current page number.
+        limit:
+          type: integer
+          description: >-
+            Number of items per page.
+        hasMore:
+          type: boolean
+          description: >-
+            Whether more pages are available.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: >-
+                  Error message describing the authentication failure.
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: >-
+                  Error message describing what was wrong with the request.
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: >-
+                  Error message indicating the resource was not found.

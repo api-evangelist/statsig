@@ -1,0 +1,254 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "statsig": "https://schemas.statsig.com/ns/",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+
+    "FeatureGate": {
+      "@id": "statsig:FeatureGate",
+      "@context": {
+        "name": "schema:name",
+        "description": "schema:description",
+        "isEnabled": "statsig:isEnabled",
+        "status": "statsig:status",
+        "rules": {
+          "@id": "statsig:rules",
+          "@container": "@set"
+        },
+        "overrides": "statsig:overrides",
+        "tags": {
+          "@id": "schema:keywords",
+          "@container": "@set"
+        },
+        "targetApps": {
+          "@id": "statsig:targetApps",
+          "@container": "@set"
+        },
+        "createdTime": {
+          "@id": "dcterms:created",
+          "@type": "xsd:dateTime"
+        },
+        "lastModifiedTime": {
+          "@id": "dcterms:modified",
+          "@type": "xsd:dateTime"
+        }
+      }
+    },
+
+    "DynamicConfig": {
+      "@id": "statsig:DynamicConfig",
+      "@context": {
+        "name": "schema:name",
+        "description": "schema:description",
+        "isEnabled": "statsig:isEnabled",
+        "defaultValue": "statsig:defaultValue",
+        "rules": {
+          "@id": "statsig:rules",
+          "@container": "@set"
+        },
+        "tags": {
+          "@id": "schema:keywords",
+          "@container": "@set"
+        },
+        "createdTime": {
+          "@id": "dcterms:created",
+          "@type": "xsd:dateTime"
+        },
+        "lastModifiedTime": {
+          "@id": "dcterms:modified",
+          "@type": "xsd:dateTime"
+        }
+      }
+    },
+
+    "Experiment": {
+      "@id": "statsig:Experiment",
+      "@context": {
+        "name": "schema:name",
+        "description": "schema:description",
+        "hypothesis": "statsig:hypothesis",
+        "status": "statsig:status",
+        "groups": {
+          "@id": "statsig:groups",
+          "@container": "@set"
+        },
+        "allocation": "statsig:allocation",
+        "layer": {
+          "@id": "statsig:layer",
+          "@type": "@id"
+        },
+        "targetingGate": {
+          "@id": "statsig:targetingGate",
+          "@type": "@id"
+        },
+        "primaryMetrics": {
+          "@id": "statsig:primaryMetrics",
+          "@container": "@set"
+        },
+        "secondaryMetrics": {
+          "@id": "statsig:secondaryMetrics",
+          "@container": "@set"
+        },
+        "tags": {
+          "@id": "schema:keywords",
+          "@container": "@set"
+        },
+        "startedTime": {
+          "@id": "statsig:startedTime",
+          "@type": "xsd:dateTime"
+        },
+        "createdTime": {
+          "@id": "dcterms:created",
+          "@type": "xsd:dateTime"
+        },
+        "lastModifiedTime": {
+          "@id": "dcterms:modified",
+          "@type": "xsd:dateTime"
+        }
+      }
+    },
+
+    "ExperimentGroup": {
+      "@id": "statsig:ExperimentGroup",
+      "@context": {
+        "name": "schema:name",
+        "size": "statsig:size",
+        "parameterValues": "statsig:parameterValues"
+      }
+    },
+
+    "Layer": {
+      "@id": "statsig:Layer",
+      "@context": {
+        "name": "schema:name",
+        "description": "schema:description",
+        "parameters": "statsig:parameters",
+        "experiments": {
+          "@id": "statsig:experiments",
+          "@container": "@set"
+        },
+        "createdTime": {
+          "@id": "dcterms:created",
+          "@type": "xsd:dateTime"
+        }
+      }
+    },
+
+    "Segment": {
+      "@id": "statsig:Segment",
+      "@context": {
+        "name": "schema:name",
+        "description": "schema:description",
+        "type": "statsig:segmentType",
+        "rules": {
+          "@id": "statsig:rules",
+          "@container": "@set"
+        },
+        "tags": {
+          "@id": "schema:keywords",
+          "@container": "@set"
+        },
+        "createdTime": {
+          "@id": "dcterms:created",
+          "@type": "xsd:dateTime"
+        }
+      }
+    },
+
+    "Rule": {
+      "@id": "statsig:Rule",
+      "@context": {
+        "name": "schema:name",
+        "passPercentage": "statsig:passPercentage",
+        "conditions": {
+          "@id": "statsig:conditions",
+          "@container": "@set"
+        },
+        "returnValue": "statsig:returnValue",
+        "environments": {
+          "@id": "statsig:environments",
+          "@container": "@set"
+        }
+      }
+    },
+
+    "Condition": {
+      "@id": "statsig:Condition",
+      "@context": {
+        "type": "statsig:conditionType",
+        "targetValue": "statsig:targetValue",
+        "operator": "statsig:operator",
+        "field": "statsig:field"
+      }
+    },
+
+    "Metric": {
+      "@id": "statsig:Metric",
+      "@context": {
+        "name": "schema:name",
+        "description": "schema:description",
+        "type": "statsig:metricType",
+        "eventName": "statsig:eventName",
+        "tags": {
+          "@id": "schema:keywords",
+          "@container": "@set"
+        }
+      }
+    },
+
+    "Event": {
+      "@id": "statsig:Event",
+      "@context": {
+        "eventName": "schema:name",
+        "user": {
+          "@id": "statsig:user",
+          "@type": "@id"
+        },
+        "time": {
+          "@id": "dcterms:date",
+          "@type": "xsd:dateTime"
+        },
+        "value": "schema:value",
+        "metadata": "statsig:metadata"
+      }
+    },
+
+    "StatsigUser": {
+      "@id": "statsig:StatsigUser",
+      "@context": {
+        "userID": "schema:identifier",
+        "email": "schema:email",
+        "name": "schema:name",
+        "country": "schema:addressCountry",
+        "locale": "schema:inLanguage",
+        "appVersion": "schema:softwareVersion"
+      }
+    },
+
+    "Holdout": {
+      "@id": "statsig:Holdout",
+      "@context": {
+        "name": "schema:name",
+        "description": "schema:description",
+        "passPercentage": "statsig:passPercentage",
+        "isEnabled": "statsig:isEnabled"
+      }
+    },
+
+    "Autotune": {
+      "@id": "statsig:Autotune",
+      "@context": {
+        "name": "schema:name",
+        "description": "schema:description",
+        "status": "statsig:status",
+        "variants": {
+          "@id": "statsig:variants",
+          "@container": "@set"
+        },
+        "successMetric": "statsig:successMetric"
+      }
+    }
+  }
+}
