@@ -22,34 +22,34 @@ servers:
   - url: https://api.statsig.com/v1
     description: Statsig API Server
 tags:
-  - name: Feature Gates
-    description: >-
-      Endpoints for evaluating feature gates for users, returning boolean
-      pass/fail values along with rule identification.
-  - name: Dynamic Configs
-    description: >-
-      Endpoints for fetching dynamic configuration values for users, supporting
-      both dynamic configs and experiments.
-  - name: Experiments
-    description: >-
-      Endpoints for retrieving experiment configurations and group assignments
-      for users.
-  - name: Layers
-    description: >-
-      Endpoints for fetching layer parameter values, enabling shared parameters
-      across multiple experiments.
-  - name: Initialization
-    description: >-
-      Endpoints for initializing client SDKs with all evaluated gates, configs,
-      experiments, and layers for a given user.
-  - name: Events
-    description: >-
-      Endpoints for logging custom events and exposure data to Statsig for
-      analytics and experiment analysis.
   - name: Configuration
     description: >-
       Endpoints for downloading full project configuration specs for server-side
       local evaluation.
+  - name: Dynamic Configs
+    description: >-
+      Endpoints for fetching dynamic configuration values for users, supporting
+      both dynamic configs and experiments.
+  - name: Events
+    description: >-
+      Endpoints for logging custom events and exposure data to Statsig for
+      analytics and experiment analysis.
+  - name: Experiments
+    description: >-
+      Endpoints for retrieving experiment configurations and group assignments
+      for users.
+  - name: Feature Gates
+    description: >-
+      Endpoints for evaluating feature gates for users, returning boolean
+      pass/fail values along with rule identification.
+  - name: Initialization
+    description: >-
+      Endpoints for initializing client SDKs with all evaluated gates, configs,
+      experiments, and layers for a given user.
+  - name: Layers
+    description: >-
+      Endpoints for fetching layer parameter values, enabling shared parameters
+      across multiple experiments.
 security:
   - statsigApiKey: []
 paths:

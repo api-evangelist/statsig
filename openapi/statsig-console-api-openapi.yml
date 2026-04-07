@@ -23,10 +23,14 @@ servers:
   - url: https://statsigapi.net/console/v1
     description: Statsig Console API Server
 tags:
-  - name: Gates
+  - name: Audit Logs
     description: >-
-      Manage feature gates including creation, updates, rules, overrides,
-      enabling, disabling, launching, and archiving.
+      Access audit log entries tracking changes made to project
+      configuration through the console or API.
+  - name: Autotunes
+    description: >-
+      Manage autotune configurations that automatically optimize
+      parameter values based on a target metric.
   - name: Dynamic Configs
     description: >-
       Manage dynamic configurations with full CRUD operations for
@@ -35,46 +39,38 @@ tags:
     description: >-
       Manage A/B test experiments including creation, configuration,
       starting, resetting, and analysis.
-  - name: Segments
+  - name: Gates
     description: >-
-      Manage user segments for targeting rules across gates, configs,
-      and experiments.
-  - name: Layers
-    description: >-
-      Manage layers that enable sharing parameters across multiple
-      experiments while maintaining mutual exclusivity.
+      Manage feature gates including creation, updates, rules, overrides,
+      enabling, disabling, launching, and archiving.
   - name: Holdouts
     description: >-
       Manage holdout groups that exclude users from receiving specific
       features for measuring long-term impact.
-  - name: Autotunes
-    description: >-
-      Manage autotune configurations that automatically optimize
-      parameter values based on a target metric.
-  - name: Metrics
-    description: >-
-      Access and manage metric definitions and metric sources used
-      in experiment analysis.
   - name: Keys
     description: >-
       Manage API keys for the project including server secret keys,
       client SDK keys, and console API keys.
-  - name: Users
+  - name: Layers
     description: >-
-      Manage user data and lookup user properties within the Statsig
-      project.
-  - name: Tags
+      Manage layers that enable sharing parameters across multiple
+      experiments while maintaining mutual exclusivity.
+  - name: Metrics
     description: >-
-      Manage tags used for organizing and categorizing gates, configs,
-      experiments, and other entities.
+      Access and manage metric definitions and metric sources used
+      in experiment analysis.
+  - name: Segments
+    description: >-
+      Manage user segments for targeting rules across gates, configs,
+      and experiments.
   - name: Target Apps
     description: >-
       Manage target application definitions that scope feature
       configurations to specific applications.
-  - name: Audit Logs
+  - name: Users
     description: >-
-      Access audit log entries tracking changes made to project
-      configuration through the console or API.
+      Manage user data and lookup user properties within the Statsig
+      project.
 security:
   - consoleApiKey: []
 paths:
@@ -1328,8 +1324,7 @@ paths:
       description: >-
         Retrieves a list of all tags used for organizing entities in
         the project.
-      tags:
-        - Tags
+      tags: []
       parameters:
         - $ref: '#/components/parameters/ApiVersion'
       responses:
@@ -1351,8 +1346,7 @@ paths:
       summary: Create a tag
       description: >-
         Creates a new tag for organizing entities in the project.
-      tags:
-        - Tags
+      tags: []
       parameters:
         - $ref: '#/components/parameters/ApiVersion'
       requestBody:

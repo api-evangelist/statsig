@@ -1,18 +1,16 @@
 aid: statsig
-url: 
-  https://raw.githubusercontent.com/api-evangelist/statsig/refs/heads/main/apis.yml
+url: https://raw.githubusercontent.com/api-evangelist/statsig/refs/heads/main/apis.yml
 modified: '2026-03-20'
 apis:
   - aid: statsig:http-api
     name: Statsig HTTP API
     tags:
-      - Feature Flags
-      - Experimentation
       - A/B Testing
-      - Dynamic Configuration
       - Analytics
-    image: 
-      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+      - Dynamic Configuration
+      - Experimentation
+      - Feature Flags
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://api.statsig.com
     humanURL: https://docs.statsig.com/http-api/
     properties:
@@ -29,13 +27,12 @@ apis:
   - aid: statsig:console-api
     name: Statsig Console API
     tags:
-      - Feature Flags
-      - Experimentation
-      - Configuration Management
       - Administration
       - Automation
-    image: 
-      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+      - Configuration Management
+      - Experimentation
+      - Feature Flags
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://statsigapi.net/console/v1
     humanURL: https://docs.statsig.com/console-api/
     properties:
@@ -52,13 +49,12 @@ apis:
   - aid: statsig:client-sdk-api
     name: Statsig Client SDK API
     tags:
-      - Feature Flags
       - Client Side
+      - Feature Flags
       - Mobile
-      - Web
       - SDKs
-    image: 
-      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+      - Web
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://api.statsig.com
     humanURL: https://docs.statsig.com/client/introduction
     properties:
@@ -76,13 +72,12 @@ apis:
   - aid: statsig:server-sdk-api
     name: Statsig Server SDK API
     tags:
-      - Feature Flags
-      - Server Side
-      - SDKs
       - Backend
       - Evaluation
-    image: 
-      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+      - Feature Flags
+      - SDKs
+      - Server Side
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://api.statsig.com
     humanURL: https://docs.statsig.com/server/introduction
     properties:
@@ -99,13 +94,12 @@ apis:
   - aid: statsig:events-api
     name: Statsig Events API
     tags:
-      - Events
       - Analytics
       - Data Ingestion
-      - Metrics
+      - Events
       - Logging
-    image: 
-      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+      - Metrics
+    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://events.statsigapi.net
     humanURL: https://docs.statsig.com/http-api/
     properties:

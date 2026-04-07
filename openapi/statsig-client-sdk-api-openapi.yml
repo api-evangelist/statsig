@@ -22,14 +22,14 @@ servers:
   - url: https://api.statsig.com/v1
     description: Statsig API Server
 tags:
-  - name: Initialization
-    description: >-
-      Endpoints for initializing client SDKs with all evaluated feature
-      gates, configs, experiments, and layers for a given user.
   - name: Events
     description: >-
       Endpoints for logging custom events and exposure data from
       client-side applications.
+  - name: Initialization
+    description: >-
+      Endpoints for initializing client SDKs with all evaluated feature
+      gates, configs, experiments, and layers for a given user.
 security:
   - clientSdkKey: []
 paths:
