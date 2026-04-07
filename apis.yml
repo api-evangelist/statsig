@@ -1,5 +1,6 @@
 aid: statsig
-url: https://raw.githubusercontent.com/api-evangelist/statsig/refs/heads/main/apis.yml
+url: 
+  https://raw.githubusercontent.com/api-evangelist/statsig/refs/heads/main/apis.yml
 modified: '2026-03-20'
 apis:
   - aid: statsig:http-api
@@ -10,7 +11,8 @@ apis:
       - A/B Testing
       - Dynamic Configuration
       - Analytics
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: 
+      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://api.statsig.com
     humanURL: https://docs.statsig.com/http-api/
     properties:
@@ -19,14 +21,11 @@ apis:
       - url: openapi/statsig-http-api-openapi.yml
         type: OpenAPI
     description: >-
-      The Statsig HTTP API allows developers to evaluate feature gates, dynamic
-      configs, and experiments for users via server-side HTTP requests. It
-      provides endpoints for checking gate values, fetching configuration data,
-      and logging custom events. All requests use the POST method with JSON
-      request bodies and require authentication via the statsig-api-key header.
-      While Statsig recommends using their official SDKs for most use cases, the
-      HTTP API is available for environments where an SDK is not available or
-      when direct HTTP integration is preferred.
+      The Statsig HTTP API allows developers to evaluate feature gates, dynamic configs,
+      and experiments for users via server-side HTTP requests. It provides endpoints
+      for checking gate values, fetching configuration data, and logging custom events.
+      All requests use the POST method with JSON request bodies and require authentication
+      via the statsig-api-key header.
   - aid: statsig:console-api
     name: Statsig Console API
     tags:
@@ -35,7 +34,8 @@ apis:
       - Configuration Management
       - Administration
       - Automation
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: 
+      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://statsigapi.net/console/v1
     humanURL: https://docs.statsig.com/console-api/
     properties:
@@ -44,14 +44,11 @@ apis:
       - url: openapi/statsig-console-api-openapi.yml
         type: OpenAPI
     description: >-
-      The Statsig Console API enables developers to programmatically manage
-      their Statsig project configuration. It supports full CRUD operations on
-      feature gates, dynamic configs, experiments, segments, layers, and other
-      entities. The API requires a Console API Key and uses versioned endpoints
-      with the STATSIG-API-VERSION header. It is designed for automation
-      workflows such as bulk configuration edits, syncing definitions into
-      Statsig from external systems, and integrating Statsig management into
-      CI/CD pipelines.
+      The Statsig Console API enables developers to programmatically manage their
+      Statsig project configuration. It supports full CRUD operations on feature gates,
+      dynamic configs, experiments, segments, layers, and other entities. The API
+      requires a Console API Key and uses versioned endpoints with the STATSIG-API-VERSION
+      header.
   - aid: statsig:client-sdk-api
     name: Statsig Client SDK API
     tags:
@@ -60,7 +57,8 @@ apis:
       - Mobile
       - Web
       - SDKs
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: 
+      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://api.statsig.com
     humanURL: https://docs.statsig.com/client/introduction
     properties:
@@ -69,14 +67,12 @@ apis:
       - url: openapi/statsig-client-sdk-api-openapi.yml
         type: OpenAPI
     description: >-
-      The Statsig Client SDK API provides endpoints that power Statsig's
-      client-side SDKs for JavaScript, React, React Native, iOS, Android,
-      Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe
-      to embed in mobile apps and front-end web applications. They access the
-      initialize endpoint to retrieve all evaluated gates, configs, and
-      experiments for a given user, and the log_event endpoint for sending
-      analytics events. The SDKs handle local evaluation, caching, and
-      automatic error handling for performant client-side feature flagging.
+      The Statsig Client SDK API provides endpoints that power Statsig's client-side
+      SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms.
+      Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end
+      web applications. They access the initialize endpoint to retrieve all evaluated
+      gates, configs, and experiments for a given user, and the log_event endpoint
+      for sending analytics events.
   - aid: statsig:server-sdk-api
     name: Statsig Server SDK API
     tags:
@@ -85,7 +81,8 @@ apis:
       - SDKs
       - Backend
       - Evaluation
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: 
+      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://api.statsig.com
     humanURL: https://docs.statsig.com/server/introduction
     properties:
@@ -94,14 +91,11 @@ apis:
       - url: openapi/statsig-server-sdk-api-openapi.yml
         type: OpenAPI
     description: >-
-      The Statsig Server SDK API provides endpoints that power Statsig's
-      server-side SDKs for Node.js, Python, Java, Ruby, Go, .NET, and other
-      backend languages. Server SDKs use Server Secret Keys and access the
-      download_config_specs endpoint to retrieve the full project configuration
-      for local evaluation. This enables sub-millisecond feature gate checks
-      without per-request network calls. The server SDKs also use the log_event
-      endpoint for sending exposure and custom event data back to Statsig for
-      analytics and experiment analysis.
+      The Statsig Server SDK API provides endpoints that power Statsig's server-side
+      SDKs for Node.js, Python, Java, Ruby, Go, .NET, and other backend languages.
+      Server SDKs use Server Secret Keys and access the download_config_specs endpoint
+      to retrieve the full project configuration for local evaluation. This enables
+      sub-millisecond feature gate checks without per-request network calls.
   - aid: statsig:events-api
     name: Statsig Events API
     tags:
@@ -110,7 +104,8 @@ apis:
       - Data Ingestion
       - Metrics
       - Logging
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: 
+      https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
     baseURL: https://events.statsigapi.net
     humanURL: https://docs.statsig.com/http-api/
     properties:
@@ -138,3 +133,7 @@ common:
     url: json-schema/statsig-experiment-schema.json
   - type: JSONSchema
     url: json-schema/statsig-event-schema.json
+description: >-
+  Statsig is a feature management and experimentation platform that helps product
+  teams ship features safely with feature flags, run A/B tests, and measure the impact
+  of every feature on key metrics.
