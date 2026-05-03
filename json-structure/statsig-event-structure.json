@@ -1,0 +1,28 @@
+{
+  "name": "StatsigEvent",
+  "description": "A Statsig event for analytics and experiment analysis.",
+  "fields": [
+    { "name": "user", "type": "StatsigUser", "required": true, "description": "The user associated with the event." },
+    { "name": "eventName", "type": "string", "required": true, "description": "Name of the event." },
+    { "name": "time", "type": "integer", "required": true, "description": "Timestamp in milliseconds since epoch." },
+    { "name": "value", "type": "string|number", "required": false, "description": "Optional event value." },
+    { "name": "metadata", "type": "object", "required": false, "description": "Optional key-value metadata." }
+  ],
+  "nested": [
+    {
+      "name": "StatsigUser",
+      "fields": [
+        { "name": "userID", "type": "string", "required": false, "description": "Unique user identifier." },
+        { "name": "email", "type": "string", "required": false, "description": "User email address." },
+        { "name": "ip", "type": "string", "required": false, "description": "User IP address." },
+        { "name": "userAgent", "type": "string", "required": false, "description": "User agent string." },
+        { "name": "country", "type": "string", "required": false, "description": "Two-letter country code." },
+        { "name": "locale", "type": "string", "required": false, "description": "Locale identifier." },
+        { "name": "appVersion", "type": "string", "required": false, "description": "Application version." },
+        { "name": "custom", "type": "object", "required": false, "description": "Custom user properties." },
+        { "name": "privateAttributes", "type": "object", "required": false, "description": "Private attributes (stripped before logging)." },
+        { "name": "customIDs", "type": "object", "required": false, "description": "Custom identifier mappings." }
+      ]
+    }
+  ]
+}

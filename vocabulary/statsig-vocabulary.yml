@@ -1,0 +1,234 @@
+name: Statsig Vocabulary
+description: >-
+  Domain vocabulary for Statsig's feature management and experimentation
+  platform covering feature gates, A/B testing, dynamic configuration,
+  and analytics concepts.
+version: '1.0.0'
+created: '2026-05-02'
+modified: '2026-05-02'
+
+terms:
+  - term: Feature Gate
+    definition: >-
+      A boolean flag that controls whether a feature is enabled for a
+      given user. Evaluated using targeting rules based on user properties
+      such as user ID, email, country, or custom attributes.
+    synonyms:
+      - Feature Flag
+      - Feature Toggle
+    tags:
+      - Feature Management
+      - Core
+
+  - term: Dynamic Config
+    definition: >-
+      A key-value configuration object that returns different values for
+      different users based on targeting rules. Enables server-driven
+      configuration without app deployments.
+    synonyms:
+      - Remote Config
+      - Dynamic Configuration
+    tags:
+      - Configuration
+      - Core
+
+  - term: Experiment
+    definition: >-
+      An A/B test or multivariate test that assigns users to different
+      groups and measures the impact of parameter variations on key
+      metrics. Experiments have a hypothesis, groups with parameter values,
+      and an allocation percentage.
+    synonyms:
+      - A/B Test
+      - Split Test
+      - Multivariate Test
+    tags:
+      - Experimentation
+      - Core
+
+  - term: Layer
+    definition: >-
+      A namespace for parameters shared across multiple mutually exclusive
+      experiments. Users are assigned to only one experiment per layer,
+      preventing interaction effects between tests.
+    tags:
+      - Experimentation
+      - Organization
+
+  - term: Holdout
+    definition: >-
+      A group of users excluded from receiving specific features to measure
+      the cumulative long-term impact of feature launches. Holdouts help
+      identify interaction effects and sustained improvements.
+    tags:
+      - Experimentation
+      - Measurement
+
+  - term: Autotune
+    definition: >-
+      A multi-armed bandit optimization system that automatically shifts
+      traffic to the best-performing variant based on a target success
+      metric, without manual intervention.
+    tags:
+      - Optimization
+      - Machine Learning
+
+  - term: Exposure Event
+    definition: >-
+      An automatically logged event that records when a user evaluates a
+      feature gate, dynamic config, or experiment. Used to accurately
+      count experiment participants and calculate metric impacts.
+    tags:
+      - Events
+      - Analytics
+
+  - term: Rule
+    definition: >-
+      A targeting condition within a feature gate or dynamic config that
+      defines which users match and what value they receive. Rules include
+      conditions (user ID, email, country, custom fields), a pass percentage,
+      and a return value.
+    tags:
+      - Feature Management
+      - Targeting
+
+  - term: Condition
+    definition: >-
+      A single predicate within a targeting rule that evaluates a user
+      attribute against a target value using an operator. Condition types
+      include user_id, email, country, custom_field, and segment membership.
+    tags:
+      - Targeting
+      - Rules
+
+  - term: Server Secret Key
+    definition: >-
+      A confidential API key used by server-side SDKs and server-side
+      HTTP API calls. Must only be used in trusted server environments
+      and never exposed in client-side code.
+    tags:
+      - Authentication
+      - Security
+
+  - term: Client SDK Key
+    definition: >-
+      A publishable API key used by client-side SDKs in mobile apps and
+      front-end web applications. Safe to embed in public code as it
+      only provides read access to evaluated configurations.
+    tags:
+      - Authentication
+      - SDKs
+
+  - term: Console API Key
+    definition: >-
+      A management API key for the Statsig Console API, granting full
+      CRUD access to project configuration. Should be kept confidential.
+    tags:
+      - Authentication
+      - Administration
+
+  - term: Download Config Specs
+    definition: >-
+      The endpoint used by server SDKs to download the complete project
+      configuration for local evaluation. Enables sub-millisecond feature
+      gate checks by eliminating per-request network calls.
+    tags:
+      - Server SDK
+      - Performance
+
+  - term: Local Evaluation
+    definition: >-
+      The process of evaluating feature gates and experiments entirely
+      within the SDK using downloaded configuration specs, without making
+      network requests for each evaluation.
+    tags:
+      - Server SDK
+      - Performance
+
+  - term: Segment
+    definition: >-
+      A reusable user group definition used in targeting rules. Segments
+      can be ID-list based (specific user IDs) or rule-based (matching
+      conditions).
+    tags:
+      - Targeting
+      - Organization
+
+  - term: Target App
+    definition: >-
+      A definition that scopes feature configurations to a specific
+      application (e.g., iOS app, Android app, web app), enabling
+      multi-app management from a single Statsig project.
+    tags:
+      - Organization
+      - Multi-App
+
+  - term: Audit Log
+    definition: >-
+      A timestamped record of all changes made to project configuration
+      through the Console or API, tracking who changed what and when.
+    tags:
+      - Governance
+      - Compliance
+
+  - term: Override
+    definition: >-
+      A manual assignment forcing specific users or IDs to always receive
+      a specific gate value or config, bypassing normal targeting rules.
+      Used for testing, debugging, and internal users.
+    tags:
+      - Testing
+      - Feature Management
+
+  - term: Custom ID
+    definition: >-
+      An alternative identifier for users beyond the standard userID,
+      allowing targeting by company ID, device ID, or other custom
+      identifier types.
+    tags:
+      - Targeting
+      - User Identity
+
+  - term: Private Attributes
+    definition: >-
+      User attributes used for evaluation but stripped from event logs
+      before being sent to Statsig servers, protecting sensitive user data.
+    tags:
+      - Privacy
+      - User Identity
+
+categories:
+  - name: Core Concepts
+    terms:
+      - Feature Gate
+      - Dynamic Config
+      - Experiment
+      - Layer
+  - name: Advanced Features
+    terms:
+      - Holdout
+      - Autotune
+      - Segment
+      - Target App
+  - name: Targeting
+    terms:
+      - Rule
+      - Condition
+      - Override
+      - Custom ID
+  - name: Authentication
+    terms:
+      - Server Secret Key
+      - Client SDK Key
+      - Console API Key
+  - name: Analytics
+    terms:
+      - Exposure Event
+  - name: Performance
+    terms:
+      - Download Config Specs
+      - Local Evaluation
+  - name: Governance
+    terms:
+      - Audit Log
+      - Private Attributes

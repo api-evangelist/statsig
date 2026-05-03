@@ -1,0 +1,43 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "https://statsigapi.net/console/v1/gates?limit=10&page=1",
+    "headers": {
+      "STATSIG-API-KEY": "console-your-console-api-key",
+      "STATSIG-API-VERSION": "20240601"
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "data": [
+        {
+          "id": "dark_mode_beta",
+          "name": "dark_mode_beta",
+          "description": "Controls access to dark mode UI feature",
+          "isEnabled": true,
+          "status": "active",
+          "tags": ["Beta", "UI"],
+          "createdTime": 1746230400000,
+          "lastModifiedTime": 1746230400000
+        },
+        {
+          "id": "new_checkout_flow",
+          "name": "new_checkout_flow",
+          "description": "Enables redesigned checkout experience",
+          "isEnabled": true,
+          "status": "active",
+          "tags": ["Checkout", "Revenue"],
+          "createdTime": 1746100000000,
+          "lastModifiedTime": 1746200000000
+        }
+      ],
+      "pagination": {
+        "total": 47,
+        "page": 1,
+        "limit": 10,
+        "hasMore": true
+      }
+    }
+  }
+}

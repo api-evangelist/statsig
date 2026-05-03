@@ -1,0 +1,29 @@
+{
+  "name": "FeatureGate",
+  "description": "A Statsig feature gate controlling access to features based on targeting rules.",
+  "fields": [
+    { "name": "id", "type": "string", "required": true, "description": "Unique gate identifier." },
+    { "name": "name", "type": "string", "required": true, "description": "Gate name." },
+    { "name": "description", "type": "string", "required": false, "description": "Gate description." },
+    { "name": "isEnabled", "type": "boolean", "required": false, "description": "Whether the gate is enabled." },
+    { "name": "status", "type": "string", "required": false, "enum": ["active", "disabled", "launched", "archived"], "description": "Gate lifecycle status." },
+    { "name": "rules", "type": "array", "required": false, "description": "Targeting rules." },
+    { "name": "tags", "type": "array", "required": false, "description": "Organizational tags." },
+    { "name": "targetApps", "type": "array", "required": false, "description": "Scoped target applications." },
+    { "name": "createdTime", "type": "integer", "required": false, "description": "Creation timestamp (ms)." },
+    { "name": "lastModifiedTime", "type": "integer", "required": false, "description": "Last modification timestamp (ms)." }
+  ],
+  "nested": [
+    {
+      "name": "Rule",
+      "fields": [
+        { "name": "id", "type": "string", "required": false },
+        { "name": "name", "type": "string", "required": false },
+        { "name": "passPercentage", "type": "number", "required": false, "description": "0-100 percentage of matching users who pass." },
+        { "name": "conditions", "type": "array", "required": false },
+        { "name": "returnValue", "type": "object", "required": false },
+        { "name": "environments", "type": "array", "required": false }
+      ]
+    }
+  ]
+}

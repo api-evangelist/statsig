@@ -1,0 +1,32 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://api.statsig.com/v1/check_gate",
+    "headers": {
+      "Content-Type": "application/json",
+      "statsig-api-key": "secret-your-server-secret-key"
+    },
+    "body": {
+      "user": {
+        "userID": "user-123",
+        "email": "alice@example.com",
+        "country": "US",
+        "appVersion": "2.5.1",
+        "custom": {
+          "plan": "premium",
+          "company": "acme-corp"
+        }
+      },
+      "gateName": "new_checkout_flow"
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "name": "new_checkout_flow",
+      "value": true,
+      "rule_id": "targeted_premium_users",
+      "group_name": "Premium Users"
+    }
+  }
+}

@@ -1,0 +1,129 @@
+extends: spectral:oas
+rules:
+  statsig-api-key-header:
+    description: >-
+      Statsig APIs require authentication via the statsig-api-key header.
+      All operations must declare this security requirement.
+    message: >-
+      Operations should declare statsig-api-key header authentication.
+    severity: error
+    given: "$.paths[*][*]"
+    then:
+      field: security
+      function: truthy
+
+  statsig-operation-ids-camel-case:
+    description: >-
+      Statsig API operation IDs use camelCase naming convention throughout
+      the HTTP, Console, Events, Client SDK, and Server SDK APIs.
+    message: "Operation ID '{{value}}' should use camelCase."
+    severity: warn
+    given: "$.paths[*][*].operationId"
+    then:
+      function: casing
+      functionOptions:
+        type: camel
+
+  statsig-summaries-title-case:
+    description: >-
+      All Statsig API operation summaries must use Title Case for
+      readability and consistency across all API specifications.
+    message: "Summary '{{value}}' should be in Title Case."
+    severity: warn
+    given: "$.paths[*][*].summary"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[A-Z][a-zA-Z0-9]*(\\s[A-Za-z][a-zA-Z0-9]*)*$"
+
+  statsig-tags-required:
+    description: >-
+      Every Statsig API operation must declare at least one tag for
+      proper documentation grouping.
+    message: "Operations must declare at least one tag."
+    severity: error
+    given: "$.paths[*][*]"
+    then:
+      field: tags
+      function: truthy
+
+  statsig-client-time-header:
+    description: >-
+      Log event operations in Statsig APIs require the STATSIG-CLIENT-TIME
+      header for timestamp normalization. Operations that accept events
+      must declare this header parameter.
+    message: >-
+      Event logging endpoints must require the STATSIG-CLIENT-TIME header
+      parameter.
+    severity: warn
+    given: "$.paths['/log_event'][*].parameters[?(@.name == 'STATSIG-CLIENT-TIME')]"
+    then:
+      field: required
+      function: truthy
+
+  statsig-pagination-parameters:
+    description: >-
+      Console API list operations use limit and page query parameters
+      for pagination. List endpoints should declare these parameters.
+    message: >-
+      List operations should include limit and page query parameters
+      for pagination.
+    severity: hint
+    given: "$.paths[?(!@ =~ /.*\\{.*\\}.*/)]..get.parameters[?(@.name == 'limit')]"
+    then:
+      field: schema.maximum
+      function: truthy
+
+  statsig-api-version-header:
+    description: >-
+      The Console API uses STATSIG-API-VERSION header for versioning.
+      Console API operations should declare this optional header parameter.
+    message: >-
+      Console API operations should declare the STATSIG-API-VERSION header
+      parameter.
+    severity: hint
+    given: "$.paths[*].get.parameters[?(@.name == 'STATSIG-API-VERSION')]"
+    then:
+      field: schema.default
+      function: truthy
+
+  statsig-console-resource-ids:
+    description: >-
+      Statsig Console API uses string-type IDs (gate names, config names)
+      as path parameters rather than numeric IDs.
+    message: >-
+      Path parameter 'id' in Console API paths should be typed as string.
+    severity: warn
+    given: "$.paths[*][*].parameters[?(@.name == 'id' && @.in == 'path')]"
+    then:
+      field: schema.type
+      function: enumeration
+      functionOptions:
+        values:
+          - string
+
+  statsig-events-202-response:
+    description: >-
+      Statsig event ingestion endpoints return 202 Accepted (not 200 OK)
+      since events are processed asynchronously.
+    message: >-
+      Event logging operations should return 202 (Accepted) not 200 (OK)
+      since events are processed asynchronously.
+    severity: warn
+    given: "$.paths['/log_event'][*].responses"
+    then:
+      field: "202"
+      function: truthy
+
+  statsig-success-boolean-response:
+    description: >-
+      Statsig API event endpoints return a simple {"success": true} response
+      body on success. Responses should follow this consistent pattern.
+    message: >-
+      Event endpoint success responses should include a "success" boolean
+      property.
+    severity: hint
+    given: "$.paths['/log_event'][*].responses['202'].content['application/json'].schema.properties"
+    then:
+      field: success
+      function: truthy

@@ -1,0 +1,62 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://statsigapi.net/console/v1/experiments",
+    "headers": {
+      "Content-Type": "application/json",
+      "STATSIG-API-KEY": "console-your-console-api-key",
+      "STATSIG-API-VERSION": "20240601"
+    },
+    "body": {
+      "name": "checkout_button_color_test",
+      "description": "Testing the effect of button color on checkout conversion rate",
+      "hypothesis": "A green checkout button will increase conversion rate by 5% compared to the default blue button",
+      "groups": [
+        {
+          "name": "Control",
+          "size": 50,
+          "parameterValues": {
+            "button_color": "blue",
+            "button_text": "Complete Purchase"
+          }
+        },
+        {
+          "name": "Green Button",
+          "size": 50,
+          "parameterValues": {
+            "button_color": "green",
+            "button_text": "Complete Purchase"
+          }
+        }
+      ],
+      "allocation": 20,
+      "tags": ["Checkout", "Conversion", "UI"]
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "id": "checkout_button_color_test",
+      "name": "checkout_button_color_test",
+      "description": "Testing the effect of button color on checkout conversion rate",
+      "hypothesis": "A green checkout button will increase conversion rate by 5% compared to the default blue button",
+      "status": "setup",
+      "groups": [
+        {
+          "name": "Control",
+          "size": 50,
+          "parameterValues": { "button_color": "blue", "button_text": "Complete Purchase" }
+        },
+        {
+          "name": "Green Button",
+          "size": 50,
+          "parameterValues": { "button_color": "green", "button_text": "Complete Purchase" }
+        }
+      ],
+      "allocation": 20,
+      "tags": ["Checkout", "Conversion", "UI"],
+      "createdTime": 1746230400000,
+      "lastModifiedTime": 1746230400000
+    }
+  }
+}

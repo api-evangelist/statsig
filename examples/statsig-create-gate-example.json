@@ -1,0 +1,60 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "https://statsigapi.net/console/v1/gates",
+    "headers": {
+      "Content-Type": "application/json",
+      "STATSIG-API-KEY": "console-your-console-api-key",
+      "STATSIG-API-VERSION": "20240601"
+    },
+    "body": {
+      "name": "dark_mode_beta",
+      "description": "Controls access to the dark mode UI feature for beta users",
+      "isEnabled": true,
+      "rules": [
+        {
+          "name": "Beta Testers",
+          "passPercentage": 100,
+          "conditions": [
+            {
+              "type": "custom_field",
+              "targetValue": ["beta_tester"],
+              "operator": "any",
+              "field": "groups"
+            }
+          ]
+        }
+      ],
+      "tags": ["Beta", "UI"]
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "id": "dark_mode_beta",
+      "name": "dark_mode_beta",
+      "description": "Controls access to the dark mode UI feature for beta users",
+      "isEnabled": true,
+      "status": "active",
+      "rules": [
+        {
+          "id": "rule-abc-123",
+          "name": "Beta Testers",
+          "passPercentage": 100,
+          "conditions": [
+            {
+              "type": "custom_field",
+              "targetValue": ["beta_tester"],
+              "operator": "any",
+              "field": "groups"
+            }
+          ]
+        }
+      ],
+      "tags": ["Beta", "UI"],
+      "targetApps": [],
+      "createdTime": 1746230400000,
+      "lastModifiedTime": 1746230400000
+    }
+  }
+}

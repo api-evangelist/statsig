@@ -1,0 +1,287 @@
+naftiko: "1.0.0-alpha1"
+
+info:
+  label: "Statsig HTTP API"
+  description: "Statsig HTTP API for server-side evaluation of feature gates, dynamic configs, experiments, and layers. Logs custom events for analytics."
+  tags:
+    - Feature Flags
+    - A/B Testing
+    - Experimentation
+    - Dynamic Configuration
+    - Analytics
+  created: "2026-05-02"
+  modified: "2026-05-02"
+
+binds:
+  - namespace: env
+    keys:
+      STATSIG_SERVER_SECRET_KEY: STATSIG_SERVER_SECRET_KEY
+
+capability:
+  consumes:
+    - type: http
+      namespace: statsig-http
+      baseUri: https://api.statsig.com/v1
+      description: "Statsig HTTP API for server-side feature evaluation and event logging."
+      authentication:
+        type: apikey
+        key: statsig-api-key
+        value: "{{STATSIG_SERVER_SECRET_KEY}}"
+        placement: header
+      resources:
+        - name: feature-gates
+          path: /check_gate
+          description: "Feature gate evaluation."
+          operations:
+            - name: check-gate
+              method: POST
+              description: "Evaluates a feature gate for the specified user."
+              body:
+                type: json
+                data:
+                  user: "{{tools.user}}"
+                  gateName: "{{tools.gateName}}"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: check-gate-multiple
+              method: POST
+              description: "Evaluates multiple feature gates for the specified user."
+              body:
+                type: json
+                data:
+                  user: "{{tools.user}}"
+                  gateNames: "{{tools.gateNames}}"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: dynamic-configs
+          path: /get_config
+          description: "Dynamic configuration retrieval."
+          operations:
+            - name: get-config
+              method: POST
+              description: "Fetches dynamic config or experiment values for a user."
+              body:
+                type: json
+                data:
+                  user: "{{tools.user}}"
+                  configName: "{{tools.configName}}"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: experiments
+          path: /get_experiment
+          description: "Experiment evaluation."
+          operations:
+            - name: get-experiment
+              method: POST
+              description: "Fetches experiment configuration and group assignment for a user."
+              body:
+                type: json
+                data:
+                  user: "{{tools.user}}"
+                  experimentName: "{{tools.experimentName}}"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: layers
+          path: /get_layer
+          description: "Layer parameter retrieval."
+          operations:
+            - name: get-layer
+              method: POST
+              description: "Fetches layer parameter values for a user."
+              body:
+                type: json
+                data:
+                  user: "{{tools.user}}"
+                  layerName: "{{tools.layerName}}"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: initialization
+          path: /initialize
+          description: "Client SDK initialization."
+          operations:
+            - name: initialize
+              method: POST
+              description: "Returns all evaluated gates, configs, and experiments for a user."
+              body:
+                type: json
+                data:
+                  user: "{{tools.user}}"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: events
+          path: /log_event
+          description: "Event logging."
+          operations:
+            - name: log-events
+              method: POST
+              description: "Logs custom events and exposures for analytics."
+              body:
+                type: json
+                data:
+                  events: "{{tools.events}}"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: config-specs
+          path: /download_config_specs
+          description: "Server SDK configuration download."
+          operations:
+            - name: download-config-specs
+              method: POST
+              description: "Downloads full project configuration for local evaluation."
+              body:
+                type: json
+                data:
+                  sinceTime: "{{tools.sinceTime}}"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+  exposes:
+    - type: rest
+      port: 8100
+      namespace: statsig-http-rest
+      resources:
+        - path: /v1/gates/check
+          name: check-gate
+          description: "Check a feature gate for a user."
+          operations:
+            - method: POST
+              name: check-gate
+              description: "Evaluate a feature gate."
+              call: "statsig-http.check-gate"
+              with:
+                user: "rest.user"
+                gateName: "rest.gateName"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+        - path: /v1/configs/get
+          name: get-config
+          description: "Get dynamic config values."
+          operations:
+            - method: POST
+              name: get-config
+              description: "Fetch dynamic config for a user."
+              call: "statsig-http.get-config"
+              with:
+                user: "rest.user"
+                configName: "rest.configName"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+        - path: /v1/experiments/get
+          name: get-experiment
+          description: "Get experiment group assignment."
+          operations:
+            - method: POST
+              name: get-experiment
+              description: "Fetch experiment assignment for a user."
+              call: "statsig-http.get-experiment"
+              with:
+                user: "rest.user"
+                experimentName: "rest.experimentName"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+        - path: /v1/events/log
+          name: log-events
+          description: "Log analytics events."
+          operations:
+            - method: POST
+              name: log-events
+              description: "Log events for analytics."
+              call: "statsig-http.log-events"
+              with:
+                events: "rest.events"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+    - type: mcp
+      port: 9100
+      namespace: statsig-http-mcp
+      transport: http
+      tools:
+        - name: check-feature-gate
+          description: "Evaluate a feature gate for a user and return pass/fail result."
+          hints:
+            readOnly: true
+            openWorld: false
+          call: "statsig-http.check-gate"
+          with:
+            user: "tools.user"
+            gateName: "tools.gateName"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: get-dynamic-config
+          description: "Fetch dynamic configuration values for a user."
+          hints:
+            readOnly: true
+            openWorld: false
+          call: "statsig-http.get-config"
+          with:
+            user: "tools.user"
+            configName: "tools.configName"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: get-experiment-group
+          description: "Get experiment group assignment and parameter values for a user."
+          hints:
+            readOnly: true
+            openWorld: false
+          call: "statsig-http.get-experiment"
+          with:
+            user: "tools.user"
+            experimentName: "tools.experimentName"
+          outputParameters:
+            - type: object
+              mapping: "$."
+
+        - name: log-events
+          description: "Log custom analytics events and exposures to Statsig."
+          hints:
+            readOnly: false
+            destructive: false
+            idempotent: false
+          call: "statsig-http.log-events"
+          with:
+            events: "tools.events"
+          outputParameters:
+            - type: object
+              mapping: "$."

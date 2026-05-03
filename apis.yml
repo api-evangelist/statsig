@@ -127,6 +127,18 @@ common:
     url: json-schema/statsig-experiment-schema.json
   - type: JSONSchema
     url: json-schema/statsig-event-schema.json
+  - type: JSONStructure
+    url: json-structure/statsig-feature-gate-structure.json
+  - type: JSONStructure
+    url: json-structure/statsig-experiment-structure.json
+  - type: JSONStructure
+    url: json-structure/statsig-event-structure.json
+  - type: SpectralRules
+    url: rules/statsig-rules.yml
+  - type: NaftikoCapabilities
+    url: capabilities/feature-management.yaml
+  - type: Vocabulary
+    url: vocabulary/statsig-vocabulary.yml
 description: >-
   Statsig is a feature management and experimentation platform that helps product
   teams ship features safely with feature flags, run A/B tests, and measure the impact

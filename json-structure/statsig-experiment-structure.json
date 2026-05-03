@@ -1,0 +1,28 @@
+{
+  "name": "Experiment",
+  "description": "A Statsig A/B test experiment with defined groups and parameter configuration.",
+  "fields": [
+    { "name": "id", "type": "string", "required": true, "description": "Unique experiment identifier." },
+    { "name": "name", "type": "string", "required": true, "description": "Experiment name." },
+    { "name": "description", "type": "string", "required": false, "description": "Experiment description." },
+    { "name": "hypothesis", "type": "string", "required": false, "description": "The hypothesis being tested." },
+    { "name": "status", "type": "string", "required": false, "enum": ["setup", "active", "decision_made", "abandoned"], "description": "Experiment lifecycle status." },
+    { "name": "groups", "type": "array", "required": false, "description": "Experiment groups with parameter values." },
+    { "name": "allocation", "type": "number", "required": false, "description": "Percentage of eligible users allocated (0-100)." },
+    { "name": "layerID", "type": "string", "required": false, "description": "Associated layer identifier." },
+    { "name": "targetingGateID", "type": "string", "required": false, "description": "Gate used to filter eligible users." },
+    { "name": "tags", "type": "array", "required": false, "description": "Organizational tags." },
+    { "name": "createdTime", "type": "integer", "required": false, "description": "Creation timestamp (ms)." },
+    { "name": "lastModifiedTime", "type": "integer", "required": false, "description": "Last modification timestamp (ms)." }
+  ],
+  "nested": [
+    {
+      "name": "ExperimentGroup",
+      "fields": [
+        { "name": "name", "type": "string", "required": false, "description": "Group name (e.g., control, test)." },
+        { "name": "size", "type": "number", "required": false, "description": "Percentage of allocated users in this group." },
+        { "name": "parameterValues", "type": "object", "required": false, "description": "Parameter key-value pairs for this group." }
+      ]
+    }
+  ]
+}
