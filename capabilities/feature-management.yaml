@@ -1,355 +1,655 @@
-naftiko: "1.0.0-alpha1"
-
+naftiko: 1.0.0-alpha2
 info:
-  label: "Statsig Feature Management"
-  description: >-
-    Unified feature management workflow combining Statsig's HTTP API and
-    Console API. Enables product teams to evaluate feature gates in real-time,
-    manage gate configuration, run A/B experiments, track exposures, and
-    log analytics events from a single integration. Supports the full feature
-    management lifecycle from gate creation through experiment analysis.
+  label: Statsig Feature Management
+  description: Unified feature management workflow combining Statsig's HTTP API and Console API. Enables product teams to
+    evaluate feature gates in real-time, manage gate configuration, run A/B experiments, track exposures, and log analytics
+    events from a single integration. Supports the full feature management lifecycle from gate creation through experiment
+    analysis.
   tags:
-    - Feature Flags
-    - Feature Management
-    - A/B Testing
-    - Experimentation
-    - Product Analytics
-    - Dynamic Configuration
-  created: "2026-05-02"
-  modified: "2026-05-02"
-
+  - Feature Flags
+  - Feature Management
+  - A/B Testing
+  - Experimentation
+  - Product Analytics
+  - Dynamic Configuration
+  created: '2026-05-02'
+  modified: '2026-05-06'
 binds:
-  - namespace: env
-    keys:
-      STATSIG_SERVER_SECRET_KEY: STATSIG_SERVER_SECRET_KEY
-      STATSIG_CONSOLE_API_KEY: STATSIG_CONSOLE_API_KEY
-
+- namespace: env
+  keys:
+    STATSIG_SERVER_SECRET_KEY: STATSIG_SERVER_SECRET_KEY
+    STATSIG_CONSOLE_API_KEY: STATSIG_CONSOLE_API_KEY
 capability:
   consumes:
-    - import: statsig-http
-      location: ./shared/http-api.yaml
-    - import: statsig-console
-      location: ./shared/console-api.yaml
-
+  - type: http
+    namespace: statsig-http
+    baseUri: https://api.statsig.com/v1
+    description: Statsig HTTP API for server-side feature evaluation and event logging.
+    authentication:
+      type: apikey
+      key: statsig-api-key
+      value: '{{STATSIG_SERVER_SECRET_KEY}}'
+      placement: header
+    resources:
+    - name: feature-gates
+      path: /check_gate
+      description: Feature gate evaluation.
+      operations:
+      - name: check-gate
+        method: POST
+        description: Evaluates a feature gate for the specified user.
+        body:
+          type: json
+          data:
+            user: '{{tools.user}}'
+            gateName: '{{tools.gateName}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: check-gate-multiple
+        method: POST
+        description: Evaluates multiple feature gates for the specified user.
+        body:
+          type: json
+          data:
+            user: '{{tools.user}}'
+            gateNames: '{{tools.gateNames}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: dynamic-configs
+      path: /get_config
+      description: Dynamic configuration retrieval.
+      operations:
+      - name: get-config
+        method: POST
+        description: Fetches dynamic config or experiment values for a user.
+        body:
+          type: json
+          data:
+            user: '{{tools.user}}'
+            configName: '{{tools.configName}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: experiments
+      path: /get_experiment
+      description: Experiment evaluation.
+      operations:
+      - name: get-experiment
+        method: POST
+        description: Fetches experiment configuration and group assignment for a user.
+        body:
+          type: json
+          data:
+            user: '{{tools.user}}'
+            experimentName: '{{tools.experimentName}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: layers
+      path: /get_layer
+      description: Layer parameter retrieval.
+      operations:
+      - name: get-layer
+        method: POST
+        description: Fetches layer parameter values for a user.
+        body:
+          type: json
+          data:
+            user: '{{tools.user}}'
+            layerName: '{{tools.layerName}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: initialization
+      path: /initialize
+      description: Client SDK initialization.
+      operations:
+      - name: initialize
+        method: POST
+        description: Returns all evaluated gates, configs, and experiments for a user.
+        body:
+          type: json
+          data:
+            user: '{{tools.user}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: events
+      path: /log_event
+      description: Event logging.
+      operations:
+      - name: log-events
+        method: POST
+        description: Logs custom events and exposures for analytics.
+        body:
+          type: json
+          data:
+            events: '{{tools.events}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: config-specs
+      path: /download_config_specs
+      description: Server SDK configuration download.
+      operations:
+      - name: download-config-specs
+        method: POST
+        description: Downloads full project configuration for local evaluation.
+        body:
+          type: json
+          data:
+            sinceTime: '{{tools.sinceTime}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  - type: http
+    namespace: statsig-console
+    baseUri: https://statsigapi.net/console/v1
+    description: Statsig Console API for project management and configuration.
+    authentication:
+      type: apikey
+      key: STATSIG-API-KEY
+      value: '{{STATSIG_CONSOLE_API_KEY}}'
+      placement: header
+    resources:
+    - name: gates
+      path: /gates
+      description: Feature gate management.
+      operations:
+      - name: list-gates
+        method: GET
+        description: Returns all feature gates in the project.
+        inputParameters:
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: Max items per page.
+        - name: page
+          in: query
+          type: integer
+          required: false
+          description: Page number.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: create-gate
+        method: POST
+        description: Creates a new feature gate.
+        body:
+          type: json
+          data:
+            name: '{{tools.name}}'
+            description: '{{tools.description}}'
+            isEnabled: '{{tools.isEnabled}}'
+            rules: '{{tools.rules}}'
+            tags: '{{tools.tags}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: get-gate
+        method: GET
+        description: Retrieves a specific feature gate.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: Gate name or ID.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: delete-gate
+        method: DELETE
+        description: Permanently deletes a feature gate.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: Gate name or ID.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: experiments
+      path: /experiments
+      description: Experiment management.
+      operations:
+      - name: list-experiments
+        method: GET
+        description: Returns all experiments in the project.
+        inputParameters:
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: Max items per page.
+        - name: page
+          in: query
+          type: integer
+          required: false
+          description: Page number.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: create-experiment
+        method: POST
+        description: Creates a new experiment.
+        body:
+          type: json
+          data:
+            name: '{{tools.name}}'
+            description: '{{tools.description}}'
+            hypothesis: '{{tools.hypothesis}}'
+            groups: '{{tools.groups}}'
+            allocation: '{{tools.allocation}}'
+            tags: '{{tools.tags}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: start-experiment
+        method: PUT
+        description: Starts an experiment to begin user allocation.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+          description: Experiment ID.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: segments
+      path: /segments
+      description: Segment management.
+      operations:
+      - name: list-segments
+        method: GET
+        description: Returns all user segments.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: create-segment
+        method: POST
+        description: Creates a new user segment.
+        body:
+          type: json
+          data:
+            name: '{{tools.name}}'
+            type: '{{tools.type}}'
+            rules: '{{tools.rules}}'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: metrics
+      path: /metrics
+      description: Metrics management.
+      operations:
+      - name: list-metrics
+        method: GET
+        description: Returns all metric definitions.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: audit-logs
+      path: /audit_logs
+      description: Audit log access.
+      operations:
+      - name: list-audit-logs
+        method: GET
+        description: Returns audit log entries for configuration changes.
+        inputParameters:
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          description: Max items per page.
+        - name: page
+          in: query
+          type: integer
+          required: false
+          description: Page number.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
   exposes:
-    - type: rest
-      port: 8080
-      namespace: statsig-feature-management-api
-      description: "Unified REST API for Statsig feature management across evaluation and administration."
-      resources:
-        - path: /v1/gates/check
-          name: check-gate
-          description: "Runtime gate evaluation."
-          operations:
-            - method: POST
-              name: check-gate
-              description: "Evaluate a feature gate for a user."
-              call: "statsig-http.check-gate"
-              with:
-                user: "rest.user"
-                gateName: "rest.gateName"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-
-        - path: /v1/configs/get
-          name: get-config
-          description: "Dynamic configuration retrieval."
-          operations:
-            - method: POST
-              name: get-config
-              description: "Get dynamic config values for a user."
-              call: "statsig-http.get-config"
-              with:
-                user: "rest.user"
-                configName: "rest.configName"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-
-        - path: /v1/experiments/evaluate
-          name: evaluate-experiment
-          description: "Runtime experiment evaluation."
-          operations:
-            - method: POST
-              name: get-experiment
-              description: "Get experiment group assignment for a user."
-              call: "statsig-http.get-experiment"
-              with:
-                user: "rest.user"
-                experimentName: "rest.experimentName"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-
-        - path: /v1/events
-          name: events
-          description: "Analytics event logging."
-          operations:
-            - method: POST
-              name: log-events
-              description: "Log analytics events and exposures."
-              call: "statsig-http.log-events"
-              with:
-                events: "rest.events"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-
-        - path: /v1/management/gates
-          name: manage-gates
-          description: "Gate configuration management."
-          operations:
-            - method: GET
-              name: list-gates
-              description: "List all feature gates."
-              call: "statsig-console.list-gates"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-            - method: POST
-              name: create-gate
-              description: "Create a new feature gate."
-              call: "statsig-console.create-gate"
-              with:
-                name: "rest.name"
-                rules: "rest.rules"
-                tags: "rest.tags"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-
-        - path: /v1/management/experiments
-          name: manage-experiments
-          description: "Experiment management."
-          operations:
-            - method: GET
-              name: list-experiments
-              description: "List all experiments."
-              call: "statsig-console.list-experiments"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-            - method: POST
-              name: create-experiment
-              description: "Create a new experiment."
-              call: "statsig-console.create-experiment"
-              with:
-                name: "rest.name"
-                groups: "rest.groups"
-                allocation: "rest.allocation"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-
-        - path: /v1/management/audit-logs
-          name: audit-logs
-          description: "Project audit log."
-          operations:
-            - method: GET
-              name: list-audit-logs
-              description: "List configuration change audit logs."
-              call: "statsig-console.list-audit-logs"
-              outputParameters:
-                - type: object
-                  mapping: "$."
-
-    - type: mcp
-      port: 9090
-      namespace: statsig-feature-management-mcp
-      transport: http
-      description: "MCP server for AI-assisted Statsig feature management, experimentation, and analytics."
-      tools:
-        - name: check-feature-gate
-          description: "Evaluate whether a feature gate passes for a given user, including rule matching and group assignment."
-          hints:
-            readOnly: true
-            openWorld: false
-          call: "statsig-http.check-gate"
-          with:
-            user: "tools.user"
-            gateName: "tools.gateName"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: check-multiple-gates
-          description: "Evaluate multiple feature gates for a user in a single request."
-          hints:
-            readOnly: true
-            openWorld: false
-          call: "statsig-http.check-gate-multiple"
-          with:
-            user: "tools.user"
-            gateNames: "tools.gateNames"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: get-dynamic-config
-          description: "Fetch dynamic configuration key-value pairs for a user."
-          hints:
-            readOnly: true
-            openWorld: false
-          call: "statsig-http.get-config"
-          with:
-            user: "tools.user"
-            configName: "tools.configName"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: get-experiment-assignment
-          description: "Get a user's experiment group assignment and parameter values."
-          hints:
-            readOnly: true
-            openWorld: false
-          call: "statsig-http.get-experiment"
-          with:
-            user: "tools.user"
-            experimentName: "tools.experimentName"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: initialize-sdk
-          description: "Initialize all evaluated gates, configs, and experiments for a user (for client SDK use)."
-          hints:
-            readOnly: true
-            openWorld: false
-          call: "statsig-http.initialize"
-          with:
-            user: "tools.user"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: log-analytics-events
-          description: "Log custom analytics events and experiment exposures to Statsig."
-          hints:
-            readOnly: false
-            destructive: false
-            idempotent: false
-          call: "statsig-http.log-events"
-          with:
-            events: "tools.events"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: list-feature-gates
-          description: "List all feature gates in the Statsig project."
-          hints:
-            readOnly: true
-            openWorld: true
-          call: "statsig-console.list-gates"
-          with:
-            limit: "tools.limit"
-            page: "tools.page"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: create-feature-gate
-          description: "Create a new feature gate with targeting rules."
-          hints:
-            readOnly: false
-            destructive: false
-            idempotent: false
-          call: "statsig-console.create-gate"
-          with:
-            name: "tools.name"
-            description: "tools.description"
-            rules: "tools.rules"
-            tags: "tools.tags"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: get-feature-gate-config
-          description: "Get the full configuration of a feature gate by name."
-          hints:
-            readOnly: true
-            openWorld: false
-          call: "statsig-console.get-gate"
-          with:
-            id: "tools.id"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: delete-feature-gate
-          description: "Permanently delete a feature gate from the project."
-          hints:
-            readOnly: false
-            destructive: true
-            idempotent: true
-          call: "statsig-console.delete-gate"
-          with:
-            id: "tools.id"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: list-experiments
-          description: "List all A/B test experiments in the project."
-          hints:
-            readOnly: true
-            openWorld: true
-          call: "statsig-console.list-experiments"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: create-experiment
-          description: "Create a new A/B test experiment with groups and parameter configuration."
-          hints:
-            readOnly: false
-            destructive: false
-            idempotent: false
-          call: "statsig-console.create-experiment"
-          with:
-            name: "tools.name"
-            description: "tools.description"
-            hypothesis: "tools.hypothesis"
-            groups: "tools.groups"
-            allocation: "tools.allocation"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: start-experiment
-          description: "Start an experiment to begin allocating users to test groups."
-          hints:
-            readOnly: false
-            destructive: false
-            idempotent: true
-          call: "statsig-console.start-experiment"
-          with:
-            id: "tools.id"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: list-metrics
-          description: "List all metric definitions used in experiment analysis."
-          hints:
-            readOnly: true
-            openWorld: true
-          call: "statsig-console.list-metrics"
-          outputParameters:
-            - type: object
-              mapping: "$."
-
-        - name: list-audit-logs
-          description: "List audit log entries showing who changed what in the project configuration."
-          hints:
-            readOnly: true
-            openWorld: true
-          call: "statsig-console.list-audit-logs"
-          with:
-            limit: "tools.limit"
-            page: "tools.page"
-          outputParameters:
-            - type: object
-              mapping: "$."
+  - type: rest
+    port: 8080
+    namespace: statsig-feature-management-api
+    description: Unified REST API for Statsig feature management across evaluation and administration.
+    resources:
+    - path: /v1/gates/check
+      name: check-gate
+      description: Runtime gate evaluation.
+      operations:
+      - method: POST
+        name: check-gate
+        description: Evaluate a feature gate for a user.
+        call: statsig-http.check-gate
+        with:
+          user: rest.user
+          gateName: rest.gateName
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/configs/get
+      name: get-config
+      description: Dynamic configuration retrieval.
+      operations:
+      - method: POST
+        name: get-config
+        description: Get dynamic config values for a user.
+        call: statsig-http.get-config
+        with:
+          user: rest.user
+          configName: rest.configName
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/experiments/evaluate
+      name: evaluate-experiment
+      description: Runtime experiment evaluation.
+      operations:
+      - method: POST
+        name: get-experiment
+        description: Get experiment group assignment for a user.
+        call: statsig-http.get-experiment
+        with:
+          user: rest.user
+          experimentName: rest.experimentName
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/events
+      name: events
+      description: Analytics event logging.
+      operations:
+      - method: POST
+        name: log-events
+        description: Log analytics events and exposures.
+        call: statsig-http.log-events
+        with:
+          events: rest.events
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/management/gates
+      name: manage-gates
+      description: Gate configuration management.
+      operations:
+      - method: GET
+        name: list-gates
+        description: List all feature gates.
+        call: statsig-console.list-gates
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: create-gate
+        description: Create a new feature gate.
+        call: statsig-console.create-gate
+        with:
+          name: rest.name
+          rules: rest.rules
+          tags: rest.tags
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/management/experiments
+      name: manage-experiments
+      description: Experiment management.
+      operations:
+      - method: GET
+        name: list-experiments
+        description: List all experiments.
+        call: statsig-console.list-experiments
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: create-experiment
+        description: Create a new experiment.
+        call: statsig-console.create-experiment
+        with:
+          name: rest.name
+          groups: rest.groups
+          allocation: rest.allocation
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/management/audit-logs
+      name: audit-logs
+      description: Project audit log.
+      operations:
+      - method: GET
+        name: list-audit-logs
+        description: List configuration change audit logs.
+        call: statsig-console.list-audit-logs
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    port: 9090
+    namespace: statsig-feature-management-mcp
+    transport: http
+    description: MCP server for AI-assisted Statsig feature management, experimentation, and analytics.
+    tools:
+    - name: check-feature-gate
+      description: Evaluate whether a feature gate passes for a given user, including rule matching and group assignment.
+      hints:
+        readOnly: true
+        openWorld: false
+      call: statsig-http.check-gate
+      with:
+        user: tools.user
+        gateName: tools.gateName
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: check-multiple-gates
+      description: Evaluate multiple feature gates for a user in a single request.
+      hints:
+        readOnly: true
+        openWorld: false
+      call: statsig-http.check-gate-multiple
+      with:
+        user: tools.user
+        gateNames: tools.gateNames
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-dynamic-config
+      description: Fetch dynamic configuration key-value pairs for a user.
+      hints:
+        readOnly: true
+        openWorld: false
+      call: statsig-http.get-config
+      with:
+        user: tools.user
+        configName: tools.configName
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-experiment-assignment
+      description: Get a user's experiment group assignment and parameter values.
+      hints:
+        readOnly: true
+        openWorld: false
+      call: statsig-http.get-experiment
+      with:
+        user: tools.user
+        experimentName: tools.experimentName
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: initialize-sdk
+      description: Initialize all evaluated gates, configs, and experiments for a user (for client SDK use).
+      hints:
+        readOnly: true
+        openWorld: false
+      call: statsig-http.initialize
+      with:
+        user: tools.user
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: log-analytics-events
+      description: Log custom analytics events and experiment exposures to Statsig.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: statsig-http.log-events
+      with:
+        events: tools.events
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-feature-gates
+      description: List all feature gates in the Statsig project.
+      hints:
+        readOnly: true
+        openWorld: true
+      call: statsig-console.list-gates
+      with:
+        limit: tools.limit
+        page: tools.page
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-feature-gate
+      description: Create a new feature gate with targeting rules.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: statsig-console.create-gate
+      with:
+        name: tools.name
+        description: tools.description
+        rules: tools.rules
+        tags: tools.tags
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-feature-gate-config
+      description: Get the full configuration of a feature gate by name.
+      hints:
+        readOnly: true
+        openWorld: false
+      call: statsig-console.get-gate
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-feature-gate
+      description: Permanently delete a feature gate from the project.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: statsig-console.delete-gate
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-experiments
+      description: List all A/B test experiments in the project.
+      hints:
+        readOnly: true
+        openWorld: true
+      call: statsig-console.list-experiments
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-experiment
+      description: Create a new A/B test experiment with groups and parameter configuration.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: statsig-console.create-experiment
+      with:
+        name: tools.name
+        description: tools.description
+        hypothesis: tools.hypothesis
+        groups: tools.groups
+        allocation: tools.allocation
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: start-experiment
+      description: Start an experiment to begin allocating users to test groups.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: statsig-console.start-experiment
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-metrics
+      description: List all metric definitions used in experiment analysis.
+      hints:
+        readOnly: true
+        openWorld: true
+      call: statsig-console.list-metrics
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-audit-logs
+      description: List audit log entries showing who changed what in the project configuration.
+      hints:
+        readOnly: true
+        openWorld: true
+      call: statsig-console.list-audit-logs
+      with:
+        limit: tools.limit
+        page: tools.page
+      outputParameters:
+      - type: object
+        mapping: $.
