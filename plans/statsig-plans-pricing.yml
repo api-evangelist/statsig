@@ -1,167 +1,163 @@
 specification: API Commons Plans
 specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
-provider: statsig
+provider: Statsig
 providerId: statsig
 created: '2026-05-04'
-modified: '2026-05-04'
-tags: []
-description: Machine-readable plans and pricing scaffold for this API provider. Conforms to the API Commons
-  Plans schema. Tier limits and prices are scaffold defaults; replace with provider-published values.
+modified: '2026-05-05'
+reconciled: true
+tags:
+  - Feature Flags
+  - Experimentation
+  - Product Analytics
+  - Session Replay
+  - Developer Tools
+description: Statsig prices its platform on a metered-events model with three tiers — a Free Developer
+  tier (2M events/mo, 50k session replays/mo), a Pro plan ($150/mo, 5M events included, $0.05 per 1K
+  additional events, 100k session replays/mo), and a custom Enterprise contract with volume discounts
+  on event or experiment-based pricing. Flag and config checks are unlimited at every tier; metered events
+  cover exposures, logged events, ingested metrics, and custom metrics.
+sources:
+  - https://www.statsig.com/pricing
+  - https://docs.statsig.com/console-api/introduction
 plans:
-  - id: statsig-free
-    name: Free
+  - id: statsig-developer
+    name: Developer
     type: freemium
-    description: Free entry tier for the statsig API surface. Intended for evaluation, prototyping, and
-      low-volume integrations. Real limits and pricing must be reconciled with the provider's published
-      plan documentation.
+    description: Free tier; no credit card required; one project. Unlimited flag and config checks.
+      Metric Lifts stop calculating if event allowance is exceeded.
     entries:
-      - label: API Requests
-        description: Monthly API request quota across all included endpoints
-        name: api_requests
+      - label: Metered Events
+        name: metered_events
         type: quota
-        metric: requests
-        limit: 1000
+        metric: event
+        limit: 2000000
         timeFrame: month
         geo: global
-        domains:
-          - https://api.statsig.com
-          - https://statsigapi.net/console/v1
-          - https://events.statsigapi.net
         unit: 1
         price: '0.00'
         userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the free tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 10
-        timeFrame: minute
+      - label: Session Replays
+        name: session_replays
+        type: quota
+        metric: replay
+        limit: 50000
+        timeFrame: month
         geo: global
-        domains:
-          - https://api.statsig.com
-          - https://statsigapi.net/console/v1
-          - https://events.statsigapi.net
+        unit: 1
+        price: '0.00'
+        userMultiplied: false
+      - label: Flag and Config Checks
+        name: flag_config_checks
+        type: quota
+        metric: check
+        limit: -1
+        timeFrame: month
+        geo: global
         unit: 1
         price: '0.00'
         userMultiplied: false
     elements:
-      - name: Public Documentation
+      - name: Feature Flags
+      - name: Experimentation
+      - name: Product Analytics
+      - name: Session Replay (capped)
+      - name: Single Project
       - name: Community Support
-      - name: Sandbox Access
-      - name: Statsig HTTP API
-      - name: Statsig Console API
-      - name: Statsig Client SDK API
-      - name: Statsig Server SDK API
-      - name: Statsig Events API
   - id: statsig-pro
-    name: Professional
-    type: paid
-    description: Production tier for statsig. Provides higher quotas, priority support, and access to
-      the broader API portfolio. Pricing placeholder; align with the provider's pricing page.
+    name: Pro
+    type: subscription
+    description: $150/month subscription with 5M metered events included, 100k session replays/mo, and
+      $0.05 per 1K additional events billed in the following month. One project per subscription.
     entries:
-      - label: API Requests
-        description: Monthly API request quota
-        name: api_requests
+      - label: Subscription
+        name: subscription
+        type: subscription
+        metric: month
+        limit: 1
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '$150'
+        userMultiplied: false
+      - label: Metered Events (included)
+        name: metered_events_included
         type: quota
-        metric: requests
+        metric: event
+        limit: 5000000
+        timeFrame: month
+        geo: global
+        unit: 1
+        price: '0.00'
+        userMultiplied: false
+      - label: Metered Events (overage)
+        name: metered_events_overage
+        type: metered
+        metric: event
+        limit: -1
+        timeFrame: month
+        geo: global
+        unit: 1000
+        price: '$0.05'
+        userMultiplied: false
+      - label: Session Replays
+        name: session_replays
+        type: quota
+        metric: replay
         limit: 100000
         timeFrame: month
         geo: global
-        domains:
-          - https://api.statsig.com
-          - https://statsigapi.net/console/v1
-          - https://events.statsigapi.net
         unit: 1
-        price: TBD
+        price: included
         userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the professional tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 100
-        timeFrame: minute
-        geo: global
-        domains:
-          - https://api.statsig.com
-          - https://statsigapi.net/console/v1
-          - https://events.statsigapi.net
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Overage
-        description: Per-request price after monthly quota is exceeded
-        name: overage
-        type: metered
-        metric: requests
+      - label: Flag and Config Checks
+        name: flag_config_checks
+        type: quota
+        metric: check
         limit: -1
         timeFrame: month
         geo: global
-        domains:
-          - https://api.statsig.com
-          - https://statsigapi.net/console/v1
-          - https://events.statsigapi.net
-        unit: 1000
-        price: TBD
+        unit: 1
+        price: included
         userMultiplied: false
     elements:
-      - name: All Production Endpoints
+      - name: All Free Features
+      - name: Higher Event Allowance
+      - name: Single Project
       - name: Email Support
-      - name: SLA Targets
-      - name: Webhook Subscriptions
-      - name: Statsig HTTP API
-      - name: Statsig Console API
-      - name: Statsig Client SDK API
-      - name: Statsig Server SDK API
-      - name: Statsig Events API
   - id: statsig-enterprise
     name: Enterprise
     type: enterprise
-    description: Custom-negotiated tier for statsig. Includes dedicated capacity, contractual SLAs, security
-      review, data residency options, and named technical account management.
+    description: Custom-priced contracts with volume discounts on event- or experiment-based pricing.
+      Multi-project, warehouse-native deployment, outbound data integrations, SSO, and HIPAA-eligibility
+      (BAA required) available. Custom billing and payment terms.
     entries:
-      - label: API Requests
-        description: Negotiated request volume; -1 indicates uncapped subject to fair use
-        name: api_requests
-        type: quota
-        metric: requests
+      - label: Metered Events
+        name: metered_events
+        type: tiered
+        metric: event
         limit: -1
         timeFrame: month
         geo: configurable
-        domains:
-          - https://api.statsig.com
-          - https://statsigapi.net/console/v1
-          - https://events.statsigapi.net
         unit: 1
         price: custom
         userMultiplied: false
-      - label: Rate Limit
-        description: Negotiated burst and steady-state rate
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 1000
-        timeFrame: minute
+      - label: Experiments
+        name: experiments
+        type: tiered
+        metric: experiment
+        limit: -1
+        timeFrame: month
         geo: configurable
-        domains:
-          - https://api.statsig.com
-          - https://statsigapi.net/console/v1
-          - https://events.statsigapi.net
         unit: 1
         price: custom
         userMultiplied: false
     elements:
-      - name: Unlimited / Negotiated Volume
-      - name: 24/7 Dedicated Support
-      - name: Contractual SLA
-      - name: Security & Compliance Review
-      - name: Dedicated Account Manager
-      - name: Custom Data Residency
-      - name: Statsig HTTP API
-      - name: Statsig Console API
-      - name: Statsig Client SDK API
-      - name: Statsig Server SDK API
-      - name: Statsig Events API
+      - name: Multiple Projects
+      - name: Warehouse Native Deployment
+      - name: Outgoing Data Integrations
+      - name: SSO
+      - name: HIPAA-Eligibility (BAA)
+      - name: Volume Discounts
+      - name: Custom Billing Terms
 maintainers: []
