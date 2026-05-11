@@ -139,7 +139,13 @@ common:
     url: capabilities/feature-management.yaml
   - type: Vocabulary
     url: vocabulary/statsig-vocabulary.yml
+  - type: Integrations
+    url: https://docs.statsig.com/integrations/mcp/overview
 description: >-
   Statsig is a feature management and experimentation platform that helps product
   teams ship features safely with feature flags, run A/B tests, and measure the impact
   of every feature on key metrics.
+integrations:
+  - name: Agent Skills Repository
+  - name: AI Development with Statsig
+  - name: Github AI Integration
