@@ -119,7 +119,7 @@ apis:
       and low latency, enabling real-time experiment monitoring and metric
       updates.
 common:
-  - type: JSON-LD
+  - type: JSONLD
     url: json-ld/statsig-context.jsonld
   - type: JSONSchema
     url: json-schema/statsig-feature-gate-schema.json
