@@ -1,0 +1,82 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Statsig HTTP API — Experiments
+  description: 'Statsig HTTP API — Experiments. 1 operations. Lead operation: Get an experiment configuration. Self-contained
+    Naftiko capability covering one Statsig business surface.'
+  tags:
+  - Statsig
+  - Experiments
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    STATSIG_API_KEY: STATSIG_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: http-experiments
+    baseUri: https://api.statsig.com/v1
+    description: Statsig HTTP API — Experiments business capability. Self-contained, no shared references.
+    resources:
+    - name: get_experiment
+      path: /get_experiment
+      operations:
+      - name: getexperiment
+        method: POST
+        description: Get an experiment configuration
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: statsig-api-key
+      value: '{{env.STATSIG_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: http-experiments-rest
+    port: 8080
+    description: REST adapter for Statsig HTTP API — Experiments. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/get-experiment
+      name: get-experiment
+      description: REST surface for get_experiment.
+      operations:
+      - method: POST
+        name: getexperiment
+        description: Get an experiment configuration
+        call: http-experiments.getexperiment
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: http-experiments-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Statsig HTTP API — Experiments. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: get-experiment-configuration
+      description: Get an experiment configuration
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: http-experiments.getexperiment
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

@@ -1,0 +1,226 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Statsig Console API — Layers
+  description: 'Statsig Console API — Layers. 5 operations. Lead operation: List all layers. Self-contained Naftiko capability
+    covering one Statsig business surface.'
+  tags:
+  - Statsig
+  - Layers
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    STATSIG_API_KEY: STATSIG_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: console-layers
+    baseUri: https://statsigapi.net/console/v1
+    description: Statsig Console API — Layers business capability. Self-contained, no shared references.
+    resources:
+    - name: layers
+      path: /layers
+      operations:
+      - name: listlayers
+        method: GET
+        description: List all layers
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createlayer
+        method: POST
+        description: Create a layer
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: layers-id
+      path: /layers/{id}
+      operations:
+      - name: getlayer
+        method: GET
+        description: Get a layer
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The name or identifier of the layer.
+          required: true
+      - name: deletelayer
+        method: DELETE
+        description: Delete a layer
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The name or identifier of the layer.
+          required: true
+    - name: layers-id-experiments
+      path: /layers/{id}/experiments
+      operations:
+      - name: listlayerexperiments
+        method: GET
+        description: List experiments in a layer
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The name or identifier of the layer.
+          required: true
+    authentication:
+      type: apikey
+      key: STATSIG-API-KEY
+      value: '{{env.STATSIG_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: console-layers-rest
+    port: 8080
+    description: REST adapter for Statsig Console API — Layers. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/layers
+      name: layers
+      description: REST surface for layers.
+      operations:
+      - method: GET
+        name: listlayers
+        description: List all layers
+        call: console-layers.listlayers
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createlayer
+        description: Create a layer
+        call: console-layers.createlayer
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/layers/{id}
+      name: layers-id
+      description: REST surface for layers-id.
+      operations:
+      - method: GET
+        name: getlayer
+        description: Get a layer
+        call: console-layers.getlayer
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletelayer
+        description: Delete a layer
+        call: console-layers.deletelayer
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/layers/{id}/experiments
+      name: layers-id-experiments
+      description: REST surface for layers-id-experiments.
+      operations:
+      - method: GET
+        name: listlayerexperiments
+        description: List experiments in a layer
+        call: console-layers.listlayerexperiments
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: console-layers-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Statsig Console API — Layers. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: list-all-layers
+      description: List all layers
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: console-layers.listlayers
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-layer
+      description: Create a layer
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: console-layers.createlayer
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-layer
+      description: Get a layer
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: console-layers.getlayer
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-layer
+      description: Delete a layer
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: console-layers.deletelayer
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-experiments-layer
+      description: List experiments in a layer
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: console-layers.listlayerexperiments
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

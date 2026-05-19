@@ -1,0 +1,82 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Statsig HTTP API — Dynamic Configs
+  description: 'Statsig HTTP API — Dynamic Configs. 1 operations. Lead operation: Get a dynamic config or experiment. Self-contained
+    Naftiko capability covering one Statsig business surface.'
+  tags:
+  - Statsig
+  - Dynamic Configs
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    STATSIG_API_KEY: STATSIG_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: http-dynamic-configs
+    baseUri: https://api.statsig.com/v1
+    description: Statsig HTTP API — Dynamic Configs business capability. Self-contained, no shared references.
+    resources:
+    - name: get_config
+      path: /get_config
+      operations:
+      - name: getconfig
+        method: POST
+        description: Get a dynamic config or experiment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: statsig-api-key
+      value: '{{env.STATSIG_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: http-dynamic-configs-rest
+    port: 8080
+    description: REST adapter for Statsig HTTP API — Dynamic Configs. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/get-config
+      name: get-config
+      description: REST surface for get_config.
+      operations:
+      - method: POST
+        name: getconfig
+        description: Get a dynamic config or experiment
+        call: http-dynamic-configs.getconfig
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: http-dynamic-configs-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Statsig HTTP API — Dynamic Configs. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: get-dynamic-config-experiment
+      description: Get a dynamic config or experiment
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: http-dynamic-configs.getconfig
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

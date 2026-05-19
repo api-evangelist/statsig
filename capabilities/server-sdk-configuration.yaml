@@ -1,0 +1,82 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Statsig Server SDK API — Configuration
+  description: 'Statsig Server SDK API — Configuration. 1 operations. Lead operation: Download configuration specs. Self-contained
+    Naftiko capability covering one Statsig business surface.'
+  tags:
+  - Statsig
+  - Configuration
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    STATSIG_API_KEY: STATSIG_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: server-sdk-configuration
+    baseUri: https://api.statsig.com/v1
+    description: Statsig Server SDK API — Configuration business capability. Self-contained, no shared references.
+    resources:
+    - name: download_config_specs
+      path: /download_config_specs
+      operations:
+      - name: downloadconfigspecs
+        method: POST
+        description: Download configuration specs
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: statsig-api-key
+      value: '{{env.STATSIG_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: server-sdk-configuration-rest
+    port: 8080
+    description: REST adapter for Statsig Server SDK API — Configuration. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/download-config-specs
+      name: download-config-specs
+      description: REST surface for download_config_specs.
+      operations:
+      - method: POST
+        name: downloadconfigspecs
+        description: Download configuration specs
+        call: server-sdk-configuration.downloadconfigspecs
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: server-sdk-configuration-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Statsig Server SDK API — Configuration. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: download-configuration-specs
+      description: Download configuration specs
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: server-sdk-configuration.downloadconfigspecs
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

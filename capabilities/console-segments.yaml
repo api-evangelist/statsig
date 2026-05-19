@@ -1,0 +1,226 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Statsig Console API — Segments
+  description: 'Statsig Console API — Segments. 5 operations. Lead operation: List all segments. Self-contained Naftiko capability
+    covering one Statsig business surface.'
+  tags:
+  - Statsig
+  - Segments
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    STATSIG_API_KEY: STATSIG_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: console-segments
+    baseUri: https://statsigapi.net/console/v1
+    description: Statsig Console API — Segments business capability. Self-contained, no shared references.
+    resources:
+    - name: segments
+      path: /segments
+      operations:
+      - name: listsegments
+        method: GET
+        description: List all segments
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: createsegment
+        method: POST
+        description: Create a segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: segments-id
+      path: /segments/{id}
+      operations:
+      - name: getsegment
+        method: GET
+        description: Get a segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The name or identifier of the segment.
+          required: true
+      - name: partiallyupdatesegment
+        method: PATCH
+        description: Partially update a segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The name or identifier of the segment.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: deletesegment
+        method: DELETE
+        description: Delete a segment
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The name or identifier of the segment.
+          required: true
+    authentication:
+      type: apikey
+      key: STATSIG-API-KEY
+      value: '{{env.STATSIG_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: console-segments-rest
+    port: 8080
+    description: REST adapter for Statsig Console API — Segments. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/segments
+      name: segments
+      description: REST surface for segments.
+      operations:
+      - method: GET
+        name: listsegments
+        description: List all segments
+        call: console-segments.listsegments
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: createsegment
+        description: Create a segment
+        call: console-segments.createsegment
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/segments/{id}
+      name: segments-id
+      description: REST surface for segments-id.
+      operations:
+      - method: GET
+        name: getsegment
+        description: Get a segment
+        call: console-segments.getsegment
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PATCH
+        name: partiallyupdatesegment
+        description: Partially update a segment
+        call: console-segments.partiallyupdatesegment
+        with:
+          id: rest.id
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: deletesegment
+        description: Delete a segment
+        call: console-segments.deletesegment
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: console-segments-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Statsig Console API — Segments. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: list-all-segments
+      description: List all segments
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: console-segments.listsegments
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-segment
+      description: Create a segment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: console-segments.createsegment
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-segment
+      description: Get a segment
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: console-segments.getsegment
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: partially-update-segment
+      description: Partially update a segment
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: console-segments.partiallyupdatesegment
+      with:
+        id: tools.id
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-segment
+      description: Delete a segment
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: console-segments.deletesegment
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

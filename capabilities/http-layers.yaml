@@ -1,0 +1,82 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Statsig HTTP API — Layers
+  description: 'Statsig HTTP API — Layers. 1 operations. Lead operation: Get layer parameters. Self-contained Naftiko capability
+    covering one Statsig business surface.'
+  tags:
+  - Statsig
+  - Layers
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    STATSIG_API_KEY: STATSIG_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: http-layers
+    baseUri: https://api.statsig.com/v1
+    description: Statsig HTTP API — Layers business capability. Self-contained, no shared references.
+    resources:
+    - name: get_layer
+      path: /get_layer
+      operations:
+      - name: getlayer
+        method: POST
+        description: Get layer parameters
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: statsig-api-key
+      value: '{{env.STATSIG_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: http-layers-rest
+    port: 8080
+    description: REST adapter for Statsig HTTP API — Layers. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/get-layer
+      name: get-layer
+      description: REST surface for get_layer.
+      operations:
+      - method: POST
+        name: getlayer
+        description: Get layer parameters
+        call: http-layers.getlayer
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: http-layers-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Statsig HTTP API — Layers. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: get-layer-parameters
+      description: Get layer parameters
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: false
+      call: http-layers.getlayer
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

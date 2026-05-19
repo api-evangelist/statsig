@@ -1,0 +1,82 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Statsig HTTP API — Initialization
+  description: 'Statsig HTTP API — Initialization. 1 operations. Lead operation: Initialize client SDK. Self-contained Naftiko
+    capability covering one Statsig business surface.'
+  tags:
+  - Statsig
+  - Initialization
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    STATSIG_API_KEY: STATSIG_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: http-initialization
+    baseUri: https://api.statsig.com/v1
+    description: Statsig HTTP API — Initialization business capability. Self-contained, no shared references.
+    resources:
+    - name: initialize
+      path: /initialize
+      operations:
+      - name: initialize
+        method: POST
+        description: Initialize client SDK
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: statsig-api-key
+      value: '{{env.STATSIG_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: http-initialization-rest
+    port: 8080
+    description: REST adapter for Statsig HTTP API — Initialization. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/initialize
+      name: initialize
+      description: REST surface for initialize.
+      operations:
+      - method: POST
+        name: initialize
+        description: Initialize client SDK
+        call: http-initialization.initialize
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: http-initialization-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Statsig HTTP API — Initialization. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: initialize-client-sdk
+      description: Initialize client SDK
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: http-initialization.initialize
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

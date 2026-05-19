@@ -1,0 +1,89 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Statsig Server SDK API — Events
+  description: 'Statsig Server SDK API — Events. 1 operations. Lead operation: Log server events. Self-contained Naftiko capability
+    covering one Statsig business surface.'
+  tags:
+  - Statsig
+  - Events
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    STATSIG_API_KEY: STATSIG_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: server-sdk-events
+    baseUri: https://api.statsig.com/v1
+    description: Statsig Server SDK API — Events business capability. Self-contained, no shared references.
+    resources:
+    - name: log_event
+      path: /log_event
+      operations:
+      - name: logserverevent
+        method: POST
+        description: Log server events
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: STATSIG-CLIENT-TIME
+          in: header
+          type: integer
+          description: Server-side timestamp in milliseconds since epoch, used to normalize event timestamps.
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: apikey
+      key: statsig-api-key
+      value: '{{env.STATSIG_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: server-sdk-events-rest
+    port: 8080
+    description: REST adapter for Statsig Server SDK API — Events. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/log-event
+      name: log-event
+      description: REST surface for log_event.
+      operations:
+      - method: POST
+        name: logserverevent
+        description: Log server events
+        call: server-sdk-events.logserverevent
+        with:
+          STATSIG-CLIENT-TIME: rest.STATSIG-CLIENT-TIME
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: server-sdk-events-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Statsig Server SDK API — Events. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: log-server-events
+      description: Log server events
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: server-sdk-events.logserverevent
+      with:
+        STATSIG-CLIENT-TIME: tools.STATSIG-CLIENT-TIME
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

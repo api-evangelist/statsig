@@ -1,0 +1,114 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Statsig Console API — Metrics
+  description: 'Statsig Console API — Metrics. 2 operations. Lead operation: List all metrics. Self-contained Naftiko capability
+    covering one Statsig business surface.'
+  tags:
+  - Statsig
+  - Metrics
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    STATSIG_API_KEY: STATSIG_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: console-metrics
+    baseUri: https://statsigapi.net/console/v1
+    description: Statsig Console API — Metrics business capability. Self-contained, no shared references.
+    resources:
+    - name: metrics
+      path: /metrics
+      operations:
+      - name: listmetrics
+        method: GET
+        description: List all metrics
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: metrics-id
+      path: /metrics/{id}
+      operations:
+      - name: getmetric
+        method: GET
+        description: Get a metric
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          description: The name or identifier of the metric.
+          required: true
+    authentication:
+      type: apikey
+      key: STATSIG-API-KEY
+      value: '{{env.STATSIG_API_KEY}}'
+      placement: header
+  exposes:
+  - type: rest
+    namespace: console-metrics-rest
+    port: 8080
+    description: REST adapter for Statsig Console API — Metrics. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/metrics
+      name: metrics
+      description: REST surface for metrics.
+      operations:
+      - method: GET
+        name: listmetrics
+        description: List all metrics
+        call: console-metrics.listmetrics
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/metrics/{id}
+      name: metrics-id
+      description: REST surface for metrics-id.
+      operations:
+      - method: GET
+        name: getmetric
+        description: Get a metric
+        call: console-metrics.getmetric
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: console-metrics-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Statsig Console API — Metrics. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: list-all-metrics
+      description: List all metrics
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: console-metrics.listmetrics
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-metric
+      description: Get a metric
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: console-metrics.getmetric
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
