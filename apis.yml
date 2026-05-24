@@ -183,6 +183,8 @@ common:
     url: vocabulary/statsig-vocabulary.yml
   - type: Integrations
     url: https://docs.statsig.com/integrations/mcp/overview
+  - type: LLMsTxt
+    url: https://docs.statsig.com/llms.txt
 description: Statsig is a feature management and experimentation platform that helps product teams ship features safely with
   feature flags, run A/B tests, and measure the impact of every feature on key metrics.
 integrations:
