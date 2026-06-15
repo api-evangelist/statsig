@@ -1,0 +1,378 @@
+{
+  "item": [
+    {
+      "id": "f96d46f6-ac17-4ffb-85d4-3d489aed64d6",
+      "name": "Configuration",
+      "description": {
+        "content": "Endpoints for downloading full project configuration specs that enable server-side local evaluation of gates, configs, experiments, and layers.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "a7091c32-4014-4287-bffa-71a0c3786841",
+          "name": "Download configuration specs",
+          "request": {
+            "name": "Download configuration specs",
+            "description": {
+              "content": "Downloads the full project configuration for server-side local evaluation. This endpoint is the primary mechanism used by server SDKs to retrieve all gate, config, experiment, and layer definitions. The downloaded specs enable sub-millisecond feature gate checks without per-request network calls. Server SDKs periodically poll this endpoint to stay up to date with configuration changes.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "download_config_specs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sinceTime\": \"<long>\",\n  \"sdkType\": \"<string>\",\n  \"sdkVersion\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f73d8070-9770-4545-8fc2-d7881db0bcd9",
+              "name": "Full project configuration specs",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "download_config_specs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sinceTime\": \"<long>\",\n  \"sdkType\": \"<string>\",\n  \"sdkVersion\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"dynamic_configs\": [\n    {\n      \"name\": \"string\",\n      \"type\": \"dynamic_config\",\n      \"salt\": \"string\",\n      \"enabled\": false,\n      \"rules\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 8.720321397726682,\n          \"conditions\": [\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            }\n          ],\n          \"returnValue\": {},\n          \"groupName\": \"string\"\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 7.268878750061325,\n          \"conditions\": [\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            }\n          ],\n          \"returnValue\": {},\n          \"groupName\": \"string\"\n        }\n      ],\n      \"defaultValue\": {}\n    },\n    {\n      \"name\": \"string\",\n      \"type\": \"feature_gate\",\n      \"salt\": \"string\",\n      \"enabled\": false,\n      \"rules\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 86.3881454723504,\n          \"conditions\": [\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            }\n          ],\n          \"returnValue\": {},\n          \"groupName\": \"string\"\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 57.288095893086336,\n          \"conditions\": [\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            }\n          ],\n          \"returnValue\": {},\n          \"groupName\": \"string\"\n        }\n      ],\n      \"defaultValue\": {}\n    }\n  ],\n  \"feature_gates\": [\n    {\n      \"name\": \"string\",\n      \"type\": \"feature_gate\",\n      \"salt\": \"string\",\n      \"enabled\": true,\n      \"rules\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 3.897996946991067,\n          \"conditions\": [\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            }\n          ],\n          \"returnValue\": {},\n          \"groupName\": \"string\"\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 29.93490687036109,\n          \"conditions\": [\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            }\n          ],\n          \"returnValue\": {},\n          \"groupName\": \"string\"\n        }\n      ],\n      \"defaultValue\": {}\n    },\n    {\n      \"name\": \"string\",\n      \"type\": \"feature_gate\",\n      \"salt\": \"string\",\n      \"enabled\": false,\n      \"rules\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 36.04473077253124,\n          \"conditions\": [\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            }\n          ],\n          \"returnValue\": {},\n          \"groupName\": \"string\"\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 79.25488184589136,\n          \"conditions\": [\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            }\n          ],\n          \"returnValue\": {},\n          \"groupName\": \"string\"\n        }\n      ],\n      \"defaultValue\": {}\n    }\n  ],\n  \"layer_configs\": [\n    {\n      \"name\": \"string\",\n      \"type\": \"autotune\",\n      \"salt\": \"string\",\n      \"enabled\": false,\n      \"rules\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 0.7236430078182976,\n          \"conditions\": [\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            }\n          ],\n          \"returnValue\": {},\n          \"groupName\": \"string\"\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 1.1337112929177273,\n          \"conditions\": [\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            }\n          ],\n          \"returnValue\": {},\n          \"groupName\": \"string\"\n        }\n      ],\n      \"defaultValue\": {}\n    },\n    {\n      \"name\": \"string\",\n      \"type\": \"layer\",\n      \"salt\": \"string\",\n      \"enabled\": false,\n      \"rules\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 53.10803862866922,\n          \"conditions\": [\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            }\n          ],\n          \"returnValue\": {},\n          \"groupName\": \"string\"\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 53.82360349605623,\n          \"conditions\": [\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            },\n            {\n              \"type\": \"string\",\n              \"targetValue\": {},\n              \"operator\": \"string\",\n              \"field\": \"string\"\n            }\n          ],\n          \"returnValue\": {},\n          \"groupName\": \"string\"\n        }\n      ],\n      \"defaultValue\": {}\n    }\n  ],\n  \"layers\": {\n    \"key_0\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"has_updates\": true,\n  \"time\": 6852\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8ec515db-0b86-431c-b016-ed15c8b34f57",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "download_config_specs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sinceTime\": \"<long>\",\n  \"sdkType\": \"<string>\",\n  \"sdkVersion\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "09ef9828-097a-4805-b13e-3e33ec8c6d60",
+      "name": "Events",
+      "description": {
+        "content": "Endpoints for logging exposure and custom event data from server-side SDKs back to Statsig for analytics and experiment analysis.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9420ee01-cf26-45fb-bfcc-6239a3ebe613",
+          "name": "Log server events",
+          "request": {
+            "name": "Log server events",
+            "description": {
+              "content": "Logs one or more events from the server SDK to Statsig for analytics and experiment analysis. Server SDKs batch exposure events from local gate checks and custom events, then flush them periodically to this endpoint. The STATSIG-CLIENT-TIME header is required for timestamp normalization.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "log_event"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Server-side timestamp in milliseconds since epoch, used to normalize event timestamps.",
+                "key": "STATSIG-CLIENT-TIME",
+                "value": "<long>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"events\": [\n    {\n      \"user\": {\n        \"userID\": \"<string>\",\n        \"custom\": {\n          \"key_0\": false\n        },\n        \"customIDs\": {\n          \"key_0\": \"<string>\",\n          \"key_1\": \"<string>\"\n        }\n      },\n      \"eventName\": \"<string>\",\n      \"time\": \"<long>\",\n      \"value\": \"<string>\",\n      \"metadata\": {\n        \"key_0\": \"string\",\n        \"key_1\": \"string\",\n        \"key_2\": 9563,\n        \"key_3\": \"string\"\n      }\n    },\n    {\n      \"user\": {\n        \"userID\": \"<string>\",\n        \"custom\": {\n          \"key_0\": true,\n          \"key_1\": true\n        },\n        \"customIDs\": {\n          \"key_0\": \"<string>\",\n          \"key_1\": \"<string>\",\n          \"key_2\": \"<string>\",\n          \"key_3\": \"<string>\"\n        }\n      },\n      \"eventName\": \"<string>\",\n      \"time\": \"<long>\",\n      \"value\": \"<string>\",\n      \"metadata\": {\n        \"key_0\": 3488.4314975110865,\n        \"key_1\": 103.81469500025054,\n        \"key_2\": 9237\n      }\n    }\n  ],\n  \"statsigMetadata\": {\n    \"sdkType\": \"<string>\",\n    \"sdkVersion\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "859e0ff0-ce87-4799-ac10-a69b3d6ef63b",
+              "name": "Events accepted for processing",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "log_event"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Server-side timestamp in milliseconds since epoch, used to normalize event timestamps.",
+                    "key": "STATSIG-CLIENT-TIME",
+                    "value": "<long>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"custom\": {\n          \"key_0\": false,\n          \"key_1\": \"string\",\n          \"key_2\": 7914.744243424067,\n          \"key_3\": 4185.227145786344\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\",\n          \"key_1\": \"string\",\n          \"key_2\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 129,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": \"string\"\n      }\n    },\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"custom\": {\n          \"key_0\": 1947\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 7485,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": 1278,\n        \"key_1\": 5913.983371607867\n      }\n    }\n  ],\n  \"statsigMetadata\": {\n    \"sdkType\": \"<string>\",\n    \"sdkVersion\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "77f163aa-e232-43fb-b01d-5f5c8e704320",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "log_event"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Server-side timestamp in milliseconds since epoch, used to normalize event timestamps.",
+                    "key": "STATSIG-CLIENT-TIME",
+                    "value": "<long>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"custom\": {\n          \"key_0\": false,\n          \"key_1\": \"string\",\n          \"key_2\": 7914.744243424067,\n          \"key_3\": 4185.227145786344\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\",\n          \"key_1\": \"string\",\n          \"key_2\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 129,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": \"string\"\n      }\n    },\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"custom\": {\n          \"key_0\": 1947\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 7485,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": 1278,\n        \"key_1\": 5913.983371607867\n      }\n    }\n  ],\n  \"statsigMetadata\": {\n    \"sdkType\": \"<string>\",\n    \"sdkVersion\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.statsig.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "statsig-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "51fbda09-f060-4441-936d-1a603f7d9ca8",
+    "name": "Statsig Server SDK API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Statsig Server SDK API provides endpoints that power Statsig's server-side SDKs for Node.js, Python, Java, Ruby, Go, .NET, and other backend languages. Server SDKs use Server Secret Keys and access the download_config_specs endpoint to retrieve the full project configuration for local evaluation. This enables sub-millisecond feature gate checks without per-request network calls. The server SDKs also use the log_event endpoint for sending exposure and custom event data back to Statsig for analytics and experiment analysis.\n\nContact Support:\n Name: Statsig Support",
+      "type": "text/plain"
+    }
+  }
+}

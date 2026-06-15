@@ -1,0 +1,1436 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Statsig Console API",
+    "version": "20240601"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "STATSIG-API-KEY",
+      "value": "{{STATSIG-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Gates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all gates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/gates",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all feature gates in the project with their current status and configuration."
+        },
+        {
+          "info": {
+            "name": "Create a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://statsigapi.net/console/v1/gates",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new feature gate in the project with the specified configuration, rules, and targeting conditions."
+        },
+        {
+          "info": {
+            "name": "Get a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/gates/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Retrieves the full configuration of a specific feature gate including its rules, conditions, and overrides."
+        },
+        {
+          "info": {
+            "name": "Partially update a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://statsigapi.net/console/v1/gates/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates specific fields of a feature gate without replacing the entire configuration."
+        },
+        {
+          "info": {
+            "name": "Delete a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://statsigapi.net/console/v1/gates/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Permanently deletes a feature gate from the project. This action cannot be undone."
+        },
+        {
+          "info": {
+            "name": "Enable a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://statsigapi.net/console/v1/gates/:id/enable",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Enables a feature gate so that its rules are actively evaluated for users."
+        },
+        {
+          "info": {
+            "name": "Disable a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://statsigapi.net/console/v1/gates/:id/disable",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Disables a feature gate so that it returns false for all users regardless of rules."
+        },
+        {
+          "info": {
+            "name": "Launch a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://statsigapi.net/console/v1/gates/:id/launch",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Launches a feature gate, indicating the feature has been fully rolled out and the gate can be cleaned up."
+        },
+        {
+          "info": {
+            "name": "Archive a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://statsigapi.net/console/v1/gates/:id/archive",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Archives a feature gate, removing it from active use while preserving its configuration for reference."
+        },
+        {
+          "info": {
+            "name": "List gate rules",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/gates/:id/rules",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Retrieves all rules configured for a specific feature gate."
+        },
+        {
+          "info": {
+            "name": "Add a gate rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://statsigapi.net/console/v1/gates/:id/rules",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds a new targeting rule to a feature gate."
+        },
+        {
+          "info": {
+            "name": "Update gate rules",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://statsigapi.net/console/v1/gates/:id/rules",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replaces all rules for a feature gate with the provided set of rules."
+        },
+        {
+          "info": {
+            "name": "Delete a gate rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://statsigapi.net/console/v1/gates/:id/rules/:ruleID",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              },
+              {
+                "name": "ruleID",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the rule to delete."
+              }
+            ]
+          },
+          "docs": "Removes a specific targeting rule from a feature gate."
+        },
+        {
+          "info": {
+            "name": "Get gate overrides",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/gates/:id/overrides",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Retrieves the user and ID overrides configured for a feature gate."
+        },
+        {
+          "info": {
+            "name": "Add gate overrides",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://statsigapi.net/console/v1/gates/:id/overrides",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds user or ID overrides to a feature gate for forcing specific evaluation results."
+        },
+        {
+          "info": {
+            "name": "Update gate overrides",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://statsigapi.net/console/v1/gates/:id/overrides",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replaces all overrides for a feature gate with the provided set."
+        },
+        {
+          "info": {
+            "name": "Delete gate overrides",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://statsigapi.net/console/v1/gates/:id/overrides",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Removes all user and ID overrides from a feature gate."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Dynamic Configs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all dynamic configs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/dynamic_configs",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all dynamic configurations in the project."
+        },
+        {
+          "info": {
+            "name": "Create a dynamic config",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://statsigapi.net/console/v1/dynamic_configs",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new dynamic configuration in the project with the specified default values and rules."
+        },
+        {
+          "info": {
+            "name": "Get a dynamic config",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/dynamic_configs/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the dynamic config."
+              }
+            ]
+          },
+          "docs": "Retrieves the full configuration of a specific dynamic config including its default values, rules, and conditions."
+        },
+        {
+          "info": {
+            "name": "Partially update a dynamic config",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://statsigapi.net/console/v1/dynamic_configs/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the dynamic config."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates specific fields of a dynamic config without replacing the entire configuration."
+        },
+        {
+          "info": {
+            "name": "Delete a dynamic config",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://statsigapi.net/console/v1/dynamic_configs/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the dynamic config."
+              }
+            ]
+          },
+          "docs": "Permanently deletes a dynamic config from the project."
+        },
+        {
+          "info": {
+            "name": "Get dynamic config rules",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/dynamic_configs/:id/rules",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the dynamic config."
+              }
+            ]
+          },
+          "docs": "Retrieves all rules configured for a specific dynamic config."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Experiments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all experiments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/experiments",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all experiments in the project with their current status and configuration."
+        },
+        {
+          "info": {
+            "name": "Create an experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://statsigapi.net/console/v1/experiments",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new experiment in the project with the specified hypothesis, groups, and parameter configuration."
+        },
+        {
+          "info": {
+            "name": "Get an experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/experiments/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the experiment."
+              }
+            ]
+          },
+          "docs": "Retrieves the full configuration of a specific experiment including its groups, parameters, hypothesis, and status."
+        },
+        {
+          "info": {
+            "name": "Partially update an experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://statsigapi.net/console/v1/experiments/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the experiment."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates specific fields of an experiment without replacing the entire configuration."
+        },
+        {
+          "info": {
+            "name": "Delete an experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://statsigapi.net/console/v1/experiments/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the experiment."
+              }
+            ]
+          },
+          "docs": "Permanently deletes an experiment from the project."
+        },
+        {
+          "info": {
+            "name": "Start an experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://statsigapi.net/console/v1/experiments/:id/start",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the experiment."
+              }
+            ]
+          },
+          "docs": "Starts an experiment, beginning to allocate users to experiment groups and logging exposures."
+        },
+        {
+          "info": {
+            "name": "Reset an experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://statsigapi.net/console/v1/experiments/:id/reset",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the experiment."
+              }
+            ]
+          },
+          "docs": "Resets an experiment, clearing all collected data and resetting user assignments."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Segments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all segments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/segments",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all user segments in the project."
+        },
+        {
+          "info": {
+            "name": "Create a segment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://statsigapi.net/console/v1/segments",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new user segment in the project for targeting rules."
+        },
+        {
+          "info": {
+            "name": "Get a segment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/segments/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the segment."
+              }
+            ]
+          },
+          "docs": "Retrieves the full configuration of a specific user segment."
+        },
+        {
+          "info": {
+            "name": "Partially update a segment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://statsigapi.net/console/v1/segments/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the segment."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates specific fields of a user segment."
+        },
+        {
+          "info": {
+            "name": "Delete a segment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://statsigapi.net/console/v1/segments/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the segment."
+              }
+            ]
+          },
+          "docs": "Permanently deletes a user segment from the project."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Layers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all layers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/layers",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all layers in the project."
+        },
+        {
+          "info": {
+            "name": "Create a layer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://statsigapi.net/console/v1/layers",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new layer in the project for sharing parameters across multiple experiments."
+        },
+        {
+          "info": {
+            "name": "Get a layer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/layers/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the layer."
+              }
+            ]
+          },
+          "docs": "Retrieves the full configuration of a specific layer including its parameters and associated experiments."
+        },
+        {
+          "info": {
+            "name": "Delete a layer",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://statsigapi.net/console/v1/layers/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the layer."
+              }
+            ]
+          },
+          "docs": "Permanently deletes a layer from the project."
+        },
+        {
+          "info": {
+            "name": "List experiments in a layer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/layers/:id/experiments",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the layer."
+              }
+            ]
+          },
+          "docs": "Retrieves the list of experiments associated with a specific layer."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Holdouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all holdouts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/holdouts",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all holdout groups in the project."
+        },
+        {
+          "info": {
+            "name": "Create a holdout",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://statsigapi.net/console/v1/holdouts",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new holdout group in the project for measuring long-term feature impact."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Autotunes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all autotunes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/autotunes",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all autotune configurations in the project."
+        },
+        {
+          "info": {
+            "name": "Create an autotune",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://statsigapi.net/console/v1/autotunes",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new autotune configuration that automatically optimizes parameter values based on a target metric."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Metrics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/metrics",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all metric definitions in the project."
+        },
+        {
+          "info": {
+            "name": "Get a metric",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/metrics/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the metric."
+              }
+            ]
+          },
+          "docs": "Retrieves the definition of a specific metric."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Keys",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all API keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/keys",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all API keys in the project including server secret keys, client SDK keys, and console API keys."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/users",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of users known to the Statsig project."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Default",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/tags",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all tags used for organizing entities in the project."
+        },
+        {
+          "info": {
+            "name": "Create a tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://statsigapi.net/console/v1/tags",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new tag for organizing entities in the project."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Target Apps",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all target apps",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/target_apps",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all target application definitions in the project."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Audit Logs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List audit logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://statsigapi.net/console/v1/audit_logs",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves audit log entries tracking changes made to the project configuration through the console or API."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

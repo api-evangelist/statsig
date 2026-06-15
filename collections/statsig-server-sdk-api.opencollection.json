@@ -1,0 +1,70 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Statsig Server SDK API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "statsig-api-key",
+      "value": "{{statsig-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Configuration",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Download configuration specs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/download_config_specs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Downloads the full project configuration for server-side local evaluation. This endpoint is the primary mechanism used by server SDKs to retrieve all gate, config, experiment, and layer definitions. The downloaded specs enable sub-millisecond feature gate checks without per-request network calls. Server SDKs periodically poll this endpoint to stay up to date with configuration changes."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Log server events",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/log_event",
+            "headers": [
+              {
+                "name": "STATSIG-CLIENT-TIME",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Logs one or more events from the server SDK to Statsig for analytics and experiment analysis. Server SDKs batch exposure events from local gate checks and custom events, then flush them periodically to this endpoint. The STATSIG-CLIENT-TIME header is required for timestamp normalization."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,1333 @@
+{
+  "item": [
+    {
+      "id": "98b716f1-dff5-4668-8192-1450418c91c0",
+      "name": "Configuration",
+      "description": {
+        "content": "Endpoints for downloading full project configuration specs for server-side local evaluation.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "dc366cf6-8709-4dcd-a4e0-711e3836e82c",
+          "name": "Download configuration specs",
+          "request": {
+            "name": "Download configuration specs",
+            "description": {
+              "content": "Downloads the full project configuration for server-side local evaluation. This endpoint is used by server SDKs to retrieve all gate, config, experiment, and layer definitions for evaluating locally without per-request network calls. This enables sub-millisecond feature gate checks.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "download_config_specs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sinceTime\": \"<long>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5e2bc0aa-0a85-44e7-8168-aa0d8a440330",
+              "name": "Full project configuration specs",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "download_config_specs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sinceTime\": \"<long>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"has_updates\": true,\n  \"time\": 5928\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d6a985d2-2057-4a4e-acaf-ea3c1307f7f4",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "download_config_specs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sinceTime\": \"<long>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "c537377a-9da7-48ff-95d2-81c093c60e99",
+      "name": "Dynamic Configs",
+      "description": {
+        "content": "Endpoints for fetching dynamic configuration values for users, supporting both dynamic configs and experiments.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d10e3d89-ba13-4b3d-b9d7-968546a96cdb",
+          "name": "Get a dynamic config or experiment",
+          "request": {
+            "name": "Get a dynamic config or experiment",
+            "description": {
+              "content": "Fetches the configuration values for a dynamic config or experiment for the specified user. The system automatically determines whether the requested name refers to a dynamic config or an experiment. An exposure event is automatically logged.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "get_config"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\n    \"userID\": \"<string>\",\n    \"email\": \"<email>\",\n    \"ip\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"country\": \"<string>\",\n    \"locale\": \"<string>\",\n    \"appVersion\": \"<string>\",\n    \"custom\": {\n      \"key_0\": \"string\",\n      \"key_1\": 2043\n    },\n    \"privateAttributes\": {\n      \"key_0\": 3296,\n      \"key_1\": 4668.618411838659,\n      \"key_2\": 8227\n    },\n    \"customIDs\": {\n      \"key_0\": \"<string>\"\n    }\n  },\n  \"configName\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "0eddd2b3-d226-4256-84f3-5092ef03263b",
+              "name": "Dynamic config or experiment values",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get_config"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"3Ii@PQmzITuSGFUniPbLXYv.sckc\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": 5774.376111843208\n    },\n    \"privateAttributes\": {\n      \"key_0\": 2693.9421138512885,\n      \"key_1\": true\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\",\n      \"key_2\": \"string\",\n      \"key_3\": \"string\"\n    }\n  },\n  \"configName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"string\",\n  \"value\": {},\n  \"group\": \"string\",\n  \"rule_id\": \"string\",\n  \"group_name\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e2ec2b6b-a4c2-4dbb-8b8e-8754b4a6ab23",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get_config"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"3Ii@PQmzITuSGFUniPbLXYv.sckc\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": 5774.376111843208\n    },\n    \"privateAttributes\": {\n      \"key_0\": 2693.9421138512885,\n      \"key_1\": true\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\",\n      \"key_2\": \"string\",\n      \"key_3\": \"string\"\n    }\n  },\n  \"configName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "1d499f2f-ad41-43b2-92f8-e4da10daf89e",
+      "name": "Events",
+      "description": {
+        "content": "Endpoints for logging custom events and exposure data to Statsig for analytics and experiment analysis.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5097ede0-f6b8-4b36-8ad8-4f27dd12f136",
+          "name": "Log custom events",
+          "request": {
+            "name": "Log custom events",
+            "description": {
+              "content": "Logs one or more custom events to Statsig for analytics and experiment analysis. Events can include exposure events, custom events with values, and metadata. The STATSIG-CLIENT-TIME header is required to normalize timestamps.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "log_event"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Client-side timestamp in milliseconds since epoch, used to normalize event timestamps.",
+                "key": "STATSIG-CLIENT-TIME",
+                "value": "<long>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"events\": [\n    {\n      \"user\": {\n        \"userID\": \"<string>\",\n        \"email\": \"<email>\",\n        \"ip\": \"<string>\",\n        \"userAgent\": \"<string>\",\n        \"country\": \"<string>\",\n        \"locale\": \"<string>\",\n        \"appVersion\": \"<string>\",\n        \"custom\": {\n          \"key_0\": 5881,\n          \"key_1\": \"string\",\n          \"key_2\": 8012\n        },\n        \"privateAttributes\": {\n          \"key_0\": 5164,\n          \"key_1\": \"string\",\n          \"key_2\": true\n        },\n        \"customIDs\": {\n          \"key_0\": \"<string>\",\n          \"key_1\": \"<string>\"\n        }\n      },\n      \"eventName\": \"<string>\",\n      \"time\": \"<long>\",\n      \"value\": \"<string>\",\n      \"metadata\": {\n        \"key_0\": true,\n        \"key_1\": 7099\n      }\n    },\n    {\n      \"user\": {\n        \"userID\": \"<string>\",\n        \"email\": \"<email>\",\n        \"ip\": \"<string>\",\n        \"userAgent\": \"<string>\",\n        \"country\": \"<string>\",\n        \"locale\": \"<string>\",\n        \"appVersion\": \"<string>\",\n        \"custom\": {\n          \"key_0\": 5830\n        },\n        \"privateAttributes\": {\n          \"key_0\": 9464\n        },\n        \"customIDs\": {\n          \"key_0\": \"<string>\"\n        }\n      },\n      \"eventName\": \"<string>\",\n      \"time\": \"<long>\",\n      \"value\": \"<string>\",\n      \"metadata\": {\n        \"key_0\": \"string\"\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a55b9160-48fa-45be-937e-11046504b17d",
+              "name": "Events accepted for processing",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "log_event"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Client-side timestamp in milliseconds since epoch, used to normalize event timestamps.",
+                    "key": "STATSIG-CLIENT-TIME",
+                    "value": "<long>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"email\": \"GzWqZ05Fkv4@uOeMocYZyvv.ehku\",\n        \"ip\": \"string\",\n        \"userAgent\": \"string\",\n        \"country\": \"string\",\n        \"locale\": \"string\",\n        \"appVersion\": \"string\",\n        \"custom\": {\n          \"key_0\": 2766\n        },\n        \"privateAttributes\": {\n          \"key_0\": 1180.0451284507774\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 3458,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": 5198\n      }\n    },\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"email\": \"aCU3t307@bZFisaNxNVXgx.fevj\",\n        \"ip\": \"string\",\n        \"userAgent\": \"string\",\n        \"country\": \"string\",\n        \"locale\": \"string\",\n        \"appVersion\": \"string\",\n        \"custom\": {\n          \"key_0\": 1302.0923375261373\n        },\n        \"privateAttributes\": {\n          \"key_0\": 5987\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\",\n          \"key_1\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 5399,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": true\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b9e0c4cd-e9af-4134-8e55-d0eaec1b9974",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "log_event"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Client-side timestamp in milliseconds since epoch, used to normalize event timestamps.",
+                    "key": "STATSIG-CLIENT-TIME",
+                    "value": "<long>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"email\": \"GzWqZ05Fkv4@uOeMocYZyvv.ehku\",\n        \"ip\": \"string\",\n        \"userAgent\": \"string\",\n        \"country\": \"string\",\n        \"locale\": \"string\",\n        \"appVersion\": \"string\",\n        \"custom\": {\n          \"key_0\": 2766\n        },\n        \"privateAttributes\": {\n          \"key_0\": 1180.0451284507774\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 3458,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": 5198\n      }\n    },\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"email\": \"aCU3t307@bZFisaNxNVXgx.fevj\",\n        \"ip\": \"string\",\n        \"userAgent\": \"string\",\n        \"country\": \"string\",\n        \"locale\": \"string\",\n        \"appVersion\": \"string\",\n        \"custom\": {\n          \"key_0\": 1302.0923375261373\n        },\n        \"privateAttributes\": {\n          \"key_0\": 5987\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\",\n          \"key_1\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 5399,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": true\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "eb7060f0-4ad8-452c-b2a9-19327fae43b4",
+      "name": "Experiments",
+      "description": {
+        "content": "Endpoints for retrieving experiment configurations and group assignments for users.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "52ced34d-9cc1-4f92-bdc4-5198973853b2",
+          "name": "Get an experiment configuration",
+          "request": {
+            "name": "Get an experiment configuration",
+            "description": {
+              "content": "Fetches the experiment configuration and group assignment for the specified user. This is functionally similar to get_config but specifically targets experiments. An exposure event is automatically logged for experiment analysis.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "get_experiment"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\n    \"userID\": \"<string>\",\n    \"email\": \"<email>\",\n    \"ip\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"country\": \"<string>\",\n    \"locale\": \"<string>\",\n    \"appVersion\": \"<string>\",\n    \"custom\": {\n      \"key_0\": 7780.961203994757,\n      \"key_1\": 6250,\n      \"key_2\": 5258\n    },\n    \"privateAttributes\": {\n      \"key_0\": 5271.857748048253,\n      \"key_1\": \"string\",\n      \"key_2\": true,\n      \"key_3\": false,\n      \"key_4\": 2408\n    },\n    \"customIDs\": {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\",\n      \"key_2\": \"<string>\"\n    }\n  },\n  \"experimentName\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "6a43068d-26b9-4dc4-a282-f087374ac1c3",
+              "name": "Experiment configuration and group assignment",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get_experiment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"kBuzxTg2TEHeOK@nmwyuJKjWJPIZfSbbdunkySwQY.txf\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": 5888.470892431386,\n      \"key_1\": false,\n      \"key_2\": true,\n      \"key_3\": 2290.5730133173183\n    },\n    \"privateAttributes\": {\n      \"key_0\": \"string\",\n      \"key_1\": 4916,\n      \"key_2\": 1287.1032045812003,\n      \"key_3\": 2205.0957221519907\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  },\n  \"experimentName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"string\",\n  \"value\": {},\n  \"group\": \"string\",\n  \"rule_id\": \"string\",\n  \"group_name\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9eb4c481-68a0-4cf9-ab62-a51706d3bcbf",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get_experiment"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"kBuzxTg2TEHeOK@nmwyuJKjWJPIZfSbbdunkySwQY.txf\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": 5888.470892431386,\n      \"key_1\": false,\n      \"key_2\": true,\n      \"key_3\": 2290.5730133173183\n    },\n    \"privateAttributes\": {\n      \"key_0\": \"string\",\n      \"key_1\": 4916,\n      \"key_2\": 1287.1032045812003,\n      \"key_3\": 2205.0957221519907\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  },\n  \"experimentName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "b6892847-9c05-4425-a801-edb8053c6bb2",
+      "name": "Feature Gates",
+      "description": {
+        "content": "Endpoints for evaluating feature gates for users, returning boolean pass/fail values along with rule identification.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "fc8ad9e5-b395-4aa7-a835-2f2fed484204",
+          "name": "Check a feature gate",
+          "request": {
+            "name": "Check a feature gate",
+            "description": {
+              "content": "Evaluates a single feature gate for the specified user and returns the boolean pass/fail result along with rule identification. Statsig automatically logs an exposure event for the gate check.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "check_gate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\n    \"userID\": \"<string>\",\n    \"email\": \"<email>\",\n    \"ip\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"country\": \"<string>\",\n    \"locale\": \"<string>\",\n    \"appVersion\": \"<string>\",\n    \"custom\": {\n      \"key_0\": 3470,\n      \"key_1\": 9447,\n      \"key_2\": 7882,\n      \"key_3\": 9321.99178739656\n    },\n    \"privateAttributes\": {\n      \"key_0\": false\n    },\n    \"customIDs\": {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\"\n    }\n  },\n  \"gateName\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "63f7644d-3794-4295-a062-fe12915ff2ac",
+              "name": "Gate evaluation result",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "check_gate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"20GSt43Ge88BW7s@TjefuJHCjwIqPZFcBcaoqbHdj.js\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": false,\n      \"key_1\": 5589\n    },\n    \"privateAttributes\": {\n      \"key_0\": false,\n      \"key_1\": \"string\",\n      \"key_2\": 273\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  },\n  \"gateName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"string\",\n  \"value\": true,\n  \"rule_id\": \"string\",\n  \"group_name\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "af4a0479-3f98-4dc2-9d55-f0ce844a1465",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "check_gate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"20GSt43Ge88BW7s@TjefuJHCjwIqPZFcBcaoqbHdj.js\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": false,\n      \"key_1\": 5589\n    },\n    \"privateAttributes\": {\n      \"key_0\": false,\n      \"key_1\": \"string\",\n      \"key_2\": 273\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  },\n  \"gateName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2ea81cf1-9d11-449b-9dee-a1f6ad546814",
+          "name": "Check multiple feature gates",
+          "request": {
+            "name": "Check multiple feature gates",
+            "description": {
+              "content": "Evaluates multiple feature gates for the specified user in a single request and returns the boolean pass/fail results for each gate. Statsig automatically logs exposure events for each gate check.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "check_gate_multiple"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\n    \"userID\": \"<string>\",\n    \"email\": \"<email>\",\n    \"ip\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"country\": \"<string>\",\n    \"locale\": \"<string>\",\n    \"appVersion\": \"<string>\",\n    \"custom\": {\n      \"key_0\": 2172.382657253332,\n      \"key_1\": \"string\",\n      \"key_2\": \"string\"\n    },\n    \"privateAttributes\": {\n      \"key_0\": false\n    },\n    \"customIDs\": {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\"\n    }\n  },\n  \"gateNames\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "dba60bdd-6b83-4dcc-9b00-f98407c85bac",
+              "name": "Multiple gate evaluation results",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "check_gate_multiple"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"9du@tlxGFgSIvppnX.jw\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": \"string\"\n    },\n    \"privateAttributes\": {\n      \"key_0\": 2191.0342013252084,\n      \"key_1\": 3761,\n      \"key_2\": \"string\"\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\"\n    }\n  },\n  \"gateNames\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"name\": \"string\",\n      \"value\": true,\n      \"rule_id\": \"string\",\n      \"group_name\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"value\": true,\n      \"rule_id\": \"string\",\n      \"group_name\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "20033319-70df-4eb0-9ccd-fc51e40acf34",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "check_gate_multiple"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"9du@tlxGFgSIvppnX.jw\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": \"string\"\n    },\n    \"privateAttributes\": {\n      \"key_0\": 2191.0342013252084,\n      \"key_1\": 3761,\n      \"key_2\": \"string\"\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\"\n    }\n  },\n  \"gateNames\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "99cb6207-1c94-438b-b40d-a3825440cddb",
+      "name": "Initialization",
+      "description": {
+        "content": "Endpoints for initializing client SDKs with all evaluated gates, configs, experiments, and layers for a given user.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6cfb4127-a670-4479-9310-de4f0018301c",
+          "name": "Initialize client SDK",
+          "request": {
+            "name": "Initialize client SDK",
+            "description": {
+              "content": "Returns all evaluated gates, configs, experiments, and layers for a given user. This is the primary endpoint used by client SDKs for initialization. The response contains hashed names for security, and the client SDK decodes them locally.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "initialize"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\n    \"userID\": \"<string>\",\n    \"email\": \"<email>\",\n    \"ip\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"country\": \"<string>\",\n    \"locale\": \"<string>\",\n    \"appVersion\": \"<string>\",\n    \"custom\": {\n      \"key_0\": 2990,\n      \"key_1\": \"string\"\n    },\n    \"privateAttributes\": {\n      \"key_0\": 5848.296905780273,\n      \"key_1\": \"string\",\n      \"key_2\": 9336.866480542454\n    },\n    \"customIDs\": {\n      \"key_0\": \"<string>\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a57f8d29-768a-419c-a342-851d5705947a",
+              "name": "Full set of evaluated configurations for the user",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "initialize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"f00QZf5Nj3@GtDMkZPjnTcLkMtELLitUHnG.dpx\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": \"string\",\n      \"key_1\": 1194.3884713545328\n    },\n    \"privateAttributes\": {\n      \"key_0\": 3204.347016104385,\n      \"key_1\": true\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\",\n      \"key_2\": \"string\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"feature_gates\": {},\n  \"dynamic_configs\": {},\n  \"layer_configs\": {},\n  \"has_updates\": false,\n  \"time\": 8601\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "241db846-e33f-40fd-bb4b-44b48e2df990",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "initialize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"f00QZf5Nj3@GtDMkZPjnTcLkMtELLitUHnG.dpx\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": \"string\",\n      \"key_1\": 1194.3884713545328\n    },\n    \"privateAttributes\": {\n      \"key_0\": 3204.347016104385,\n      \"key_1\": true\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\",\n      \"key_2\": \"string\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "fce1557f-ada1-4b37-befa-c623818cb7c5",
+      "name": "Layers",
+      "description": {
+        "content": "Endpoints for fetching layer parameter values, enabling shared parameters across multiple experiments.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "685265ec-63c6-47bf-801f-5a16f0eabbc0",
+          "name": "Get layer parameters",
+          "request": {
+            "name": "Get layer parameters",
+            "description": {
+              "content": "Fetches parameter values from a layer for the specified user. Layers allow sharing parameters across multiple experiments. An exposure event is logged only when a specific parameter is accessed.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "get_layer"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\n    \"userID\": \"<string>\",\n    \"email\": \"<email>\",\n    \"ip\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"country\": \"<string>\",\n    \"locale\": \"<string>\",\n    \"appVersion\": \"<string>\",\n    \"custom\": {\n      \"key_0\": false,\n      \"key_1\": \"string\",\n      \"key_2\": true\n    },\n    \"privateAttributes\": {\n      \"key_0\": \"string\",\n      \"key_1\": 9811.111792539354,\n      \"key_2\": \"string\",\n      \"key_3\": 6297\n    },\n    \"customIDs\": {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\",\n      \"key_2\": \"<string>\"\n    }\n  },\n  \"layerName\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "50d98a4a-c0b9-4f2d-930b-303a63fb4954",
+              "name": "Layer parameter values",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get_layer"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"Uwe2X@EoSnOuNsMraTGlEpdVRVOORt.uwi\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": false,\n      \"key_1\": \"string\"\n    },\n    \"privateAttributes\": {\n      \"key_0\": 7278,\n      \"key_1\": \"string\"\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  },\n  \"layerName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"string\",\n  \"value\": {},\n  \"rule_id\": \"string\",\n  \"group_name\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "09f784c7-1ee0-4bc9-ad99-535bf020f31f",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get_layer"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"Uwe2X@EoSnOuNsMraTGlEpdVRVOORt.uwi\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": false,\n      \"key_1\": \"string\"\n    },\n    \"privateAttributes\": {\n      \"key_0\": 7278,\n      \"key_1\": \"string\"\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  },\n  \"layerName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.statsig.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "statsig-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "d6720f91-088f-4e82-ae15-8150bebabb29",
+    "name": "Statsig HTTP API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Statsig HTTP API allows developers to evaluate feature gates, dynamic configs, and experiments for users via server-side HTTP requests. It provides endpoints for checking gate values, fetching configuration data, and logging custom events. All requests use the POST method with JSON request bodies and require authentication via the statsig-api-key header. While Statsig recommends using their official SDKs for most use cases, the HTTP API is available for environments where an SDK is not available or when direct HTTP integration is preferred.\n\nContact Support:\n Name: Statsig Support",
+      "type": "text/plain"
+    }
+  }
+}

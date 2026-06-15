@@ -1,0 +1,200 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Statsig HTTP API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "statsig-api-key",
+      "value": "{{statsig-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Feature Gates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Check a feature gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/check_gate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Evaluates a single feature gate for the specified user and returns the boolean pass/fail result along with rule identification. Statsig automatically logs an exposure event for the gate check."
+        },
+        {
+          "info": {
+            "name": "Check multiple feature gates",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/check_gate_multiple",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Evaluates multiple feature gates for the specified user in a single request and returns the boolean pass/fail results for each gate. Statsig automatically logs exposure events for each gate check."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Dynamic Configs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a dynamic config or experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/get_config",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fetches the configuration values for a dynamic config or experiment for the specified user. The system automatically determines whether the requested name refers to a dynamic config or an experiment. An exposure event is automatically logged."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Experiments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get an experiment configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/get_experiment",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fetches the experiment configuration and group assignment for the specified user. This is functionally similar to get_config but specifically targets experiments. An exposure event is automatically logged for experiment analysis."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Layers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get layer parameters",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/get_layer",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fetches parameter values from a layer for the specified user. Layers allow sharing parameters across multiple experiments. An exposure event is logged only when a specific parameter is accessed."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Initialization",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Initialize client SDK",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/initialize",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns all evaluated gates, configs, experiments, and layers for a given user. This is the primary endpoint used by client SDKs for initialization. The response contains hashed names for security, and the client SDK decodes them locally."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Log custom events",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/log_event",
+            "headers": [
+              {
+                "name": "STATSIG-CLIENT-TIME",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Logs one or more custom events to Statsig for analytics and experiment analysis. Events can include exposure events, custom events with values, and metadata. The STATSIG-CLIENT-TIME header is required to normalize timestamps."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Configuration",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Download configuration specs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/download_config_specs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Downloads the full project configuration for server-side local evaluation. This endpoint is used by server SDKs to retrieve all gate, config, experiment, and layer definitions for evaluating locally without per-request network calls. This enables sub-millisecond feature gate checks."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
