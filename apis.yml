@@ -10,7 +10,7 @@ apis:
       - Dynamic Configuration
       - Experimentation
       - Feature Flags
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     baseURL: https://api.statsig.com
     humanURL: https://docs.statsig.com/http-api/
     properties:
@@ -31,7 +31,7 @@ apis:
       - Configuration Management
       - Experimentation
       - Feature Flags
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     baseURL: https://statsigapi.net/console/v1
     humanURL: https://docs.statsig.com/console-api/
     properties:
@@ -51,7 +51,7 @@ apis:
       - Mobile
       - SDKs
       - Web
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     baseURL: https://api.statsig.com
     humanURL: https://docs.statsig.com/client/introduction
     properties:
@@ -72,7 +72,7 @@ apis:
       - Feature Flags
       - SDKs
       - Server Side
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     baseURL: https://api.statsig.com
     humanURL: https://docs.statsig.com/server/introduction
     properties:
@@ -93,7 +93,7 @@ apis:
       - Events
       - Logging
       - Metrics
-    image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     baseURL: https://events.statsigapi.net
     humanURL: https://docs.statsig.com/http-api/
     properties:
