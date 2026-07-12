@@ -1,0 +1,29 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/statsig-client-sdk-api-openapi.yml, openapi/statsig-console-api-openapi.yml,
+  openapi/statsig-events-api-openapi.yml, openapi/statsig-http-api-openapi.yml, openapi/statsig-server-sdk-api-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: clientSdkKey
+  type: apiKey
+  in: header
+  parameter: statsig-api-key
+  description: Client-SDK Key that is safe to embed in mobile apps and front-end web applications.
+    Created in Project Settings > API Keys tab.
+  sources:
+  - openapi/statsig-client-sdk-api-openapi.yml
+  - openapi/statsig-events-api-openapi.yml
+  - openapi/statsig-http-api-openapi.yml
+  - openapi/statsig-server-sdk-api-openapi.yml
+- name: consoleApiKey
+  type: apiKey
+  in: header
+  parameter: STATSIG-API-KEY
+  description: Console API Key created in Project Settings > API Keys tab. Required for all
+    Console API requests.
+  sources:
+  - openapi/statsig-console-api-openapi.yml
