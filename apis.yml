@@ -110,6 +110,8 @@ apis:
       high-throughput data ingestion, processing over a trillion events daily with high reliability and low latency,
       enabling real-time experiment monitoring and metric updates.
 common:
+  - type: AgenticAccess
+    url: agentic-access/statsig-agentic-access.yml
   - type: TrustCenter
     url: security/statsig-trust-center.yml
   - type: DomainSecurity
