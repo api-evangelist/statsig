@@ -1,0 +1,490 @@
+openapi: 3.1.0
+info:
+  title: Statsig Client SDK Audit Logs Dynamic Configs API
+  description: The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.
+  version: 1.0.0
+  contact:
+    name: Statsig Support
+    url: https://statsig.com/support
+  termsOfService: https://statsig.com/terms
+servers:
+- url: https://api.statsig.com/v1
+  description: Statsig API Server
+security:
+- clientSdkKey: []
+tags:
+- name: Dynamic Configs
+  description: Manage dynamic configurations with full CRUD operations for server-driven configuration values.
+paths:
+  /dynamic_configs:
+    get:
+      operationId: listDynamicConfigs
+      summary: List all dynamic configs
+      description: Retrieves a list of all dynamic configurations in the project.
+      tags:
+      - Dynamic Configs
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: List of dynamic configs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DynamicConfig'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createDynamicConfig
+      summary: Create a dynamic config
+      description: Creates a new dynamic configuration in the project with the specified default values and rules.
+      tags:
+      - Dynamic Configs
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DynamicConfigCreate'
+      responses:
+        '201':
+          description: Dynamic config created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicConfig'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /dynamic_configs/{id}:
+    get:
+      operationId: getDynamicConfig
+      summary: Get a dynamic config
+      description: Retrieves the full configuration of a specific dynamic config including its default values, rules, and conditions.
+      tags:
+      - Dynamic Configs
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - $ref: '#/components/parameters/DynamicConfigId'
+      responses:
+        '200':
+          description: Dynamic config details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicConfig'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: partiallyUpdateDynamicConfig
+      summary: Partially update a dynamic config
+      description: Updates specific fields of a dynamic config without replacing the entire configuration.
+      tags:
+      - Dynamic Configs
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - $ref: '#/components/parameters/DynamicConfigId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DynamicConfigUpdate'
+      responses:
+        '200':
+          description: Dynamic config updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicConfig'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteDynamicConfig
+      summary: Delete a dynamic config
+      description: Permanently deletes a dynamic config from the project.
+      tags:
+      - Dynamic Configs
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - $ref: '#/components/parameters/DynamicConfigId'
+      responses:
+        '200':
+          description: Dynamic config deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /dynamic_configs/{id}/rules:
+    get:
+      operationId: getDynamicConfigRules
+      summary: Get dynamic config rules
+      description: Retrieves all rules configured for a specific dynamic config.
+      tags:
+      - Dynamic Configs
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - $ref: '#/components/parameters/DynamicConfigId'
+      responses:
+        '200':
+          description: List of dynamic config rules
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Rule'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /get_config:
+    post:
+      operationId: getConfig
+      summary: Get a dynamic config or experiment
+      description: Fetches the configuration values for a dynamic config or experiment for the specified user. The system automatically determines whether the requested name refers to a dynamic config or an experiment. An exposure event is automatically logged.
+      tags:
+      - Dynamic Configs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - user
+              - configName
+              properties:
+                user:
+                  $ref: '#/components/schemas/StatsigUser'
+                configName:
+                  type: string
+                  description: The name of the dynamic config or experiment to retrieve.
+      responses:
+        '200':
+          description: Dynamic config or experiment values
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: The name of the config that was retrieved.
+                  value:
+                    type: object
+                    description: The JSON object containing the configuration key-value pairs for this user.
+                  group:
+                    type: string
+                    description: The experiment group the user was assigned to, if applicable.
+                  rule_id:
+                    type: string
+                    description: The identifier of the rule that was matched.
+                  group_name:
+                    type: string
+                    description: The name of the group the user was assigned to.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    DynamicConfigCreate:
+      type: object
+      description: Request body for creating a new dynamic config.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the dynamic config to create.
+        description:
+          type: string
+          description: A human-readable description of the config purpose.
+        defaultValue:
+          type: object
+          description: The default key-value pairs.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags to associate with the config.
+    DynamicConfig:
+      type: object
+      description: A dynamic configuration that provides key-value pairs to clients based on targeting rules.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the dynamic config.
+        name:
+          type: string
+          description: The name of the dynamic config.
+        description:
+          type: string
+          description: A human-readable description of the config purpose.
+        isEnabled:
+          type: boolean
+          description: Whether the config is currently enabled.
+        defaultValue:
+          type: object
+          description: The default key-value pairs returned when no rules match.
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+          description: The targeting rules for this config.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the config.
+        createdTime:
+          type: integer
+          format: int64
+          description: Timestamp when the config was created.
+        lastModifiedTime:
+          type: integer
+          format: int64
+          description: Timestamp when the config was last modified.
+    Condition:
+      type: object
+      description: A condition within a targeting rule that evaluates user properties against specified criteria.
+      properties:
+        type:
+          type: string
+          enum:
+          - user_id
+          - email
+          - ip_address
+          - country
+          - app_version
+          - custom_field
+          - browser_name
+          - browser_version
+          - os_name
+          - os_version
+          - passes_gate
+          - fails_gate
+          - environment
+          - passes_segment
+          - fails_segment
+          - time
+          - unit_id
+          description: The type of condition to evaluate.
+        targetValue:
+          description: The value or values to compare against.
+        operator:
+          type: string
+          enum:
+          - any
+          - none
+          - str_starts_with_any
+          - str_ends_with_any
+          - str_contains_any
+          - str_contains_none
+          - str_matches
+          - gt
+          - gte
+          - lt
+          - lte
+          - version_gt
+          - version_gte
+          - version_lt
+          - version_lte
+          - before
+          - after
+          - true
+          description: The comparison operator to use.
+    Rule:
+      type: object
+      description: A targeting rule that defines conditions under which a gate passes or a config returns specific values.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the rule.
+        name:
+          type: string
+          description: The name of the rule.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of users matching conditions who pass the rule.
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+          description: The conditions that must be met for this rule to apply.
+        returnValue:
+          type: object
+          description: The value returned when this rule matches, for dynamic configs.
+        environments:
+          type: array
+          items:
+            type: string
+          description: Environments where this rule is active.
+    StatsigUser:
+      type: object
+      description: The user object representing the end user being evaluated. At minimum, a userID should be provided. Additional properties enable more sophisticated targeting.
+      properties:
+        userID:
+          type: string
+          description: A unique identifier for the user.
+        email:
+          type: string
+          format: email
+          description: The email address of the user, used for email-based targeting.
+        ip:
+          type: string
+          description: The IP address of the user, used for IP-based targeting.
+        userAgent:
+          type: string
+          description: The user agent string, used for browser or device targeting.
+        country:
+          type: string
+          description: The two-letter country code of the user.
+        locale:
+          type: string
+          description: The locale identifier for the user.
+        appVersion:
+          type: string
+          description: The version of the application the user is using.
+        custom:
+          type: object
+          additionalProperties: true
+          description: Custom properties for the user, used for custom targeting rules.
+        privateAttributes:
+          type: object
+          additionalProperties: true
+          description: Private user attributes used for evaluation but stripped before logging to Statsig servers.
+        customIDs:
+          type: object
+          additionalProperties:
+            type: string
+          description: Custom identifier mappings for the user, such as companyID or teamID.
+    DynamicConfigUpdate:
+      type: object
+      description: Request body for partially updating a dynamic config.
+      properties:
+        description:
+          type: string
+          description: Updated description.
+        isEnabled:
+          type: boolean
+          description: Whether the config should be enabled.
+        defaultValue:
+          type: object
+          description: Updated default key-value pairs.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Updated tags.
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message indicating the resource was not found.
+  parameters:
+    DynamicConfigId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The name or identifier of the dynamic config.
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
+  securitySchemes:
+    clientSdkKey:
+      type: apiKey
+      in: header
+      name: statsig-api-key
+      description: Client-SDK Key that is safe to embed in mobile apps and front-end web applications. Created in Project Settings > API Keys tab.
+externalDocs:
+  description: Statsig Client SDK Documentation
+  url: https://docs.statsig.com/client/introduction

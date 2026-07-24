@@ -1,0 +1,134 @@
+openapi: 3.1.0
+info:
+  title: Statsig Client SDK Audit Logs Webhooks API
+  description: The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.
+  version: 1.0.0
+  contact:
+    name: Statsig Support
+    url: https://statsig.com/support
+  termsOfService: https://statsig.com/terms
+servers:
+- url: https://api.statsig.com/v1
+  description: Statsig API Server
+security:
+- clientSdkKey: []
+tags:
+- name: Webhooks
+  description: Endpoint for receiving event data from third-party applications via webhook integration.
+paths:
+  /webhooks/event_webhook:
+    post:
+      operationId: receiveWebhookEvent
+      summary: Receive webhook events
+      description: Receives event data from third-party applications or external sources via webhook integration. This endpoint allows logging events to Statsig from external systems to provide additional insights to experiments and metrics. Events are validated and ingested into the same analytics pipeline as SDK events.
+      tags:
+      - Webhooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - events
+              properties:
+                events:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Event'
+                  description: An array of events from the external source.
+      responses:
+        '202':
+          description: Webhook events accepted for processing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Whether the events were successfully accepted.
+        '400':
+          description: Invalid request format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+  schemas:
+    Error:
+      type: object
+      description: An error response from the Events API.
+      properties:
+        message:
+          type: string
+          description: A human-readable error message.
+        status:
+          type: integer
+          description: The HTTP status code.
+    Event:
+      type: object
+      description: An event object representing an exposure, custom event, or diagnostic event for ingestion.
+      required:
+      - user
+      - eventName
+      - time
+      properties:
+        user:
+          type: object
+          description: The user associated with the event.
+          properties:
+            userID:
+              type: string
+              description: A unique identifier for the user.
+            email:
+              type: string
+              format: email
+              description: The user email address.
+            custom:
+              type: object
+              additionalProperties: true
+              description: Custom properties for the user.
+            customIDs:
+              type: object
+              additionalProperties:
+                type: string
+              description: Custom identifier mappings.
+        eventName:
+          type: string
+          description: The name of the event. Exposure events use the format statsig::gate_exposure or statsig::config_exposure. Custom events use application-defined names.
+        time:
+          type: integer
+          format: int64
+          description: Timestamp of the event in milliseconds since epoch.
+        value:
+          oneOf:
+          - type: string
+          - type: number
+          description: An optional value associated with the event, such as revenue amount or duration.
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Optional metadata key-value pairs providing additional context for the event.
+  securitySchemes:
+    clientSdkKey:
+      type: apiKey
+      in: header
+      name: statsig-api-key
+      description: Client-SDK Key that is safe to embed in mobile apps and front-end web applications. Created in Project Settings > API Keys tab.
+externalDocs:
+  description: Statsig Client SDK Documentation
+  url: https://docs.statsig.com/client/introduction

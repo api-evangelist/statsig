@@ -1,0 +1,423 @@
+openapi: 3.1.0
+info:
+  title: Statsig Client SDK Audit Logs Layers API
+  description: The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.
+  version: 1.0.0
+  contact:
+    name: Statsig Support
+    url: https://statsig.com/support
+  termsOfService: https://statsig.com/terms
+servers:
+- url: https://api.statsig.com/v1
+  description: Statsig API Server
+security:
+- clientSdkKey: []
+tags:
+- name: Layers
+  description: Manage layers that enable sharing parameters across multiple experiments while maintaining mutual exclusivity.
+paths:
+  /layers:
+    get:
+      operationId: listLayers
+      summary: List all layers
+      description: Retrieves a list of all layers in the project.
+      tags:
+      - Layers
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: List of layers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Layer'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createLayer
+      summary: Create a layer
+      description: Creates a new layer in the project for sharing parameters across multiple experiments.
+      tags:
+      - Layers
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LayerCreate'
+      responses:
+        '201':
+          description: Layer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Layer'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /layers/{id}:
+    get:
+      operationId: getLayer
+      summary: Get a layer
+      description: Retrieves the full configuration of a specific layer including its parameters and associated experiments.
+      tags:
+      - Layers
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The name or identifier of the layer.
+      responses:
+        '200':
+          description: Layer details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Layer'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteLayer
+      summary: Delete a layer
+      description: Permanently deletes a layer from the project.
+      tags:
+      - Layers
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The name or identifier of the layer.
+      responses:
+        '200':
+          description: Layer deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /layers/{id}/experiments:
+    get:
+      operationId: listLayerExperiments
+      summary: List experiments in a layer
+      description: Retrieves the list of experiments associated with a specific layer.
+      tags:
+      - Layers
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The name or identifier of the layer.
+      responses:
+        '200':
+          description: List of experiments in the layer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Experiment'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /get_layer:
+    post:
+      operationId: getLayer
+      summary: Get layer parameters
+      description: Fetches parameter values from a layer for the specified user. Layers allow sharing parameters across multiple experiments. An exposure event is logged only when a specific parameter is accessed.
+      tags:
+      - Layers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - user
+              - layerName
+              properties:
+                user:
+                  $ref: '#/components/schemas/StatsigUser'
+                layerName:
+                  type: string
+                  description: The name of the layer to retrieve.
+      responses:
+        '200':
+          description: Layer parameter values
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: The name of the layer.
+                  value:
+                    type: object
+                    description: The JSON object containing the layer parameter values for this user.
+                  rule_id:
+                    type: string
+                    description: The identifier of the rule that was matched.
+                  group_name:
+                    type: string
+                    description: The name of the group the user was assigned to.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    LayerCreate:
+      type: object
+      description: Request body for creating a new layer.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the layer to create.
+        description:
+          type: string
+          description: A human-readable description.
+        parameters:
+          type: object
+          description: The default parameter values for the layer.
+    Layer:
+      type: object
+      description: A layer that enables sharing parameters across multiple experiments while maintaining mutual exclusivity.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the layer.
+        name:
+          type: string
+          description: The name of the layer.
+        description:
+          type: string
+          description: A human-readable description of the layer.
+        parameters:
+          type: object
+          description: The default parameter values for the layer.
+        experiments:
+          type: array
+          items:
+            type: string
+          description: The IDs of experiments associated with this layer.
+        createdTime:
+          type: integer
+          format: int64
+          description: Timestamp when the layer was created.
+    ExperimentGroup:
+      type: object
+      description: An experiment group defining parameter values for a set of users.
+      properties:
+        name:
+          type: string
+          description: The name of the group (e.g., control, test).
+        size:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of allocated users assigned to this group.
+        parameterValues:
+          type: object
+          description: The parameter key-value pairs for this group.
+    StatsigUser:
+      type: object
+      description: The user object representing the end user being evaluated. At minimum, a userID should be provided. Additional properties enable more sophisticated targeting.
+      properties:
+        userID:
+          type: string
+          description: A unique identifier for the user.
+        email:
+          type: string
+          format: email
+          description: The email address of the user, used for email-based targeting.
+        ip:
+          type: string
+          description: The IP address of the user, used for IP-based targeting.
+        userAgent:
+          type: string
+          description: The user agent string, used for browser or device targeting.
+        country:
+          type: string
+          description: The two-letter country code of the user.
+        locale:
+          type: string
+          description: The locale identifier for the user.
+        appVersion:
+          type: string
+          description: The version of the application the user is using.
+        custom:
+          type: object
+          additionalProperties: true
+          description: Custom properties for the user, used for custom targeting rules.
+        privateAttributes:
+          type: object
+          additionalProperties: true
+          description: Private user attributes used for evaluation but stripped before logging to Statsig servers.
+        customIDs:
+          type: object
+          additionalProperties:
+            type: string
+          description: Custom identifier mappings for the user, such as companyID or teamID.
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
+    Experiment:
+      type: object
+      description: An A/B test experiment with defined groups, parameters, and analysis configuration.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the experiment.
+        name:
+          type: string
+          description: The name of the experiment.
+        description:
+          type: string
+          description: A human-readable description of the experiment.
+        hypothesis:
+          type: string
+          description: The hypothesis being tested by this experiment.
+        status:
+          type: string
+          enum:
+          - setup
+          - active
+          - decision_made
+          - abandoned
+          description: The current status of the experiment.
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExperimentGroup'
+          description: The experiment groups and their parameter configurations.
+        allocation:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of eligible users allocated to the experiment.
+        layerID:
+          type: string
+          description: The layer this experiment belongs to, if any.
+        targetingGateID:
+          type: string
+          description: The gate used to filter eligible users for the experiment.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the experiment.
+        createdTime:
+          type: integer
+          format: int64
+          description: Timestamp when the experiment was created.
+        lastModifiedTime:
+          type: integer
+          format: int64
+          description: Timestamp when the experiment was last modified.
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message indicating the resource was not found.
+  parameters:
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
+  securitySchemes:
+    clientSdkKey:
+      type: apiKey
+      in: header
+      name: statsig-api-key
+      description: Client-SDK Key that is safe to embed in mobile apps and front-end web applications. Created in Project Settings > API Keys tab.
+externalDocs:
+  description: Statsig Client SDK Documentation
+  url: https://docs.statsig.com/client/introduction

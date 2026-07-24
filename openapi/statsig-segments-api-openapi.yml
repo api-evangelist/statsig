@@ -1,0 +1,367 @@
+openapi: 3.1.0
+info:
+  title: Statsig Client SDK Audit Logs Segments API
+  description: The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.
+  version: 1.0.0
+  contact:
+    name: Statsig Support
+    url: https://statsig.com/support
+  termsOfService: https://statsig.com/terms
+servers:
+- url: https://api.statsig.com/v1
+  description: Statsig API Server
+security:
+- clientSdkKey: []
+tags:
+- name: Segments
+  description: Manage user segments for targeting rules across gates, configs, and experiments.
+paths:
+  /segments:
+    get:
+      operationId: listSegments
+      summary: List all segments
+      description: Retrieves a list of all user segments in the project.
+      tags:
+      - Segments
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: List of segments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Segment'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createSegment
+      summary: Create a segment
+      description: Creates a new user segment in the project for targeting rules.
+      tags:
+      - Segments
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentCreate'
+      responses:
+        '201':
+          description: Segment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /segments/{id}:
+    get:
+      operationId: getSegment
+      summary: Get a segment
+      description: Retrieves the full configuration of a specific user segment.
+      tags:
+      - Segments
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The name or identifier of the segment.
+      responses:
+        '200':
+          description: Segment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segment'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: partiallyUpdateSegment
+      summary: Partially update a segment
+      description: Updates specific fields of a user segment.
+      tags:
+      - Segments
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The name or identifier of the segment.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentCreate'
+      responses:
+        '200':
+          description: Segment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteSegment
+      summary: Delete a segment
+      description: Permanently deletes a user segment from the project.
+      tags:
+      - Segments
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The name or identifier of the segment.
+      responses:
+        '200':
+          description: Segment deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message indicating the resource was not found.
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
+  schemas:
+    Condition:
+      type: object
+      description: A condition within a targeting rule that evaluates user properties against specified criteria.
+      properties:
+        type:
+          type: string
+          enum:
+          - user_id
+          - email
+          - ip_address
+          - country
+          - app_version
+          - custom_field
+          - browser_name
+          - browser_version
+          - os_name
+          - os_version
+          - passes_gate
+          - fails_gate
+          - environment
+          - passes_segment
+          - fails_segment
+          - time
+          - unit_id
+          description: The type of condition to evaluate.
+        targetValue:
+          description: The value or values to compare against.
+        operator:
+          type: string
+          enum:
+          - any
+          - none
+          - str_starts_with_any
+          - str_ends_with_any
+          - str_contains_any
+          - str_contains_none
+          - str_matches
+          - gt
+          - gte
+          - lt
+          - lte
+          - version_gt
+          - version_gte
+          - version_lt
+          - version_lte
+          - before
+          - after
+          - true
+          description: The comparison operator to use.
+    Segment:
+      type: object
+      description: A user segment defining a group of users for targeting.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the segment.
+        name:
+          type: string
+          description: The name of the segment.
+        description:
+          type: string
+          description: A human-readable description of the segment.
+        type:
+          type: string
+          description: The type of segment (e.g., id_list, rule_based).
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+          description: The rules defining segment membership.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the segment.
+        createdTime:
+          type: integer
+          format: int64
+          description: Timestamp when the segment was created.
+    Rule:
+      type: object
+      description: A targeting rule that defines conditions under which a gate passes or a config returns specific values.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the rule.
+        name:
+          type: string
+          description: The name of the rule.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of users matching conditions who pass the rule.
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+          description: The conditions that must be met for this rule to apply.
+        returnValue:
+          type: object
+          description: The value returned when this rule matches, for dynamic configs.
+        environments:
+          type: array
+          items:
+            type: string
+          description: Environments where this rule is active.
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
+    SegmentCreate:
+      type: object
+      description: Request body for creating a new user segment.
+      required:
+      - name
+      - type
+      properties:
+        name:
+          type: string
+          description: The name of the segment to create.
+        description:
+          type: string
+          description: A human-readable description.
+        type:
+          type: string
+          description: The type of segment.
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+          description: The rules defining segment membership.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags to associate with the segment.
+  securitySchemes:
+    clientSdkKey:
+      type: apiKey
+      in: header
+      name: statsig-api-key
+      description: Client-SDK Key that is safe to embed in mobile apps and front-end web applications. Created in Project Settings > API Keys tab.
+externalDocs:
+  description: Statsig Client SDK Documentation
+  url: https://docs.statsig.com/client/introduction

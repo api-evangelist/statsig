@@ -1,0 +1,169 @@
+openapi: 3.1.0
+info:
+  title: Statsig Client SDK Audit Logs Metrics API
+  description: The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.
+  version: 1.0.0
+  contact:
+    name: Statsig Support
+    url: https://statsig.com/support
+  termsOfService: https://statsig.com/terms
+servers:
+- url: https://api.statsig.com/v1
+  description: Statsig API Server
+security:
+- clientSdkKey: []
+tags:
+- name: Metrics
+  description: Access and manage metric definitions and metric sources used in experiment analysis.
+paths:
+  /metrics:
+    get:
+      operationId: listMetrics
+      summary: List all metrics
+      description: Retrieves a list of all metric definitions in the project.
+      tags:
+      - Metrics
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - $ref: '#/components/parameters/Limit'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: List of metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Metric'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /metrics/{id}:
+    get:
+      operationId: getMetric
+      summary: Get a metric
+      description: Retrieves the definition of a specific metric.
+      tags:
+      - Metrics
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The name or identifier of the metric.
+      responses:
+        '200':
+          description: Metric details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metric'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    Metric:
+      type: object
+      description: A metric definition used in experiment analysis.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the metric.
+        name:
+          type: string
+          description: The name of the metric.
+        description:
+          type: string
+          description: A human-readable description of the metric.
+        type:
+          type: string
+          description: The type of metric (e.g., event_count, ratio, funnel).
+        eventName:
+          type: string
+          description: The event name this metric is derived from.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the metric.
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message indicating the resource was not found.
+  parameters:
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
+  securitySchemes:
+    clientSdkKey:
+      type: apiKey
+      in: header
+      name: statsig-api-key
+      description: Client-SDK Key that is safe to embed in mobile apps and front-end web applications. Created in Project Settings > API Keys tab.
+externalDocs:
+  description: Statsig Client SDK Documentation
+  url: https://docs.statsig.com/client/introduction

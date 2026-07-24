@@ -1,0 +1,89 @@
+openapi: 3.1.0
+info:
+  title: Statsig Client SDK Audit Logs Configuration API
+  description: The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.
+  version: 1.0.0
+  contact:
+    name: Statsig Support
+    url: https://statsig.com/support
+  termsOfService: https://statsig.com/terms
+servers:
+- url: https://api.statsig.com/v1
+  description: Statsig API Server
+security:
+- clientSdkKey: []
+tags:
+- name: Configuration
+  description: Endpoints for downloading full project configuration specs for server-side local evaluation.
+paths:
+  /download_config_specs:
+    post:
+      operationId: downloadConfigSpecs
+      summary: Download configuration specs
+      description: Downloads the full project configuration for server-side local evaluation. This endpoint is used by server SDKs to retrieve all gate, config, experiment, and layer definitions for evaluating locally without per-request network calls. This enables sub-millisecond feature gate checks.
+      tags:
+      - Configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sinceTime:
+                  type: integer
+                  format: int64
+                  description: Timestamp of the last successful download, used for incremental updates.
+      responses:
+        '200':
+          description: Full project configuration specs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dynamic_configs:
+                    type: array
+                    items:
+                      type: object
+                    description: Array of dynamic config and experiment specifications.
+                  feature_gates:
+                    type: array
+                    items:
+                      type: object
+                    description: Array of feature gate specifications.
+                  layer_configs:
+                    type: array
+                    items:
+                      type: object
+                    description: Array of layer specifications.
+                  has_updates:
+                    type: boolean
+                    description: Whether the response contains updates since sinceTime.
+                  time:
+                    type: integer
+                    format: int64
+                    description: Server timestamp of this configuration snapshot.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+  securitySchemes:
+    clientSdkKey:
+      type: apiKey
+      in: header
+      name: statsig-api-key
+      description: Client-SDK Key that is safe to embed in mobile apps and front-end web applications. Created in Project Settings > API Keys tab.
+externalDocs:
+  description: Statsig Client SDK Documentation
+  url: https://docs.statsig.com/client/introduction

@@ -1,0 +1,93 @@
+openapi: 3.1.0
+info:
+  title: Statsig Client SDK Audit Logs Keys API
+  description: The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.
+  version: 1.0.0
+  contact:
+    name: Statsig Support
+    url: https://statsig.com/support
+  termsOfService: https://statsig.com/terms
+servers:
+- url: https://api.statsig.com/v1
+  description: Statsig API Server
+security:
+- clientSdkKey: []
+tags:
+- name: Keys
+  description: Manage API keys for the project including server secret keys, client SDK keys, and console API keys.
+paths:
+  /keys:
+    get:
+      operationId: listKeys
+      summary: List all API keys
+      description: Retrieves a list of all API keys in the project including server secret keys, client SDK keys, and console API keys.
+      tags:
+      - Keys
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      responses:
+        '200':
+          description: List of API keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ApiKey'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+  schemas:
+    ApiKey:
+      type: object
+      description: An API key for accessing Statsig services.
+      properties:
+        key:
+          type: string
+          description: The API key value (partially masked).
+        type:
+          type: string
+          enum:
+          - server
+          - client
+          - console
+          description: The type of API key.
+        description:
+          type: string
+          description: A description of the key purpose.
+        createdTime:
+          type: integer
+          format: int64
+          description: Timestamp when the key was created.
+  parameters:
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
+  securitySchemes:
+    clientSdkKey:
+      type: apiKey
+      in: header
+      name: statsig-api-key
+      description: Client-SDK Key that is safe to embed in mobile apps and front-end web applications. Created in Project Settings > API Keys tab.
+externalDocs:
+  description: Statsig Client SDK Documentation
+  url: https://docs.statsig.com/client/introduction

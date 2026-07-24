@@ -1,0 +1,155 @@
+openapi: 3.1.0
+info:
+  title: Statsig Client SDK Audit Logs Holdouts API
+  description: The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.
+  version: 1.0.0
+  contact:
+    name: Statsig Support
+    url: https://statsig.com/support
+  termsOfService: https://statsig.com/terms
+servers:
+- url: https://api.statsig.com/v1
+  description: Statsig API Server
+security:
+- clientSdkKey: []
+tags:
+- name: Holdouts
+  description: Manage holdout groups that exclude users from receiving specific features for measuring long-term impact.
+paths:
+  /holdouts:
+    get:
+      operationId: listHoldouts
+      summary: List all holdouts
+      description: Retrieves a list of all holdout groups in the project.
+      tags:
+      - Holdouts
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      responses:
+        '200':
+          description: List of holdouts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Holdout'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createHoldout
+      summary: Create a holdout
+      description: Creates a new holdout group in the project for measuring long-term feature impact.
+      tags:
+      - Holdouts
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HoldoutCreate'
+      responses:
+        '201':
+          description: Holdout created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Holdout'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+  schemas:
+    Holdout:
+      type: object
+      description: A holdout group that excludes users from specific features to measure long-term impact.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the holdout.
+        name:
+          type: string
+          description: The name of the holdout.
+        description:
+          type: string
+          description: A human-readable description.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of users in the holdout group.
+        gateIDs:
+          type: array
+          items:
+            type: string
+          description: The gates affected by this holdout.
+        isEnabled:
+          type: boolean
+          description: Whether the holdout is currently active.
+    HoldoutCreate:
+      type: object
+      description: Request body for creating a new holdout group.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the holdout to create.
+        description:
+          type: string
+          description: A human-readable description.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of users in the holdout group.
+        gateIDs:
+          type: array
+          items:
+            type: string
+          description: The gates to include in the holdout.
+  parameters:
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
+  securitySchemes:
+    clientSdkKey:
+      type: apiKey
+      in: header
+      name: statsig-api-key
+      description: Client-SDK Key that is safe to embed in mobile apps and front-end web applications. Created in Project Settings > API Keys tab.
+externalDocs:
+  description: Statsig Client SDK Documentation
+  url: https://docs.statsig.com/client/introduction
