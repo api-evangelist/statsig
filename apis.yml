@@ -1,114 +1,368 @@
 aid: statsig
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/statsig.png
 url: https://raw.githubusercontent.com/api-evangelist/statsig/refs/heads/main/apis.yml
 modified: '2026-05-19'
 apis:
-  - aid: statsig:http-api
-    name: Statsig HTTP API
-    tags:
-      - A/B Testing
-      - Analytics
-      - Dynamic Configuration
-      - Experimentation
-      - Feature Flags
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    baseURL: https://api.statsig.com
-    humanURL: https://docs.statsig.com/http-api/
-    properties:
-      - url: https://docs.statsig.com/http-api/
-        type: Documentation
-      - url: openapi/statsig-http-api-openapi.yml
-        type: OpenAPI
-    description: >-
-      The Statsig HTTP API allows developers to evaluate feature gates, dynamic configs, and experiments for users via
-      server-side HTTP requests. It provides endpoints for checking gate values, fetching configuration data, and
-      logging custom events. All requests use the POST method with JSON request bodies and require authentication via
-      the statsig-api-key header.
-  - aid: statsig:console-api
-    name: Statsig Console API
-    tags:
-      - Administration
-      - Automation
-      - Configuration Management
-      - Experimentation
-      - Feature Flags
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    baseURL: https://statsigapi.net/console/v1
-    humanURL: https://docs.statsig.com/console-api/
-    properties:
-      - url: https://docs.statsig.com/console-api/
-        type: Documentation
-      - url: openapi/statsig-console-api-openapi.yml
-        type: OpenAPI
-    description: >-
-      The Statsig Console API enables developers to programmatically manage their Statsig project configuration. It
-      supports full CRUD operations on feature gates, dynamic configs, experiments, segments, layers, and other
-      entities. The API requires a Console API Key and uses versioned endpoints with the STATSIG-API-VERSION header.
-  - aid: statsig:client-sdk-api
-    name: Statsig Client SDK API
-    tags:
-      - Client Side
-      - Feature Flags
-      - Mobile
-      - SDKs
-      - Web
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    baseURL: https://api.statsig.com
-    humanURL: https://docs.statsig.com/client/introduction
-    properties:
-      - url: https://docs.statsig.com/client/introduction
-        type: Documentation
-      - url: openapi/statsig-client-sdk-api-openapi.yml
-        type: OpenAPI
-    description: >-
-      The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React
-      Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile
-      apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs,
-      and experiments for a given user, and the log_event endpoint for sending analytics events.
-  - aid: statsig:server-sdk-api
-    name: Statsig Server SDK API
-    tags:
-      - Backend
-      - Evaluation
-      - Feature Flags
-      - SDKs
-      - Server Side
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    baseURL: https://api.statsig.com
-    humanURL: https://docs.statsig.com/server/introduction
-    properties:
-      - url: https://docs.statsig.com/server/introduction
-        type: Documentation
-      - url: openapi/statsig-server-sdk-api-openapi.yml
-        type: OpenAPI
-    description: >-
-      The Statsig Server SDK API provides endpoints that power Statsig's server-side SDKs for Node.js, Python, Java,
-      Ruby, Go, .NET, and other backend languages. Server SDKs use Server Secret Keys and access the
-      download_config_specs endpoint to retrieve the full project configuration for local evaluation. This enables
-      sub-millisecond feature gate checks without per-request network calls.
-  - aid: statsig:events-api
-    name: Statsig Events API
-    tags:
-      - Analytics
-      - Data Ingestion
-      - Events
-      - Logging
-      - Metrics
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    baseURL: https://events.statsigapi.net
-    humanURL: https://docs.statsig.com/http-api/
-    properties:
-      - url: https://docs.statsig.com/http-api/
-        type: Documentation
-      - url: openapi/statsig-events-api-openapi.yml
-        type: OpenAPI
-      - url: asyncapi/statsig-webhooks-asyncapi.yml
-        type: AsyncAPI
-    description: >-
-      The Statsig Events API handles the ingestion of event data from both client and server SDKs. It receives exposure
-      events, custom events, and diagnostic data at the events.statsigapi.net endpoint. This data powers Statsig's
-      experimentation analysis, product analytics, and metric computations. The Events API is optimized for
-      high-throughput data ingestion, processing over a trillion events daily with high reliability and low latency,
-      enabling real-time experiment monitoring and metric updates.
+- aid: statsig:events-api
+  name: Statsig Events API
+  tags:
+  - Analytics
+  - Data Ingestion
+  - Events
+  - Logging
+  - Metrics
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  baseURL: https://events.statsigapi.net
+  humanURL: https://docs.statsig.com/http-api/
+  properties:
+  - url: https://docs.statsig.com/http-api/
+    type: Documentation
+  - url: openapi/statsig-events-api-openapi.yml
+    type: OpenAPI
+  - url: asyncapi/statsig-webhooks-asyncapi.yml
+    type: AsyncAPI
+  description: >-
+    The Statsig Events API handles the ingestion of event data from both client and server SDKs. It receives
+    exposure events, custom events, and diagnostic data at the events.statsigapi.net endpoint. This data
+    powers Statsig's experimentation analysis, product analytics, and metric computations. The Events
+    API is optimized for high-throughput data ingestion, processing over a trillion events daily with
+    high reliability and low latency, enabling real-time experiment monitoring and metric updates.
+- aid: statsig:statsig-audit-logs-api
+  name: statsig Audit Logs API
+  description: >-
+    Access audit log entries tracking changes made to project configuration through the console or API.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Audit Logs
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-audit-logs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-autotunes-api
+  name: statsig Autotunes API
+  description: >-
+    Manage autotune configurations that automatically optimize parameter values based on a target metric.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Autotunes
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-autotunes-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-configuration-api
+  name: statsig Configuration API
+  description: >-
+    Endpoints for downloading full project configuration specs for server-side local evaluation.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Configuration
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-configuration-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-dynamic-configs-api
+  name: statsig Dynamic Configs API
+  description: >-
+    Manage dynamic configurations with full CRUD operations for server-driven configuration values.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Dynamic Configs
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-dynamic-configs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-experiments-api
+  name: statsig Experiments API
+  description: >-
+    Manage A/B test experiments including creation, configuration, starting, resetting, and analysis.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Experiments
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-experiments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-feature-gates-api
+  name: statsig Feature Gates API
+  description: >-
+    Endpoints for evaluating feature gates for users, returning boolean pass/fail values along with rule
+    identification.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Feature Gates
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-feature-gates-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-gates-api
+  name: statsig Gates API
+  description: >-
+    Manage feature gates including creation, updates, rules, overrides, enabling, disabling, launching,
+    and archiving.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Gates
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-gates-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-holdouts-api
+  name: statsig Holdouts API
+  description: >-
+    Manage holdout groups that exclude users from receiving specific features for measuring long-term
+    impact.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Holdouts
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-holdouts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-initialization-api
+  name: statsig Initialization API
+  description: >-
+    Endpoints for initializing client SDKs with all evaluated feature gates, configs, experiments, and
+    layers for a given user.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Initialization
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-initialization-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-keys-api
+  name: statsig Keys API
+  description: >-
+    Manage API keys for the project including server secret keys, client SDK keys, and console API keys.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-keys-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-layers-api
+  name: statsig Layers API
+  description: >-
+    Manage layers that enable sharing parameters across multiple experiments while maintaining mutual
+    exclusivity.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Layers
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-layers-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-metrics-api
+  name: statsig Metrics API
+  description: Access and manage metric definitions and metric sources used in experiment analysis.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Metrics
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-metrics-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-segments-api
+  name: statsig Segments API
+  description: Manage user segments for targeting rules across gates, configs, and experiments.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Segments
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-segments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-tags-api
+  name: statsig Tags API
+  description: The Tags API from statsig — 1 operation(s) for tags.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-tags-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-target-apps-api
+  name: statsig Target Apps API
+  description: >-
+    Manage target application definitions that scope feature configurations to specific applications.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Target Apps
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-target-apps-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-users-api
+  name: statsig Users API
+  description: Manage user data and lookup user properties within the Statsig project.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-users-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-webhooks-api
+  name: statsig Webhooks API
+  description: Endpoint for receiving event data from third-party applications via webhook integration.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://api.statsig.com
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/http-api/
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/
+  - type: Documentation
+    url: https://docs.statsig.com/client/introduction
+  - type: Documentation
+    url: https://docs.statsig.com/server/introduction
 common:
   - type: AgenticAccess
     url: agentic-access/statsig-agentic-access.yml
