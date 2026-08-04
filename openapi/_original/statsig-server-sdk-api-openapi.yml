@@ -1,0 +1,344 @@
+openapi: 3.1.0
+info:
+  title: Statsig Server SDK API
+  description: >-
+    The Statsig Server SDK API provides endpoints that power Statsig's
+    server-side SDKs for Node.js, Python, Java, Ruby, Go, .NET, and other
+    backend languages. Server SDKs use Server Secret Keys and access the
+    download_config_specs endpoint to retrieve the full project configuration
+    for local evaluation. This enables sub-millisecond feature gate checks
+    without per-request network calls. The server SDKs also use the log_event
+    endpoint for sending exposure and custom event data back to Statsig for
+    analytics and experiment analysis.
+  version: '1.0.0'
+  contact:
+    name: Statsig Support
+    url: https://statsig.com/support
+  termsOfService: https://statsig.com/terms
+externalDocs:
+  description: Statsig Server SDK Documentation
+  url: https://docs.statsig.com/server/introduction
+servers:
+  - url: https://api.statsig.com/v1
+    description: Statsig API Server
+tags:
+  - name: Configuration
+    description: >-
+      Endpoints for downloading full project configuration specs that enable
+      server-side local evaluation of gates, configs, experiments, and layers.
+  - name: Events
+    description: >-
+      Endpoints for logging exposure and custom event data from server-side
+      SDKs back to Statsig for analytics and experiment analysis.
+security:
+  - serverSecretKey: []
+paths:
+  /download_config_specs:
+    post:
+      operationId: downloadConfigSpecs
+      summary: Download configuration specs
+      description: >-
+        Downloads the full project configuration for server-side local
+        evaluation. This endpoint is the primary mechanism used by server SDKs
+        to retrieve all gate, config, experiment, and layer definitions. The
+        downloaded specs enable sub-millisecond feature gate checks without
+        per-request network calls. Server SDKs periodically poll this endpoint
+        to stay up to date with configuration changes.
+      tags:
+        - Configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sinceTime:
+                  type: integer
+                  format: int64
+                  description: >-
+                    Timestamp of the last successful download in milliseconds
+                    since epoch. Used for incremental updates to reduce
+                    response size.
+                sdkType:
+                  type: string
+                  description: >-
+                    The type of SDK making the request (e.g., py-server,
+                    java-server, node-server).
+                sdkVersion:
+                  type: string
+                  description: >-
+                    The version of the SDK making the request.
+      responses:
+        '200':
+          description: Full project configuration specs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigSpecs'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /log_event:
+    post:
+      operationId: logServerEvent
+      summary: Log server events
+      description: >-
+        Logs one or more events from the server SDK to Statsig for analytics
+        and experiment analysis. Server SDKs batch exposure events from local
+        gate checks and custom events, then flush them periodically to this
+        endpoint. The STATSIG-CLIENT-TIME header is required for timestamp
+        normalization.
+      tags:
+        - Events
+      parameters:
+        - name: STATSIG-CLIENT-TIME
+          in: header
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: >-
+            Server-side timestamp in milliseconds since epoch, used to
+            normalize event timestamps.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - events
+              properties:
+                events:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/StatsigEvent'
+                  description: >-
+                    An array of events to log, including exposure events from
+                    local evaluation and custom events.
+                statsigMetadata:
+                  type: object
+                  properties:
+                    sdkType:
+                      type: string
+                      description: >-
+                        The type of SDK sending events.
+                    sdkVersion:
+                      type: string
+                      description: >-
+                        The version of the SDK.
+                  description: >-
+                    SDK metadata for attribution and diagnostics.
+      responses:
+        '202':
+          description: Events accepted for processing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: >-
+                      Whether the events were successfully accepted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    serverSecretKey:
+      type: apiKey
+      in: header
+      name: statsig-api-key
+      description: >-
+        Server Secret Key for secure server-side API access. Must only be
+        used from trusted server environments and never exposed client-side.
+  schemas:
+    ConfigSpecs:
+      type: object
+      description: >-
+        The complete project configuration specs for server-side local
+        evaluation.
+      properties:
+        dynamic_configs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigSpec'
+          description: >-
+            Array of dynamic config and experiment specifications.
+        feature_gates:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigSpec'
+          description: >-
+            Array of feature gate specifications.
+        layer_configs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigSpec'
+          description: >-
+            Array of layer specifications.
+        layers:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          description: >-
+            Map of layer names to their associated experiment names.
+        has_updates:
+          type: boolean
+          description: >-
+            Whether the response contains updates since sinceTime.
+        time:
+          type: integer
+          format: int64
+          description: >-
+            Server timestamp of this configuration snapshot.
+    ConfigSpec:
+      type: object
+      description: >-
+        A configuration specification for a gate, config, experiment, or layer
+        that enables local evaluation.
+      properties:
+        name:
+          type: string
+          description: >-
+            The name of the entity.
+        type:
+          type: string
+          enum:
+            - feature_gate
+            - dynamic_config
+            - experiment
+            - autotune
+            - layer
+          description: >-
+            The type of configuration entity.
+        salt:
+          type: string
+          description: >-
+            Salt value used for deterministic user assignment hashing.
+        enabled:
+          type: boolean
+          description: >-
+            Whether the entity is currently enabled.
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleSpec'
+          description: >-
+            The evaluation rules for this entity.
+        defaultValue:
+          type: object
+          description: >-
+            The default value when no rules match.
+    RuleSpec:
+      type: object
+      description: >-
+        An evaluation rule specification used for local evaluation.
+      properties:
+        id:
+          type: string
+          description: >-
+            The unique identifier of the rule.
+        name:
+          type: string
+          description: >-
+            The name of the rule.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: >-
+            The percentage of matching users who pass the rule.
+        conditions:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: >-
+                  The type of condition.
+              targetValue:
+                description: >-
+                  The target value to compare against.
+              operator:
+                type: string
+                description: >-
+                  The comparison operator.
+              field:
+                type: string
+                description: >-
+                  The user field to evaluate.
+          description: >-
+            The conditions that must be met for this rule.
+        returnValue:
+          type: object
+          description: >-
+            The value returned when this rule matches.
+        groupName:
+          type: string
+          description: >-
+            The group name assigned when this rule matches.
+    StatsigEvent:
+      type: object
+      description: >-
+        An event object for logging exposure or custom events.
+      required:
+        - user
+        - eventName
+        - time
+      properties:
+        user:
+          type: object
+          properties:
+            userID:
+              type: string
+              description: >-
+                A unique identifier for the user.
+            custom:
+              type: object
+              additionalProperties: true
+              description: >-
+                Custom properties for the user.
+            customIDs:
+              type: object
+              additionalProperties:
+                type: string
+              description: >-
+                Custom identifier mappings.
+          description: >-
+            The user associated with the event.
+        eventName:
+          type: string
+          description: >-
+            The name of the event.
+        time:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp in milliseconds since epoch.
+        value:
+          oneOf:
+            - type: string
+            - type: number
+          description: >-
+            An optional value associated with the event.
+        metadata:
+          type: object
+          additionalProperties: true
+          description: >-
+            Optional metadata key-value pairs.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: >-
+                  Error message describing the authentication failure.
