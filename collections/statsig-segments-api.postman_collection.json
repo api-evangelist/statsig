@@ -1,0 +1,1215 @@
+{
+  "item": [
+    {
+      "id": "b9584e52-ccf4-439b-a81b-3f10b17cd543",
+      "name": "Segments",
+      "description": {
+        "content": "Manage user segments for targeting rules across gates, configs, and experiments.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "49411794-a07d-4da7-b148-329ba788736b",
+          "name": "List all segments",
+          "request": {
+            "name": "List all segments",
+            "description": {
+              "content": "Retrieves a list of all user segments in the project.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "segments"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "Maximum number of items to return per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "Page number for paginated results."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0bde51c0-d936-4444-8a89-4ce7452b088b",
+              "name": "List of segments",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"type\": \"string\",\n      \"rules\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 35.92528836636302,\n          \"conditions\": [\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"returnValue\": {},\n          \"environments\": [\n            \"string\",\n            \"string\"\n          ]\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 96.94412193428188,\n          \"conditions\": [\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"returnValue\": {},\n          \"environments\": [\n            \"string\",\n            \"string\"\n          ]\n        }\n      ],\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"createdTime\": 836\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"type\": \"string\",\n      \"rules\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 23.73159507518586,\n          \"conditions\": [\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"returnValue\": {},\n          \"environments\": [\n            \"string\",\n            \"string\"\n          ]\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 12.038029156664386,\n          \"conditions\": [\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"returnValue\": {},\n          \"environments\": [\n            \"string\",\n            \"string\"\n          ]\n        }\n      ],\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"createdTime\": 8595\n    }\n  ],\n  \"pagination\": {\n    \"total\": 6149,\n    \"page\": 764,\n    \"limit\": 217,\n    \"hasMore\": true\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1e168241-6e2a-45c7-9a50-e933e4b89cc4",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "851204e2-f052-4259-ace2-c47e20294a68",
+          "name": "Create a segment",
+          "request": {
+            "name": "Create a segment",
+            "description": {
+              "content": "Creates a new user segment in the project for targeting rules.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "segments"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"type\": \"<string>\",\n  \"description\": \"<string>\",\n  \"rules\": [\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"passPercentage\": \"<number>\",\n      \"conditions\": [\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        },\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        }\n      ],\n      \"returnValue\": \"<object>\",\n      \"environments\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"passPercentage\": \"<number>\",\n      \"conditions\": [\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        },\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        }\n      ],\n      \"returnValue\": \"<object>\",\n      \"environments\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "0d42f53a-a581-4587-a8e0-d96910a628c8",
+              "name": "Segment created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"type\": \"<string>\",\n  \"description\": \"<string>\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 73.20873496469078,\n      \"conditions\": [\n        {\n          \"type\": \"browser_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_gt\"\n        },\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 33.54221149121322,\n      \"conditions\": [\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        },\n        {\n          \"type\": \"ip_address\",\n          \"targetValue\": {},\n          \"operator\": \"gte\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"type\": \"string\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 79.51040780871276,\n      \"conditions\": [\n        {\n          \"type\": \"ip_address\",\n          \"targetValue\": {},\n          \"operator\": \"str_contains_any\"\n        },\n        {\n          \"type\": \"email\",\n          \"targetValue\": {},\n          \"operator\": \"true\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 25.84494891714273,\n      \"conditions\": [\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"str_contains_any\"\n        },\n        {\n          \"type\": \"passes_gate\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 4896\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "29f95f52-e140-4276-9a36-d267fd400442",
+              "name": "Invalid request parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"type\": \"<string>\",\n  \"description\": \"<string>\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 73.20873496469078,\n      \"conditions\": [\n        {\n          \"type\": \"browser_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_gt\"\n        },\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 33.54221149121322,\n      \"conditions\": [\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        },\n        {\n          \"type\": \"ip_address\",\n          \"targetValue\": {},\n          \"operator\": \"gte\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4b937773-5ba9-4663-845d-038b0cc51fcd",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"type\": \"<string>\",\n  \"description\": \"<string>\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 73.20873496469078,\n      \"conditions\": [\n        {\n          \"type\": \"browser_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_gt\"\n        },\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 33.54221149121322,\n      \"conditions\": [\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        },\n        {\n          \"type\": \"ip_address\",\n          \"targetValue\": {},\n          \"operator\": \"gte\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "04568d18-fa77-4ef6-8b48-dc25279359ff",
+          "name": "Get a segment",
+          "request": {
+            "name": "Get a segment",
+            "description": {
+              "content": "Retrieves the full configuration of a specific user segment.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "segments",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the segment."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9f55e282-c4ee-4824-83a3-7d8ed122322a",
+              "name": "Segment details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the segment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"type\": \"string\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 79.51040780871276,\n      \"conditions\": [\n        {\n          \"type\": \"ip_address\",\n          \"targetValue\": {},\n          \"operator\": \"str_contains_any\"\n        },\n        {\n          \"type\": \"email\",\n          \"targetValue\": {},\n          \"operator\": \"true\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 25.84494891714273,\n      \"conditions\": [\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"str_contains_any\"\n        },\n        {\n          \"type\": \"passes_gate\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 4896\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8c396d0d-4e85-4b67-be1a-349f74941943",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the segment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0ab0f55d-793f-4ee4-82cb-5e94c6f942f5",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the segment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e37246f0-8671-4053-baa8-58330745e20f",
+          "name": "Partially update a segment",
+          "request": {
+            "name": "Partially update a segment",
+            "description": {
+              "content": "Updates specific fields of a user segment.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "segments",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the segment."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"type\": \"<string>\",\n  \"description\": \"<string>\",\n  \"rules\": [\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"passPercentage\": \"<number>\",\n      \"conditions\": [\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        },\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        }\n      ],\n      \"returnValue\": \"<object>\",\n      \"environments\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"passPercentage\": \"<number>\",\n      \"conditions\": [\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        },\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        }\n      ],\n      \"returnValue\": \"<object>\",\n      \"environments\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2b2488e9-4660-41a7-9bd9-a72776ad6d42",
+              "name": "Segment updated successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the segment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"type\": \"<string>\",\n  \"description\": \"<string>\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 73.20873496469078,\n      \"conditions\": [\n        {\n          \"type\": \"browser_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_gt\"\n        },\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 33.54221149121322,\n      \"conditions\": [\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        },\n        {\n          \"type\": \"ip_address\",\n          \"targetValue\": {},\n          \"operator\": \"gte\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"type\": \"string\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 79.51040780871276,\n      \"conditions\": [\n        {\n          \"type\": \"ip_address\",\n          \"targetValue\": {},\n          \"operator\": \"str_contains_any\"\n        },\n        {\n          \"type\": \"email\",\n          \"targetValue\": {},\n          \"operator\": \"true\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 25.84494891714273,\n      \"conditions\": [\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"str_contains_any\"\n        },\n        {\n          \"type\": \"passes_gate\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 4896\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9636d5f6-294f-4cc1-a291-bb24d4652723",
+              "name": "Invalid request parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the segment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"type\": \"<string>\",\n  \"description\": \"<string>\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 73.20873496469078,\n      \"conditions\": [\n        {\n          \"type\": \"browser_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_gt\"\n        },\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 33.54221149121322,\n      \"conditions\": [\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        },\n        {\n          \"type\": \"ip_address\",\n          \"targetValue\": {},\n          \"operator\": \"gte\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bdc9d833-f4e4-48c5-a2f2-02c9409696bf",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the segment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"type\": \"<string>\",\n  \"description\": \"<string>\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 73.20873496469078,\n      \"conditions\": [\n        {\n          \"type\": \"browser_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_gt\"\n        },\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 33.54221149121322,\n      \"conditions\": [\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        },\n        {\n          \"type\": \"ip_address\",\n          \"targetValue\": {},\n          \"operator\": \"gte\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2a0c8fa9-37e5-4641-83b0-c8c2458fc4a6",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the segment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"type\": \"<string>\",\n  \"description\": \"<string>\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 73.20873496469078,\n      \"conditions\": [\n        {\n          \"type\": \"browser_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_gt\"\n        },\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 33.54221149121322,\n      \"conditions\": [\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        },\n        {\n          \"type\": \"ip_address\",\n          \"targetValue\": {},\n          \"operator\": \"gte\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "21edf217-2750-43ec-8c59-2cc74a23266f",
+          "name": "Delete a segment",
+          "request": {
+            "name": "Delete a segment",
+            "description": {
+              "content": "Permanently deletes a user segment from the project.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "segments",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the segment."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "44877155-49b0-4ac3-aa3d-a6c5529d0c99",
+              "name": "Segment deleted successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the segment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "cf6f635a-a56a-4414-9679-c76904521c51",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the segment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6221f6be-8a33-489a-8ff6-1798bb97949f",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "segments",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the segment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.statsig.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "statsig-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "2ce0da1e-0b01-48fc-b860-3947190d9982",
+    "name": "Statsig Client SDK Audit Logs Segments API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.\n\nContact Support:\n Name: Statsig Support",
+      "type": "text/plain"
+    }
+  }
+}

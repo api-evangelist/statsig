@@ -1,0 +1,254 @@
+{
+  "item": [
+    {
+      "id": "4a99e208-5c98-4158-b388-c801e7614bb5",
+      "name": "Webhooks",
+      "description": {
+        "content": "Endpoint for receiving event data from third-party applications via webhook integration.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "e80255ae-c7ee-4b82-b0d6-15ad8c2d81ab",
+          "name": "Receive webhook events",
+          "request": {
+            "name": "Receive webhook events",
+            "description": {
+              "content": "Receives event data from third-party applications or external sources via webhook integration. This endpoint allows logging events to Statsig from external systems to provide additional insights to experiments and metrics. Events are validated and ingested into the same analytics pipeline as SDK events.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "webhooks",
+                "event_webhook"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"events\": [\n    {\n      \"user\": {\n        \"userID\": \"<string>\",\n        \"email\": \"<email>\",\n        \"custom\": {\n          \"key_0\": 3916.482701988975,\n          \"key_1\": 6122\n        },\n        \"customIDs\": {\n          \"key_0\": \"<string>\"\n        }\n      },\n      \"eventName\": \"<string>\",\n      \"time\": \"<long>\",\n      \"value\": \"<string>\",\n      \"metadata\": {\n        \"key_0\": 663\n      }\n    },\n    {\n      \"user\": {\n        \"userID\": \"<string>\",\n        \"email\": \"<email>\",\n        \"custom\": {\n          \"key_0\": 4307\n        },\n        \"customIDs\": {\n          \"key_0\": \"<string>\"\n        }\n      },\n      \"eventName\": \"<string>\",\n      \"time\": \"<long>\",\n      \"value\": \"<string>\",\n      \"metadata\": {\n        \"key_0\": 6787\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1e21f4b2-e045-48c7-a1a3-9e7f71d3a6dd",
+              "name": "Webhook events accepted for processing",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "webhooks",
+                    "event_webhook"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"email\": \"crtdAxGM5@YIGALIGRJemTGyfMHSkcpPxyTAgZVRs.lu\",\n        \"custom\": {\n          \"key_0\": 2201,\n          \"key_1\": \"string\",\n          \"key_2\": false,\n          \"key_3\": 374\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\",\n          \"key_1\": \"string\",\n          \"key_2\": \"string\",\n          \"key_3\": \"string\",\n          \"key_4\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 5703,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": \"string\",\n        \"key_1\": 6192.178667810596,\n        \"key_2\": true,\n        \"key_3\": \"string\"\n      }\n    },\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"email\": \"g1UtNUNLudFzMJ@oEMGTzcLrNwBOjzoorSWkQy.zum\",\n        \"custom\": {\n          \"key_0\": false,\n          \"key_1\": 5117,\n          \"key_2\": 6615,\n          \"key_3\": true,\n          \"key_4\": 1956\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\",\n          \"key_1\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 8571,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": 2597.299349208445\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a935f626-d142-4bf9-ac38-2228d6f7021a",
+              "name": "Invalid request format",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "webhooks",
+                    "event_webhook"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"email\": \"crtdAxGM5@YIGALIGRJemTGyfMHSkcpPxyTAgZVRs.lu\",\n        \"custom\": {\n          \"key_0\": 2201,\n          \"key_1\": \"string\",\n          \"key_2\": false,\n          \"key_3\": 374\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\",\n          \"key_1\": \"string\",\n          \"key_2\": \"string\",\n          \"key_3\": \"string\",\n          \"key_4\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 5703,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": \"string\",\n        \"key_1\": 6192.178667810596,\n        \"key_2\": true,\n        \"key_3\": \"string\"\n      }\n    },\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"email\": \"g1UtNUNLudFzMJ@oEMGTzcLrNwBOjzoorSWkQy.zum\",\n        \"custom\": {\n          \"key_0\": false,\n          \"key_1\": 5117,\n          \"key_2\": 6615,\n          \"key_3\": true,\n          \"key_4\": 1956\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\",\n          \"key_1\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 8571,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": 2597.299349208445\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"status\": 2828\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b5f2c099-9525-490a-bae7-65015926ce12",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "webhooks",
+                    "event_webhook"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"events\": [\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"email\": \"crtdAxGM5@YIGALIGRJemTGyfMHSkcpPxyTAgZVRs.lu\",\n        \"custom\": {\n          \"key_0\": 2201,\n          \"key_1\": \"string\",\n          \"key_2\": false,\n          \"key_3\": 374\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\",\n          \"key_1\": \"string\",\n          \"key_2\": \"string\",\n          \"key_3\": \"string\",\n          \"key_4\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 5703,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": \"string\",\n        \"key_1\": 6192.178667810596,\n        \"key_2\": true,\n        \"key_3\": \"string\"\n      }\n    },\n    {\n      \"user\": {\n        \"userID\": \"string\",\n        \"email\": \"g1UtNUNLudFzMJ@oEMGTzcLrNwBOjzoorSWkQy.zum\",\n        \"custom\": {\n          \"key_0\": false,\n          \"key_1\": 5117,\n          \"key_2\": 6615,\n          \"key_3\": true,\n          \"key_4\": 1956\n        },\n        \"customIDs\": {\n          \"key_0\": \"string\",\n          \"key_1\": \"string\"\n        }\n      },\n      \"eventName\": \"string\",\n      \"time\": 8571,\n      \"value\": \"string\",\n      \"metadata\": {\n        \"key_0\": 2597.299349208445\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.statsig.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "statsig-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "36d3200a-f0d9-4a7f-bc69-e8f264c1838f",
+    "name": "Statsig Client SDK Audit Logs Webhooks API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.\n\nContact Support:\n Name: Statsig Support",
+      "type": "text/plain"
+    }
+  }
+}

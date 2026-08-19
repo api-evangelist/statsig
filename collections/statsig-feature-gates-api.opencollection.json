@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Statsig Client SDK Audit Logs Feature Gates API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "statsig-api-key",
+      "value": "{{statsig-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Feature Gates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Check a feature gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/check_gate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Evaluates a single feature gate for the specified user and returns the boolean pass/fail result along with rule identification. Statsig automatically logs an exposure event for the gate check."
+        },
+        {
+          "info": {
+            "name": "Check multiple feature gates",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/check_gate_multiple",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Evaluates multiple feature gates for the specified user in a single request and returns the boolean pass/fail results for each gate. Statsig automatically logs exposure events for each gate check."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

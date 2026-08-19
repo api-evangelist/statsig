@@ -1,0 +1,168 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Statsig Client SDK Audit Logs Layers API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "statsig-api-key",
+      "value": "{{statsig-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Layers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all layers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/layers",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all layers in the project."
+        },
+        {
+          "info": {
+            "name": "Create a layer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/layers",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new layer in the project for sharing parameters across multiple experiments."
+        },
+        {
+          "info": {
+            "name": "Get a layer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/layers/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the layer."
+              }
+            ]
+          },
+          "docs": "Retrieves the full configuration of a specific layer including its parameters and associated experiments."
+        },
+        {
+          "info": {
+            "name": "Delete a layer",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.statsig.com/v1/layers/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the layer."
+              }
+            ]
+          },
+          "docs": "Permanently deletes a layer from the project."
+        },
+        {
+          "info": {
+            "name": "List experiments in a layer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/layers/:id/experiments",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the layer."
+              }
+            ]
+          },
+          "docs": "Retrieves the list of experiments associated with a specific layer."
+        },
+        {
+          "info": {
+            "name": "Get layer parameters",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/get_layer",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fetches parameter values from a layer for the specified user. Layers allow sharing parameters across multiple experiments. An exposure event is logged only when a specific parameter is accessed."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

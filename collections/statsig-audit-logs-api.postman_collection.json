@@ -1,0 +1,219 @@
+{
+  "item": [
+    {
+      "id": "1e083c1c-3fbd-4d7e-9766-c3edcd301740",
+      "name": "Audit Logs",
+      "description": {
+        "content": "Access audit log entries tracking changes made to project configuration through the console or API.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "1c78cd85-1896-408b-9600-e46b6e4555fc",
+          "name": "List audit logs",
+          "request": {
+            "name": "List audit logs",
+            "description": {
+              "content": "Retrieves audit log entries tracking changes made to the project configuration through the console or API.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "audit_logs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "Maximum number of items to return per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "Page number for paginated results."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "98afa6a3-e638-44f0-a821-f2004c4796a8",
+              "name": "List of audit log entries",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "audit_logs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"timestamp\": 7028,\n      \"user\": {\n        \"name\": \"string\",\n        \"email\": \"7YklGrRg@ASOOMGHSavcvoKglHBBtARORbnr.sr\"\n      },\n      \"action\": \"string\",\n      \"entityType\": \"string\",\n      \"entityName\": \"string\",\n      \"changes\": {}\n    },\n    {\n      \"id\": \"string\",\n      \"timestamp\": 4796,\n      \"user\": {\n        \"name\": \"string\",\n        \"email\": \"u4-XdFxly1kf@ntsdhhTfqmkNgavahiEeBIjlaFM.hxir\"\n      },\n      \"action\": \"string\",\n      \"entityType\": \"string\",\n      \"entityName\": \"string\",\n      \"changes\": {}\n    }\n  ],\n  \"pagination\": {\n    \"total\": 4756,\n    \"page\": 8761,\n    \"limit\": 4446,\n    \"hasMore\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e44957ab-185d-4a4b-a5b1-a0dc751951f6",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "audit_logs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.statsig.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "statsig-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "d8d88595-125f-427a-b839-d9de7d7493f5",
+    "name": "Statsig Client SDK Audit Logs API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.\n\nContact Support:\n Name: Statsig Support",
+      "type": "text/plain"
+    }
+  }
+}

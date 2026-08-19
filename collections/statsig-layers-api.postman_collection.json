@@ -1,0 +1,1266 @@
+{
+  "item": [
+    {
+      "id": "60ab51e9-e400-49eb-9bc0-8d8daf08173a",
+      "name": "Layers",
+      "description": {
+        "content": "Manage layers that enable sharing parameters across multiple experiments while maintaining mutual exclusivity.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7289a026-4310-4b76-9e04-3e09a6f33d93",
+          "name": "List all layers",
+          "request": {
+            "name": "List all layers",
+            "description": {
+              "content": "Retrieves a list of all layers in the project.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "layers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "Maximum number of items to return per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "Page number for paginated results."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "bc81770c-53a2-4450-980f-ab9db9070225",
+              "name": "List of layers",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"parameters\": {},\n      \"experiments\": [\n        \"string\",\n        \"string\"\n      ],\n      \"createdTime\": 1787\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"parameters\": {},\n      \"experiments\": [\n        \"string\",\n        \"string\"\n      ],\n      \"createdTime\": 276\n    }\n  ],\n  \"pagination\": {\n    \"total\": 3653,\n    \"page\": 5263,\n    \"limit\": 5164,\n    \"hasMore\": true\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fcf22959-0a84-46fa-9e2c-a8fa9f3394fa",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4346bbb6-b7e9-4b96-b60d-d7676b4b76b2",
+          "name": "Create a layer",
+          "request": {
+            "name": "Create a layer",
+            "description": {
+              "content": "Creates a new layer in the project for sharing parameters across multiple experiments.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "layers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"parameters\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b83bc5a4-73b3-4233-9173-2d43d6d4f774",
+              "name": "Layer created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"parameters\": \"<object>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"parameters\": {},\n  \"experiments\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 9881\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1ca2d8e4-389a-40ba-8fcd-ad83e9a18445",
+              "name": "Invalid request parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"parameters\": \"<object>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f739ba3b-3c6e-45fc-9239-0112ecec811f",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"parameters\": \"<object>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a3b6857c-cacb-4eb6-a99b-44f5be276acb",
+          "name": "Get a layer",
+          "request": {
+            "name": "Get a layer",
+            "description": {
+              "content": "Retrieves the full configuration of a specific layer including its parameters and associated experiments.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "layers",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the layer."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "323ab49c-69c8-402f-b0db-4c88485c75a6",
+              "name": "Layer details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the layer."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"parameters\": {},\n  \"experiments\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 9881\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "370c99d6-f580-4b97-b746-35d2d009a509",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the layer."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "89ce4881-61c3-4886-b5f4-81aa67dabf9a",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the layer."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a2aaf3c3-5b1b-459c-a154-8138de23a28a",
+          "name": "Delete a layer",
+          "request": {
+            "name": "Delete a layer",
+            "description": {
+              "content": "Permanently deletes a layer from the project.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "layers",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the layer."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8da08fc0-79a0-4a47-a315-6c1175f63397",
+              "name": "Layer deleted successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the layer."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "16a9d688-f388-4c40-aace-36d354bf96f3",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the layer."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ac65fdc1-991c-4f60-974b-fce87dec5b1b",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the layer."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "66f38a0f-3e91-4a3f-b63c-4f6d927853d7",
+          "name": "List experiments in a layer",
+          "request": {
+            "name": "List experiments in a layer",
+            "description": {
+              "content": "Retrieves the list of experiments associated with a specific layer.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "layers",
+                ":id",
+                "experiments"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the layer."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "bae95e44-3510-4e5f-b65d-37c9066f05d8",
+              "name": "List of experiments in the layer",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers",
+                    ":id",
+                    "experiments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the layer."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"hypothesis\": \"string\",\n      \"status\": \"setup\",\n      \"groups\": [\n        {\n          \"name\": \"string\",\n          \"size\": 93.19095267245538,\n          \"parameterValues\": {}\n        },\n        {\n          \"name\": \"string\",\n          \"size\": 69.24639247006982,\n          \"parameterValues\": {}\n        }\n      ],\n      \"allocation\": 28.22592888661829,\n      \"layerID\": \"string\",\n      \"targetingGateID\": \"string\",\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"createdTime\": 8546,\n      \"lastModifiedTime\": 6232\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"hypothesis\": \"string\",\n      \"status\": \"active\",\n      \"groups\": [\n        {\n          \"name\": \"string\",\n          \"size\": 10.413492572643667,\n          \"parameterValues\": {}\n        },\n        {\n          \"name\": \"string\",\n          \"size\": 0.3315196968258771,\n          \"parameterValues\": {}\n        }\n      ],\n      \"allocation\": 88.76359531718572,\n      \"layerID\": \"string\",\n      \"targetingGateID\": \"string\",\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"createdTime\": 1776,\n      \"lastModifiedTime\": 7867\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "92bf9858-cc6c-4e24-847e-f5b2a9be56dc",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers",
+                    ":id",
+                    "experiments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the layer."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bf5d94aa-56ee-49ec-9c4a-66c4391345c0",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "layers",
+                    ":id",
+                    "experiments"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the layer."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "20a16288-dceb-4d37-8431-1bab0ca60411",
+          "name": "Get layer parameters",
+          "request": {
+            "name": "Get layer parameters",
+            "description": {
+              "content": "Fetches parameter values from a layer for the specified user. Layers allow sharing parameters across multiple experiments. An exposure event is logged only when a specific parameter is accessed.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "get_layer"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\n    \"userID\": \"<string>\",\n    \"email\": \"<email>\",\n    \"ip\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"country\": \"<string>\",\n    \"locale\": \"<string>\",\n    \"appVersion\": \"<string>\",\n    \"custom\": {\n      \"key_0\": true,\n      \"key_1\": 942.4975497083853\n    },\n    \"privateAttributes\": {\n      \"key_0\": 8546\n    },\n    \"customIDs\": {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\",\n      \"key_2\": \"<string>\"\n    }\n  },\n  \"layerName\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "32365a52-3ee3-4bda-9f05-1afa28eb7c53",
+              "name": "Layer parameter values",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get_layer"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"eYsWSr@WEJWhYbVGrRKSqqGY.ebd\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": 829.6435422853299,\n      \"key_1\": 6176,\n      \"key_2\": 8482.917459254373\n    },\n    \"privateAttributes\": {\n      \"key_0\": 9406.623212586364,\n      \"key_1\": \"string\",\n      \"key_2\": 2586\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\"\n    }\n  },\n  \"layerName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"string\",\n  \"value\": {},\n  \"rule_id\": \"string\",\n  \"group_name\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f5ae144e-b2d0-4c80-b93d-42c28c828ab3",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get_layer"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"eYsWSr@WEJWhYbVGrRKSqqGY.ebd\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": 829.6435422853299,\n      \"key_1\": 6176,\n      \"key_2\": 8482.917459254373\n    },\n    \"privateAttributes\": {\n      \"key_0\": 9406.623212586364,\n      \"key_1\": \"string\",\n      \"key_2\": 2586\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\"\n    }\n  },\n  \"layerName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.statsig.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "statsig-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "63df1d3b-63e1-4c0e-bcbb-dba92fc92637",
+    "name": "Statsig Client SDK Audit Logs Layers API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.\n\nContact Support:\n Name: Statsig Support",
+      "type": "text/plain"
+    }
+  }
+}

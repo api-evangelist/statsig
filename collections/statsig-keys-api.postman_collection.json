@@ -1,0 +1,188 @@
+{
+  "item": [
+    {
+      "id": "ce39cfac-a123-451a-8eae-f26cce3b45e0",
+      "name": "Keys",
+      "description": {
+        "content": "Manage API keys for the project including server secret keys, client SDK keys, and console API keys.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "59e8f6d5-b92e-4096-9449-8b56b52591b3",
+          "name": "List all API keys",
+          "request": {
+            "name": "List all API keys",
+            "description": {
+              "content": "Retrieves a list of all API keys in the project including server secret keys, client SDK keys, and console API keys.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "keys"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a53a9be9-2d65-4460-8558-889a6997baec",
+              "name": "List of API keys",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "keys"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"key\": \"string\",\n      \"type\": \"server\",\n      \"description\": \"string\",\n      \"createdTime\": 504\n    },\n    {\n      \"key\": \"string\",\n      \"type\": \"console\",\n      \"description\": \"string\",\n      \"createdTime\": 7912\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a41956be-a18b-4566-9bf6-2aaf38a5c69a",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "keys"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.statsig.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "statsig-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "64ba6a9f-ad9a-4ef2-a5aa-674261fd06ee",
+    "name": "Statsig Client SDK Audit Logs Keys API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.\n\nContact Support:\n Name: Statsig Support",
+      "type": "text/plain"
+    }
+  }
+}

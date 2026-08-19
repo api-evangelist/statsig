@@ -1,0 +1,479 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Statsig Client SDK Audit Logs Gates API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "statsig-api-key",
+      "value": "{{statsig-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Gates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all gates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/gates",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all feature gates in the project with their current status and configuration."
+        },
+        {
+          "info": {
+            "name": "Create a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/gates",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new feature gate in the project with the specified configuration, rules, and targeting conditions."
+        },
+        {
+          "info": {
+            "name": "Get a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/gates/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Retrieves the full configuration of a specific feature gate including its rules, conditions, and overrides."
+        },
+        {
+          "info": {
+            "name": "Partially update a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.statsig.com/v1/gates/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates specific fields of a feature gate without replacing the entire configuration."
+        },
+        {
+          "info": {
+            "name": "Delete a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.statsig.com/v1/gates/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Permanently deletes a feature gate from the project. This action cannot be undone."
+        },
+        {
+          "info": {
+            "name": "Enable a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.statsig.com/v1/gates/:id/enable",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Enables a feature gate so that its rules are actively evaluated for users."
+        },
+        {
+          "info": {
+            "name": "Disable a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.statsig.com/v1/gates/:id/disable",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Disables a feature gate so that it returns false for all users regardless of rules."
+        },
+        {
+          "info": {
+            "name": "Launch a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.statsig.com/v1/gates/:id/launch",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Launches a feature gate, indicating the feature has been fully rolled out and the gate can be cleaned up."
+        },
+        {
+          "info": {
+            "name": "Archive a gate",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.statsig.com/v1/gates/:id/archive",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Archives a feature gate, removing it from active use while preserving its configuration for reference."
+        },
+        {
+          "info": {
+            "name": "List gate rules",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/gates/:id/rules",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Retrieves all rules configured for a specific feature gate."
+        },
+        {
+          "info": {
+            "name": "Add a gate rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/gates/:id/rules",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds a new targeting rule to a feature gate."
+        },
+        {
+          "info": {
+            "name": "Update gate rules",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.statsig.com/v1/gates/:id/rules",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replaces all rules for a feature gate with the provided set of rules."
+        },
+        {
+          "info": {
+            "name": "Delete a gate rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.statsig.com/v1/gates/:id/rules/:ruleID",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              },
+              {
+                "name": "ruleID",
+                "value": "",
+                "type": "path",
+                "description": "The identifier of the rule to delete."
+              }
+            ]
+          },
+          "docs": "Removes a specific targeting rule from a feature gate."
+        },
+        {
+          "info": {
+            "name": "Get gate overrides",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/gates/:id/overrides",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Retrieves the user and ID overrides configured for a feature gate."
+        },
+        {
+          "info": {
+            "name": "Add gate overrides",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/gates/:id/overrides",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds user or ID overrides to a feature gate for forcing specific evaluation results."
+        },
+        {
+          "info": {
+            "name": "Update gate overrides",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.statsig.com/v1/gates/:id/overrides",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replaces all overrides for a feature gate with the provided set."
+        },
+        {
+          "info": {
+            "name": "Delete gate overrides",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.statsig.com/v1/gates/:id/overrides",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the feature gate."
+              }
+            ]
+          },
+          "docs": "Removes all user and ID overrides from a feature gate."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

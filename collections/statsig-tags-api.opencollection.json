@@ -1,0 +1,64 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Statsig Client SDK Audit Logs Tags API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "statsig-api-key",
+      "value": "{{statsig-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tags",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/tags",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all tags used for organizing entities in the project."
+        },
+        {
+          "info": {
+            "name": "Create a tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/tags",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new tag for organizing entities in the project."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

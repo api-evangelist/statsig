@@ -1,0 +1,199 @@
+{
+  "item": [
+    {
+      "id": "d674d219-56f9-42ce-96d0-930d3115e3c5",
+      "name": "Initialization",
+      "description": {
+        "content": "Endpoints for initializing client SDKs with all evaluated feature gates, configs, experiments, and layers for a given user.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b4560508-b416-43af-81eb-dc569c6ea3e9",
+          "name": "Initialize client SDK",
+          "request": {
+            "name": "Initialize client SDK",
+            "description": {
+              "content": "Returns all evaluated gates, configs, experiments, and layers for a given user. This is the primary endpoint called during client SDK initialization. The response contains hashed entity names for security, and the client SDK decodes them locally. The response is optimized for client-side caching and includes a hash for detecting changes on subsequent requests.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "initialize"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\n    \"userID\": \"<string>\",\n    \"email\": \"<email>\",\n    \"ip\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"country\": \"<string>\",\n    \"locale\": \"<string>\",\n    \"appVersion\": \"<string>\",\n    \"custom\": {\n      \"key_0\": 6585.751099233512,\n      \"key_1\": false,\n      \"key_2\": 2674\n    },\n    \"privateAttributes\": {\n      \"key_0\": true,\n      \"key_1\": true,\n      \"key_2\": 3961\n    },\n    \"customIDs\": {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\"\n    }\n  },\n  \"hash\": \"<string>\",\n  \"sinceTime\": \"<long>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2faf1275-5526-4168-9881-4b4b5b87aff4",
+              "name": "Evaluated configurations for the user",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "initialize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"bRAbojvPlJD6KB@PiuRgwUXoVXxlFzSEmOli.njr\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": \"string\",\n      \"key_1\": 8363\n    },\n    \"privateAttributes\": {\n      \"key_0\": \"string\"\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  },\n  \"hash\": \"<string>\",\n  \"sinceTime\": \"<long>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"feature_gates\": {\n    \"key_0\": {\n      \"value\": false,\n      \"rule_id\": \"string\"\n    }\n  },\n  \"dynamic_configs\": {\n    \"key_0\": {\n      \"value\": {},\n      \"rule_id\": \"string\"\n    }\n  },\n  \"layer_configs\": {\n    \"key_0\": {\n      \"value\": {},\n      \"rule_id\": \"string\",\n      \"explicit_parameters\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    \"key_1\": {\n      \"value\": {},\n      \"rule_id\": \"string\",\n      \"explicit_parameters\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  },\n  \"has_updates\": false,\n  \"time\": 5810,\n  \"hash_used\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "78aa90e5-6979-4229-bbd6-2bf6dd4f9033",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "initialize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"bRAbojvPlJD6KB@PiuRgwUXoVXxlFzSEmOli.njr\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": \"string\",\n      \"key_1\": 8363\n    },\n    \"privateAttributes\": {\n      \"key_0\": \"string\"\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  },\n  \"hash\": \"<string>\",\n  \"sinceTime\": \"<long>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.statsig.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "statsig-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "c24bf406-e6f0-439d-93ab-d424fc136d41",
+    "name": "Statsig Client SDK Audit Logs Initialization API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.\n\nContact Support:\n Name: Statsig Support",
+      "type": "text/plain"
+    }
+  }
+}

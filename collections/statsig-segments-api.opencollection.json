@@ -1,0 +1,157 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Statsig Client SDK Audit Logs Segments API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "statsig-api-key",
+      "value": "{{statsig-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Segments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all segments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/segments",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all user segments in the project."
+        },
+        {
+          "info": {
+            "name": "Create a segment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/segments",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new user segment in the project for targeting rules."
+        },
+        {
+          "info": {
+            "name": "Get a segment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/segments/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the segment."
+              }
+            ]
+          },
+          "docs": "Retrieves the full configuration of a specific user segment."
+        },
+        {
+          "info": {
+            "name": "Partially update a segment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.statsig.com/v1/segments/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the segment."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates specific fields of a user segment."
+        },
+        {
+          "info": {
+            "name": "Delete a segment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.statsig.com/v1/segments/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the segment."
+              }
+            ]
+          },
+          "docs": "Permanently deletes a user segment from the project."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

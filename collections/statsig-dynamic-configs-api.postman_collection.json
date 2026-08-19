@@ -1,0 +1,1593 @@
+{
+  "item": [
+    {
+      "id": "81aec2ce-2371-4fef-ad77-91dd59409a6e",
+      "name": "Dynamic Configs",
+      "description": {
+        "content": "Manage dynamic configurations with full CRUD operations for server-driven configuration values.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "35233e0e-ee8c-474b-971a-2bc9c189e82b",
+          "name": "List all dynamic configs",
+          "request": {
+            "name": "List all dynamic configs",
+            "description": {
+              "content": "Retrieves a list of all dynamic configurations in the project.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "dynamic_configs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "Maximum number of items to return per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "Page number for paginated results."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "7232180c-0142-40c3-bac9-6a7cf379d1c8",
+              "name": "List of dynamic configs",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"isEnabled\": false,\n      \"defaultValue\": {},\n      \"rules\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 92.02515016694326,\n          \"conditions\": [\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"returnValue\": {},\n          \"environments\": [\n            \"string\",\n            \"string\"\n          ]\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 23.068035070610826,\n          \"conditions\": [\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"returnValue\": {},\n          \"environments\": [\n            \"string\",\n            \"string\"\n          ]\n        }\n      ],\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"createdTime\": 309,\n      \"lastModifiedTime\": 3432\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"isEnabled\": false,\n      \"defaultValue\": {},\n      \"rules\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 28.871029876546718,\n          \"conditions\": [\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"returnValue\": {},\n          \"environments\": [\n            \"string\",\n            \"string\"\n          ]\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 77.49776965328778,\n          \"conditions\": [\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"returnValue\": {},\n          \"environments\": [\n            \"string\",\n            \"string\"\n          ]\n        }\n      ],\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"createdTime\": 1335,\n      \"lastModifiedTime\": 9855\n    }\n  ],\n  \"pagination\": {\n    \"total\": 9012,\n    \"page\": 2166,\n    \"limit\": 5892,\n    \"hasMore\": true\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f54a1246-20c6-422a-a24e-6b22ffa91adc",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "af7612f4-8161-43de-ab95-87b30f7d21d7",
+          "name": "Create a dynamic config",
+          "request": {
+            "name": "Create a dynamic config",
+            "description": {
+              "content": "Creates a new dynamic configuration in the project with the specified default values and rules.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "dynamic_configs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"defaultValue\": \"<object>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "76b3a42b-a94b-4ebb-b53c-14745a4ee6d6",
+              "name": "Dynamic config created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"defaultValue\": \"<object>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"isEnabled\": true,\n  \"defaultValue\": {},\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 63.341660019776214,\n      \"conditions\": [\n        {\n          \"type\": \"fails_gate\",\n          \"targetValue\": {},\n          \"operator\": \"version_lte\"\n        },\n        {\n          \"type\": \"passes_gate\",\n          \"targetValue\": {},\n          \"operator\": \"str_matches\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 52.768037807246216,\n      \"conditions\": [\n        {\n          \"type\": \"country\",\n          \"targetValue\": {},\n          \"operator\": \"version_gte\"\n        },\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"version_lte\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 702,\n  \"lastModifiedTime\": 7781\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c88da84d-9e47-451f-bdbd-49de379de648",
+              "name": "Invalid request parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"defaultValue\": \"<object>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "55d97c33-a0d2-4a39-ab3d-4fd2c41dc418",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"defaultValue\": \"<object>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "46ade0f9-2f63-49aa-8e91-3acb63f46ef6",
+          "name": "Get a dynamic config",
+          "request": {
+            "name": "Get a dynamic config",
+            "description": {
+              "content": "Retrieves the full configuration of a specific dynamic config including its default values, rules, and conditions.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "dynamic_configs",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the dynamic config."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "779f76c8-0450-40f6-b6d8-5450bc9532d8",
+              "name": "Dynamic config details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the dynamic config."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"isEnabled\": true,\n  \"defaultValue\": {},\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 63.341660019776214,\n      \"conditions\": [\n        {\n          \"type\": \"fails_gate\",\n          \"targetValue\": {},\n          \"operator\": \"version_lte\"\n        },\n        {\n          \"type\": \"passes_gate\",\n          \"targetValue\": {},\n          \"operator\": \"str_matches\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 52.768037807246216,\n      \"conditions\": [\n        {\n          \"type\": \"country\",\n          \"targetValue\": {},\n          \"operator\": \"version_gte\"\n        },\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"version_lte\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 702,\n  \"lastModifiedTime\": 7781\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "71f8bd2e-8630-463e-af83-7866620e86aa",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the dynamic config."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "53d04263-9699-45e1-b0b3-db5db585d092",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the dynamic config."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "56f4355c-f7db-4cdd-875f-fbb84be69692",
+          "name": "Partially update a dynamic config",
+          "request": {
+            "name": "Partially update a dynamic config",
+            "description": {
+              "content": "Updates specific fields of a dynamic config without replacing the entire configuration.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "dynamic_configs",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the dynamic config."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"defaultValue\": \"<object>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f6dc8a39-1e82-4dfb-a4ee-c0083e8863d5",
+              "name": "Dynamic config updated successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the dynamic config."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"defaultValue\": \"<object>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"isEnabled\": true,\n  \"defaultValue\": {},\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 63.341660019776214,\n      \"conditions\": [\n        {\n          \"type\": \"fails_gate\",\n          \"targetValue\": {},\n          \"operator\": \"version_lte\"\n        },\n        {\n          \"type\": \"passes_gate\",\n          \"targetValue\": {},\n          \"operator\": \"str_matches\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 52.768037807246216,\n      \"conditions\": [\n        {\n          \"type\": \"country\",\n          \"targetValue\": {},\n          \"operator\": \"version_gte\"\n        },\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"version_lte\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 702,\n  \"lastModifiedTime\": 7781\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0b35c8e6-a02d-4af3-b639-0da5af433df6",
+              "name": "Invalid request parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the dynamic config."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"defaultValue\": \"<object>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c404d89e-41e1-48a8-8de3-fccfcb1b6953",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the dynamic config."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"defaultValue\": \"<object>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "35a8296b-d7ec-419a-9a67-76519b14da09",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the dynamic config."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"defaultValue\": \"<object>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5951e86e-555b-4c44-96e4-dc1d8e16fb7a",
+          "name": "Delete a dynamic config",
+          "request": {
+            "name": "Delete a dynamic config",
+            "description": {
+              "content": "Permanently deletes a dynamic config from the project.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "dynamic_configs",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the dynamic config."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fa052248-b91f-4fd2-9a76-4385e4be0059",
+              "name": "Dynamic config deleted successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the dynamic config."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "7d81a45c-da00-46a7-8ab1-c2e632c83eba",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the dynamic config."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "104f43f9-046b-4b8a-bd26-646c9c4ea7da",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the dynamic config."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a7d3f686-4e25-4ced-80bf-5c09103c5c67",
+          "name": "Get dynamic config rules",
+          "request": {
+            "name": "Get dynamic config rules",
+            "description": {
+              "content": "Retrieves all rules configured for a specific dynamic config.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "dynamic_configs",
+                ":id",
+                "rules"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the dynamic config."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8890ae7f-539a-48ff-a2ed-cbf1f2de5c04",
+              "name": "List of dynamic config rules",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the dynamic config."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 28.034907874464242,\n      \"conditions\": [\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"str_matches\"\n        },\n        {\n          \"type\": \"browser_version\",\n          \"targetValue\": {},\n          \"operator\": \"str_contains_any\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 49.87252557962518,\n      \"conditions\": [\n        {\n          \"type\": \"environment\",\n          \"targetValue\": {},\n          \"operator\": \"str_contains_any\"\n        },\n        {\n          \"type\": \"browser_version\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "80546149-4a8c-4fb0-b1f5-dcb24ecb2256",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the dynamic config."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d3ce1713-f853-4ea5-af73-da6bc8e695f1",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "dynamic_configs",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the dynamic config."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7b7a4110-aef3-410b-bbee-34ab3efc6d05",
+          "name": "Get a dynamic config or experiment",
+          "request": {
+            "name": "Get a dynamic config or experiment",
+            "description": {
+              "content": "Fetches the configuration values for a dynamic config or experiment for the specified user. The system automatically determines whether the requested name refers to a dynamic config or an experiment. An exposure event is automatically logged.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "get_config"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\n    \"userID\": \"<string>\",\n    \"email\": \"<email>\",\n    \"ip\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"country\": \"<string>\",\n    \"locale\": \"<string>\",\n    \"appVersion\": \"<string>\",\n    \"custom\": {\n      \"key_0\": true\n    },\n    \"privateAttributes\": {\n      \"key_0\": 9369.08223188177\n    },\n    \"customIDs\": {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\",\n      \"key_2\": \"<string>\"\n    }\n  },\n  \"configName\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "26ee25b4-eaf1-456b-a79c-030ed8059764",
+              "name": "Dynamic config or experiment values",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get_config"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"vA0@GvOQLuIuMEoBvfCPhhCNzoJMwxl.cau\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": \"string\"\n    },\n    \"privateAttributes\": {\n      \"key_0\": \"string\"\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\"\n    }\n  },\n  \"configName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"string\",\n  \"value\": {},\n  \"group\": \"string\",\n  \"rule_id\": \"string\",\n  \"group_name\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "149e967a-8664-4d04-a636-f231f6a01854",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "get_config"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"vA0@GvOQLuIuMEoBvfCPhhCNzoJMwxl.cau\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": \"string\"\n    },\n    \"privateAttributes\": {\n      \"key_0\": \"string\"\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\"\n    }\n  },\n  \"configName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.statsig.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "statsig-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b58db7a9-879d-4d03-89de-28db31b08c84",
+    "name": "Statsig Client SDK Audit Logs Dynamic Configs API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.\n\nContact Support:\n Name: Statsig Support",
+      "type": "text/plain"
+    }
+  }
+}

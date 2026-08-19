@@ -1,0 +1,4387 @@
+{
+  "item": [
+    {
+      "id": "89cbe62c-b66c-48a8-a246-412a199e28c6",
+      "name": "Gates",
+      "description": {
+        "content": "Manage feature gates including creation, updates, rules, overrides, enabling, disabling, launching, and archiving.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "817a339c-f711-4443-9feb-cd5daff566c0",
+          "name": "List all gates",
+          "request": {
+            "name": "List all gates",
+            "description": {
+              "content": "Retrieves a list of all feature gates in the project with their current status and configuration.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "Maximum number of items to return per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "Page number for paginated results."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "018fd623-b605-4b63-8877-d0373ccc3e6d",
+              "name": "List of feature gates",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"isEnabled\": true,\n      \"status\": \"archived\",\n      \"rules\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 99.65225711910401,\n          \"conditions\": [\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"returnValue\": {},\n          \"environments\": [\n            \"string\",\n            \"string\"\n          ]\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 26.68071110162168,\n          \"conditions\": [\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"returnValue\": {},\n          \"environments\": [\n            \"string\",\n            \"string\"\n          ]\n        }\n      ],\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"targetApps\": [\n        \"string\",\n        \"string\"\n      ],\n      \"createdTime\": 907,\n      \"lastModifiedTime\": 701\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"isEnabled\": true,\n      \"status\": \"archived\",\n      \"rules\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 24.085441295456945,\n          \"conditions\": [\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"returnValue\": {},\n          \"environments\": [\n            \"string\",\n            \"string\"\n          ]\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"passPercentage\": 4.546593457674031,\n          \"conditions\": [\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"type\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"targetValue\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"returnValue\": {},\n          \"environments\": [\n            \"string\",\n            \"string\"\n          ]\n        }\n      ],\n      \"tags\": [\n        \"string\",\n        \"string\"\n      ],\n      \"targetApps\": [\n        \"string\",\n        \"string\"\n      ],\n      \"createdTime\": 6388,\n      \"lastModifiedTime\": 4480\n    }\n  ],\n  \"pagination\": {\n    \"total\": 9502,\n    \"page\": 876,\n    \"limit\": 6424,\n    \"hasMore\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e606d9c4-2d6c-41cb-92b0-2a0fa0480cff",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3d7b3e51-01db-4e31-ac98-dcba382a264d",
+          "name": "Create a gate",
+          "request": {
+            "name": "Create a gate",
+            "description": {
+              "content": "Creates a new feature gate in the project with the specified configuration, rules, and targeting conditions.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"rules\": [\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"passPercentage\": \"<number>\",\n      \"conditions\": [\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        },\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        }\n      ],\n      \"returnValue\": \"<object>\",\n      \"environments\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"passPercentage\": \"<number>\",\n      \"conditions\": [\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        },\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        }\n      ],\n      \"returnValue\": \"<object>\",\n      \"environments\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"targetApps\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "edb43c5c-542e-4e60-bfce-7912f8d0657c",
+              "name": "Gate created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 97.40845525856844,\n      \"conditions\": [\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"str_starts_with_any\"\n        },\n        {\n          \"type\": \"passes_gate\",\n          \"targetValue\": {},\n          \"operator\": \"lt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 40.30796147891783,\n      \"conditions\": [\n        {\n          \"type\": \"email\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        },\n        {\n          \"type\": \"os_version\",\n          \"targetValue\": {},\n          \"operator\": \"str_ends_with_any\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"targetApps\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"isEnabled\": true,\n  \"status\": \"launched\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 28.31669695485921,\n      \"conditions\": [\n        {\n          \"type\": \"time\",\n          \"targetValue\": {},\n          \"operator\": \"none\"\n        },\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 31.395204883073912,\n      \"conditions\": [\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        },\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"after\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"targetApps\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 9503,\n  \"lastModifiedTime\": 6937\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4aa5821f-06f9-4ea4-8e10-60828b64ff53",
+              "name": "Invalid request parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 97.40845525856844,\n      \"conditions\": [\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"str_starts_with_any\"\n        },\n        {\n          \"type\": \"passes_gate\",\n          \"targetValue\": {},\n          \"operator\": \"lt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 40.30796147891783,\n      \"conditions\": [\n        {\n          \"type\": \"email\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        },\n        {\n          \"type\": \"os_version\",\n          \"targetValue\": {},\n          \"operator\": \"str_ends_with_any\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"targetApps\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7f7a6583-159e-466e-8d06-ac183b0d6044",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 97.40845525856844,\n      \"conditions\": [\n        {\n          \"type\": \"os_name\",\n          \"targetValue\": {},\n          \"operator\": \"str_starts_with_any\"\n        },\n        {\n          \"type\": \"passes_gate\",\n          \"targetValue\": {},\n          \"operator\": \"lt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 40.30796147891783,\n      \"conditions\": [\n        {\n          \"type\": \"email\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        },\n        {\n          \"type\": \"os_version\",\n          \"targetValue\": {},\n          \"operator\": \"str_ends_with_any\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"targetApps\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cfcf6b2d-cfe8-42a6-ac41-e86705929980",
+          "name": "Get a gate",
+          "request": {
+            "name": "Get a gate",
+            "description": {
+              "content": "Retrieves the full configuration of a specific feature gate including its rules, conditions, and overrides.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3f74e581-272f-4433-a991-c7fa16e6b578",
+              "name": "Gate details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"isEnabled\": true,\n  \"status\": \"launched\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 28.31669695485921,\n      \"conditions\": [\n        {\n          \"type\": \"time\",\n          \"targetValue\": {},\n          \"operator\": \"none\"\n        },\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 31.395204883073912,\n      \"conditions\": [\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        },\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"after\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"targetApps\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 9503,\n  \"lastModifiedTime\": 6937\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8d820b13-78e1-4594-8e69-cd11c7a84ee4",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7c99ebde-033c-4cd0-b0a2-1fd03d342648",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "78a03c42-405a-41bd-9052-7e055c6dddbb",
+          "name": "Partially update a gate",
+          "request": {
+            "name": "Partially update a gate",
+            "description": {
+              "content": "Updates specific fields of a feature gate without replacing the entire configuration.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"targetApps\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5165e98a-1385-49de-88e5-054719ad9901",
+              "name": "Gate updated successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"targetApps\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"isEnabled\": true,\n  \"status\": \"launched\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 28.31669695485921,\n      \"conditions\": [\n        {\n          \"type\": \"time\",\n          \"targetValue\": {},\n          \"operator\": \"none\"\n        },\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 31.395204883073912,\n      \"conditions\": [\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        },\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"after\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"targetApps\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 9503,\n  \"lastModifiedTime\": 6937\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c12788fe-5359-4bf1-a520-f320121eb4db",
+              "name": "Invalid request parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"targetApps\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "24f01f80-5cf7-446c-82f7-5460cc597e93",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"targetApps\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3ca4aa1f-6043-43f2-8c64-332c53b739d5",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"<string>\",\n  \"isEnabled\": \"<boolean>\",\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"targetApps\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cae363fd-f982-4323-a07d-22f463313764",
+          "name": "Delete a gate",
+          "request": {
+            "name": "Delete a gate",
+            "description": {
+              "content": "Permanently deletes a feature gate from the project. This action cannot be undone.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ba14da62-c7d6-41d4-857f-7c0d74f0b808",
+              "name": "Gate deleted successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "70c3a288-f0a8-4cf4-978e-355c5dadee9d",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1a640d2e-80b1-42fb-90ba-750cd711a3d9",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2eb7861e-5840-4397-adb2-c0577982e880",
+          "name": "Enable a gate",
+          "request": {
+            "name": "Enable a gate",
+            "description": {
+              "content": "Enables a feature gate so that its rules are actively evaluated for users.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id",
+                "enable"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a31bf0b4-3a36-4254-b39f-3fa9da819244",
+              "name": "Gate enabled successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "enable"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"isEnabled\": true,\n  \"status\": \"launched\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 28.31669695485921,\n      \"conditions\": [\n        {\n          \"type\": \"time\",\n          \"targetValue\": {},\n          \"operator\": \"none\"\n        },\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 31.395204883073912,\n      \"conditions\": [\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        },\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"after\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"targetApps\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 9503,\n  \"lastModifiedTime\": 6937\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4c4d969f-cd4d-4262-999a-e2b0ff57a3a0",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "enable"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7b0fe4ca-76e4-4188-b61a-299388ec7d87",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "enable"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3f5bb2c9-8a2c-4460-8904-2c90593409f8",
+          "name": "Disable a gate",
+          "request": {
+            "name": "Disable a gate",
+            "description": {
+              "content": "Disables a feature gate so that it returns false for all users regardless of rules.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id",
+                "disable"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8472c51f-7abb-4eea-90a4-1e821cfc1a78",
+              "name": "Gate disabled successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "disable"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"isEnabled\": true,\n  \"status\": \"launched\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 28.31669695485921,\n      \"conditions\": [\n        {\n          \"type\": \"time\",\n          \"targetValue\": {},\n          \"operator\": \"none\"\n        },\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 31.395204883073912,\n      \"conditions\": [\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        },\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"after\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"targetApps\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 9503,\n  \"lastModifiedTime\": 6937\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f232e3b6-392c-43a4-ac8d-66ae730a0648",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "disable"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1d5dccda-9164-4b37-84fd-615c4e6cb7d0",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "disable"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b0460d51-98d2-4b57-991b-c272fd86208c",
+          "name": "Launch a gate",
+          "request": {
+            "name": "Launch a gate",
+            "description": {
+              "content": "Launches a feature gate, indicating the feature has been fully rolled out and the gate can be cleaned up.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id",
+                "launch"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9536e8df-8200-4b7b-b872-92cb8965fc21",
+              "name": "Gate launched successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "launch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"isEnabled\": true,\n  \"status\": \"launched\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 28.31669695485921,\n      \"conditions\": [\n        {\n          \"type\": \"time\",\n          \"targetValue\": {},\n          \"operator\": \"none\"\n        },\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 31.395204883073912,\n      \"conditions\": [\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        },\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"after\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"targetApps\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 9503,\n  \"lastModifiedTime\": 6937\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "472294c2-e2fc-4d1d-90f6-f660f29046db",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "launch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2d468708-291b-42b3-8ce4-e325bc4d4380",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "launch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7a6bda49-d788-4f92-b1fb-e5d516719562",
+          "name": "Archive a gate",
+          "request": {
+            "name": "Archive a gate",
+            "description": {
+              "content": "Archives a feature gate, removing it from active use while preserving its configuration for reference.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id",
+                "archive"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "33f100eb-a2bc-4790-afbb-032573dd2b38",
+              "name": "Gate archived successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "archive"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"isEnabled\": true,\n  \"status\": \"launched\",\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 28.31669695485921,\n      \"conditions\": [\n        {\n          \"type\": \"time\",\n          \"targetValue\": {},\n          \"operator\": \"none\"\n        },\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"version_lt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 31.395204883073912,\n      \"conditions\": [\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        },\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"after\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"tags\": [\n    \"string\",\n    \"string\"\n  ],\n  \"targetApps\": [\n    \"string\",\n    \"string\"\n  ],\n  \"createdTime\": 9503,\n  \"lastModifiedTime\": 6937\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "48331af3-88e8-4dd6-aa56-219417076a9f",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "archive"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "88a252ce-b4df-4d6b-b4d7-04bf19009780",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "archive"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e5ff9aab-c0f4-4acf-a749-3adf3a029f9e",
+          "name": "List gate rules",
+          "request": {
+            "name": "List gate rules",
+            "description": {
+              "content": "Retrieves all rules configured for a specific feature gate.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id",
+                "rules"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5096ca31-0752-43b1-87d4-c896904f8904",
+              "name": "List of gate rules",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 38.007178863929326,\n      \"conditions\": [\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"before\"\n        },\n        {\n          \"type\": \"time\",\n          \"targetValue\": {},\n          \"operator\": \"str_contains_none\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 2.7018278846434263,\n      \"conditions\": [\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"str_ends_with_any\"\n        },\n        {\n          \"type\": \"time\",\n          \"targetValue\": {},\n          \"operator\": \"str_contains_none\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c6ab0ba3-5531-4990-8f01-d59e232297a9",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9343a93c-00d2-4520-af3d-5324155413f9",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c5e72540-e685-4e61-82bc-b2e1d22e0398",
+          "name": "Add a gate rule",
+          "request": {
+            "name": "Add a gate rule",
+            "description": {
+              "content": "Adds a new targeting rule to a feature gate.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id",
+                "rules"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"passPercentage\": \"<number>\",\n  \"conditions\": [\n    {\n      \"type\": \"<string>\",\n      \"targetValue\": {},\n      \"operator\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"targetValue\": {},\n      \"operator\": \"<string>\"\n    }\n  ],\n  \"returnValue\": \"<object>\",\n  \"environments\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "45670112-c847-4ff0-b94f-17d464eec77d",
+              "name": "Rule added successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"passPercentage\": \"<number>\",\n  \"conditions\": [\n    {\n      \"type\": \"passes_gate\",\n      \"targetValue\": {},\n      \"operator\": \"after\"\n    },\n    {\n      \"type\": \"os_version\",\n      \"targetValue\": {},\n      \"operator\": \"gt\"\n    }\n  ],\n  \"returnValue\": \"<object>\",\n  \"environments\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\",\n  \"passPercentage\": 62.123817084641395,\n  \"conditions\": [\n    {\n      \"type\": \"time\",\n      \"targetValue\": {},\n      \"operator\": \"version_gte\"\n    },\n    {\n      \"type\": \"ip_address\",\n      \"targetValue\": {},\n      \"operator\": \"before\"\n    }\n  ],\n  \"returnValue\": {},\n  \"environments\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e6144ac3-6084-41b3-9a30-aa5d4d82596b",
+              "name": "Invalid request parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"passPercentage\": \"<number>\",\n  \"conditions\": [\n    {\n      \"type\": \"passes_gate\",\n      \"targetValue\": {},\n      \"operator\": \"after\"\n    },\n    {\n      \"type\": \"os_version\",\n      \"targetValue\": {},\n      \"operator\": \"gt\"\n    }\n  ],\n  \"returnValue\": \"<object>\",\n  \"environments\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5508da91-30f7-4319-9680-7a79f4c6d0a7",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"passPercentage\": \"<number>\",\n  \"conditions\": [\n    {\n      \"type\": \"passes_gate\",\n      \"targetValue\": {},\n      \"operator\": \"after\"\n    },\n    {\n      \"type\": \"os_version\",\n      \"targetValue\": {},\n      \"operator\": \"gt\"\n    }\n  ],\n  \"returnValue\": \"<object>\",\n  \"environments\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0f52ab46-8cad-427c-b624-e64358d8b6f4",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"passPercentage\": \"<number>\",\n  \"conditions\": [\n    {\n      \"type\": \"passes_gate\",\n      \"targetValue\": {},\n      \"operator\": \"after\"\n    },\n    {\n      \"type\": \"os_version\",\n      \"targetValue\": {},\n      \"operator\": \"gt\"\n    }\n  ],\n  \"returnValue\": \"<object>\",\n  \"environments\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "523e79b8-bca0-4f43-a7e6-479bfbf7d7be",
+          "name": "Update gate rules",
+          "request": {
+            "name": "Update gate rules",
+            "description": {
+              "content": "Replaces all rules for a feature gate with the provided set of rules.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id",
+                "rules"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rules\": [\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"passPercentage\": \"<number>\",\n      \"conditions\": [\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        },\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        }\n      ],\n      \"returnValue\": \"<object>\",\n      \"environments\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"passPercentage\": \"<number>\",\n      \"conditions\": [\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        },\n        {\n          \"type\": \"<string>\",\n          \"targetValue\": {},\n          \"operator\": \"<string>\"\n        }\n      ],\n      \"returnValue\": \"<object>\",\n      \"environments\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "6c7f5fca-ab02-4ffd-907f-883440e433f9",
+              "name": "Rules updated successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 94.59632170251385,\n      \"conditions\": [\n        {\n          \"type\": \"fails_gate\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        },\n        {\n          \"type\": \"environment\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 26.125433540531052,\n      \"conditions\": [\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"after\"\n        },\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"str_ends_with_any\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "ae42493a-f5bb-4fb3-8aae-8faa0ffb2d3f",
+              "name": "Invalid request parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 94.59632170251385,\n      \"conditions\": [\n        {\n          \"type\": \"fails_gate\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        },\n        {\n          \"type\": \"environment\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 26.125433540531052,\n      \"conditions\": [\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"after\"\n        },\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"str_ends_with_any\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "49ece964-2018-4369-a465-5f833ba9ae18",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 94.59632170251385,\n      \"conditions\": [\n        {\n          \"type\": \"fails_gate\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        },\n        {\n          \"type\": \"environment\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 26.125433540531052,\n      \"conditions\": [\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"after\"\n        },\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"str_ends_with_any\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "de885e58-ba22-4fff-b17f-e32e31f718a8",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 94.59632170251385,\n      \"conditions\": [\n        {\n          \"type\": \"fails_gate\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        },\n        {\n          \"type\": \"environment\",\n          \"targetValue\": {},\n          \"operator\": \"gt\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"passPercentage\": 26.125433540531052,\n      \"conditions\": [\n        {\n          \"type\": \"user_id\",\n          \"targetValue\": {},\n          \"operator\": \"after\"\n        },\n        {\n          \"type\": \"app_version\",\n          \"targetValue\": {},\n          \"operator\": \"str_ends_with_any\"\n        }\n      ],\n      \"returnValue\": {},\n      \"environments\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d087357b-ca97-4174-ba24-addd4b16e144",
+          "name": "Delete a gate rule",
+          "request": {
+            "name": "Delete a gate rule",
+            "description": {
+              "content": "Removes a specific targeting rule from a feature gate.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id",
+                "rules",
+                ":ruleID"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "ruleID",
+                  "description": "(Required) The identifier of the rule to delete."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "084d9218-6811-4e19-8869-1e10feb680b4",
+              "name": "Rule deleted successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules",
+                    ":ruleID"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ruleID",
+                      "description": "(Required) The identifier of the rule to delete."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "baa2a671-feb8-49a5-8daa-3141a11954dc",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules",
+                    ":ruleID"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ruleID",
+                      "description": "(Required) The identifier of the rule to delete."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ea3be376-fcad-4c93-a6ca-53683c872a3b",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "rules",
+                    ":ruleID"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ruleID",
+                      "description": "(Required) The identifier of the rule to delete."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "01382d07-f5b4-43db-88ae-0f3a23175956",
+          "name": "Get gate overrides",
+          "request": {
+            "name": "Get gate overrides",
+            "description": {
+              "content": "Retrieves the user and ID overrides configured for a feature gate.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id",
+                "overrides"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "389e4be1-cd62-492c-9eac-d01dc181db3c",
+              "name": "Gate overrides",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"userOverrides\": [\n    {\n      \"userID\": \"string\",\n      \"value\": true\n    },\n    {\n      \"userID\": \"string\",\n      \"value\": true\n    }\n  ],\n  \"idOverrides\": [\n    {\n      \"ids\": [\n        \"string\",\n        \"string\"\n      ],\n      \"value\": false\n    },\n    {\n      \"ids\": [\n        \"string\",\n        \"string\"\n      ],\n      \"value\": false\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d6837cf1-9cc3-49d7-a84d-9f83d26cb9b2",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "023b26c5-e037-43fe-8a03-dde6ae9741a5",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6733767f-ef73-4446-a55c-d1e127672e64",
+          "name": "Add gate overrides",
+          "request": {
+            "name": "Add gate overrides",
+            "description": {
+              "content": "Adds user or ID overrides to a feature gate for forcing specific evaluation results.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id",
+                "overrides"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userOverrides\": [\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    }\n  ],\n  \"idOverrides\": [\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b5728b90-64b3-4b49-b3c3-04d656826266",
+              "name": "Overrides added successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userOverrides\": [\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    }\n  ],\n  \"idOverrides\": [\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"userOverrides\": [\n    {\n      \"userID\": \"string\",\n      \"value\": true\n    },\n    {\n      \"userID\": \"string\",\n      \"value\": true\n    }\n  ],\n  \"idOverrides\": [\n    {\n      \"ids\": [\n        \"string\",\n        \"string\"\n      ],\n      \"value\": false\n    },\n    {\n      \"ids\": [\n        \"string\",\n        \"string\"\n      ],\n      \"value\": false\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "50077fa0-96c4-46ea-b739-416f6a17f899",
+              "name": "Invalid request parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userOverrides\": [\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    }\n  ],\n  \"idOverrides\": [\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ac2f5b7c-2631-4d41-b98f-b480fb81febf",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userOverrides\": [\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    }\n  ],\n  \"idOverrides\": [\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "351bcee9-d2ec-40c9-a3a3-293f6d906638",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userOverrides\": [\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    }\n  ],\n  \"idOverrides\": [\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7fb9b335-b6c0-466c-81cf-39f3d6c56dae",
+          "name": "Update gate overrides",
+          "request": {
+            "name": "Update gate overrides",
+            "description": {
+              "content": "Replaces all overrides for a feature gate with the provided set.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id",
+                "overrides"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userOverrides\": [\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    }\n  ],\n  \"idOverrides\": [\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8ebe3f1b-c578-4c2e-92b5-c72f1acceaf4",
+              "name": "Overrides updated successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userOverrides\": [\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    }\n  ],\n  \"idOverrides\": [\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"userOverrides\": [\n    {\n      \"userID\": \"string\",\n      \"value\": true\n    },\n    {\n      \"userID\": \"string\",\n      \"value\": true\n    }\n  ],\n  \"idOverrides\": [\n    {\n      \"ids\": [\n        \"string\",\n        \"string\"\n      ],\n      \"value\": false\n    },\n    {\n      \"ids\": [\n        \"string\",\n        \"string\"\n      ],\n      \"value\": false\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1537edb4-ae1d-4308-9c0b-0fee0194d63a",
+              "name": "Invalid request parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userOverrides\": [\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    }\n  ],\n  \"idOverrides\": [\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "61021f90-73a0-4ca6-8ca4-ef2f9e89ce27",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userOverrides\": [\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    }\n  ],\n  \"idOverrides\": [\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d3ca0047-6b88-4aaa-af3b-8732fe03f192",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userOverrides\": [\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"userID\": \"<string>\",\n      \"value\": \"<boolean>\"\n    }\n  ],\n  \"idOverrides\": [\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    },\n    {\n      \"ids\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"value\": \"<boolean>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a5f56a88-9635-4059-8174-ee86a604e7df",
+          "name": "Delete gate overrides",
+          "request": {
+            "name": "Delete gate overrides",
+            "description": {
+              "content": "Removes all user and ID overrides from a feature gate.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gates",
+                ":id",
+                "overrides"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The name or identifier of the feature gate."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "The Console API version. Currently the only version is 20240601.",
+                "key": "STATSIG-API-VERSION",
+                "value": "20240601"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0090528e-1184-414c-bf2a-a357389574ed",
+              "name": "Overrides deleted successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d15e7b94-b178-4166-a6b6-cf5a35b8f199",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cbff6584-52a5-402f-9181-dc9cd908a0a2",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gates",
+                    ":id",
+                    "overrides"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The name or identifier of the feature gate."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "The Console API version. Currently the only version is 20240601.",
+                    "key": "STATSIG-API-VERSION",
+                    "value": "20240601"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.statsig.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "statsig-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "6d507286-fa20-4b90-9fe0-517a86540761",
+    "name": "Statsig Client SDK Audit Logs Gates API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.\n\nContact Support:\n Name: Statsig Support",
+      "type": "text/plain"
+    }
+  }
+}

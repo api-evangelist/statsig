@@ -1,0 +1,57 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Statsig Client SDK Audit Logs API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "statsig-api-key",
+      "value": "{{statsig-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Audit Logs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List audit logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/audit_logs",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves audit log entries tracking changes made to the project configuration through the console or API."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

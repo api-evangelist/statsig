@@ -1,0 +1,349 @@
+{
+  "item": [
+    {
+      "id": "f5a93eb0-8ac2-4bbf-b839-38d370626538",
+      "name": "Feature Gates",
+      "description": {
+        "content": "Endpoints for evaluating feature gates for users, returning boolean pass/fail values along with rule identification.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "308368ad-b98f-4869-a2e1-781e66919a42",
+          "name": "Check a feature gate",
+          "request": {
+            "name": "Check a feature gate",
+            "description": {
+              "content": "Evaluates a single feature gate for the specified user and returns the boolean pass/fail result along with rule identification. Statsig automatically logs an exposure event for the gate check.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "check_gate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\n    \"userID\": \"<string>\",\n    \"email\": \"<email>\",\n    \"ip\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"country\": \"<string>\",\n    \"locale\": \"<string>\",\n    \"appVersion\": \"<string>\",\n    \"custom\": {\n      \"key_0\": 9263.206328575723\n    },\n    \"privateAttributes\": {\n      \"key_0\": true,\n      \"key_1\": \"string\"\n    },\n    \"customIDs\": {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\"\n    }\n  },\n  \"gateName\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4b11bc52-bce3-4724-86b5-a396bc62c7bd",
+              "name": "Gate evaluation result",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "check_gate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"efJpOfNLz3TJl@TViySnop.hbbi\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": 4350,\n      \"key_1\": \"string\",\n      \"key_2\": false\n    },\n    \"privateAttributes\": {\n      \"key_0\": 3601.778659629118,\n      \"key_1\": \"string\"\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\"\n    }\n  },\n  \"gateName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"string\",\n  \"value\": false,\n  \"rule_id\": \"string\",\n  \"group_name\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8f724ece-b032-40f7-bad8-75343618ebcf",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "check_gate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"efJpOfNLz3TJl@TViySnop.hbbi\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": 4350,\n      \"key_1\": \"string\",\n      \"key_2\": false\n    },\n    \"privateAttributes\": {\n      \"key_0\": 3601.778659629118,\n      \"key_1\": \"string\"\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\"\n    }\n  },\n  \"gateName\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "927f5964-cbd7-42fa-9aee-69cf1d039ffc",
+          "name": "Check multiple feature gates",
+          "request": {
+            "name": "Check multiple feature gates",
+            "description": {
+              "content": "Evaluates multiple feature gates for the specified user in a single request and returns the boolean pass/fail results for each gate. Statsig automatically logs exposure events for each gate check.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "check_gate_multiple"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\n    \"userID\": \"<string>\",\n    \"email\": \"<email>\",\n    \"ip\": \"<string>\",\n    \"userAgent\": \"<string>\",\n    \"country\": \"<string>\",\n    \"locale\": \"<string>\",\n    \"appVersion\": \"<string>\",\n    \"custom\": {\n      \"key_0\": 7840.600053563795,\n      \"key_1\": 1451,\n      \"key_2\": true\n    },\n    \"privateAttributes\": {\n      \"key_0\": \"string\"\n    },\n    \"customIDs\": {\n      \"key_0\": \"<string>\",\n      \"key_1\": \"<string>\",\n      \"key_2\": \"<string>\",\n      \"key_3\": \"<string>\"\n    }\n  },\n  \"gateNames\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d26b82aa-675b-429e-8b43-081b302cb8e1",
+              "name": "Multiple gate evaluation results",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "check_gate_multiple"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"0g5iI@rvhusEzXWwCzHCYYFUoPXo.xg\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": 1030.4673945210418\n    },\n    \"privateAttributes\": {\n      \"key_0\": 7298.491159541377\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\"\n    }\n  },\n  \"gateNames\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"results\": [\n    {\n      \"name\": \"string\",\n      \"value\": true,\n      \"rule_id\": \"string\",\n      \"group_name\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"value\": false,\n      \"rule_id\": \"string\",\n      \"group_name\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "df15c4d6-3789-4481-8bfa-882dd763cecb",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "check_gate_multiple"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "statsig-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user\": {\n    \"userID\": \"string\",\n    \"email\": \"0g5iI@rvhusEzXWwCzHCYYFUoPXo.xg\",\n    \"ip\": \"string\",\n    \"userAgent\": \"string\",\n    \"country\": \"string\",\n    \"locale\": \"string\",\n    \"appVersion\": \"string\",\n    \"custom\": {\n      \"key_0\": 1030.4673945210418\n    },\n    \"privateAttributes\": {\n      \"key_0\": 7298.491159541377\n    },\n    \"customIDs\": {\n      \"key_0\": \"string\"\n    }\n  },\n  \"gateNames\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.statsig.com/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "statsig-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "afc1b19f-957e-41e5-9133-6821e8697d9f",
+    "name": "Statsig Client SDK Audit Logs Feature Gates API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.\n\nContact Support:\n Name: Statsig Support",
+      "type": "text/plain"
+    }
+  }
+}

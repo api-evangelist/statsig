@@ -1,0 +1,222 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Statsig Client SDK Audit Logs Experiments API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "statsig-api-key",
+      "value": "{{statsig-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Experiments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all experiments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/experiments",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all experiments in the project with their current status and configuration."
+        },
+        {
+          "info": {
+            "name": "Create an experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/experiments",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new experiment in the project with the specified hypothesis, groups, and parameter configuration."
+        },
+        {
+          "info": {
+            "name": "Get an experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/experiments/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the experiment."
+              }
+            ]
+          },
+          "docs": "Retrieves the full configuration of a specific experiment including its groups, parameters, hypothesis, and status."
+        },
+        {
+          "info": {
+            "name": "Partially update an experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.statsig.com/v1/experiments/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the experiment."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates specific fields of an experiment without replacing the entire configuration."
+        },
+        {
+          "info": {
+            "name": "Delete an experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.statsig.com/v1/experiments/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the experiment."
+              }
+            ]
+          },
+          "docs": "Permanently deletes an experiment from the project."
+        },
+        {
+          "info": {
+            "name": "Start an experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.statsig.com/v1/experiments/:id/start",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the experiment."
+              }
+            ]
+          },
+          "docs": "Starts an experiment, beginning to allocate users to experiment groups and logging exposures."
+        },
+        {
+          "info": {
+            "name": "Reset an experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.statsig.com/v1/experiments/:id/reset",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the experiment."
+              }
+            ]
+          },
+          "docs": "Resets an experiment, clearing all collected data and resetting user assignments."
+        },
+        {
+          "info": {
+            "name": "Get an experiment configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/get_experiment",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fetches the experiment configuration and group assignment for the specified user. This is functionally similar to get_config but specifically targets experiments. An exposure event is automatically logged for experiment analysis."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

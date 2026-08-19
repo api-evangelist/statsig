@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Statsig Client SDK Audit Logs Webhooks API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "statsig-api-key",
+      "value": "{{statsig-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Receive webhook events",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/webhooks/event_webhook",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Receives event data from third-party applications or external sources via webhook integration. This endpoint allows logging events to Statsig from external systems to provide additional insights to experiments and metrics. Events are validated and ingested into the same analytics pipeline as SDK events."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

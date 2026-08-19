@@ -1,0 +1,197 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Statsig Client SDK Audit Logs Dynamic Configs API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "statsig-api-key",
+      "value": "{{statsig-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Dynamic Configs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all dynamic configs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/dynamic_configs",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to return per page."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated results."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of all dynamic configurations in the project."
+        },
+        {
+          "info": {
+            "name": "Create a dynamic config",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/dynamic_configs",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new dynamic configuration in the project with the specified default values and rules."
+        },
+        {
+          "info": {
+            "name": "Get a dynamic config",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/dynamic_configs/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the dynamic config."
+              }
+            ]
+          },
+          "docs": "Retrieves the full configuration of a specific dynamic config including its default values, rules, and conditions."
+        },
+        {
+          "info": {
+            "name": "Partially update a dynamic config",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.statsig.com/v1/dynamic_configs/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the dynamic config."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates specific fields of a dynamic config without replacing the entire configuration."
+        },
+        {
+          "info": {
+            "name": "Delete a dynamic config",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.statsig.com/v1/dynamic_configs/:id",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the dynamic config."
+              }
+            ]
+          },
+          "docs": "Permanently deletes a dynamic config from the project."
+        },
+        {
+          "info": {
+            "name": "Get dynamic config rules",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.statsig.com/v1/dynamic_configs/:id/rules",
+            "headers": [
+              {
+                "name": "STATSIG-API-VERSION",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The name or identifier of the dynamic config."
+              }
+            ]
+          },
+          "docs": "Retrieves all rules configured for a specific dynamic config."
+        },
+        {
+          "info": {
+            "name": "Get a dynamic config or experiment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.statsig.com/v1/get_config",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fetches the configuration values for a dynamic config or experiment for the specified user. The system automatically determines whether the requested name refers to a dynamic config or an experiment. An exposure event is automatically logged."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
