@@ -22,6 +22,12 @@ apis:
   tags:
   - Analytics
   - Data Ingestion
+  - Event
+  - Logging
+  - Metrics
+  tags_raw:
+  - Analytics
+  - Data Ingestion
   - Events
   - Logging
   - Metrics
@@ -334,6 +340,8 @@ apis:
   humanURL: https://docs.statsig.com/http-api/
   baseURL: https://api.statsig.com
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
@@ -352,6 +360,8 @@ apis:
   humanURL: https://docs.statsig.com/http-api/
   baseURL: https://api.statsig.com
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
