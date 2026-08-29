@@ -1,4 +1,15 @@
 aid: statsig
+deliveryModel:
+  model: unknown
+  open_source: false
+  commercial: false
+  callable_host: true
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - openapi
+  generated: '2026-08-28'
+  method: derived
 specificationVersion: '0.23'
 accessModel:
   pricing: freemium
@@ -346,26 +357,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/statsig-users-api-openapi.yml
-  - type: Documentation
-    url: https://docs.statsig.com/http-api/
-  - type: Documentation
-    url: https://docs.statsig.com/console-api/
-  - type: Documentation
-    url: https://docs.statsig.com/client/introduction
-  - type: Documentation
-    url: https://docs.statsig.com/server/introduction
-- aid: statsig:statsig-webhooks-api
-  name: statsig Webhooks API
-  description: Endpoint for receiving event data from third-party applications via webhook integration.
-  humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
-  tags:
-  - Webhook
-  tags_raw:
-  - Webhooks
-  properties:
-  - type: OpenAPI
-    url: openapi/statsig-webhooks-api-openapi.yml
   - type: Documentation
     url: https://docs.statsig.com/http-api/
   - type: Documentation
