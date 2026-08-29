@@ -1,17 +1,17 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Statsig Client SDK Audit Logs Layers API
-  description: The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.
-  version: 1.0.0
+  title: Statsig Layers API
   contact:
     name: Statsig Support
     url: https://statsig.com/support
   termsOfService: https://statsig.com/terms
+  version: '1.0'
+  description: 'Operations tagged Layers across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-http-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
+- url: https://statsigapi.net/console/v1
+  description: Statsig Console API Server
 - url: https://api.statsig.com/v1
   description: Statsig API Server
-security:
-- clientSdkKey: []
 tags:
 - name: Layers
   description: Manage layers that enable sharing parameters across multiple experiments while maintaining mutual exclusivity.
@@ -43,6 +43,8 @@ paths:
                     $ref: '#/components/schemas/Pagination'
         '401':
           $ref: '#/components/responses/Unauthorized'
+      security:
+      - consoleApiKey: []
     post:
       operationId: createLayer
       summary: Create a layer
@@ -68,6 +70,11 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+      security:
+      - consoleApiKey: []
+    servers:
+    - url: https://statsigapi.net/console/v1
+      description: Statsig Console API Server
   /layers/{id}:
     get:
       operationId: getLayer
@@ -94,6 +101,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+      security:
+      - consoleApiKey: []
     delete:
       operationId: deleteLayer
       summary: Delete a layer
@@ -115,6 +124,11 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+      security:
+      - consoleApiKey: []
+    servers:
+    - url: https://statsigapi.net/console/v1
+      description: Statsig Console API Server
   /layers/{id}/experiments:
     get:
       operationId: listLayerExperiments
@@ -146,6 +160,11 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+      security:
+      - consoleApiKey: []
+    servers:
+    - url: https://statsigapi.net/console/v1
+      description: Statsig Console API Server
   /get_layer:
     post:
       operationId: getLayer
@@ -190,7 +209,69 @@ paths:
                     description: The name of the group the user was assigned to.
         '401':
           $ref: '#/components/responses/Unauthorized'
+      security:
+      - statsigApiKey: []
+    servers:
+    - url: https://api.statsig.com/v1
+      description: Statsig API Server
 components:
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message indicating the resource was not found.
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
   schemas:
     LayerCreate:
       type: object
@@ -207,6 +288,21 @@ components:
         parameters:
           type: object
           description: The default parameter values for the layer.
+    ExperimentGroup:
+      type: object
+      description: An experiment group defining parameter values for a set of users.
+      properties:
+        name:
+          type: string
+          description: The name of the group (e.g., control, test).
+        size:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of allocated users assigned to this group.
+        parameterValues:
+          type: object
+          description: The parameter key-value pairs for this group.
     Layer:
       type: object
       description: A layer that enables sharing parameters across multiple experiments while maintaining mutual exclusivity.
@@ -232,76 +328,6 @@ components:
           type: integer
           format: int64
           description: Timestamp when the layer was created.
-    ExperimentGroup:
-      type: object
-      description: An experiment group defining parameter values for a set of users.
-      properties:
-        name:
-          type: string
-          description: The name of the group (e.g., control, test).
-        size:
-          type: number
-          minimum: 0
-          maximum: 100
-          description: The percentage of allocated users assigned to this group.
-        parameterValues:
-          type: object
-          description: The parameter key-value pairs for this group.
-    StatsigUser:
-      type: object
-      description: The user object representing the end user being evaluated. At minimum, a userID should be provided. Additional properties enable more sophisticated targeting.
-      properties:
-        userID:
-          type: string
-          description: A unique identifier for the user.
-        email:
-          type: string
-          format: email
-          description: The email address of the user, used for email-based targeting.
-        ip:
-          type: string
-          description: The IP address of the user, used for IP-based targeting.
-        userAgent:
-          type: string
-          description: The user agent string, used for browser or device targeting.
-        country:
-          type: string
-          description: The two-letter country code of the user.
-        locale:
-          type: string
-          description: The locale identifier for the user.
-        appVersion:
-          type: string
-          description: The version of the application the user is using.
-        custom:
-          type: object
-          additionalProperties: true
-          description: Custom properties for the user, used for custom targeting rules.
-        privateAttributes:
-          type: object
-          additionalProperties: true
-          description: Private user attributes used for evaluation but stripped before logging to Statsig servers.
-        customIDs:
-          type: object
-          additionalProperties:
-            type: string
-          description: Custom identifier mappings for the user, such as companyID or teamID.
-    Pagination:
-      type: object
-      description: Pagination metadata for list responses.
-      properties:
-        total:
-          type: integer
-          description: Total number of items available.
-        page:
-          type: integer
-          description: Current page number.
-        limit:
-          type: integer
-          description: Number of items per page.
-        hasMore:
-          type: boolean
-          description: Whether more pages are available.
     Experiment:
       type: object
       description: An A/B test experiment with defined groups, parameters, and analysis configuration.
@@ -355,69 +381,72 @@ components:
           type: integer
           format: int64
           description: Timestamp when the experiment was last modified.
-  responses:
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message indicating the resource was not found.
-  parameters:
-    Limit:
-      name: limit
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: Maximum number of items to return per page.
-    ApiVersion:
-      name: STATSIG-API-VERSION
-      in: header
-      required: false
-      schema:
-        type: string
-        default: '20240601'
-      description: The Console API version. Currently the only version is 20240601.
-    Page:
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-      description: Page number for paginated results.
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
+    StatsigUser:
+      type: object
+      description: The user object representing the end user being evaluated. At minimum, a userID should be provided. Additional properties enable more sophisticated targeting.
+      properties:
+        userID:
+          type: string
+          description: A unique identifier for the user.
+        email:
+          type: string
+          format: email
+          description: The email address of the user, used for email-based targeting.
+        ip:
+          type: string
+          description: The IP address of the user, used for IP-based targeting.
+        userAgent:
+          type: string
+          description: The user agent string, used for browser or device targeting.
+        country:
+          type: string
+          description: The two-letter country code of the user.
+        locale:
+          type: string
+          description: The locale identifier for the user.
+        appVersion:
+          type: string
+          description: The version of the application the user is using.
+        custom:
+          type: object
+          additionalProperties: true
+          description: Custom properties for the user, used for custom targeting rules.
+        privateAttributes:
+          type: object
+          additionalProperties: true
+          description: Private user attributes used for evaluation but stripped before logging to Statsig servers.
+        customIDs:
+          type: object
+          additionalProperties:
+            type: string
+          description: Custom identifier mappings for the user, such as companyID or teamID.
   securitySchemes:
-    clientSdkKey:
+    consoleApiKey:
+      type: apiKey
+      in: header
+      name: STATSIG-API-KEY
+      description: Console API Key created in Project Settings > API Keys tab. Required for all Console API requests.
+    statsigApiKey:
       type: apiKey
       in: header
       name: statsig-api-key
-      description: Client-SDK Key that is safe to embed in mobile apps and front-end web applications. Created in Project Settings > API Keys tab.
-externalDocs:
-  description: Statsig Client SDK Documentation
-  url: https://docs.statsig.com/client/introduction
+      description: API key for authentication. Use a Server Secret Key for secure server-side requests or a Client-SDK Key for client-side applications.
+x-refined-from:
+- statsig-console-api-openapi.yml
+- statsig-http-api-openapi.yml

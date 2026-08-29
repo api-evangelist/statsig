@@ -1,17 +1,17 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Statsig Client SDK Audit Logs Autotunes API
-  description: The Statsig Client SDK API provides endpoints that power Statsig's client-side SDKs for JavaScript, React, React Native, iOS, Android, Unity, and other platforms. Client SDKs use Client-SDK Keys that are safe to embed in mobile apps and front-end web applications. They access the initialize endpoint to retrieve all evaluated gates, configs, and experiments for a given user, and the log_event endpoint for sending analytics events. The SDKs handle local evaluation, caching, and automatic error handling for performant client-side feature flagging.
-  version: 1.0.0
+  title: Statsig Console Autotunes API
+  description: The Statsig Console API enables developers to programmatically manage their Statsig project configuration. It supports full CRUD operations on feature gates, dynamic configs, experiments, segments, layers, holdouts, autotunes, metrics, keys, users, tags, target apps, audit logs, and other entities. The API requires a Console API Key and uses versioned endpoints with the STATSIG-API-VERSION header. It is designed for automation workflows such as bulk configuration edits, syncing definitions into Statsig from external systems, and integrating Statsig management into CI/CD pipelines.
+  version: '20240601'
   contact:
     name: Statsig Support
     url: https://statsig.com/support
   termsOfService: https://statsig.com/terms
 servers:
-- url: https://api.statsig.com/v1
-  description: Statsig API Server
+- url: https://statsigapi.net/console/v1
+  description: Statsig Console API Server
 security:
-- clientSdkKey: []
+- consoleApiKey: []
 tags:
 - name: Autotunes
   description: Manage autotune configurations that automatically optimize parameter values based on a target metric.
@@ -87,6 +87,34 @@ components:
                 type: string
                 description: Error message describing the authentication failure.
   schemas:
+    AutotuneCreate:
+      type: object
+      description: Request body for creating a new autotune configuration.
+      required:
+      - name
+      - successMetric
+      properties:
+        name:
+          type: string
+          description: The name of the autotune to create.
+        description:
+          type: string
+          description: A human-readable description.
+        variants:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the variant.
+              parameterValues:
+                type: object
+                description: The parameter values for this variant.
+          description: The variants to optimize.
+        successMetric:
+          type: string
+          description: The metric to optimize for.
     Autotune:
       type: object
       description: An autotune configuration that automatically optimizes parameter values based on a target metric.
@@ -118,34 +146,6 @@ components:
         successMetric:
           type: string
           description: The metric being optimized for.
-    AutotuneCreate:
-      type: object
-      description: Request body for creating a new autotune configuration.
-      required:
-      - name
-      - successMetric
-      properties:
-        name:
-          type: string
-          description: The name of the autotune to create.
-        description:
-          type: string
-          description: A human-readable description.
-        variants:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the variant.
-              parameterValues:
-                type: object
-                description: The parameter values for this variant.
-          description: The variants to optimize.
-        successMetric:
-          type: string
-          description: The metric to optimize for.
   parameters:
     ApiVersion:
       name: STATSIG-API-VERSION
@@ -156,11 +156,11 @@ components:
         default: '20240601'
       description: The Console API version. Currently the only version is 20240601.
   securitySchemes:
-    clientSdkKey:
+    consoleApiKey:
       type: apiKey
       in: header
-      name: statsig-api-key
-      description: Client-SDK Key that is safe to embed in mobile apps and front-end web applications. Created in Project Settings > API Keys tab.
+      name: STATSIG-API-KEY
+      description: Console API Key created in Project Settings > API Keys tab. Required for all Console API requests.
 externalDocs:
-  description: Statsig Client SDK Documentation
-  url: https://docs.statsig.com/client/introduction
+  description: Statsig Console API Documentation
+  url: https://docs.statsig.com/console-api/
