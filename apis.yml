@@ -28,7 +28,7 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/statsig.png
 url: https://raw.githubusercontent.com/api-evangelist/statsig/refs/heads/main/apis.yml
-modified: '2026-05-19'
+modified: '2026-09-17'
 apis:
 - aid: statsig:events-api
   name: Statsig Events API
@@ -65,7 +65,7 @@ apis:
   description: >-
     Access audit log entries tracking changes made to project configuration through the console or API.
   humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
+  baseURL: https://statsigapi.net
   tags:
   - Audit Logs
   properties:
@@ -84,7 +84,7 @@ apis:
   description: >-
     Manage autotune configurations that automatically optimize parameter values based on a target metric.
   humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
+  baseURL: https://statsigapi.net
   tags:
   - Autotunes
   properties:
@@ -122,7 +122,7 @@ apis:
   description: >-
     Manage dynamic configurations with full CRUD operations for server-driven configuration values.
   humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
+  baseURL: https://statsigapi.net
   tags:
   - Dynamic Configs
   properties:
@@ -141,7 +141,7 @@ apis:
   description: >-
     Manage A/B test experiments including creation, configuration, starting, resetting, and analysis.
   humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
+  baseURL: https://statsigapi.net
   tags:
   - Experiments
   properties:
@@ -181,7 +181,7 @@ apis:
     Manage feature gates including creation, updates, rules, overrides, enabling, disabling, launching,
     and archiving.
   humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
+  baseURL: https://statsigapi.net
   tags:
   - Gates
   properties:
@@ -201,7 +201,7 @@ apis:
     Manage holdout groups that exclude users from receiving specific features for measuring long-term
     impact.
   humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
+  baseURL: https://statsigapi.net
   tags:
   - Holdouts
   properties:
@@ -240,7 +240,7 @@ apis:
   description: >-
     Manage API keys for the project including server secret keys, client SDK keys, and console API keys.
   humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
+  baseURL: https://statsigapi.net
   tags:
   - Keys
   properties:
@@ -260,7 +260,7 @@ apis:
     Manage layers that enable sharing parameters across multiple experiments while maintaining mutual
     exclusivity.
   humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
+  baseURL: https://statsigapi.net
   tags:
   - Layers
   properties:
@@ -278,7 +278,7 @@ apis:
   name: statsig Metrics API
   description: Access and manage metric definitions and metric sources used in experiment analysis.
   humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
+  baseURL: https://statsigapi.net
   tags:
   - Metrics
   properties:
@@ -296,7 +296,7 @@ apis:
   name: statsig Segments API
   description: Manage user segments for targeting rules across gates, configs, and experiments.
   humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
+  baseURL: https://statsigapi.net
   tags:
   - Segments
   properties:
@@ -314,7 +314,7 @@ apis:
   name: statsig Tags API
   description: The Tags API from statsig — 1 operation(s) for tags.
   humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
+  baseURL: https://statsigapi.net
   tags:
   - Tags
   properties:
@@ -333,7 +333,7 @@ apis:
   description: >-
     Manage target application definitions that scope feature configurations to specific applications.
   humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
+  baseURL: https://statsigapi.net
   tags:
   - Target Apps
   properties:
@@ -351,7 +351,7 @@ apis:
   name: statsig Users API
   description: Manage user data and lookup user properties within the Statsig project.
   humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://api.statsig.com
+  baseURL: https://statsigapi.net
   tags:
   - User
   tags_raw:
@@ -367,6 +367,46 @@ apis:
     url: https://docs.statsig.com/client/introduction
   - type: Documentation
     url: https://docs.statsig.com/server/introduction
+- aid: statsig:statsig-console-api
+  name: statsig Console API
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/statsig.png
+  description: >-
+    The Statsig Console API is the provider's own published contract — the CRUD API for everything
+    available in console.statsig.com without the web UI. Statsig maintains an OpenAPI 3.0 document
+    for it at https://api.statsig.com/openapi/20240601.json covering 208 paths and 324 operations
+    across 34 resource groups: gates, experiments (including Warehouse Native), dynamic configs,
+    autotunes, layers, holdouts, segments, metrics, metric sources, ingestions, release pipelines,
+    dashboards, param stores, alerts, keys, roles, teams, tags, target apps and audit logs. It
+    authenticates with a Console API Key in the STATSIG-API-KEY header, versions by date through
+    STATSIG-API-VERSION, and is the same surface the authenticated Statsig MCP server projects.
+  humanURL: https://docs.statsig.com/console-api/introduction
+  baseURL: https://statsigapi.net
+  tags:
+  - Feature Flags
+  - Experimentation
+  - Configuration
+  - Analytics
+  - Management
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-console-api-openapi.json
+  - type: OpenAPI
+    name: OpenAPI (provider-hosted)
+    url: https://api.statsig.com/openapi/20240601.json
+  - type: Overlay
+    url: overlays/statsig-console-api-overlay.yaml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: MCPServer
+    url: mcp/statsig-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
 common:
   - type: Website
     url: https://www.statsig.com/
@@ -404,10 +444,110 @@ common:
     url: https://docs.statsig.com/integrations/mcp/overview
   - type: LlmsText
     url: https://docs.statsig.com/llms.txt
+  - type: Packages
+    url: packages/statsig-packages.yml
+  - type: SDKs
+    url: packages/statsig-packages.yml
+  - type: MCPServer
+    url: mcp/statsig-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: Protobuf
+    url: grpc/statsig-forward-proxy.proto
+  - type: WellKnown
+    url: well-known/statsig-well-known.yml
+  - type: Conformance
+    url: conformance/statsig-conformance.yml
+  - type: Compliance
+    url: security/statsig-trust-center.yml
+  - type: VulnerabilityDisclosure
+    url: security/statsig-vulnerability-disclosure.yml
+  - type: Security
+    url: https://www.statsig.com/legal/security
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/statsig-lifecycle.yml
+  - type: StatusPage
+    url: https://status.statsig.com/
+  - type: ChangeLog
+    url: changelog/statsig-changelog.yml
+  - type: CLI
+    url: cli/statsig-cli.yml
+  - type: Plans
+    url: plans/statsig-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/statsig-rate-limits.yml
+  - type: FinOps
+    url: finops/statsig-finops.yml
+  - type: Examples
+    url: examples/statsig-check-gate-example.json
+  - type: Webhooks
+    url: asyncapi/statsig-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/statsig-webhooks-asyncapi.yml
+  - type: LLMsTxt
+    url: llms/statsig-llms.txt
+  - type: DeveloperPortal
+    url: https://docs.statsig.com/
+  - type: Documentation
+    url: https://docs.statsig.com/
+  - type: APIReference
+    url: https://docs.statsig.com/console-api/introduction
+  - type: GettingStarted
+    url: https://docs.statsig.com/sdks/quickstart
+  - type: Support
+    url: https://www.statsig.com/contact
+  - type: Community
+    url: https://www.statsig.com/slack
+  - type: Blog
+    url: https://www.statsig.com/blog
+  - type: Pricing
+    url: https://www.statsig.com/pricing
+  - type: SignUp
+    url: https://console.statsig.com/login
+  - type: TermsOfService
+    url: https://www.statsig.com/terms
+  - type: FAQ
+    url: https://docs.statsig.com/faq
 description: >-
-  Statsig is a feature management and experimentation platform that helps product teams ship features safely with
-  feature flags, run A/B tests, and measure the impact of every feature on key metrics.
+  Statsig is a product development platform that combines feature management, experimentation and
+  analytics in one system. Teams gate releases behind feature flags, run A/B, A/B/n, switchback,
+  holdout and multi-armed-bandit experiments, and read the impact of every change against their own
+  metrics — in Statsig Cloud, which ingests and stores the event data, or Warehouse Native, which
+  runs the same analysis directly against the customer's Snowflake, BigQuery, Databricks or Athena
+  warehouse without moving user-level data out of it. Around that core it ships product analytics,
+  web analytics, session replay, infra analytics, dynamic configs, parameter stores and 30+ SDKs.
+  Its programmable surface is unusually complete: a first-party OpenAPI covering 324 Console API
+  operations, a low-latency HTTP evaluation API, gRPC protobufs for the self-hosted Forward Proxy,
+  an authenticated remote MCP server with OAuth, a public documentation MCP server, published
+  Agent Skills, a Terraform provider and a CLI. Statsig is based in Bellevue, Washington.
+tags:
+  - Feature Flags
+  - Experimentation
+  - A/B Testing
+  - Product Analytics
+  - Session Replay
+  - Developer Tools
+  - Data Warehouse
+  - Configuration Management
+created: '2026-05-04'
+maintainers:
+  - FN: API Evangelist
+    email: info@apievangelist.com
+    url: https://apievangelist.com
 integrations:
   - name: Agent Skills Repository
   - name: AI Development with Statsig
   - name: Github AI Integration
+x-enrichment:
+  date: '2026-09-17'
+  status: enriched
+  artifacts_added: 33
+  pass: local-v3
