@@ -1,0 +1,11 @@
+{
+  "repo": "statsig",
+  "feeds": [
+    {
+      "source": "https://www.statsig.com/slack",
+      "error": "HTTPError"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-09-19T20:17:39Z"
+}
