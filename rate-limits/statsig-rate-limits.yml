@@ -6,8 +6,14 @@ providerId: statsig
 created: '2026-05-04'
 # Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
 # bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-05'
+# 2026-09-17: re-read against the live Console API docs and confirmed. Also probed the live
+# API for runtime rate-limit signalling and found none. Upgraded generated -> searched.
+method: searched
+source: https://docs.statsig.com/console-api/introduction
+verified: '2026-09-17'
+verified_status: 200
+limit_count: 5
+modified: '2026-09-17'
 reconciled: true
 tags:
   - Rate Limiting
@@ -25,7 +31,39 @@ sources:
 responseCodes:
   throttled: 429
   quotaExceeded: 429
+responseHeaders:
+  rate_limit_headers: none
+  retry_after: false
+  observed: [cache-control, referrer-policy, x-content-type-options, x-statsig-region, via, alt-svc]
+  probe:
+    url: https://statsigapi.net/console/v1/gates
+    method: GET with an invalid Console key
+    http_status: 401
+    date: '2026-09-17'
+  note: >-
+    Probed live. Statsig returns no X-RateLimit-*, no RateLimit-* (RFC 9238 draft) and no
+    Retry-After, and declares no 429 on any of the 324 operations in its published OpenAPI.
+    The published ceilings below are therefore documentation only — an agent cannot pace itself
+    from the response, it can only fail and guess. This is the single highest-value runtime fix
+    available to Statsig.
+declaredInSpec: false
 limits:
+  - name: Segment ID-list write (Add IDs to Segment)
+    scope: endpoint
+    metric: requests_per_15_minutes
+    limit: 900
+    timeFrame: minute
+    endpoint: PATCH /console/v1/segments/{id}/id_list
+    notes: >-
+      Documented per-endpoint on the operation's own reference page as "900 requests /15m or
+      12 requests /10s" — a tighter short-window ceiling than the global mutation limit.
+  - name: Segment ID-list read (Get IDs in a Segment)
+    scope: endpoint
+    metric: requests_per_10_seconds
+    limit: 100
+    timeFrame: second
+    endpoint: GET /console/v1/segments/{id}/id_list
+    notes: Documented per-endpoint; the only read operation with a published numeric limit.
   - name: Console API mutations (short window)
     scope: project
     metric: requests_per_10_seconds

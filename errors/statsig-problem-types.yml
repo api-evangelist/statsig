@@ -1,0 +1,113 @@
+generated: '2026-09-17'
+method: derived
+source: openapi/statsig-console-api-openapi.json
+docs: https://docs.statsig.com/console-api/introduction
+description: >-
+  Error catalogue derived from every 4xx/5xx response declared in the Statsig Console API's own
+  published OpenAPI (https://api.statsig.com/openapi/20240601.json, 324 operations). Statsig does
+  NOT use RFC 9457 problem+json. Every error is returned as application/json with a two-field
+  envelope — {"status": <int>, "message": <string>} — and validation failures add an `errors`
+  array naming the parameter that failed. There is no machine-readable error code beyond the HTTP
+  status, which is the single biggest gap for an agent: two different 400s are distinguishable
+  only by the English message string.
+format: custom-json
+envelope:
+  media_type: application/json
+  fields:
+    - {name: status, type: integer, description: Repeats the HTTP status code in the body.}
+    - {name: message, type: string, description: Human-readable English message. Not a stable identifier.}
+    - {name: errors, type: array, required: false, description: "Present on validation failures; names the parameter(s) that failed."}
+  example:
+    status: 400
+    message: Invalid request. Please check the request input and try again.
+  no_error_code: true
+  no_type_uri: true
+counts:
+  operations_scanned: 324
+  responses_4xx_5xx: 411
+  '400': 105
+  '401': 155
+  '403': 23
+  '404': 125
+  '409': 3
+  '5xx': 0
+problem_types:
+  - status: 400
+    title: Invalid request
+    occurrences: 105
+    message: Invalid request. Please check the request input and try again.
+    cause: Request body or query parameters failed validation.
+    remediation: >-
+      Read the `errors` array when present — it names the failing parameter. Compare the body
+      against the operation's requestBody schema in the published spec.
+    variants:
+      - {message: 'Experiment has not yet started', occurrences: 5, note: Returned by result/pulse reads against an experiment in draft.}
+      - {message: 'Name is already in use', occurrences: 4, note: Entity names are unique within a project; this is the closest thing to a 409 in the create path.}
+      - {message: '`groupID` is missing. The `errors` array names the parameter that failed validation.', occurrences: 2}
+      - {message: 'Invalid field(s) requested.', occurrences: 2, note: Returned when the `fields` projection names an unknown field.}
+      - {message: 'Data is not available', occurrences: 2}
+  - status: 401
+    title: Unauthorized
+    occurrences: 155
+    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxx'
+    cause: >-
+      Missing, malformed, deactivated or wrong-type STATSIG-API-KEY. Console endpoints reject
+      Server Secret and Client SDK keys; those authenticate the HTTP/SDK APIs instead.
+    remediation: >-
+      Send a Console API Key (console- prefix) in the STATSIG-API-KEY header. Keys are managed at
+      console.statsig.com/api_keys. The message echoes a masked prefix of the key received, which
+      is how to tell "wrong key type" from "no key".
+    note: >-
+      This is also the response an unauthenticated MCP client gets from https://api.statsig.com/v1/mcp,
+      alongside an RFC 9728 WWW-Authenticate challenge.
+  - status: 403
+    title: Forbidden
+    occurrences: 23
+    messages: ['Forbidden resource', 'Insufficient permissions.', 'Forbidden. The request was valid, but the server is refusing action.']
+    cause: >-
+      The key is valid but the role attached to it lacks the permission for this operation, or the
+      entity is owned by a team the caller is not a member of.
+    remediation: >-
+      Check the key's role in Project Settings. Write operations need a write-permissioned key;
+      read-only keys get 403 rather than 401. Entity-level permissions shipped Sep 2026, so a key
+      that worked before may now be scoped out of a specific gate or experiment.
+  - status: 404
+    title: Not Found
+    occurrences: 125
+    message: Not Found. The requested resource could not be found.
+    cause: Unknown entity ID, or an entity in a different project than the key.
+    remediation: >-
+      Entity IDs are project-scoped. Confirm the ID with the matching list operation before
+      retrying. Many operations return a typed variant of this message instead.
+    variants:
+      - {message: 'Experiment not found.', occurrences: 18}
+      - {message: 'Segment not found.', occurrences: 8}
+      - {message: 'Layer not found.', occurrences: 6}
+      - {message: 'Key not found.', occurrences: 5}
+      - {message: 'Autotune not found.', occurrences: 4}
+  - status: 409
+    title: Conflict
+    occurrences: 3
+    message: Another update is already in progress for this ID list
+    cause: >-
+      Concurrent writes to the same Segment ID list. The only genuine concurrency error the
+      contract declares.
+    remediation: Back off and retry; serialise ID-list mutations for a given segment.
+  - status: 429
+    title: Too Many Requests
+    occurrences_in_spec: 0
+    documented: true
+    docs: https://docs.statsig.com/console-api/introduction
+    cause: >-
+      Console API mutation rate limit exceeded (~100 requests / 10 seconds and ~900 / 15 minutes,
+      per project).
+    remediation: Back off with jitter and batch writes.
+    note: >-
+      DECLARED NOWHERE IN THE SPEC. 429 is documented in prose and enforced per the docs, but not
+      one of the 324 operations lists a 429 response — so a client generated from the contract
+      will not know it can happen. See lifecycle/ and conventions/ for the runtime signal gap.
+gaps:
+  - No RFC 9457 application/problem+json representation on any operation.
+  - No stable machine-readable error code; the message string is the only discriminator.
+  - No 429 declared on any operation despite a published rate limit.
+  - No 5xx declared on any operation.

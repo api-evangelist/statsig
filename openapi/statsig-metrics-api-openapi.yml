@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Statsig Console Metrics API
-  description: The Statsig Console API enables developers to programmatically manage their Statsig project configuration. It supports full CRUD operations on feature gates, dynamic configs, experiments, segments, layers, holdouts, autotunes, metrics, keys, users, tags, target apps, audit logs, and other entities. The API requires a Console API Key and uses versioned endpoints with the STATSIG-API-VERSION header. It is designed for automation workflows such as bulk configuration edits, syncing definitions into Statsig from external systems, and integrating Statsig management into CI/CD pipelines.
+  description: The Statsig Console API enables developers to programmatically manage their Statsig project configuration.
   version: '20240601'
   contact:
     name: Statsig Support
@@ -70,32 +70,6 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    Page:
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-      description: Page number for paginated results.
-    Limit:
-      name: limit
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: Maximum number of items to return per page.
-    ApiVersion:
-      name: STATSIG-API-VERSION
-      in: header
-      required: false
-      schema:
-        type: string
-        default: '20240601'
-      description: The Console API version. Currently the only version is 20240601.
   responses:
     NotFound:
       description: Resource not found
@@ -117,7 +91,49 @@ components:
               message:
                 type: string
                 description: Error message describing the authentication failure.
+  parameters:
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
   schemas:
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
     Metric:
       type: object
       description: A metric definition used in experiment analysis.
@@ -142,22 +158,6 @@ components:
           items:
             type: string
           description: Tags associated with the metric.
-    Pagination:
-      type: object
-      description: Pagination metadata for list responses.
-      properties:
-        total:
-          type: integer
-          description: Total number of items available.
-        page:
-          type: integer
-          description: Current page number.
-        limit:
-          type: integer
-          description: Number of items per page.
-        hasMore:
-          type: boolean
-          description: Whether more pages are available.
   securitySchemes:
     consoleApiKey:
       type: apiKey

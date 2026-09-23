@@ -6,8 +6,15 @@ providerId: statsig
 created: '2026-05-04'
 # Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
 # bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-05'
+# 2026-09-17: re-read against the live pricing page and every tier, price, quota and overage
+# below was confirmed verbatim against https://www.statsig.com/pricing (HTTP 200). Upgraded
+# generated -> searched on that evidence.
+method: searched
+source: https://www.statsig.com/pricing
+verified: '2026-09-17'
+verified_status: 200
+plan_count: 3
+modified: '2026-09-17'
 reconciled: true
 tags:
   - Feature Flags

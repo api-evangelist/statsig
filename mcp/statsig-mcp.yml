@@ -1,0 +1,112 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  https://docs.statsig.com/integrations/mcp/overview,
+  https://docs.statsig.com/integrations/mcp/manual-setup,
+  https://docs.statsig.com/integrations/mcp/docs-mcp-server,
+  probed https://api.statsig.com/v1/mcp and https://docs.statsig.com/api/mcp on 2026-09-17
+name: Statsig MCP
+description: >-
+  Statsig ships TWO distinct remote MCP servers. The authenticated Statsig MCP server at
+  https://api.statsig.com/v1/mcp exposes the Console API surface — gates, experiments, dynamic
+  configs, segments, layers, metrics, param stores, dashboards, reviews and results — to an agent
+  acting as the signed-in user, with OAuth (RFC 9728 protected-resource metadata is served) or a
+  Console API key. The public Docs MCP server at https://docs.statsig.com/api/mcp is read-only,
+  needs no credential, and serves the documentation corpus. Both are Streamable HTTP; neither
+  is a stdio package, though the docs show `npx mcp-remote` as a shim for clients that cannot
+  speak OAuth.
+status: published
+deployment:
+  mode: remote
+  endpoint: https://api.statsig.com/v1/mcp
+  auth: oauth
+  verified: probed
+  note: >-
+    Probed 2026-09-17 with an unauthenticated tools/list POST. Returned HTTP 401 with
+    WWW-Authenticate: Bearer realm="statsig", resource="https://api.statsig.com/v1/mcp",
+    resource_metadata="https://api.statsig.com/.well-known/oauth-protected-resource/v1/mcp" —
+    a correctly-formed RFC 9728 challenge, so the endpoint is live and the live tool schemas are
+    auth-gated. API-key auth (statsig-api-key: console-…) is documented as an alternative.
+servers:
+  - id: statsig-mcp
+    name: Statsig MCP server
+    endpoint: https://api.statsig.com/v1/mcp
+    transport: streamable-http
+    auth: oauth
+    auth_alternate: api-key (Console API key in the statsig-api-key header, via npx mcp-remote)
+    docs: https://docs.statsig.com/integrations/mcp/overview
+    probed:
+      url: https://api.statsig.com/v1/mcp
+      method: POST tools/list (anonymous)
+      http_status: 401
+      www_authenticate: >-
+        Bearer realm="statsig", resource="https://api.statsig.com/v1/mcp",
+        resource_metadata="https://api.statsig.com/.well-known/oauth-protected-resource/v1/mcp"
+    tools_source: >-
+      Published capability tables at docs.statsig.com/integrations/mcp/overview. Input schemas
+      require authenticated introspection; names and descriptions below are the provider's own.
+    clients_documented: [Codex, ChatGPT Connector, Cursor, Claude Code, any Streamable HTTP client]
+    read_write: >-
+      Read-only Console keys can use every read tool; write tools require a key with write
+      permission. Read-Only MCP Access shipped Jun 2026 and Self-Serve RBAC for MCP Sep 2026.
+  - id: statsig-docs-mcp
+    name: Statsig Docs MCP server
+    endpoint: https://docs.statsig.com/api/mcp
+    transport: streamable-http
+    auth: none
+    docs: https://docs.statsig.com/integrations/mcp/docs-mcp-server
+    probed:
+      url: https://docs.statsig.com/api/mcp
+      method: POST initialize + tools/list (anonymous)
+      http_status: 200
+      server_info: statsig-docs 1.1.0
+      protocol_version: '2025-06-18'
+    tools_file: mcp/statsig-docs-mcp-tools.json
+    tools_source: live tools/list response, saved verbatim
+    tools:
+      - name: get_page
+        description: Retrieve the full markdown content of a Statsig documentation page.
+      - name: list_pages
+        description: List all available Statsig documentation pages with their titles and slugs.
+      - name: search_docs
+        description: Search Statsig documentation and return typed results with section-level chunks.
+      - name: amplitude_implementation_planner
+        description: Assemble an ordered multi-page setup sequence with code snippets for analytics, experiment, or session replay workflows.
+      - name: send_docs_mcp_feedback
+        description: Report documentation gaps, broken examples, or ambiguous parameter descriptions to the Docs content backlog.
+    note: >-
+      One of the five live tools is named `amplitude_implementation_planner`. Combined with
+      trust.statsig.com redirecting (HTTP 200 after redirect) to
+      trust.amplitude.com/?product_id=25a85de2-f369-4ee0-bd69-5fb5912f39ae, this is first-party
+      evidence that the Statsig documentation and trust surfaces are now operated alongside
+      Amplitude's. Recorded as observed evidence, not as a corporate-structure conclusion.
+tool_catalog:
+  source: https://docs.statsig.com/integrations/mcp/overview
+  note: >-
+    The provider publishes the authenticated server's tool list as markdown tables, grouped by
+    entity. Reproduced here by group with the provider's own tool names; input schemas are gated.
+  groups:
+    - group: Audit Logs
+      tools: [Get_Audit_Logs]
+    - group: Dynamic Configs
+      tools: [Create_Dynamic_Config, Get_Dynamic_Config_Details_by_ID, Get_List_of_Dynamic_Configs, Update_Dynamic_Config_Entirely, Get_Dynamic_Config_Version_History]
+    - group: Experiments
+      tools: [Create_Experiment, Get_Experiment_Details_by_ID, Get_Experiment_Overall_Results, Get_Experiment_Metric_Dimension_Results, Get_List_of_Experiments, Update_Experiment_Entirely, GetExperimentSummaryCharts, Get_Experiment_Version_History, Start_Experiment_Code_Cleanup]
+    - group: Autotunes
+      tools: [Create_Autotune]
+    - group: Gates
+      tools: [Create_Gate, Get_Gate_Details_by_ID, Get_Gate_Results, Get_List_of_Gates, Update_Gate_Entirely, Get_Gate_Version_History]
+    - group: Reviews
+      tools: [Create_Gate_Review, Edit_Gate_Review, Approve_Gate_Review, Reject_Gate_Review, Commit_Gate_Review, Cancel_Gate_Review, Get_Gate_Review_by_ID, Get_List_of_Gate_Reviews, Get_Gate_Eligible_Reviewers, Create_Experiment_Review, Edit_Experiment_Review, Approve_Experiment_Review, Reject_Experiment_Review, Commit_Experiment_Review, Cancel_Experiment_Review, Get_Experiment_Review_by_ID, Get_List_of_Experiment_Reviews, Get_Experiment_Eligible_Reviewers, Create_Autotune_Review, Edit_Autotune_Review, Approve_Autotune_Review, Reject_Autotune_Review, Commit_Autotune_Review, Cancel_Autotune_Review, Get_Autotune_Review_by_ID, Get_List_of_Autotune_Reviews, Get_Autotune_Eligible_Reviewers]
+    - group: Logs and Observability
+      tools: [Query_Logs_Explorer, Cluster_Log_Patterns]
+oauth:
+  authorization_server_metadata: https://api.statsig.com/.well-known/oauth-authorization-server
+  protected_resource_metadata: https://api.statsig.com/.well-known/oauth-protected-resource/v1/mcp
+  issuer: https://api.statsig.com
+  registration_endpoint: https://api.statsig.com/v1/oauth/register
+  pkce: S256
+  note: >-
+    Dynamic client registration is advertised, which is what lets an MCP client complete the OAuth
+    dance with no pre-provisioned client. MCP OAuth is documented as supporting Personal Console
+    API Keys only.

@@ -1,0 +1,68 @@
+generated: '2026-09-17'
+method: searched
+source: https://github.com/statsig-io/agent-skills
+description: >-
+  Agent Skills PUBLISHED BY STATSIG, saved verbatim from the provider's own repository. Statsig
+  announced the repository in its Mar 2026 product update ("Statsig Agent Skills Repository") and
+  describes it as experimental. Nothing here is authored or derived by API Evangelist; the
+  frontmatter, prose and helper-script references are the provider's.
+repository: https://github.com/statsig-io/agent-skills
+license: see LICENSE in the source repository
+install: npx skills add statsig-io/agent-skills
+install_variants:
+  - 'npx skills add statsig-io/agent-skills --list'
+  - 'npx skills add -g statsig-io/agent-skills --skill statsig-dashboard'
+  - 'npx skills add statsig-io/agent-skills --all'
+requirements:
+  - STATSIG_CONSOLE_API_KEY for Console API access
+  - Python 3 to run the bundled helper scripts directly
+skill_count: 3
+skills:
+  - name: statsig
+    file: skills/statsig/SKILL.md
+    description: >-
+      Use the Statsig MCP to inspect and manage Statsig entities such as gates, experiments,
+      dynamic configs, segments, metrics, audit logs, and results.
+    api: https://api.statsig.com/v1/mcp
+    surface: mcp
+    references: [skills/statsig/statsig-mcp.md]
+    method: searched
+  - name: statsig-dashboard
+    file: skills/statsig-dashboard/SKILL.md
+    description: >-
+      Create or read Statsig dashboards through the Console API — building a valid
+      POST /console/v1/dashboards body, reading GET /console/v1/dashboards/{id} into a
+      create-compatible shape, and appending or replacing dashboard widgets.
+    api: https://statsigapi.net/console/v1
+    surface: rest
+    operations:
+      - 'GET /console/v1/dashboards'
+      - 'POST /console/v1/dashboards'
+      - 'GET /console/v1/dashboards/{id}'
+      - 'POST /console/v1/dashboards/{id}/widgets'
+      - 'PUT /console/v1/dashboards/{id}/widgets'
+      - 'GET /console/v1/dashboards/{id}/widgets/{widgetId}/results'
+    references: [skills/statsig-dashboard/dashboard-api.md]
+    scripts_in_source: [create_dashboard.py, read_dashboard.py, add_dashboard_widgets.py, replace_dashboard_widgets.py]
+    scripts_note: >-
+      The executable helper scripts are NOT copied into this repository; only the SKILL.md and its
+      reference material are. Fetch them from the source repo if you intend to run them, and read
+      the provider's own warning about reviewing skills that ship executable code.
+    method: searched
+  - name: statsig-create-cloud-metric
+    file: skills/statsig-create-cloud-metric/SKILL.md
+    description: >-
+      Draft or execute Statsig Cloud metric creation requests through the Console API
+      POST /console/v1/metrics, including required fields and metric-type differences.
+    api: https://statsigapi.net/console/v1
+    surface: rest
+    operations: ['POST /console/v1/metrics']
+    references:
+      - skills/statsig-create-cloud-metric/cloud-metric-creation.md
+      - skills/statsig-create-cloud-metric/create-metric-api.md
+    method: searched
+note: >-
+  All three skills are grounded in operations that exist in the published Console API spec, which
+  is unusual — most provider "skills" in the catalog point at prose. The dashboards skill is the
+  interesting one: Dashboards has no MCP tool at all, so Statsig is covering that gap with a skill
+  that drives REST directly. See mcp/statsig-tool-crosswalk.yml.

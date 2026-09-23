@@ -1,0 +1,143 @@
+generated: '2026-09-17'
+method: derived
+source: openapi/statsig-console-api-openapi.json
+docs: https://docs.statsig.com/console-api/introduction
+description: >-
+  Entity-relationship graph derived from the 186 component schemas and the id-reference fields of
+  the published Statsig Console API OpenAPI. Statsig's model has one root (the Project) and two
+  intersecting spines: the CONFIGURATION spine (gate / experiment / dynamic config / layer /
+  holdout / autotune, all targetable by segments and scoped by target apps) and the MEASUREMENT
+  spine (metric / metric source / event / unit-ID type, which produce the results the first spine
+  is judged on). Every entity is project-scoped; no ID is global.
+entities:
+  - name: Project
+    schema: null
+    description: The root container. Every API key, entity ID and rate-limit budget is project-scoped.
+    id_field: projectID
+  - name: Gate
+    schema: ExternalGateDto
+    description: A feature flag. Boolean evaluation with ordered rules, overrides and a rollout percentage.
+    id_field: id
+    paths: ['/console/v1/gates', '/console/v1/gates/{id}']
+    lifecycle_fields: [isEnabled, status, type (TEMPORARY|PERMANENT|STALE|TEMPLATE), typeReason]
+  - name: Experiment
+    schema: ExternalExperimentDto
+    description: An A/B or A/B/n test with groups, allocation, a scorecard of metrics and a decision.
+    id_field: id
+    paths: ['/console/v1/experiments', '/console/v1/experiments/{id}']
+  - name: DynamicConfig
+    schema: DynamicConfigDto
+    description: Server-driven JSON configuration with the same rule/targeting machinery as a gate.
+    id_field: id
+  - name: Autotune
+    schema: AutotuneExperimentDto
+    description: A multi-armed bandit that reallocates traffic toward the best arm on one goal metric.
+    id_field: id
+  - name: Layer
+    schema: ExternalLayerDto
+    description: Shares parameters across mutually exclusive experiments.
+    id_field: id
+  - name: Holdout
+    schema: HoldoutDto
+    description: A withheld population used to measure cumulative impact across many features.
+    id_field: id
+  - name: Segment
+    schema: ExternalSegmentDto
+    description: A reusable user population, optionally backed by an uploaded ID list.
+    id_field: id
+  - name: Metric
+    schema: ExternalMetricDto
+    description: A measured quantity computed from events or warehouse data.
+    id_field: id
+  - name: MetricSource
+    description: The table or event stream a metric is computed from (Warehouse Native).
+    id_field: metricSourceID
+  - name: Event
+    description: A logged user action. Ingested at events.statsigapi.net, not managed via the Console API.
+  - name: Team
+    description: An organizational and permissions layer over a project; owns entities via teamID.
+    id_field: teamID
+  - name: TargetApp
+    description: Scopes gates/configs/experiments to a named application inside one project.
+    id_field: targetAppIDs
+  - name: UnitIDType
+    description: The randomization unit (userID, stableID, or a custom ID type).
+  - name: ReleasePipeline
+    description: A staged rollout plan a gate can be attached to.
+    id_field: releasePipelineID
+  - name: Review
+    description: A proposed change to a gate/experiment/config/autotune, pending approval and commit.
+    id_field: reviewID
+  - name: Override
+    description: A forced assignment for a user ID or a gate/segment condition.
+  - name: AuditLogEntry
+    description: An immutable record of a configuration change. Read-only.
+  - name: Dashboard
+    description: A saved set of widgets over analytics results.
+    id_field: id
+  - name: ParamStore
+    description: Named parameters resolvable by client SDKs, mapped onto gates/configs/experiments.
+  - name: ToplineAlert
+    schema: null
+    description: A threshold alert on a metric, with mute/unmute and an event history.
+    id_field: id
+  - name: APIKey
+    description: A Console, Server Secret or Client SDK key. Managed through /console/v1/keys.
+relationships:
+  - {from: Project, type: has_many, to: Gate, via: project scope}
+  - {from: Project, type: has_many, to: Experiment, via: project scope}
+  - {from: Project, type: has_many, to: Metric, via: project scope}
+  - {from: Project, type: has_many, to: APIKey, via: project scope}
+  - {from: Gate, type: belongs_to, to: Team, via: teamID}
+  - {from: Gate, type: belongs_to, to: ReleasePipeline, via: releasePipelineID}
+  - {from: Gate, type: has_many, to: Holdout, via: holdoutIDs}
+  - {from: Gate, type: has_many, to: TargetApp, via: targetAppIDs}
+  - {from: Gate, type: has_many, to: Rule, via: 'rules[]'}
+  - {from: Gate, type: has_many, to: Override, via: '/gates/{id}/overrides'}
+  - {from: Gate, type: has_many, to: Review, via: '/gates/{id}/reviews'}
+  - {from: Gate, type: belongs_to, to: User, via: creatorID}
+  - {from: Gate, type: belongs_to, to: User, via: lastModifierID}
+  - {from: Gate, type: belongs_to, to: User, via: archivedByID}
+  - {from: Experiment, type: belongs_to, to: Layer, via: layerID}
+  - {from: Experiment, type: belongs_to, to: Gate, via: targetingGateID}
+  - {from: Experiment, type: has_many, to: Holdout, via: holdoutIDs}
+  - {from: Experiment, type: belongs_to, to: Team, via: teamID}
+  - {from: Experiment, type: has_one, to: Group, via: controlGroupID}
+  - {from: Experiment, type: has_one, to: Group, via: launchedGroupID}
+  - {from: Experiment, type: has_many, to: Metric, via: primaryMetrics/secondaryMetrics}
+  - {from: Experiment, type: has_many, to: Review, via: '/experiments/{id}/reviews'}
+  - {from: Experiment, type: belongs_to, to: UnitIDType, via: idType/secondaryIDType}
+  - {from: DynamicConfig, type: has_many, to: Rule, via: '/dynamic_configs/{id}/rules'}
+  - {from: DynamicConfig, type: belongs_to, to: Team, via: teamID}
+  - {from: Autotune, type: has_one, to: Metric, via: success/goal metric}
+  - {from: Autotune, type: has_many, to: Override, via: '/autotunes/{id}/overrides'}
+  - {from: Layer, type: has_many, to: Experiment, via: layerIDs}
+  - {from: Holdout, type: has_many, to: Gate, via: gateIDs}
+  - {from: Holdout, type: has_many, to: Experiment, via: experimentIDs}
+  - {from: Holdout, type: belongs_to, to: Holdout, via: defaultHoldoutID}
+  - {from: Rule, type: has_many, to: Segment, via: condition targets}
+  - {from: Metric, type: belongs_to, to: MetricSource, via: metricSourceID}
+  - {from: Metric, type: has_many, to: Metric, via: parent/child metric families}
+  - {from: Segment, type: has_many, to: UserID, via: '/segments/{id}/id_list'}
+  - {from: Team, type: belongs_to, to: Company, via: companyID}
+  - {from: AuditLogEntry, type: belongs_to, to: 'Gate|Experiment|DynamicConfig|Segment', via: entity reference}
+  - {from: ToplineAlert, type: belongs_to, to: Metric, via: metric reference}
+id_conventions:
+  shape: >-
+    Entity IDs are caller-chosen slugs for gates, experiments and dynamic configs (the docs' own
+    examples use `a_gate`, `an_experiment`), which is why "Name is already in use" is a 400 on
+    create. User, group and rule identifiers are opaque 22-character base62 strings
+    (e.g. 4R5PV7mvYdW6NLCwK8ocoz, 4SauZJcM1T7zNvh1igBjwE).
+  prefixes: none
+  most_referenced_fields: [teamID, creatorID, lastModifierID, releasePipelineID, holdoutIDs, targetingGateID, metricSourceID]
+  note: >-
+    teamID appears on 38 schemas and creatorID on 24 — ownership and attribution are modelled
+    consistently across every entity type, which is unusual and useful.
+timestamps:
+  fields: [createdTime, lastModifiedTime, time]
+  format: epoch milliseconds (integer)
+counts:
+  component_schemas: 186
+  dto_schemas: 183
+  operations: 324
+  paths: 208

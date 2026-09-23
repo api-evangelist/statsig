@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Statsig HTTP Feature Gates API
-  description: The Statsig HTTP API allows developers to evaluate feature gates, dynamic configs, and experiments for users via server-side HTTP requests. It provides endpoints for checking gate values, fetching configuration data, and logging custom events. All requests use the POST method with JSON request bodies and require authentication via the statsig-api-key header. While Statsig recommends using their official SDKs for most use cases, the HTTP API is available for environments where an SDK is not available or when direct HTTP integration is preferred.
+  description: The Statsig HTTP API allows developers to evaluate feature gates, dynamic configs, and experiments for users via server-side HTTP requests.
   version: 1.0.0
   contact:
     name: Statsig Support
@@ -112,17 +112,6 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
   schemas:
     StatsigUser:
       type: object
@@ -163,6 +152,17 @@ components:
           additionalProperties:
             type: string
           description: Custom identifier mappings for the user, such as companyID or teamID.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
   securitySchemes:
     statsigApiKey:
       type: apiKey

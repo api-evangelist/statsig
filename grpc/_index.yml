@@ -1,0 +1,30 @@
+generated: '2026-09-17'
+method: searched
+source: https://github.com/statsig-io/api-interface-definitions
+description: >-
+  proto3 service definitions published by Statsig, saved verbatim. These are the contract for the
+  Statsig Forward Proxy — the self-hosted component that sits between a customer's server SDKs and
+  Statsig and serves config specs over gRPC, including a server-streaming subscription. This is a
+  second, independent machine-readable contract alongside the Console API OpenAPI, and it covers a
+  surface the OpenAPI does not describe at all.
+repository: https://github.com/statsig-io/api-interface-definitions
+files:
+  - file: grpc/statsig-forward-proxy.proto
+    package: statsig_forward_proxy
+    service: StatsigForwardProxy
+    rpcs:
+      - {name: getConfigSpec, input: ConfigSpecRequest, output: ConfigSpecResponse, streaming: none}
+      - {name: StreamConfigSpec, input: ConfigSpecRequest, output: ConfigSpecResponse, streaming: server}
+    note: >-
+      ConfigSpecRequest carries sdkKey, sinceTime and an apiVersion enum (no_version|v1|v2). The
+      proto itself documents a preserved field-number typo — "This was a typo but you can't delete
+      it" — which is a real, honest wire-compatibility note.
+  - file: grpc/statsig-config-specs.proto
+    note: Message definitions for the configuration specification payload the proxy serves.
+  - file: grpc/statsig-data-adapter.proto
+    note: Contract for the server SDK data-store / data-adapter integration.
+  - file: grpc/statsig-grpc-health.proto
+    note: Standard gRPC health-checking service definition, vendored for the proxy.
+related:
+  forward_proxy_repo: https://github.com/statsig-io/statsig-forward-proxy
+  docs: https://docs.statsig.com/server/concepts/data_store

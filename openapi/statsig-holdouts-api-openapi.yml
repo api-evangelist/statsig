@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Statsig Console Holdouts API
-  description: The Statsig Console API enables developers to programmatically manage their Statsig project configuration. It supports full CRUD operations on feature gates, dynamic configs, experiments, segments, layers, holdouts, autotunes, metrics, keys, users, tags, target apps, audit logs, and other entities. The API requires a Console API Key and uses versioned endpoints with the STATSIG-API-VERSION header. It is designed for automation workflows such as bulk configuration edits, syncing definitions into Statsig from external systems, and integrating Statsig management into CI/CD pipelines.
+  description: The Statsig Console API enables developers to programmatically manage their Statsig project configuration.
   version: '20240601'
   contact:
     name: Statsig Support
@@ -87,6 +87,28 @@ components:
                 type: string
                 description: Error message describing the authentication failure.
   schemas:
+    HoldoutCreate:
+      type: object
+      description: Request body for creating a new holdout group.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the holdout to create.
+        description:
+          type: string
+          description: A human-readable description.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of users in the holdout group.
+        gateIDs:
+          type: array
+          items:
+            type: string
+          description: The gates to include in the holdout.
     Holdout:
       type: object
       description: A holdout group that excludes users from specific features to measure long-term impact.
@@ -113,28 +135,6 @@ components:
         isEnabled:
           type: boolean
           description: Whether the holdout is currently active.
-    HoldoutCreate:
-      type: object
-      description: Request body for creating a new holdout group.
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: The name of the holdout to create.
-        description:
-          type: string
-          description: A human-readable description.
-        passPercentage:
-          type: number
-          minimum: 0
-          maximum: 100
-          description: The percentage of users in the holdout group.
-        gateIDs:
-          type: array
-          items:
-            type: string
-          description: The gates to include in the holdout.
   parameters:
     ApiVersion:
       name: STATSIG-API-VERSION

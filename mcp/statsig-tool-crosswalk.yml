@@ -1,0 +1,358 @@
+generated: '2026-09-17'
+method: derived
+source: >-
+  mcp/statsig-mcp.yml (provider-published tool tables at
+  https://docs.statsig.com/integrations/mcp/overview) bound to
+  openapi/statsig-console-api-openapi.json (https://api.statsig.com/openapi/20240601.json)
+description: >-
+  Binds each tool of the authenticated Statsig MCP server to the Console API operation(s) that
+  back it. The Statsig MCP server is a projection of the Console API — the provider's own docs
+  tell an agent to "use the get /console/v1/gates endpoint" from inside MCP — so nearly every
+  tool maps onto a REST operation. The binding is by method+path rather than operationId
+  BECAUSE THE PUBLISHED SPEC DECLARES NO operationId ON ANY OF ITS 324 OPERATIONS; that is a
+  contract gap, recorded in conformance/ and lifecycle/, not a gap in this crosswalk.
+  Confidence is `medium` throughout: the live MCP tools/list is OAuth-gated, so tools are matched
+  by the provider's published name and description against the operation with the same summary,
+  not by comparing schemas.
+surfaces:
+  openapi:
+    file: openapi/statsig-console-api-openapi.json
+    url: https://api.statsig.com/openapi/20240601.json
+    server: https://statsigapi.net
+    operations: 324
+    gated: false
+  mcp:
+    url: https://api.statsig.com/v1/mcp
+    transport: streamable-http
+    gated: true
+    gate: OAuth (RFC 9728 challenge on anonymous tools/list) or Console API key
+  mcp_docs:
+    url: https://docs.statsig.com/api/mcp
+    gated: false
+    note: Read-only documentation server; its 5 tools back onto no REST operation at all.
+  graphql:
+    present: false
+coverage:
+  mcp_tools_published: 56
+  crosswalked: 51
+  mcp_only: 8
+  rest_operations: 324
+  rest_operations_with_a_tool: 51
+  rest_only: 273
+  counting_note: >-
+    56 = 51 authenticated tools enumerated in the provider's capability tables + 5 Docs MCP tools.
+    One crosswalk row (Get_Autotune_Eligible_Reviewers) binds to no published path and is also
+    listed under mcp_only; two rows bind to two candidate operations each.
+  note: >-
+    The REST surface is roughly five times the MCP surface. 256 Console API operations have no
+    published tool — including the entire Ingestions, Release Pipelines, Target Apps, Unit ID
+    Types, Keys, Roles, Warehouse Connections and Settings groups.
+crosswalk:
+  - tool: Get_List_of_Gates
+    category: gates
+    rest: ["GET /console/v1/gates"]
+    binding: name+summary
+    confidence: medium
+    note: Documented filters (type, creatorName, tags) match the operation's query parameters.
+  - tool: Get_Gate_Details_by_ID
+    category: gates
+    rest: ["GET /console/v1/gates/{id}"]
+    binding: name+summary
+    confidence: medium
+  - tool: Create_Gate
+    category: gates
+    rest: ["POST /console/v1/gates"]
+    binding: name+summary
+    confidence: medium
+  - tool: Update_Gate_Entirely
+    category: gates
+    rest: ["POST /console/v1/gates/{id}"]
+    binding: name+summary
+    confidence: high
+    note: >-
+      "Replace entire gate setup (Statsig removes any excluded data)" is the Fully Update
+      semantics of POST /gates/{id}, not the PATCH partial update.
+  - tool: Get_Gate_Results
+    category: gates
+    rest: ["GET /console/v1/gates/{id}/rules/{ruleID}/pulse_results"]
+    binding: description
+    confidence: medium
+    note: The tool documents cuped and confidence analysis params, which this operation carries.
+  - tool: Get_Gate_Version_History
+    category: gates
+    rest: ["GET /console/v1/gates/{id}/versions"]
+    binding: name+summary
+    confidence: medium
+  - tool: Start_Gate_Code_Cleanup
+    category: gates
+    rest: ["POST /console/v1/gates/{id}/code_cleanup"]
+    binding: name+summary
+    confidence: medium
+  - tool: Create_Gate_Review
+    category: reviews
+    rest: ["POST /console/v1/gates/{id}/reviews"]
+    binding: name+summary
+    confidence: high
+  - tool: Edit_Gate_Review
+    category: reviews
+    rest: ["PUT /console/v1/gates/{id}/reviews/{reviewID}"]
+    binding: name+summary
+    confidence: high
+  - tool: Approve_Gate_Review
+    category: reviews
+    rest: ["PUT /console/v1/gates/{id}/reviews/{reviewID}/approve"]
+    binding: name+summary
+    confidence: high
+  - tool: Reject_Gate_Review
+    category: reviews
+    rest: ["PUT /console/v1/gates/{id}/reviews/{reviewID}/reject"]
+    binding: name+summary
+    confidence: high
+  - tool: Commit_Gate_Review
+    category: reviews
+    rest: ["PUT /console/v1/gates/{id}/reviews/{reviewID}/commit"]
+    binding: name+summary
+    confidence: high
+  - tool: Cancel_Gate_Review
+    category: reviews
+    rest: ["DELETE /console/v1/gates/{id}/reviews/{reviewID}"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_Gate_Review_by_ID
+    category: reviews
+    rest: ["GET /console/v1/gates/{id}/reviews/{reviewID}"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_List_of_Gate_Reviews
+    category: reviews
+    rest: ["GET /console/v1/gates/{id}/reviews"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_Gate_Eligible_Reviewers
+    category: reviews
+    rest: ["GET /console/v1/gates/{id}/eligible_reviewers"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_List_of_Experiments
+    category: experiments
+    rest: ["GET /console/v1/experiments"]
+    binding: name+summary
+    confidence: medium
+  - tool: Get_Experiment_Details_by_ID
+    category: experiments
+    rest: ["GET /console/v1/experiments/{id}"]
+    binding: name+summary
+    confidence: medium
+    note: >-
+      The tool adds a `fields` projection parameter the docs say cuts context by 95-99%. That
+      projection is an MCP-layer affordance; confirm against the REST operation's parameters
+      when the gated schema becomes readable.
+  - tool: Create_Experiment
+    category: experiments
+    rest: ["POST /console/v1/experiments"]
+    binding: name+summary
+    confidence: medium
+  - tool: Update_Experiment_Entirely
+    category: experiments
+    rest: ["POST /console/v1/experiments/{id}"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_Experiment_Overall_Results
+    category: experiments
+    rest: ["GET /console/v1/experiments/{id}/pulse_results"]
+    binding: description
+    confidence: medium
+  - tool: Get_Experiment_Metric_Dimension_Results
+    category: experiments
+    rest: ["GET /console/v1/experiments/{id}/pulse_metric_result", "GET /console/v1/experiments/{id}/dimensional_exposures"]
+    binding: description
+    confidence: low
+    note: Two REST operations plausibly back this tool; which one (or both) is unverifiable while the tool schema is gated.
+  - tool: GetExperimentSummaryCharts
+    category: experiments
+    rest: ["GET /console/v1/experiments/{id}/summary_charts"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_Experiment_Version_History
+    category: experiments
+    rest: ["GET /console/v1/experiments/{id}/versions"]
+    binding: name+summary
+    confidence: medium
+  - tool: Start_Experiment_Code_Cleanup
+    category: experiments
+    rest: ["POST /console/v1/experiments/{id}/code_cleanup"]
+    binding: name+summary
+    confidence: high
+  - tool: Create_Experiment_Review
+    category: reviews
+    rest: ["POST /console/v1/experiments/{id}/reviews"]
+    binding: name+summary
+    confidence: high
+  - tool: Edit_Experiment_Review
+    category: reviews
+    rest: ["PUT /console/v1/experiments/{id}/reviews/{reviewID}"]
+    binding: name+summary
+    confidence: high
+  - tool: Approve_Experiment_Review
+    category: reviews
+    rest: ["PUT /console/v1/experiments/{id}/reviews/{reviewID}/approve"]
+    binding: name+summary
+    confidence: high
+  - tool: Reject_Experiment_Review
+    category: reviews
+    rest: ["PUT /console/v1/experiments/{id}/reviews/{reviewID}/reject"]
+    binding: name+summary
+    confidence: high
+  - tool: Commit_Experiment_Review
+    category: reviews
+    rest: ["PUT /console/v1/experiments/{id}/reviews/{reviewID}/commit"]
+    binding: name+summary
+    confidence: high
+  - tool: Cancel_Experiment_Review
+    category: reviews
+    rest: ["DELETE /console/v1/experiments/{id}/reviews/{reviewID}"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_Experiment_Review_by_ID
+    category: reviews
+    rest: ["GET /console/v1/experiments/{id}/reviews/{reviewID}"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_List_of_Experiment_Reviews
+    category: reviews
+    rest: ["GET /console/v1/experiments/{id}/reviews"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_Experiment_Eligible_Reviewers
+    category: reviews
+    rest: ["GET /console/v1/experiments/{id}/eligible_reviewers"]
+    binding: name+summary
+    confidence: high
+  - tool: Create_Dynamic_Config
+    category: dynamic-configs
+    rest: ["POST /console/v1/dynamic_configs"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_Dynamic_Config_Details_by_ID
+    category: dynamic-configs
+    rest: ["GET /console/v1/dynamic_configs/{id}"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_List_of_Dynamic_Configs
+    category: dynamic-configs
+    rest: ["GET /console/v1/dynamic_configs"]
+    binding: name+summary
+    confidence: high
+  - tool: Update_Dynamic_Config_Entirely
+    category: dynamic-configs
+    rest: ["POST /console/v1/dynamic_configs/{id}"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_Dynamic_Config_Version_History
+    category: dynamic-configs
+    rest: ["GET /console/v1/dynamic_configs/{id}/versions"]
+    binding: name+summary
+    confidence: high
+  - tool: Create_Autotune
+    category: autotunes
+    rest: ["POST /console/v1/autotunes"]
+    binding: name+summary
+    confidence: high
+    note: >-
+      The tool description says it creates in draft and prompts for confirmation before creating —
+      an agent-safety affordance the REST operation does not carry. This is one place the MCP
+      surface is genuinely richer than the contract.
+  - tool: Create_Autotune_Review
+    category: reviews
+    rest: ["POST /console/v1/autotunes/{id}/reviews"]
+    binding: name+summary
+    confidence: high
+  - tool: Edit_Autotune_Review
+    category: reviews
+    rest: ["PUT /console/v1/autotunes/{id}/reviews/{reviewID}"]
+    binding: name+summary
+    confidence: high
+  - tool: Approve_Autotune_Review
+    category: reviews
+    rest: ["PUT /console/v1/autotunes/{id}/reviews/{reviewID}/approve"]
+    binding: name+summary
+    confidence: high
+  - tool: Reject_Autotune_Review
+    category: reviews
+    rest: ["PUT /console/v1/autotunes/{id}/reviews/{reviewID}/reject"]
+    binding: name+summary
+    confidence: high
+  - tool: Commit_Autotune_Review
+    category: reviews
+    rest: ["PUT /console/v1/autotunes/{id}/reviews/{reviewID}/commit"]
+    binding: name+summary
+    confidence: high
+  - tool: Cancel_Autotune_Review
+    category: reviews
+    rest: ["DELETE /console/v1/autotunes/{id}/reviews/{reviewID}"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_Autotune_Review_by_ID
+    category: reviews
+    rest: ["GET /console/v1/autotunes/{id}/reviews/{reviewID}"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_List_of_Autotune_Reviews
+    category: reviews
+    rest: ["GET /console/v1/autotunes/{id}/reviews"]
+    binding: name+summary
+    confidence: high
+  - tool: Get_Autotune_Eligible_Reviewers
+    category: reviews
+    rest: ["GET /console/v1/autotunes/{id}/eligible_reviewers"]
+    binding: inferred
+    confidence: low
+    note: >-
+      No /console/v1/autotunes/{id}/eligible_reviewers path exists in the published spec, although
+      gates, experiments and dynamic_configs all have one. Either the tool calls an unpublished
+      operation or the spec is missing the path — an honest divergence, not a mapping.
+  - tool: Get_Audit_Logs
+    category: audit
+    rest: ["GET /console/v1/audit_logs"]
+    binding: name+summary
+    confidence: high
+  - tool: Query_Logs_Explorer
+    category: observability
+    rest: ["GET /console/v1/logs"]
+    binding: description
+    confidence: medium
+mcp_only:
+  - tool: Cluster_Log_Patterns
+    reason: >-
+      "Cluster and summarize log patterns to surface recurring events and anomalies" has no
+      corresponding operation in the published Console API — it is analysis performed at the MCP
+      layer over /console/v1/logs output.
+  - tool: get_page
+    reason: Docs MCP server; serves documentation markdown, not project data. No REST equivalent.
+  - tool: list_pages
+    reason: Docs MCP server. No REST equivalent.
+  - tool: search_docs
+    reason: Docs MCP server. No REST equivalent.
+  - tool: amplitude_implementation_planner
+    reason: Docs MCP server; composes a multi-page setup sequence. No REST equivalent.
+  - tool: send_docs_mcp_feedback
+    reason: Docs MCP server; writes to a documentation backlog, not to the project. No REST equivalent.
+  - tool: Get_Autotune_Eligible_Reviewers
+    reason: No matching path published in the 20240601 spec (see the low-confidence row above).
+  - tool: "Segments / Layers / Param Store / Metrics tools"
+    reason: >-
+      The Sep 2026 product-update log records Segments, Layers, Param Store, Metrics and Version
+      History tools shipping into Statsig MCP, but the published capability tables on the MCP
+      overview page do not yet enumerate them by name. They exist; this crosswalk will not invent
+      their names.
+rest_only:
+  summary: >-
+    273 of 324 Console API operations have no published MCP tool. The largest untooled groups are
+    Metrics (32 ops), Experiments (Warehouse Native) (25), Segments (15), Ingestions (13), Layers
+    (13), Release Pipelines (13), Holdouts (11), Users (10), Alerts (9), Settings (8), Keys (7),
+    Metrics (Warehouse Native) (7), Prompts (7), Dashboards (6), Target App (6), Param Store (5),
+    Roles (5), Tags (5) and Unit ID Types (5).
+  note: >-
+    Dashboards is the interesting case: it has no MCP tool, but Statsig ships a provider-authored
+    Agent Skill (skills/statsig-dashboard/) that drives those six REST operations directly with
+    Python scripts. The provider is bridging the MCP gap with skills rather than tools.

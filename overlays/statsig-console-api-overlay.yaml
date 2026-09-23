@@ -1,0 +1,83 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Statsig Console API
+  version: 1.0.0
+x-provenance:
+  generated: '2026-09-17'
+  method: generated
+  source: openapi/statsig-console-api-openapi.json
+  note: >-
+    Overlay of API Evangelist's enhancements to Statsig's own published Console API OpenAPI
+    (https://api.statsig.com/openapi/20240601.json, retrieved 2026-09-17). The original is stored
+    verbatim and is never mutated. Every action below adds information the provider's document is
+    missing and that we can state from the provider's own documentation — the rate-limit ceiling,
+    the 429 no operation declares, the license and contact, and the tag descriptions the spec
+    omits. It does NOT add operationIds: inventing 324 identifiers would create names no Statsig
+    client or SDK uses, and the right fix is for Statsig to emit them.
+extends: https://api.statsig.com/openapi/20240601.json
+actions:
+  - target: $.info
+    update:
+      contact:
+        name: Statsig Support
+        url: https://www.statsig.com/contact
+      termsOfService: https://www.statsig.com/terms
+      x-documentation: https://docs.statsig.com/console-api/introduction
+      x-changelog: https://www.statsig.com/updates
+      x-status-page: https://status.statsig.com/
+      x-api-version-header: STATSIG-API-VERSION
+      x-api-version-current: '20240601'
+  - target: $.info
+    update:
+      x-rate-limits:
+        scope: project
+        applies_to: mutation requests (POST, PATCH, PUT, DELETE)
+        windows:
+          - {limit: 100, window: 10s}
+          - {limit: 900, window: 15m}
+        status_on_exhaustion: 429
+        response_headers: none
+        source: https://docs.statsig.com/console-api/introduction
+        note: >-
+          Published in the Console API documentation but declared on no operation in the contract,
+          and signalled by no response header at runtime.
+  - target: $.info
+    update:
+      x-error-envelope:
+        media_type: application/json
+        shape: '{"status": <int>, "message": <string>}'
+        validation_detail: 'errors[] names the failing parameter'
+        rfc9457: false
+        source: openapi/statsig-console-api-openapi.json
+  - target: $.info
+    update:
+      x-agent-surfaces:
+        mcp: https://api.statsig.com/v1/mcp
+        mcp_docs: https://docs.statsig.com/api/mcp
+        llms_txt: https://docs.statsig.com/llms.txt
+        agent_skills: https://github.com/statsig-io/agent-skills
+        oauth_authorization_server: https://api.statsig.com/.well-known/oauth-authorization-server
+        oauth_protected_resource: https://api.statsig.com/.well-known/oauth-protected-resource/v1/mcp
+  - target: $.servers
+    update:
+      - url: https://statsigapi.net
+        description: Statsig Console API (production)
+  - target: $
+    update:
+      x-api-evangelist:
+        contract_gaps:
+          - id: no-operation-ids
+            detail: 'All 324 operations omit operationId. Clients and code generators fall back to synthesised names, which change when a path changes.'
+          - id: no-top-level-tags
+            detail: 'Operations carry tags (34 distinct), but the document declares no top-level tags[] array, so tag descriptions and ordering are lost.'
+          - id: no-429
+            detail: 'A documented rate limit is declared on no operation.'
+          - id: no-5xx
+            detail: 'No server-error response is declared anywhere.'
+          - id: no-security-in-info
+            detail: 'securitySchemes defines STATSIG-API-KEY correctly; the key-prefix convention (console-/secret-/client-) is documented only in prose.'
+        strengths:
+          - '658 responses carry examples in-spec.'
+          - 'Every operation has a human summary.'
+          - 'Uniform pagination envelope with nextPage/previousPage/totalItems on every list operation.'
+          - 'Rich typed query filters with enums, so valid values are discoverable from the contract.'

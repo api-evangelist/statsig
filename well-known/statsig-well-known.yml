@@ -1,0 +1,191 @@
+generated: '2026-09-17'
+method: probed
+source: live GET of each named /.well-known/ path on every host this record knows, 2026-09-17
+description: Closed-list probe of the RFC 8615 discovery surface across the registrable domain, www, each
+  API baseURL host, every OpenAPI servers[] host, the docs host and the console host. Statsig serves NO
+  security.txt, api-catalog, openid-configuration, ai-plugin.json, agent card or aauth-resource anywhere.
+  It DOES serve RFC 8414 OAuth authorization-server metadata and RFC 9728 protected-resource metadata
+  on both api.statsig.com and statsigapi.net — the discovery documents that make the Statsig MCP server
+  reachable by an MCP client with no pre-provisioned OAuth client.
+summary:
+  hosts_probed: 7
+  paths_probed_per_host: 9
+  documents_found: 5
+  documents_found_paths:
+  - /.well-known/oauth-authorization-server
+  - /.well-known/oauth-protected-resource
+  security_txt: absent
+  api_catalog: absent
+  agent_card: absent
+hosts:
+- host: statsig.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  note: Returns a JSON 404 envelope for every path, so the misses are genuine, not an SPA catch-all.
+- host: www.statsig.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+- host: api.statsig.com
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: statsig-oauth-authorization-server.json
+    content_type: application/json
+    note: RFC 8414 metadata. issuer https://api.statsig.com, PKCE S256, authorization_code and device_code
+      grants, and a registration_endpoint (dynamic client registration).
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: statsig-oauth-protected-resource.json
+    content_type: application/json
+  - path: /.well-known/oauth-protected-resource/v1/mcp
+    status: 200
+    file: statsig-oauth-protected-resource-v1-mcp.json
+    content_type: application/json
+    note: RFC 9728 metadata for the MCP endpoint specifically. This is the exact document the 401 WWW-Authenticate
+      challenge on POST https://api.statsig.com/v1/mcp points at.
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+- host: statsigapi.net
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: statsig-statsigapi-oauth-authorization-server.json
+    content_type: application/json
+    note: Same metadata under the statsigapi.net issuer; statsigapi.net is the Console API servers[] host.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: statsig-statsigapi-oauth-protected-resource.json
+    content_type: application/json
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+- host: docs.statsig.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  note: Next.js docs app; every miss returns the 404 error page as HTML with a real 404 status, so no
+    soft-200 false positives here. The docs host's agent surface is /llms.txt and /api/mcp, neither of
+    which is a /.well-known/ document.
+- host: events.statsigapi.net
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+  - path: /.well-known/openid-configuration
+    status: 403
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+  - path: /.well-known/oauth-protected-resource
+    status: 403
+  - path: /.well-known/api-catalog
+    status: 403
+  - path: /.well-known/ai-plugin.json
+    status: 403
+  - path: /.well-known/agent-card.json
+    status: 403
+  - path: /.well-known/agent.json
+    status: 403
+  - path: /.well-known/aauth-resource.json
+    status: 403
+  note: 'The event-ingestion host answers every unauthenticated GET with 403 "RBAC: access denied", including
+    paths that do not exist. Recorded as blanket-denied, not as absent.'
+- host: console.statsig.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 307
+  - path: /.well-known/openid-configuration
+    status: 307
+  - path: /.well-known/oauth-authorization-server
+    status: 307
+  - path: /.well-known/oauth-protected-resource
+    status: 307
+  - path: /.well-known/api-catalog
+    status: 307
+  - path: /.well-known/ai-plugin.json
+    status: 307
+  - path: /.well-known/agent-card.json
+    status: 307
+  - path: /.well-known/agent.json
+    status: 307
+  - path: /.well-known/aauth-resource.json
+    status: 307
+  note: The console redirects every /.well-known/ path to /login?redirect=… — an auth wall in front of
+    the discovery namespace, not a set of served documents.
+gaps:
+- No /.well-known/security.txt on any host, despite a published security page that describes a bug-bounty
+  program and a responsible-disclosure process. An RFC 9116 file would make that program machine-discoverable;
+  today an agent has to read marketing HTML to find it.
+- No /.well-known/api-catalog, despite Statsig publishing a first-party OpenAPI at a stable URL (https://api.statsig.com/openapi/20240601.json).
+  One linkset would make the contract discoverable from the domain root.

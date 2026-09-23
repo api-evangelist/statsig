@@ -1,24 +1,16 @@
-generated: '2026-07-11'
+generated: '2026-09-17'
 method: derived
-source: openapi/statsig-client-sdk-api-openapi.yml, openapi/statsig-console-api-openapi.yml,
-  openapi/statsig-events-api-openapi.yml, openapi/statsig-http-api-openapi.yml, openapi/statsig-server-sdk-api-openapi.yml
+source: openapi/statsig-audit-logs-api-openapi.yml, openapi/statsig-autotunes-api-openapi.yml,
+  openapi/statsig-configuration-api-openapi.yml, openapi/statsig-console-api-openapi.json, openapi/statsig-dynamic-configs-api-openapi.yml,
+  openapi/statsig-events-api-openapi.yml, openapi/statsig-experiments-api-openapi.yml, openapi/statsig-feature-gates-api-openapi.yml,
+  openapi/statsig-gates-api-openapi.yml, openapi/statsig-holdouts-api-openapi.yml, openapi/statsig-initialization-api-openapi.yml,
+  openapi/statsig-keys-api-openapi.yml ...
 summary:
   types:
   - apiKey
   api_key_in:
   - header
 schemes:
-- name: clientSdkKey
-  type: apiKey
-  in: header
-  parameter: statsig-api-key
-  description: Client-SDK Key that is safe to embed in mobile apps and front-end web applications.
-    Created in Project Settings > API Keys tab.
-  sources:
-  - openapi/statsig-client-sdk-api-openapi.yml
-  - openapi/statsig-events-api-openapi.yml
-  - openapi/statsig-http-api-openapi.yml
-  - openapi/statsig-server-sdk-api-openapi.yml
 - name: consoleApiKey
   type: apiKey
   in: header
@@ -26,4 +18,31 @@ schemes:
   description: Console API Key created in Project Settings > API Keys tab. Required for all
     Console API requests.
   sources:
-  - openapi/statsig-console-api-openapi.yml
+  - openapi/statsig-audit-logs-api-openapi.yml
+  - openapi/statsig-autotunes-api-openapi.yml
+  - openapi/statsig-console-api-openapi.json
+  - openapi/statsig-dynamic-configs-api-openapi.yml
+  - openapi/statsig-experiments-api-openapi.yml
+  - openapi/statsig-gates-api-openapi.yml
+  - openapi/statsig-holdouts-api-openapi.yml
+  - openapi/statsig-keys-api-openapi.yml
+  - openapi/statsig-layers-api-openapi.yml
+  - openapi/statsig-metrics-api-openapi.yml
+  - openapi/statsig-segments-api-openapi.yml
+  - openapi/statsig-tags-api-openapi.yml
+  - openapi/statsig-target-apps-api-openapi.yml
+  - openapi/statsig-users-api-openapi.yml
+- name: statsigApiKey
+  type: apiKey
+  in: header
+  parameter: statsig-api-key
+  description: API key for authentication. Use a Server Secret Key for secure server-side requests
+    or a Client-SDK Key for client-side applications.
+  sources:
+  - openapi/statsig-configuration-api-openapi.yml
+  - openapi/statsig-dynamic-configs-api-openapi.yml
+  - openapi/statsig-events-api-openapi.yml
+  - openapi/statsig-experiments-api-openapi.yml
+  - openapi/statsig-feature-gates-api-openapi.yml
+  - openapi/statsig-initialization-api-openapi.yml
+  - openapi/statsig-layers-api-openapi.yml

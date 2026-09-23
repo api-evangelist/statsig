@@ -1,0 +1,243 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  https://registry.npmjs.org, https://pypi.org, https://rubygems.org, https://crates.io,
+  https://api.nuget.org, https://search.maven.org, https://proxy.golang.org,
+  https://repo.packagist.org, https://registry.terraform.io,
+  https://docs.statsig.com/sdks/getting-started, https://github.com/statsig-io
+description: >-
+  First-party Statsig client and server SDKs, read from each public package registry's own
+  metadata endpoint on 2026-09-17. Statsig ships two generations of server SDK: the original
+  per-language SDKs (statsig-node, python `statsig`, go-sdk, ruby `statsig`, Java serversdk,
+  .NET `Statsig`, PHP statsigsdk, rust `statsig`) and Server Core, a shared Rust core with
+  thin language bindings versioned together on the 0.23.x line. Registry versions below are
+  what the registry returned, not what the docs claim.
+package_count: 23
+official_count: 23
+packages:
+  - language: javascript
+    registry: npm
+    name: "@statsig/js-client"
+    url: https://www.npmjs.com/package/@statsig/js-client
+    install: npm install @statsig/js-client
+    official: true
+    version: 3.33.5
+    published: '2026-08-27'
+    repo: https://github.com/statsig-io/js-client-monorepo
+    note: Current browser client SDK; the js-client monorepo publishes every @statsig/* client package on one version line.
+  - language: javascript
+    registry: npm
+    name: "@statsig/react-bindings"
+    url: https://www.npmjs.com/package/@statsig/react-bindings
+    install: npm install @statsig/react-bindings
+    official: true
+    version: 3.33.5
+    published: '2026-08-27'
+    repo: https://github.com/statsig-io/js-client-monorepo
+  - language: javascript
+    registry: npm
+    name: "@statsig/angular-bindings"
+    url: https://www.npmjs.com/package/@statsig/angular-bindings
+    install: npm install @statsig/angular-bindings
+    official: true
+    version: 3.33.5
+    published: '2026-08-27'
+    repo: https://github.com/statsig-io/js-client-monorepo
+  - language: javascript
+    registry: npm
+    name: "@statsig/js-on-device-eval-client"
+    url: https://www.npmjs.com/package/@statsig/js-on-device-eval-client
+    install: npm install @statsig/js-on-device-eval-client
+    official: true
+    version: 3.33.5
+    published: '2026-08-27'
+    repo: https://github.com/statsig-io/js-client-monorepo
+  - language: javascript
+    registry: npm
+    name: "@statsig/web-analytics"
+    url: https://www.npmjs.com/package/@statsig/web-analytics
+    install: npm install @statsig/web-analytics
+    official: true
+    version: 3.33.5
+    published: '2026-08-27'
+    repo: https://github.com/statsig-io/js-client-monorepo
+  - language: javascript
+    registry: npm
+    name: "@statsig/session-replay"
+    url: https://www.npmjs.com/package/@statsig/session-replay
+    install: npm install @statsig/session-replay
+    official: true
+    version: 3.33.5
+    published: '2026-08-27'
+    repo: https://github.com/statsig-io/js-client-monorepo
+  - language: javascript
+    registry: npm
+    name: statsig-node
+    url: https://www.npmjs.com/package/statsig-node
+    install: npm install statsig-node
+    official: true
+    version: 6.5.2
+    published: '2026-08-13'
+    repo: https://github.com/statsig-io/node-js-server-sdk
+    note: First-generation Node.js server SDK; Server Core (@statsig/statsig-node-core) is the current recommendation.
+  - language: javascript
+    registry: npm
+    name: "@statsig/statsig-node-core"
+    url: https://www.npmjs.com/package/@statsig/statsig-node-core
+    install: npm install @statsig/statsig-node-core
+    official: true
+    version: 0.23.0
+    published: '2026-09-08'
+    repo: https://github.com/statsig-io/statsig-server-core
+  - language: javascript
+    registry: npm
+    name: statsig-js
+    url: https://www.npmjs.com/package/statsig-js
+    install: npm install statsig-js
+    official: true
+    version: 5.1.0
+    published: '2024-06-05'
+    repo: https://github.com/statsig-io/js-client-sdk
+    note: >-
+      Superseded browser client SDK. Last published 2024-06-05, more than two years before the
+      @statsig/js-client line it was replaced by — a decay signal, not a live library.
+  - language: python
+    registry: pypi
+    name: statsig
+    url: https://pypi.org/project/statsig/
+    install: pip install statsig
+    official: true
+    version: 0.72.1
+    published: '2026-08-19'
+    repo: https://github.com/statsig-io/python-sdk
+  - language: python
+    registry: pypi
+    name: statsig-python-core
+    url: https://pypi.org/project/statsig-python-core/
+    install: pip install statsig-python-core
+    official: true
+    version: 0.23.0
+    published: '2026-09-08'
+    repo: https://github.com/statsig-io/statsig-server-core
+  - language: ruby
+    registry: rubygems
+    name: statsig
+    url: https://rubygems.org/gems/statsig
+    install: gem install statsig
+    official: true
+    version: 2.9.4
+    published: '2026-09-09'
+    repo: https://github.com/statsig-io/ruby-sdk
+  - language: rust
+    registry: crates.io
+    name: statsig-rust
+    url: https://crates.io/crates/statsig-rust
+    install: cargo add statsig-rust
+    official: true
+    version: 0.23.1-rc.2609161923
+    published: '2026-09-17'
+    repo: https://github.com/statsig-io/statsig-server-core
+    note: Current Rust crate; the registry's max_version is a release candidate on the Server Core 0.23.x line.
+  - language: rust
+    registry: crates.io
+    name: statsig
+    url: https://crates.io/crates/statsig
+    install: cargo add statsig
+    official: true
+    version: 1.4.0
+    published: '2024-10-10'
+    repo: https://github.com/statsig-io/rust-sdk
+    note: Superseded first-generation Rust SDK; last published 2024-10-10.
+  - language: dotnet
+    registry: nuget
+    name: Statsig
+    url: https://www.nuget.org/packages/Statsig
+    install: dotnet add package Statsig
+    official: true
+    version: 2.4.1
+    published: '2026-01-12'
+    repo: https://github.com/statsig-io/dotnet-sdk
+  - language: dotnet
+    registry: nuget
+    name: Statsig.Dotnet
+    url: https://www.nuget.org/packages/Statsig.Dotnet
+    install: dotnet add package Statsig.Dotnet
+    official: true
+    version: 0.23.0
+    published: null
+    note: >-
+      Server Core .NET binding, on the same 0.23.x line as the other Core bindings. The NuGet
+      search index returned the version but no publication date; checked, nothing to record.
+  - language: java
+    registry: maven-central
+    name: com.statsig:serversdk
+    url: https://central.sonatype.com/artifact/com.statsig/serversdk
+    install: "implementation 'com.statsig:serversdk:2.0.8'"
+    official: true
+    version: 2.0.8
+    published: '2025-05-28'
+    repo: https://github.com/statsig-io/java-server-sdk
+  - language: java
+    registry: maven-central
+    name: com.statsig:android-sdk
+    url: https://central.sonatype.com/artifact/com.statsig/android-sdk
+    install: "implementation 'com.statsig:android-sdk:4.41.0'"
+    official: true
+    version: 4.41.0
+    published: '2025-06-17'
+    repo: https://github.com/statsig-io/android-sdk
+  - language: go
+    registry: go-modules
+    name: github.com/statsig-io/go-sdk
+    url: https://pkg.go.dev/github.com/statsig-io/go-sdk
+    install: go get github.com/statsig-io/go-sdk
+    official: true
+    version: v1.40.1
+    published: '2025-10-10'
+    repo: https://github.com/statsig-io/go-sdk
+  - language: php
+    registry: packagist
+    name: statsig/statsigsdk
+    url: https://packagist.org/packages/statsig/statsigsdk
+    install: composer require statsig/statsigsdk
+    official: true
+    version: 3.7.2
+    published: '2025-11-06'
+    repo: https://github.com/statsig-io/php-sdk
+  - language: php
+    registry: packagist
+    name: statsig/statsig-php-core
+    url: https://packagist.org/packages/statsig/statsig-php-core
+    install: composer require statsig/statsig-php-core
+    official: true
+    version: 0.23.1-beta.2609100206
+    published: '2026-09-09'
+    repo: https://github.com/statsig-io/statsig-php-core
+    note: Server Core PHP binding; latest published release on Packagist is a beta.
+  - language: javascript
+    registry: npm
+    name: "@statsig/siggy"
+    url: https://www.npmjs.com/package/@statsig/siggy
+    install: npm install -g @statsig/siggy
+    official: true
+    version: 0.0.4
+    published: '2024-09-17'
+    repo: https://github.com/statsig-io/siggy
+    note: >-
+      The Statsig CLI ("Siggy"). Documented as current at docs.statsig.com/statsigcli/introduction
+      but last published to npm on 2024-09-17 at 0.0.4, while the Console API it wraps has shipped
+      new endpoints every month since — the strongest abandonment signal in this package set.
+  - language: hcl
+    registry: terraform-registry
+    name: statsig-io/statsig
+    url: https://registry.terraform.io/providers/statsig-io/statsig/latest
+    install: 'terraform { required_providers { statsig = { source = "statsig-io/statsig" } } }'
+    official: true
+    version: 2.2.1
+    published: '2025-12-12'
+    repo: https://github.com/statsig-io/terraform-provider-statsig
+    note: Community-tier listing in the Terraform Registry, published under the statsig-io namespace.
+gaps:
+  - No first-party Statsig package is published to Packagist beyond the two above, and there is no
+    official Dart/Flutter or Swift package-registry entry — those SDKs are distributed from the
+    GitHub repositories (statsig-io/dart-sdk, statsig-io/statsig-kit) rather than a registry.

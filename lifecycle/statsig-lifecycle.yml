@@ -1,0 +1,80 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  https://docs.statsig.com/console-api/introduction, https://www.statsig.com/updates,
+  https://status.statsig.com/, openapi/statsig-console-api-openapi.json
+description: >-
+  Versioning, deprecation and operational-status posture for the Statsig APIs. Statsig runs a
+  date-stamped, single-version Console API with an explicit no-breaking-changes-within-a-version
+  guarantee, a monthly product-update log, and a hosted status page. It publishes no Sunset or
+  Deprecation response headers, no dated deprecation policy, and marks no operation `deprecated`
+  in the contract.
+versioning:
+  scheme: date-stamped, header-selected
+  header: STATSIG-API-VERSION
+  current_version: '20240601'
+  versions_published: ['20240601']
+  header_required: false
+  header_required_future: true
+  policy_text: >-
+    "Statsig versions the Console API. Statsig guarantees that each version won't break existing
+    usage; each new version introduces breaking changes. There is only one version: 20240601."
+  policy_url: https://docs.statsig.com/console-api/introduction
+  spec_url: https://api.statsig.com/openapi/20240601.json
+  spec_note: >-
+    The docs commit to keeping the OpenAPI for the current version up to date, and the spec's
+    info.version is 20240601.0.0 — a maintained, versioned contract rather than a snapshot.
+  sdk_versioning: >-
+    SDKs version independently of the API. Server Core bindings (Node/Python/PHP/Rust/.NET) move
+    together on one line — 0.23.x as of 2026-09 — while the first-generation per-language SDKs
+    (statsig-node 6.x, python statsig 0.72.x, go-sdk v1.40.x) keep their own numbering.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  deprecated_operations_in_spec: 0
+  note: >-
+    No RFC 8594 Sunset or Deprecation headers are documented, no deprecation window is stated, and
+    not one of the 324 published operations carries `deprecated: true`. What Statsig does publish
+    is an in-product deprecation concept for the customer's own artifacts — stale feature gates,
+    with Start_Gate_Code_Cleanup / Start_Experiment_Code_Cleanup operations and an AI stale-gate
+    cleanup flow — which is lifecycle management OF the customer's flags, not OF the API.
+  superseded_surfaces:
+    - {surface: 'statsig-js (npm)', replaced_by: '@statsig/js-client', last_published: '2024-06-05', announced: false}
+    - {surface: 'statsig (crates.io)', replaced_by: 'statsig-rust', last_published: '2024-10-10', announced: false}
+    - note: >-
+        Both are superseded in practice — the docs route new users to the replacement — but neither
+        registry entry is marked deprecated and no end-of-support date is published anywhere.
+status_page:
+  url: https://status.statsig.com/
+  http_status: 200
+  hosted: self-hosted
+  source_repo: https://github.com/statsig-io/statsigstatus
+  note: >-
+    Statsig runs its status page from its own open-source template (statsig-io/statuspage,
+    forked into statsig-io/statsigstatus), not a vendor status service.
+changelog:
+  url: https://www.statsig.com/updates
+  http_status: 200
+  cadence: monthly, dated back to at least 2025
+  see: changelog/statsig-changelog.yml
+sla:
+  published: false
+  note: >-
+    No public uptime SLA. The pricing page attaches "Priority support" to Enterprise; support
+    response targets are not published.
+support:
+  community: https://www.statsig.com/slack
+  docs: https://docs.statsig.com/
+  contact: https://www.statsig.com/contact
+gaps:
+  - >-
+    NO LIVE PRIVACY POLICY. statsig.com's own footer links to /privacy, and that URL — along with
+    /legal/privacy-policy, /legal/privacy, /legal/privacy-notice and /privacy-policy — returns the
+    site's "Page not found" body. Several return HTTP 200 while doing it, so the breakage is
+    invisible to any checker that reads status codes alone. The cookie banner on every page also
+    links to a "Privacy Policy" that does not resolve. Terms (/terms), Security (/legal/security)
+    and the DPA (/legal/dpa) all render normally, so this is one broken page, not a dead section.
+    Probed 2026-09-17.
+  - No deprecation policy and no Sunset/Deprecation headers, so a client cannot learn about a retirement from a response.
+  - Superseded SDKs are silently superseded rather than formally deprecated in their registries.

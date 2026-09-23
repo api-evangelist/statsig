@@ -1,15 +1,17 @@
 openapi: 3.2.0
 info:
-  title: Statsig Configuration API
+  title: Statsig HTTP Configuration API
+  description: The Statsig HTTP API allows developers to evaluate feature gates, dynamic configs, and experiments for users via server-side HTTP requests.
   version: 1.0.0
   contact:
     name: Statsig Support
     url: https://statsig.com/support
   termsOfService: https://statsig.com/terms
-  description: 'Operations tagged Configuration across 2 of this provider''s published API definitions: statsig-http-api-openapi.yml, statsig-server-sdk-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.statsig.com/v1
   description: Statsig API Server
+security:
+- statsigApiKey: []
 tags:
 - name: Configuration
   description: Endpoints for downloading full project configuration specs for server-side local evaluation.
@@ -64,11 +66,6 @@ paths:
                     description: Server timestamp of this configuration snapshot.
         '401':
           $ref: '#/components/responses/Unauthorized'
-      security:
-      - statsigApiKey: []
-    servers:
-    - url: https://api.statsig.com/v1
-      description: Statsig API Server
 components:
   responses:
     Unauthorized:
@@ -81,119 +78,12 @@ components:
               message:
                 type: string
                 description: Error message describing the authentication failure.
-  schemas:
-    ConfigSpecs:
-      type: object
-      description: The complete project configuration specs for server-side local evaluation.
-      properties:
-        dynamic_configs:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConfigSpec'
-          description: Array of dynamic config and experiment specifications.
-        feature_gates:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConfigSpec'
-          description: Array of feature gate specifications.
-        layer_configs:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConfigSpec'
-          description: Array of layer specifications.
-        layers:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
-          description: Map of layer names to their associated experiment names.
-        has_updates:
-          type: boolean
-          description: Whether the response contains updates since sinceTime.
-        time:
-          type: integer
-          format: int64
-          description: Server timestamp of this configuration snapshot.
-    RuleSpec:
-      type: object
-      description: An evaluation rule specification used for local evaluation.
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the rule.
-        name:
-          type: string
-          description: The name of the rule.
-        passPercentage:
-          type: number
-          minimum: 0
-          maximum: 100
-          description: The percentage of matching users who pass the rule.
-        conditions:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-                description: The type of condition.
-              targetValue:
-                description: The target value to compare against.
-              operator:
-                type: string
-                description: The comparison operator.
-              field:
-                type: string
-                description: The user field to evaluate.
-          description: The conditions that must be met for this rule.
-        returnValue:
-          type: object
-          description: The value returned when this rule matches.
-        groupName:
-          type: string
-          description: The group name assigned when this rule matches.
-    ConfigSpec:
-      type: object
-      description: A configuration specification for a gate, config, experiment, or layer that enables local evaluation.
-      properties:
-        name:
-          type: string
-          description: The name of the entity.
-        type:
-          type: string
-          enum:
-          - feature_gate
-          - dynamic_config
-          - experiment
-          - autotune
-          - layer
-          description: The type of configuration entity.
-        salt:
-          type: string
-          description: Salt value used for deterministic user assignment hashing.
-        enabled:
-          type: boolean
-          description: Whether the entity is currently enabled.
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/RuleSpec'
-          description: The evaluation rules for this entity.
-        defaultValue:
-          type: object
-          description: The default value when no rules match.
   securitySchemes:
     statsigApiKey:
       type: apiKey
       in: header
       name: statsig-api-key
       description: API key for authentication. Use a Server Secret Key for secure server-side requests or a Client-SDK Key for client-side applications.
-    serverSecretKey:
-      type: apiKey
-      in: header
-      name: statsig-api-key
-      description: Server Secret Key for secure server-side API access. Must only be used from trusted server environments and never exposed client-side.
-x-refined-from:
-- statsig-http-api-openapi.yml
-- statsig-server-sdk-api-openapi.yml
+externalDocs:
+  description: Statsig HTTP API Documentation
+  url: https://docs.statsig.com/http-api/

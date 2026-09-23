@@ -265,14 +265,6 @@ components:
                 type: string
                 description: Error message describing the authentication failure.
   parameters:
-    Page:
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-      description: Page number for paginated results.
     Limit:
       name: limit
       in: query
@@ -297,6 +289,14 @@ components:
       schema:
         type: string
       description: The name or identifier of the dynamic config.
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
   schemas:
     DynamicConfigUpdate:
       type: object
@@ -316,6 +316,42 @@ components:
           items:
             type: string
           description: Updated tags.
+    DynamicConfigCreate:
+      type: object
+      description: Request body for creating a new dynamic config.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the dynamic config to create.
+        description:
+          type: string
+          description: A human-readable description of the config purpose.
+        defaultValue:
+          type: object
+          description: The default key-value pairs.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags to associate with the config.
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
     DynamicConfig:
       type: object
       description: A dynamic configuration that provides key-value pairs to clients based on targeting rules.
@@ -353,6 +389,34 @@ components:
           type: integer
           format: int64
           description: Timestamp when the config was last modified.
+    Rule:
+      type: object
+      description: A targeting rule that defines conditions under which a gate passes or a config returns specific values.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the rule.
+        name:
+          type: string
+          description: The name of the rule.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of users matching conditions who pass the rule.
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+          description: The conditions that must be met for this rule to apply.
+        returnValue:
+          type: object
+          description: The value returned when this rule matches, for dynamic configs.
+        environments:
+          type: array
+          items:
+            type: string
+          description: Environments where this rule is active.
     Condition:
       type: object
       description: A condition within a targeting rule that evaluates user properties against specified criteria.
@@ -402,70 +466,6 @@ components:
           - after
           - true
           description: The comparison operator to use.
-    Pagination:
-      type: object
-      description: Pagination metadata for list responses.
-      properties:
-        total:
-          type: integer
-          description: Total number of items available.
-        page:
-          type: integer
-          description: Current page number.
-        limit:
-          type: integer
-          description: Number of items per page.
-        hasMore:
-          type: boolean
-          description: Whether more pages are available.
-    DynamicConfigCreate:
-      type: object
-      description: Request body for creating a new dynamic config.
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: The name of the dynamic config to create.
-        description:
-          type: string
-          description: A human-readable description of the config purpose.
-        defaultValue:
-          type: object
-          description: The default key-value pairs.
-        tags:
-          type: array
-          items:
-            type: string
-          description: Tags to associate with the config.
-    Rule:
-      type: object
-      description: A targeting rule that defines conditions under which a gate passes or a config returns specific values.
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the rule.
-        name:
-          type: string
-          description: The name of the rule.
-        passPercentage:
-          type: number
-          minimum: 0
-          maximum: 100
-          description: The percentage of users matching conditions who pass the rule.
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Condition'
-          description: The conditions that must be met for this rule to apply.
-        returnValue:
-          type: object
-          description: The value returned when this rule matches, for dynamic configs.
-        environments:
-          type: array
-          items:
-            type: string
-          description: Environments where this rule is active.
     StatsigUser:
       type: object
       description: The user object representing the end user being evaluated. At minimum, a userID should be provided. Additional properties enable more sophisticated targeting.

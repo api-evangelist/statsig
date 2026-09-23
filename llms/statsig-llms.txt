@@ -5,7 +5,7 @@
 Statsig Feature Gates are feature flags. Statsig Cloud processes hosted event data; Warehouse Native runs analysis against data in the customer's warehouse.
 Use Docs MCP for targeted, read-only public documentation retrieval. Authenticated Statsig MCP accesses product resources according to the user's account permissions.
 Prefer current SDKs for new implementations. Verify plan requirements, lifecycle status, and availability on the linked live page before making recommendations.
-AI Evals is Early Access and is not accepting new customers. Use Docs MCP or `/api/content/<slug>` for targeted retrieval; use `llms-full.txt` only as an offline full-corpus resource.
+AI Experimentation is Early Access and is not accepting new customers. Use Docs MCP or `/api/content/<slug>` for targeted retrieval; use `llms-full.txt` only as an offline full-corpus resource.
 
 ## Start here
 
@@ -28,7 +28,7 @@ AI Evals is Early Access and is not accepting new customers. Use Docs MCP or `/a
 - [Session Replay Overview](https://docs.statsig.com/api/content/session-replay/overview): Overview of Statsig Session Replay for capturing and replaying real user sessions to debug bugs, study UX, and investigate experiment anomalies.
 - [About Warehouse Native](https://docs.statsig.com/api/content/statsig-warehouse-native/introduction): Introduction to Statsig Warehouse Native, a deployment model that runs experiment analysis directly on your data warehouse for privacy and control. Deployment: Warehouse Native.
 - [Comparing Warehouse Native and Cloud](https://docs.statsig.com/api/content/statsig-warehouse-native/native-vs-cloud): Understand the different Statsig products Deployment: Warehouse Native.
-- [AI Evals Overview](https://docs.statsig.com/api/content/ai-evals/overview): Early Access; not accepting new customers. Status: Early Access.
+- [AI Experimentation Overview](https://docs.statsig.com/api/content/ai-evals/overview): Early Access; not accepting new customers. Status: Early Access.
 
 ## Agent access
 

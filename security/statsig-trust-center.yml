@@ -1,10 +1,44 @@
-generated: '2026-07-11'
+generated: '2026-09-17'
 method: searched
 probe: true
-source: https://trust.amplitude.com/?product_id=25a85de2-f369-4ee0-bd69-5fb5912f39ae
-url: https://trust.amplitude.com/?product_id=25a85de2-f369-4ee0-bd69-5fb5912f39ae
+source: https://trust.statsig.com/
+url: https://trust.statsig.com/
+resolved_url: https://trust.amplitude.com/?product_id=25a85de2-f369-4ee0-bd69-5fb5912f39ae
+domain_note: >-
+  The trust center is reached at Statsig's own subdomain, trust.statsig.com, which HTTP-redirects
+  to trust.amplitude.com scoped to a Statsig product_id. The cross-domain hop is justified by the
+  provider's own surface in two independent places: Statsig itself points trust.statsig.com there,
+  and the public Statsig Docs MCP server at https://docs.statsig.com/api/mcp exposes a tool named
+  `amplitude_implementation_planner`. Recorded as observed evidence of a shared trust/docs
+  operation, not as a corporate-structure conclusion.
+certifications:
+  - name: SOC 2 Type II
+    evidence: https://www.statsig.com/legal/security
+    note: "Security at Statsig states plainly: \"SOC2 Type II audited and certified\"."
+  - name: ISO 27001
+    evidence: https://trust.statsig.com/
+  - name: GDPR
+    evidence: https://trust.statsig.com/
+  - name: HIPAA
+    evidence: https://www.statsig.com/pricing
+    note: >-
+      The pricing page lists "HIPAA-eligibility (BAA required)" as an Enterprise-tier entitlement.
+      Eligibility under a BAA, not a certification.
+programs:
+  - name: Bug Bounty Program
+    evidence: https://www.statsig.com/legal/security
+    status: named-in-prose
+    note: >-
+      Listed among SDLC testing controls. No public program page, no HackerOne or Bugcrowd listing
+      (both probed, 404), and no /.well-known/security.txt on any host — so the program exists but
+      is not reachable by a researcher who has not already been invited.
 evidence:
-- source: https://trust.amplitude.com/?product_id=25a85de2-f369-4ee0-bd69-5fb5912f39ae
-  keywords:
-  - trust center
-  - compliance certification
+  - source: https://trust.statsig.com/
+    http_status: 200
+    keywords: [trust center, soc 2, iso 27001, gdpr, compliance certification]
+  - source: https://www.statsig.com/legal/security
+    http_status: 200
+    keywords: [soc2 type ii, bug bounty program, owasp, encryption at rest, disaster recovery]
+  - source: https://statsig.com/legal/dpa
+    http_status: 200
+    keywords: [data processing addendum]

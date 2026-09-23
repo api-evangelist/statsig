@@ -1,24 +1,26 @@
 openapi: 3.2.0
 info:
-  title: Statsig Initialization API
+  title: Statsig HTTP Initialization API
+  description: The Statsig HTTP API allows developers to evaluate feature gates, dynamic configs, and experiments for users via server-side HTTP requests.
   version: 1.0.0
   contact:
     name: Statsig Support
     url: https://statsig.com/support
   termsOfService: https://statsig.com/terms
-  description: 'Operations tagged Initialization across 2 of this provider''s published API definitions: statsig-client-sdk-api-openapi.yml, statsig-http-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.statsig.com/v1
   description: Statsig API Server
+security:
+- statsigApiKey: []
 tags:
 - name: Initialization
-  description: Endpoints for initializing client SDKs with all evaluated feature gates, configs, experiments, and layers for a given user.
+  description: Endpoints for initializing client SDKs with all evaluated gates, configs, experiments, and layers for a given user.
 paths:
   /initialize:
     post:
-      operationId: initializeClient
+      operationId: initialize
       summary: Initialize client SDK
-      description: Returns all evaluated gates, configs, experiments, and layers for a given user. This is the primary endpoint called during client SDK initialization. The response contains hashed entity names for security, and the client SDK decodes them locally. The response is optimized for client-side caching and includes a hash for detecting changes on subsequent requests.
+      description: Returns all evaluated gates, configs, experiments, and layers for a given user. This is the primary endpoint used by client SDKs for initialization. The response contains hashed names for security, and the client SDK decodes them locally.
       tags:
       - Initialization
       requestBody:
@@ -32,134 +34,35 @@ paths:
               properties:
                 user:
                   $ref: '#/components/schemas/StatsigUser'
-                hash:
-                  type: string
-                  description: Hash from a previous initialize response, used to detect changes and enable incremental updates.
-                sinceTime:
-                  type: integer
-                  format: int64
-                  description: Timestamp of the last successful initialization, used for incremental updates.
       responses:
         '200':
-          description: Evaluated configurations for the user
+          description: Full set of evaluated configurations for the user
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InitializeResponse'
+                type: object
+                properties:
+                  feature_gates:
+                    type: object
+                    description: A map of hashed gate names to their evaluation results.
+                  dynamic_configs:
+                    type: object
+                    description: A map of hashed config names to their evaluation results.
+                  layer_configs:
+                    type: object
+                    description: A map of hashed layer names to their evaluation results.
+                  has_updates:
+                    type: boolean
+                    description: Whether there are updates since the last initialization.
+                  time:
+                    type: integer
+                    format: int64
+                    description: Server timestamp of the evaluation.
         '401':
           $ref: '#/components/responses/Unauthorized'
-      security:
-      - clientSdkKey: []
-    servers:
-    - url: https://api.statsig.com/v1
-      description: Statsig API Server
 components:
   schemas:
-    InitializeResponse:
-      type: object
-      description: The response from the initialize endpoint containing all evaluated configurations for the user.
-      properties:
-        feature_gates:
-          type: object
-          additionalProperties:
-            type: object
-            properties:
-              value:
-                type: boolean
-                description: Whether the user passes the gate.
-              rule_id:
-                type: string
-                description: The matched rule identifier.
-              secondary_exposures:
-                type: array
-                items:
-                  type: object
-                description: Secondary exposure data for nested gate evaluations.
-          description: A map of hashed gate names to their evaluation results.
-        dynamic_configs:
-          type: object
-          additionalProperties:
-            type: object
-            properties:
-              value:
-                type: object
-                description: The config parameter values for this user.
-              rule_id:
-                type: string
-                description: The matched rule identifier.
-              secondary_exposures:
-                type: array
-                items:
-                  type: object
-                description: Secondary exposure data.
-          description: A map of hashed config names to their evaluation results.
-        layer_configs:
-          type: object
-          additionalProperties:
-            type: object
-            properties:
-              value:
-                type: object
-                description: The layer parameter values.
-              rule_id:
-                type: string
-                description: The matched rule identifier.
-              explicit_parameters:
-                type: array
-                items:
-                  type: string
-                description: Parameters explicitly set by the active experiment.
-          description: A map of hashed layer names to their evaluation results.
-        has_updates:
-          type: boolean
-          description: Whether there are updates since the last initialization.
-        time:
-          type: integer
-          format: int64
-          description: Server timestamp of the evaluation.
-        hash_used:
-          type: string
-          description: The hashing algorithm used for entity names.
     StatsigUser:
-      type: object
-      description: The user object representing the end user. A userID is required for consistent evaluation results across requests.
-      properties:
-        userID:
-          type: string
-          description: A unique identifier for the user.
-        email:
-          type: string
-          format: email
-          description: The email address of the user.
-        ip:
-          type: string
-          description: The IP address of the user.
-        userAgent:
-          type: string
-          description: The user agent string.
-        country:
-          type: string
-          description: The two-letter country code.
-        locale:
-          type: string
-          description: The locale identifier.
-        appVersion:
-          type: string
-          description: The application version.
-        custom:
-          type: object
-          additionalProperties: true
-          description: Custom properties for targeting rules.
-        privateAttributes:
-          type: object
-          additionalProperties: true
-          description: Private attributes used for evaluation but not logged.
-        customIDs:
-          type: object
-          additionalProperties:
-            type: string
-          description: Custom identifier mappings.
-    StatsigUser_2:
       type: object
       description: The user object representing the end user being evaluated. At minimum, a userID should be provided. Additional properties enable more sophisticated targeting.
       properties:
@@ -210,16 +113,11 @@ components:
                 type: string
                 description: Error message describing the authentication failure.
   securitySchemes:
-    clientSdkKey:
-      type: apiKey
-      in: header
-      name: statsig-api-key
-      description: Client-SDK Key that is safe to embed in mobile apps and front-end web applications. Created in Project Settings > API Keys tab.
     statsigApiKey:
       type: apiKey
       in: header
       name: statsig-api-key
       description: API key for authentication. Use a Server Secret Key for secure server-side requests or a Client-SDK Key for client-side applications.
-x-refined-from:
-- statsig-client-sdk-api-openapi.yml
-- statsig-http-api-openapi.yml
+externalDocs:
+  description: Statsig HTTP API Documentation
+  url: https://docs.statsig.com/http-api/

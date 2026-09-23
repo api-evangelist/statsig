@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Statsig Console Target Apps API
-  description: The Statsig Console API enables developers to programmatically manage their Statsig project configuration. It supports full CRUD operations on feature gates, dynamic configs, experiments, segments, layers, holdouts, autotunes, metrics, keys, users, tags, target apps, audit logs, and other entities. The API requires a Console API Key and uses versioned endpoints with the STATSIG-API-VERSION header. It is designed for automation workflows such as bulk configuration edits, syncing definitions into Statsig from external systems, and integrating Statsig management into CI/CD pipelines.
+  description: The Statsig Console API enables developers to programmatically manage their Statsig project configuration.
   version: '20240601'
   contact:
     name: Statsig Support

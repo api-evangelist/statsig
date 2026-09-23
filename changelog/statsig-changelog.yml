@@ -1,0 +1,72 @@
+generated: '2026-09-17'
+method: searched
+source: https://www.statsig.com/updates
+description: >-
+  Statsig publishes a dated Product Updates log at statsig.com/updates, grouped by calendar month
+  and running back to at least 2025. It is a product changelog rather than an API changelog: it
+  names features, and API/MCP changes appear in it as named items, but it does not record breaking
+  changes against the 20240601 Console API version (there have been none — a new version is how
+  Statsig says it would ship one).
+url: https://www.statsig.com/updates
+http_status: 200
+scheme: month-grouped product updates, no version numbers
+current_api_version: '20240601'
+breaking_changes_recorded: 0
+format: html
+feed: null
+feed_note: No RSS/Atom or JSON feed is published for the update log.
+entries:
+  - period: '2026-09'
+    highlights: ['Self-Serve RBAC for MCP', 'Entity-Level Permissions']
+    api_relevant: true
+    note: Both are authorization changes that affect what an MCP agent or Console key can reach.
+  - period: '2026-08'
+    highlights: ['Pipeline Overview for Athena', 'Experiment Configuration via MCP', 'SCIM Role Aliases', 'Experiment Daily Checks in API', 'Query Cost Attribution', 'Layers Targeting', 'Expanded Targeting Multiselect', 'Create Modals Updates', 'New Targeting Rules', 'Feature Gate User Override', 'PagerDuty Integration']
+    api_relevant: true
+  - period: '2026-07'
+    highlights: ['Autotune Reviews on MCP', 'Holdouts Public Gate IDs', 'Athena New Key Support', 'Topline Impact in Warehouse Native', 'Config Delete Permission', 'Audit Overrides', 'Experiment Reviews']
+    api_relevant: true
+  - period: '2026-06'
+    highlights: ['Follow Dynamic Configs', 'Feature Gate Reviews', 'Parameter Store in MCP', 'Leaner Experiment Reads', 'Read-Only MCP Access', 'Create Autotunes in MCP', 'Single-Override DELETE Endpoints', 'Version History Tools in MCP']
+    api_relevant: true
+    note: >-
+      "Single-Override DELETE Endpoints" is visible in the contract as the
+      /overrides/conditional/{type}/{name} and /overrides/userID/{userID} paths on gates,
+      experiments and autotunes.
+  - period: '2026-03'
+    highlights: ['Statsig Agent Skills Repository', 'Segments and Layers in MCP', 'Cancel Queries']
+    api_relevant: true
+    note: The Agent Skills repository entry corresponds to github.com/statsig-io/agent-skills, saved to skills/.
+  - period: '2026-02'
+    highlights: ['Lifecycle Charts', 'Generate Dashboards via API (Private Beta)', 'Dashboard Pages', 'Dashboard Subscriptions', 'Enhanced WHN Switchback', 'Quick Copy/Paste Results', 'Inline Power Analysis', 'Metrics Tools in Statsig MCP', 'Stratification in CUPED', 'Statsig ChatGPT App']
+    api_relevant: true
+  - period: '2026-01'
+    highlights: ['Analyze Only Switchback [Beta]', 'Composite Metrics', 'Background Queries', 'Clear, Flexible Privacy for Session Replay', 'Count Distinct Metric in Cloud', 'Explore Multi-Dimension Group By']
+    api_relevant: false
+  - period: '2025-12'
+    highlights: ['AI Knowledge Bank Search [Beta]', 'AI-Powered Experiment Summary', 'Contextual AI Descriptions', 'AI Stale Gate Cleanup', 'Github AI Integration', 'Segment Filters on Dashboards', 'Global Filters in Funnels', 'Session Analytics on Warehouse Native', 'Warehouse Explorer', 'OAuth Support for Statsig MCP Server', 'Traces Explorer']
+    api_relevant: true
+    note: >-
+      "OAuth Support for Statsig MCP Server" dates the RFC 9728 discovery surface now served at
+      api.statsig.com/.well-known/oauth-protected-resource/v1/mcp.
+  - period: '2025-11'
+    highlights: ['Reverse Power', 'Results in Lower Environment', 'Recent Queries in Logs Explorer', 'Topline Alerts on Metrics', 'Metric Source Freshness', 'Results Table View', 'Metric Family', 'Bulk Topline Impact Calculation', 'Layers UI Improvements']
+    api_relevant: true
+  - period: '2025-10'
+    highlights: ['Console Logs in Session Replay', 'Sum Property Values at Funnel Conversion', 'Power Analysis Enhancements', 'Schedule Experiment Start', 'Warehouse Events', 'Feature Gate Exposures in Metrics Explorer', 'Docs v2', 'Autocapture Updates', 'Statsig Visual Editor', 'Rich Text Widgets on Dashboards']
+    api_relevant: true
+  - period: '2025-09'
+    highlights: ['Change Alerts', 'Exposure Imbalance / SRM Debugging', 'Custom Chart Annotations', 'Conversion Drivers in Funnels on WHN', 'Custom Experiment Decision Framework', 'Personal Console API Key', 'API Endpoints for archiving and unarchiving Dynamic Configs', 'Sampling Across All Charts']
+    api_relevant: true
+    note: >-
+      "Personal Console API Key" is the key type MCP OAuth requires, and the archive/unarchive
+      endpoints are visible in the contract at /dynamic_configs/{id}/archive and /unarchive.
+  - period: '2025-06'
+    highlights: ['Pulumi Statsig Provider', 'Statsig MCP Server', 'Log Explorer', 'AI Onboarding Wizard', 'Geotest Experiments', 'Results Snapshot']
+    api_relevant: true
+    note: Dates the original launch of the Statsig MCP server.
+gaps:
+  - No feed. An agent has to scrape HTML to watch for changes.
+  - >-
+    The log is product-shaped, not contract-shaped. There is no per-endpoint changelog, so a
+    consumer cannot tell from it which of the 324 Console operations changed in a given month.

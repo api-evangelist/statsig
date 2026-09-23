@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Statsig Console Audit Logs API
-  description: The Statsig Console API enables developers to programmatically manage their Statsig project configuration. It supports full CRUD operations on feature gates, dynamic configs, experiments, segments, layers, holdouts, autotunes, metrics, keys, users, tags, target apps, audit logs, and other entities. The API requires a Console API Key and uses versioned endpoints with the STATSIG-API-VERSION header. It is designed for automation workflows such as bulk configuration edits, syncing definitions into Statsig from external systems, and integrating Statsig management into CI/CD pipelines.
+  description: The Statsig Console API enables developers to programmatically manage their Statsig project configuration.
   version: '20240601'
   contact:
     name: Statsig Support
@@ -45,14 +45,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   parameters:
-    Page:
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-      description: Page number for paginated results.
     Limit:
       name: limit
       in: query
@@ -70,17 +62,14 @@ components:
         type: string
         default: '20240601'
       description: The Console API version. Currently the only version is 20240601.
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
   schemas:
     AuditLogEntry:
       type: object
@@ -132,6 +121,17 @@ components:
         hasMore:
           type: boolean
           description: Whether more pages are available.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
   securitySchemes:
     consoleApiKey:
       type: apiKey

@@ -1,0 +1,231 @@
+generated: '2026-09-17'
+method: searched
+source: >-
+  https://docs.statsig.com/console-api/introduction, https://docs.statsig.com/http-api/overview,
+  https://docs.statsig.com/integrations/event_webhook,
+  openapi/statsig-console-api-openapi.json (324 operations),
+  live header probe of https://statsigapi.net/console/v1/gates on 2026-09-17
+description: >-
+  Cross-cutting runtime semantics for the Statsig APIs, read from the provider's own docs and its
+  published Console API OpenAPI. Statsig's conventions are consistent and simple — one header for
+  auth, one header for version, page/limit pagination with a metadata block, a two-field error
+  envelope — and they are also thin where an agent needs them most: there is no idempotency key,
+  no rate-limit response header, and no request-id echoed for tracing.
+authentication:
+  style: api-key-in-header
+  schemes:
+    - {name: 'Console API Key', header: 'STATSIG-API-KEY', prefix: 'console-', scope: 'Console API (statsigapi.net/console/v1) and the MCP server', surface: management}
+    - {name: 'Server Secret Key', header: 'statsig-api-key', prefix: 'secret-', scope: 'HTTP API and server SDKs; download_config_specs, log_event', surface: runtime}
+    - {name: 'Client SDK Key', header: 'statsig-api-key', prefix: 'client-', scope: 'initialize, log_event from browsers and mobile apps; safe to embed', surface: runtime}
+    - {name: 'SCIM key', header: 'n/a (IdP-configured)', prefix: 'scim', scope: 'Okta user/group provisioning', surface: identity}
+  oauth:
+    present: true
+    scope: the MCP endpoint only
+    metadata: https://api.statsig.com/.well-known/oauth-authorization-server
+    note: >-
+      OAuth exists for https://api.statsig.com/v1/mcp and is documented as backing onto Personal
+      Console API Keys. The REST Console API itself is key-only; there is no OAuth path to it.
+  see: authentication/statsig-authentication.yml
+idempotency:
+  coverage: none
+  mechanism: null
+  header: null
+  scope: []
+  retention: null
+  evidence: >-
+    The string "Idempotency" appears nowhere in the 3.4MB published Console API OpenAPI, and no
+    idempotency key is documented on any endpoint. There is no request-replay protection on the
+    mutating surface.
+  natural_idempotence:
+    - >-
+      Several DELETE operations are naturally idempotent and say so in their own descriptions —
+      DELETE /console/v1/{gates|experiments|autotunes}/{id}/overrides/conditional/{type}/{name}
+      and .../overrides/userID/{userID} "return 200 even when no matching override exists".
+    - >-
+      The state-transition PUTs (archive/unarchive, enable/disable, launch) are idempotent by
+      construction: re-applying them lands in the same state.
+    - >-
+      This is idempotency BY SHAPE, not a replay-protection mechanism. Retrying a failed
+      POST /console/v1/gates after a timeout can still create a duplicate gate — which is exactly
+      the case an agent hits, and exactly what a key would prevent.
+  note: >-
+    Name uniqueness partly covers the create path: a duplicate name returns 400 "Name is already
+    in use" rather than creating a second entity. That is a collision guard, not idempotency, and
+    it does not apply to updates or to entities created without a caller-chosen name.
+pagination:
+  style: page-number
+  request_params: [limit, page]
+  response_envelope: {message: string, data: array, pagination: object}
+  response_fields: [itemsPerPage, pageNumber, nextPage, previousPage, totalItems, all]
+  applies_to: every list operation on the Console API
+  cursor: false
+  note: >-
+    `nextPage`/`previousPage` are nullable strings, so a client can follow links rather than
+    incrementing page numbers. `totalItems` is present, which makes progress reporting possible.
+filtering:
+  style: query parameters, per-resource
+  note: >-
+    Filters are rich and typed. GET /console/v1/gates alone accepts idType, type, typeReason,
+    passRate, rolloutRate, releasePipelineID, teamID, targetAppID, includeArchived,
+    includeArchiveMetadata, store0100Exposures, creatorName, creatorID and tags — with enums, so
+    an agent can discover valid values from the contract.
+field_expansion:
+  present: partial
+  mechanism: "`fields` projection on Get_Experiment_Details_by_ID (MCP)"
+  note: >-
+    The MCP tool documents a comma-separated `fields` projection that "reduces context consumption
+    by up to 95-99%". This is an agent-shaped affordance and a good one; it is documented on the
+    MCP tool, not visibly on the REST operation.
+metadata:
+  present: true
+  mechanism: tags[] on gates, experiments, dynamic configs, metrics and segments
+  note: Free-form tags are filterable on list operations; there is no arbitrary key/value metadata bag.
+request_tracing:
+  request_id_header: null
+  response_headers_observed: [cache-control, referrer-policy, x-content-type-options, x-statsig-region, via, alt-svc]
+  note: >-
+    Probed live: a 401 from statsigapi.net/console/v1/gates returns no request-id of any kind.
+    `x-statsig-region` (observed value gke-us-west1) identifies the serving region but not the
+    request, so a customer reporting a failure has no correlation id to hand support.
+  mcp_correlation:
+    present: true
+    headers: [x-agent-trace-id, x-agent-session-id, x-mcp-client]
+    scope: the Docs MCP server only
+    note: >-
+      Notably, the one surface with agent-request correlation is the free documentation server,
+      not the API an agent actually writes through.
+versioning:
+  header: STATSIG-API-VERSION
+  current: '20240601'
+  required: false
+  see: lifecycle/statsig-lifecycle.yml
+errors:
+  envelope: '{"status": <int>, "message": <string>}'
+  validation_detail: '`errors` array naming the failing parameter'
+  rfc9457: false
+  see: errors/statsig-problem-types.yml
+rate_limit_signaling:
+  response_headers: none
+  documented_limits: true
+  status_on_exhaustion: 429
+  declared_in_spec: false
+  note: >-
+    The gap that matters at runtime. The limit is published in prose (~100 mutations / 10s and
+    ~900 / 15m per project) but the API returns no X-RateLimit-*, no RateLimit-*, and no
+    Retry-After, and no operation in the contract declares a 429. An agent cannot pace itself; it
+    can only fail and guess how long to wait.
+  see: rate-limits/statsig-rate-limits.yml
+webhooks:
+  direction: both
+  incoming: 'POST https://api.statsig.com/v1/webhooks/event_webhook (STATSIG-API-KEY: server secret)'
+  outgoing: Generic Webhook integration, configured per project
+  batching: events are delivered in JSON batches
+  signature:
+    header: X-Statsig-Signature
+    timestamp_header: X-Statsig-Request-Timestamp
+    algorithm: HMAC-SHA256
+    basestring: 'v0:{timestamp}:{raw body}'
+    prefix: 'v0='
+  event_families: [exposures (statsig::gate_exposure, statsig::config_exposure, statsig::experiment_exposure), custom events, config changes (statsig::config_change), pre-commit webhooks]
+  see: asyncapi/statsig-webhooks-asyncapi.yml
+reversibility:
+  grade: documented
+  na: false
+  summary: >-
+    Statsig's management surface is unusually reversible in SHAPE — nearly every destructive
+    action has a named inverse operation in the contract, and the review/approval workflow lets a
+    change be cancelled or rejected before it ever applies. What is missing everywhere is the
+    WINDOW: the docs state no retention period for an archived or deleted entity, and no operation
+    documents how long its inverse remains available. That caps this at `documented`, not
+    `verified`.
+  write_surfaces:
+    - surface: Feature gates
+      destructive: 'PUT /console/v1/gates/{id}/archive, PUT /console/v1/gates/{id}/disable, DELETE /console/v1/gates/{id}'
+      reversal: 'PUT /console/v1/gates/{id}/unarchive, PUT /console/v1/gates/{id}/enable'
+      operation_id: null
+      operation_id_note: The published spec declares no operationId on any operation; paths are the identifier.
+      window: null
+      window_docs: https://docs.statsig.com/feature-flags/overview
+      note: >-
+        Archive is reversible via unarchive. DELETE has NO inverse — the docs advise cloning an
+        archived gate rather than reusing it, and warn before deleting a permanent gate, which is
+        guidance, not a restore path.
+    - surface: Experiments
+      destructive: 'PUT /console/v1/experiments/{id}/archive, PUT /console/v1/experiments/{id}/abandon, PUT /console/v1/experiments/{id}/make_decision, DELETE /console/v1/experiments/{id}'
+      reversal: 'PUT /console/v1/experiments/{id}/unarchive, PUT /console/v1/experiments/{id}/reset, POST /console/v1/experiments/{id}/restart_as_new, PUT /console/v1/experiments/{id}/defer_decision'
+      window: null
+      note: >-
+        `reset` returns a started experiment to a pre-allocation state and `restart_as_new` clones
+        it forward. Neither un-exposes users who were already assigned, and the docs do not state a
+        time limit on either — the irreversible part is the exposure data, not the object.
+    - surface: Dynamic configs
+      destructive: 'PUT /console/v1/dynamic_configs/{id}/archive, PUT /console/v1/dynamic_configs/{id}/disable, DELETE /console/v1/dynamic_configs/{id}'
+      reversal: 'PUT /console/v1/dynamic_configs/{id}/unarchive, PUT /console/v1/dynamic_configs/{id}/enable'
+      window: null
+      note: The archive/unarchive pair shipped 2025-09 per the product-update log.
+    - surface: Autotunes
+      destructive: 'DELETE /console/v1/autotunes/{id}, PUT /console/v1/autotunes/{id}/make_decision'
+      reversal: 'PUT /console/v1/autotunes/{id}/reset'
+      window: null
+    - surface: Overrides (gates / experiments / autotunes)
+      destructive: 'DELETE .../overrides, DELETE .../overrides/conditional/{type}/{name}, DELETE .../overrides/userID/{userID}'
+      reversal: 'POST .../overrides (re-apply)'
+      window: null
+      note: >-
+        The single-override DELETEs are scoped and idempotent by their own description — they clear
+        only the named bucket and leave every other override in place, and return the full override
+        set after the delete so the caller can diff. This is the best-behaved destructive operation
+        in the whole surface.
+    - surface: Change reviews (gates / experiments / dynamic configs / autotunes)
+      destructive: 'PUT .../reviews/{reviewID}/commit (applies the change)'
+      reversal: 'DELETE .../reviews/{reviewID} (cancel), PUT .../reviews/{reviewID}/reject'
+      window: 'before commit'
+      window_docs: https://docs.statsig.com/console-api/introduction
+      note: >-
+        This IS a stated window — cancel and reject work up to the point of commit — which is the
+        one reversal boundary Statsig actually publishes. It is a workflow gate, not a time window.
+    - surface: Metrics
+      destructive: 'archive / delete a metric (Console API Metrics group)'
+      reversal: 're-enable / restore'
+      window: null
+      window_docs: https://docs.statsig.com/metrics/create-metric
+      note: >-
+        Docs state archiving a metric stops computation but retains history, and that re-enabling a
+        parent metric automatically restores its child metrics. A child deleted independently can be
+        restored on its own, but returns without its parent-child relationship — a partial restore
+        the docs are commendably explicit about.
+    - surface: Topline alerts
+      destructive: 'POST /console/v1/alerts/{id}/mute, DELETE /console/v1/alerts/{id}'
+      reversal: 'POST /console/v1/alerts/{id}/unmute'
+      window: null
+    - surface: Event ingestion (events.statsigapi.net, log_event)
+      destructive: 'events are appended and metrics computed from them'
+      reversal: null
+      window: null
+      note: >-
+        No delete-event or retract-event operation exists. Logged exposures and events are not
+        reversible through the API — the one genuinely one-way write surface Statsig has.
+  irreversible:
+    - 'DELETE /console/v1/gates/{id} and the other entity DELETEs — no restore operation is published.'
+    - 'Logged events and exposures — no retraction path.'
+    - 'Users already assigned to a started experiment — reset returns the object, not the assignments.'
+  gaps:
+    - >-
+      No retention window is published for any archived or deleted entity, so an agent cannot know
+      whether "undo" is available for an hour, thirty days, or not at all. Naming one number would
+      move this artifact from `documented` to `verified`.
+dry_run_mode:
+  present: partial
+  mechanism: >-
+    Change reviews (create -> approve -> commit) let a change be proposed and inspected before it
+    applies, and Create_Autotune creates in draft and prompts for confirmation. Neither is a
+    dry-run parameter on an ordinary operation.
+  note: >-
+    There is no `?dry_run=true`-style rehearsal on the REST surface. The review workflow is the
+    closest equivalent and only covers gates, experiments, dynamic configs and autotunes.
+cross_links:
+  - errors/statsig-problem-types.yml
+  - lifecycle/statsig-lifecycle.yml
+  - authentication/statsig-authentication.yml
+  - rate-limits/statsig-rate-limits.yml
+  - asyncapi/statsig-webhooks-asyncapi.yml

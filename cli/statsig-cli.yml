@@ -1,0 +1,66 @@
+generated: '2026-09-17'
+method: searched
+source: https://docs.statsig.com/statsigcli/introduction, https://docs.statsig.com/statsigcli/commands
+description: >-
+  Statsig ships a first-party CLI called Siggy, distributed on npm as @statsig/siggy. It is a thin
+  wrapper over the Console API for gates, dynamic configs, segments and experiments, aimed at
+  scripting and CI/CD. It is documented as current but its npm package has not been republished
+  since 2024-09-17.
+name: Siggy
+binary: siggy
+package: "@statsig/siggy"
+registry: npm
+url: https://www.npmjs.com/package/@statsig/siggy
+repo: https://github.com/statsig-io/siggy
+version: 0.0.4
+published: '2024-09-17'
+docs: https://docs.statsig.com/statsigcli/introduction
+official: true
+install:
+  - method: npm-global
+    command: npm install -g @statsig/siggy
+  - method: npx
+    command: npx siggy --version
+prerequisites: [Node.js 14 or higher, npm]
+configuration:
+  commands:
+    - 'siggy config -c <console-api-key>'
+    - 'siggy config -k <client-api-key>'
+  keys_from: https://console.statsig.com/settings
+  note: >-
+    Both a Console API Key and a Client API Key are configured — the Console key drives the
+    management commands, the Client key backs `gates check`, which evaluates a gate for a user.
+commands:
+  - group: config
+    summary: view/edit configuration settings
+    subcommands: []
+  - group: gates
+    summary: create/list/edit gates
+    subcommands:
+      - {name: create, args: '<gate-name>', summary: create a new feature gate, rest: 'POST /console/v1/gates'}
+      - {name: get, args: '<gate-id>', summary: retrieve gate details, rest: 'GET /console/v1/gates/{id}'}
+      - {name: list, args: '[options]', summary: list all gates, rest: 'GET /console/v1/gates'}
+      - {name: update, args: '<gate-id> <gate-properties-json>', summary: update a gate, rest: 'POST|PATCH /console/v1/gates/{id}'}
+      - {name: delete, args: '[options] <gate-id>', summary: delete a gate, rest: 'DELETE /console/v1/gates/{id}'}
+      - {name: check, args: '[options] <gate-id>', summary: check the current state of the gate for a user, rest: 'HTTP API check_gate'}
+  - group: dyncon
+    summary: create/list/edit dynamic configs
+  - group: segments
+    summary: create/list/edit segments
+  - group: experiments
+    summary: create/list/edit experiments
+  - group: help
+    summary: display help for command
+help_model: >-
+  `siggy` with no arguments prints usage; `siggy <group> --help` prints the group. The docs state
+  plainly that help content lives in code and the CLI is the most current reference — which is
+  honest, and also means the command surface is not fully documented on the web.
+body_schema_reference: https://docs.statsig.com/console-api/introduction
+adjacent_tooling:
+  - {name: Terraform provider, source: statsig-io/statsig, registry: https://registry.terraform.io/providers/statsig-io/statsig/latest, version: 2.2.1, published: '2025-12-12'}
+  - {name: Pulumi provider, evidence: 'https://www.statsig.com/updates (Jun 2025)', note: Announced in the product-update log.}
+gaps:
+  - >-
+    The CLI is at 0.0.4 and was last published 2024-09-17, while the Console API it wraps has added
+    endpoints in most months since. The documented command surface covers 4 of the API's 34 tag
+    groups; there is no metrics, layers, holdouts, keys, reviews or dashboards command.

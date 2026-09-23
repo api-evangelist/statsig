@@ -1,0 +1,155 @@
+{
+  "tools": [
+    {
+      "name": "get_page",
+      "description": "Retrieve the full markdown content of a Statsig documentation page",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "Page slug, e.g. \"sdks/browser/latest/getting-started\""
+          },
+          "rationale": {
+            "description": "Brief explanation of why you are calling this tool",
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "slug"
+        ]
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_pages",
+      "description": "List all available Statsig documentation pages with their titles and slugs",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "rationale": {
+            "description": "Brief explanation of why you are calling this tool",
+            "type": "string",
+            "maxLength": 500
+          }
+        }
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "search_docs",
+      "description": "Search Statsig documentation and return typed results with section-level chunks (Guide, APIReference, SDKReference, Troubleshooting)",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Keyword to search for across all documentation pages"
+          },
+          "rationale": {
+            "description": "Brief explanation of why you are calling this tool",
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "amplitude_implementation_planner",
+      "description": "Assemble an ordered multi-page setup sequence with code snippets for analytics, experiment, or session replay workflows",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "workflow": {
+            "type": "string",
+            "enum": [
+              "analytics",
+              "experiment",
+              "session_replay"
+            ],
+            "description": "End-to-end integration workflow: analytics, experiment, or session_replay"
+          },
+          "rationale": {
+            "description": "Brief explanation of why you are calling this tool",
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "workflow"
+        ]
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "send_docs_mcp_feedback",
+      "description": "Report documentation gaps, broken examples, or ambiguous parameter descriptions to the Docs content backlog",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "missing_endpoint",
+              "broken_example",
+              "ambiguous_parameter",
+              "missing_content",
+              "other"
+            ],
+            "description": "Feedback category: missing_endpoint, broken_example, ambiguous_parameter, missing_content, or other"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Description of the documentation gap or issue"
+          },
+          "page_slug": {
+            "description": "Optional page slug where the issue was found",
+            "type": "string",
+            "maxLength": 512
+          },
+          "section_heading": {
+            "description": "Optional section heading where the issue was found",
+            "type": "string",
+            "maxLength": 200
+          },
+          "rationale": {
+            "description": "Brief explanation of why you are calling this tool",
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "category",
+          "message"
+        ]
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ]
+}
