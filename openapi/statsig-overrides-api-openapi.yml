@@ -1,0 +1,628 @@
+openapi: 3.2.0
+info:
+  title: Console Overrides API
+  description: The "Console API" is the CRUD API for performing the actions offered on console.statsig.com without needing to go through the web UI.
+  version: 20240601.0.0
+  contact: {}
+servers:
+- url: https://statsigapi.net
+tags:
+- name: Overrides
+paths:
+  /console/v1/overrides:
+    get:
+      summary: Audit Overrides
+      description: Returns overrides across all gates, holdouts, experiments, autotunes, and layers in the project. Provide `userId` (optionally with `idType`) to audit everywhere a single unit ID is overridden; omit it to export every override. Each section only lists entities that have matching overrides.
+      parameters:
+      - name: userId
+        required: false
+        in: query
+        description: Unit ID to audit. When provided, the response only includes entities that override this ID, narrowed to the matching ID. When omitted, every override across all entities is returned.
+        schema:
+          example: user-123
+          type: string
+      - name: idType
+        required: false
+        in: query
+        description: The unit ID type that `userId` refers to (e.g. 'userID', 'stableID', or a custom unit ID type). Accepts snake_case or camelCase. Defaults to 'userID'. Ignored when `userId` is omitted.
+        schema:
+          example: userID
+          type: string
+      responses:
+        '200':
+          description: Audit Overrides Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/OverridesAuditDto'
+                example:
+                  message: Overrides read successfully.
+                  data:
+                    gates:
+                    - id: my_gate
+                      name: My Gate
+                      passingUserIDs:
+                      - user-123
+                      failingUserIDs: []
+                      environmentOverrides:
+                      - environment: null
+                        unitID: userID
+                        passingIDs:
+                        - user-123
+                        failingIDs: []
+                    holdouts: []
+                    experiments:
+                    - id: my_experiment
+                      name: My Experiment
+                      overrides: []
+                      userIDOverrides:
+                      - groupID: Control
+                        ids:
+                        - user-123
+                        environment: null
+                        unitType: userID
+                    autotunes: []
+                    layers: []
+              example:
+                message: Overrides read successfully.
+                data:
+                  gates:
+                  - id: my_gate
+                    name: My Gate
+                    passingUserIDs:
+                    - user-123
+                    failingUserIDs: []
+                    environmentOverrides:
+                    - environment: null
+                      unitID: userID
+                      passingIDs:
+                      - user-123
+                      failingIDs: []
+                  holdouts: []
+                  experiments:
+                  - id: my_experiment
+                    name: My Experiment
+                    overrides: []
+                    userIDOverrides:
+                    - groupID: Control
+                      ids:
+                      - user-123
+                      environment: null
+                      unitType: userID
+                  autotunes: []
+                  layers: []
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Overrides
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1Overrides
+      x-operation-id-source: derived
+components:
+  schemas:
+    OverridesAuditDto:
+      type: object
+      properties:
+        gates:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Entity identifier (name)
+                example: my_gate
+              name:
+                type: string
+                description: Entity display name
+                example: My Gate
+              passingUserIDs:
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+                  description: User ID
+                  example: user123
+                maxItems: 2000
+                description: List of user IDs
+                example:
+                - user123
+                - user456
+                - user789
+              failingUserIDs:
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+                  description: User ID
+                  example: user123
+                maxItems: 2000
+                description: List of user IDs
+                example:
+                - user123
+                - user456
+                - user789
+              passingCustomIDs:
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+                  description: Custom ID
+                  example: custom123
+                maxItems: 2000
+                description: Optional list of custom IDs
+                example:
+                - custom123
+                - custom456
+              failingCustomIDs:
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+                  description: Custom ID
+                  example: custom123
+                maxItems: 2000
+                description: Optional list of custom IDs
+                example:
+                - custom123
+                - custom456
+              environmentOverrides:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    environment:
+                      type:
+                      - string
+                      - 'null'
+                      description: Environment
+                      example: staging
+                    unitID:
+                      type:
+                      - string
+                      - 'null'
+                      description: Unit ID
+                      example: unit123
+                    passingIDs:
+                      type: array
+                      items:
+                        type: string
+                      description: List of passing IDs
+                      example:
+                      - id1
+                      - id2
+                    failingIDs:
+                      type: array
+                      items:
+                        type: string
+                      description: List of failing IDs
+                      example:
+                      - id3
+                      - id4
+                  required:
+                  - unitID
+                  - passingIDs
+                  - failingIDs
+                  description: Contract for environment override
+                  example:
+                    environment: staging
+                    unitID: unit123
+                    passingIDs:
+                    - id1
+                    - id2
+                    failingIDs:
+                    - id3
+                    - id4
+            required:
+            - id
+            - name
+            - passingUserIDs
+            - failingUserIDs
+            - environmentOverrides
+          description: Feature gates with matching overrides.
+        holdouts:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Entity identifier (name)
+                example: my_gate
+              name:
+                type: string
+                description: Entity display name
+                example: My Gate
+              passingUserIDs:
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+                  description: User ID
+                  example: user123
+                maxItems: 2000
+                description: List of user IDs
+                example:
+                - user123
+                - user456
+                - user789
+              failingUserIDs:
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+                  description: User ID
+                  example: user123
+                maxItems: 2000
+                description: List of user IDs
+                example:
+                - user123
+                - user456
+                - user789
+              passingCustomIDs:
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+                  description: Custom ID
+                  example: custom123
+                maxItems: 2000
+                description: Optional list of custom IDs
+                example:
+                - custom123
+                - custom456
+              failingCustomIDs:
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+                  description: Custom ID
+                  example: custom123
+                maxItems: 2000
+                description: Optional list of custom IDs
+                example:
+                - custom123
+                - custom456
+              environmentOverrides:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    environment:
+                      type:
+                      - string
+                      - 'null'
+                      description: Environment
+                      example: staging
+                    unitID:
+                      type:
+                      - string
+                      - 'null'
+                      description: Unit ID
+                      example: unit123
+                    passingIDs:
+                      type: array
+                      items:
+                        type: string
+                      description: List of passing IDs
+                      example:
+                      - id1
+                      - id2
+                    failingIDs:
+                      type: array
+                      items:
+                        type: string
+                      description: List of failing IDs
+                      example:
+                      - id3
+                      - id4
+                  required:
+                  - unitID
+                  - passingIDs
+                  - failingIDs
+                  description: Contract for environment override
+                  example:
+                    environment: staging
+                    unitID: unit123
+                    passingIDs:
+                    - id1
+                    - id2
+                    failingIDs:
+                    - id3
+                    - id4
+            required:
+            - id
+            - name
+            - passingUserIDs
+            - failingUserIDs
+            - environmentOverrides
+          description: Holdouts with matching overrides.
+        experiments:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Entity identifier (name)
+                example: my_gate
+              name:
+                type: string
+                description: Entity display name
+                example: My Gate
+              overrides:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                      - gate
+                      - segment
+                    id:
+                      type: string
+                      description: The id of the segment or gate
+                    groupID:
+                      type: string
+                      description: The experiment group which user will be forced into
+                    environment:
+                      type:
+                      - string
+                      - 'null'
+                      description: Optional environment designation (e.g., production, staging) for the experiment.
+                  required:
+                  - type
+                  - id
+                  - groupID
+                maxItems: 1000
+                description: Array of experiment overrides, each specifying type, ID, and group ID.
+              userIDOverrides:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    groupID:
+                      type: string
+                      description: The experiment group the user will be forced into.
+                    ids:
+                      type: array
+                      items:
+                        type: string
+                      maxItems: 1000
+                      description: Array of user IDs to be assigned to the specified experiment group.
+                    environment:
+                      type:
+                      - string
+                      - 'null'
+                      description: Optional environment designation (e.g., production, staging) for the experiment.
+                    unitType:
+                      type:
+                      - string
+                      - 'null'
+                      description: Optional type of unit for the experiment, defining the scope of the override.
+                  required:
+                  - groupID
+                  - ids
+                description: Array of user ID overrides, specifying which users to force into experiment groups.
+            required:
+            - id
+            - name
+            - overrides
+            - userIDOverrides
+          description: Experiments with matching overrides.
+        autotunes:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Entity identifier (name)
+                example: my_gate
+              name:
+                type: string
+                description: Entity display name
+                example: My Gate
+              overrides:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                      - gate
+                      - segment
+                    id:
+                      type: string
+                      description: The id of the segment or gate
+                    groupID:
+                      type: string
+                      description: The experiment group which user will be forced into
+                    environment:
+                      type:
+                      - string
+                      - 'null'
+                      description: Optional environment designation (e.g., production, staging) for the experiment.
+                  required:
+                  - type
+                  - id
+                  - groupID
+                maxItems: 1000
+                description: Array of experiment overrides, each specifying type, ID, and group ID.
+              userIDOverrides:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    groupID:
+                      type: string
+                      description: The experiment group the user will be forced into.
+                    ids:
+                      type: array
+                      items:
+                        type: string
+                      maxItems: 1000
+                      description: Array of user IDs to be assigned to the specified experiment group.
+                    environment:
+                      type:
+                      - string
+                      - 'null'
+                      description: Optional environment designation (e.g., production, staging) for the experiment.
+                    unitType:
+                      type:
+                      - string
+                      - 'null'
+                      description: Optional type of unit for the experiment, defining the scope of the override.
+                  required:
+                  - groupID
+                  - ids
+                description: Array of user ID overrides, specifying which users to force into experiment groups.
+            required:
+            - id
+            - name
+            - overrides
+            - userIDOverrides
+          description: Autotunes with matching overrides.
+        layers:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Entity identifier (name)
+                example: my_gate
+              name:
+                type: string
+                description: Entity display name
+                example: My Gate
+              conditionalOverrides:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      description: Describes whether layer override is segment or gate
+                    name:
+                      type: string
+                      description: Name of override entity
+                    experimentName:
+                      type: string
+                    groupName:
+                      type: string
+                    environment:
+                      type:
+                      - string
+                      - 'null'
+                      description: Optional environment scope (e.g. production, staging). Omit or pass null to target the all-environments bucket.
+                  required:
+                  - type
+                  - name
+                  - experimentName
+                  - groupName
+              idOverrides:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    groupName:
+                      type: string
+                      description: Group that ID is overriden into
+                    ids:
+                      type: array
+                      items:
+                        type: string
+                      description: ID being overriden into a particular group
+                    idType:
+                      type:
+                      - string
+                      - 'null'
+                    environment:
+                      type:
+                      - string
+                      - 'null'
+                    experimentName:
+                      type:
+                      - string
+                      - 'null'
+                  required:
+                  - groupName
+                  - ids
+            required:
+            - id
+            - name
+            - conditionalOverrides
+            - idOverrides
+          description: Layers with matching overrides.
+      required:
+      - gates
+      - holdouts
+      - experiments
+      - autotunes
+      - layers
+      description: Overrides grouped by entity type. Each section only lists entities that have (matching) overrides.
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+  securitySchemes:
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header

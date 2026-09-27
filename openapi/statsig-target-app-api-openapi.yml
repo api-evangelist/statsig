@@ -1,0 +1,526 @@
+openapi: 3.2.0
+info:
+  title: Console Target App API
+  description: The "Console API" is the CRUD API for performing the actions offered on console.statsig.com without needing to go through the web UI.
+  version: 20240601.0.0
+  contact: {}
+servers:
+- url: https://statsigapi.net
+tags:
+- name: Target App
+paths:
+  /console/v1/target_app:
+    get:
+      summary: List Target Apps
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: List Target Apps Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/TargetAppDto'
+                example:
+                  message: Target apps listed successfully.
+                  data:
+                  - name: Client-apps
+                  - name: Server-apps
+              example:
+                message: Target apps listed successfully.
+                data:
+                - name: Client-apps
+                - name: Server-apps
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Target App
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1TargetApp
+      x-operation-id-source: derived
+    post:
+      summary: Create Target App
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TargetAppCreateDto'
+      responses:
+        '200':
+          description: Create Target App Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/TargetAppDto'
+                example:
+                  name: Target app 1
+                  description: Example description
+                  gates:
+                  - Example gate
+                  dynamicConfigs:
+                  - Example dynamic config
+                  experiments:
+                  - Example experiment
+              example:
+                name: Target app 1
+                description: Example description
+                gates:
+                - Example gate
+                dynamicConfigs:
+                - Example dynamic config
+                experiments:
+                - Example experiment
+      tags:
+      - Target App
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1TargetApp
+      x-operation-id-source: derived
+    patch:
+      summary: Bulk Assign Target Apps
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkAssignConfigTargetAppDto'
+      responses:
+        '200':
+          description: Bulk Assign Target Apps Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Target apps updated successfully.
+              example:
+                message: Target apps updated successfully.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Gates with IDs [not a gate] do not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Target App
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1TargetApp
+      x-operation-id-source: derived
+  /console/v1/target_app/{id}:
+    get:
+      summary: Read Target App
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Read Target App Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/TargetAppDto'
+                example:
+                  message: Target app read successfully.
+                  data:
+                    name: Target app 1
+                    id: Example ID
+              example:
+                message: Target app read successfully.
+                data:
+                  name: Target app 1
+                  id: Example ID
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Target App
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1TargetAppById
+      x-operation-id-source: derived
+    patch:
+      summary: Update Target App
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTargetAppDto'
+      responses:
+        '200':
+          description: Update Target App Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Target apps updated successfully.
+              example:
+                message: Target apps updated successfully.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Gates with IDs [not a gate] do not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Target App
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1TargetAppById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete Target App
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id of target app
+        schema:
+          example: string
+          type: string
+      responses:
+        '200':
+          description: Delete Target App Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Target app deleted successfully
+              example:
+                message: Target app deleted successfully
+      tags:
+      - Target App
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1TargetAppById
+      x-operation-id-source: derived
+components:
+  schemas:
+    UpdateTargetAppDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: string
+          description: name of the target app
+        description:
+          type: string
+          example: a description
+          description: a description of the target app
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    TargetAppDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: string
+          description: id of target app
+        name:
+          type: string
+          example: a tag
+          description: name of the target app
+      required:
+      - name
+    BulkAssignConfigTargetAppDto:
+      type: object
+      properties:
+        targetApps:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          description: target app ids
+        gates:
+          type: array
+          items:
+            type: string
+          description: Gate IDs to assign to target app(s)
+        dynamicConfigs:
+          type: array
+          items:
+            type: string
+          description: Dynamic Config IDs to assign to target app(s)
+        experiments:
+          type: array
+          items:
+            type: string
+          description: Experiment IDs to assign to target app(s)
+        layers:
+          type: array
+          items:
+            type: string
+          description: Layer IDs to assign to target app(s)
+        parameterStores:
+          type: array
+          items:
+            type: string
+          description: Parameter Store IDs to assign to target app(s)
+      required:
+      - targetApps
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    TargetAppCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: string
+          description: name of the target app
+        description:
+          type: string
+          example: a description
+          description: a description of the target app
+        gates:
+          type: array
+          items:
+            type: string
+          description: Gate IDs to assign to target app(s)
+        dynamicConfigs:
+          type: array
+          items:
+            type: string
+          description: Dynamic Config IDs to assign to target app(s)
+        experiments:
+          type: array
+          items:
+            type: string
+          description: Experiment IDs to assign to target app(s)
+        layers:
+          type: array
+          items:
+            type: string
+          description: Layer IDs to assign to target app(s)
+        parameterStores:
+          type: array
+          items:
+            type: string
+          description: Parameter Store IDs to assign to target app(s)
+      required:
+      - name
+      - description
+  securitySchemes:
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header

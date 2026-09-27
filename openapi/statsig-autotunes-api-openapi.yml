@@ -1,17 +1,12 @@
 openapi: 3.2.0
 info:
-  title: Statsig Console Autotunes API
-  description: The Statsig Console API enables developers to programmatically manage their Statsig project configuration.
-  version: '20240601'
-  contact:
-    name: Statsig Support
-    url: https://statsig.com/support
-  termsOfService: https://statsig.com/terms
+  title: Statsig Autotunes API
+  version: '1.0'
+  description: 'Operations tagged Autotunes across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-console-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://statsigapi.net/console/v1
   description: Statsig Console API Server
-security:
-- consoleApiKey: []
+- url: https://statsigapi.net
 tags:
 - name: Autotunes
   description: Manage autotune configurations that automatically optimize parameter values based on a target metric.
@@ -39,6 +34,8 @@ paths:
                       $ref: '#/components/schemas/Autotune'
         '401':
           $ref: '#/components/responses/Unauthorized'
+      security:
+      - consoleApiKey: []
     post:
       operationId: createAutotune
       summary: Create an autotune
@@ -64,18 +61,2047 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+      security:
+      - consoleApiKey: []
+    servers:
+    - url: https://statsigapi.net/console/v1
+      description: Statsig Console API Server
+  /console/v1/autotunes:
+    get:
+      summary: List Autotune
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: Autotune Experiments listed successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/AutotuneExperimentDto'
+                example:
+                  message: Autotune Experiments listed successfully.
+                  data:
+                  - id: test_autotune_exp
+                    name: test_autotune_exp
+                    description: dsdsdsd test
+                    idType: userID
+                    lastModifierID: 24hiIXz1maFaDwtYEetv2i
+                    lastModifiedTime: 1716324033128
+                    lastModifierName: jairo Garciga
+                    lastModifierEmail: jairo@statsig.com
+                    creatorID: 5sgBiiuoBX4fscrWdCXVma
+                    createdTime: 1688072516890
+                    creatorName: Samuel Kitono
+                    creatorEmail: samuel@statsig.com
+                    targetApps: []
+                    holdoutIDs: []
+                    tags: []
+                    team: null
+                    isStarted: false
+                    inlineTargetingRulesJSON: '{}'
+                    inlineTargetingRules: []
+                    variants:
+                    - name: test_12
+                      id: 7eOW6aXU7F07KxrggOrAdy
+                      json:
+                        user:
+                          id: 12345
+                          name: Jane Doe
+                          email: jane.doe@example.com
+                          isActive: true
+                          roles:
+                          - admin
+                          - editor
+                          - subscriber
+                        posts:
+                        - id: 1
+                          title: Introduction to JSON5
+                          content: JSON5 is a superset of JSON that aims to be easier for humans to write and maintain.
+                          tags:
+                          - json5
+                          - json
+                          - javascript
+                          comments:
+                          - id: 101
+                            author: John Smith
+                            content: Great post! Very informative.
+                            likes: 5
+                          - id: 102
+                            author: Alice Johnson
+                            content: I found this very helpful. Thanks!
+                            likes: 3
+                        - id: 2
+                          title: Advanced JSON5 Features
+                          content: Explore the advanced features of JSON5, including comments, trailing commas, and more.
+                          tags:
+                          - json5
+                          - advanced
+                          - features
+                          comments:
+                          - id: 201
+                            author: Bob Brown
+                            content: I didn't know JSON5 could do this. Amazing!
+                            likes: 8
+                        settings:
+                          theme: dark
+                          notificationsEnabled: true
+                          language: en-US
+                          layout:
+                            header: true
+                            footer: true
+                            sidebar: collapsed
+                        metadata:
+                          version: 1.0.0
+                          author: Jane Doe
+                          lastUpdated: '2024-05-21T10:00:00Z'
+                    - name: var1
+                      id: 7eOW6cCWzX9C3WZbRWndwA
+                      json: {}
+                    - name: control
+                      id: 7GVLLJOBETDYXLn00FXFuQ
+                      json: {}
+                    successEvent: add_to_cart
+                    successEventValue: ''
+                    explorationWindow: 24hrs
+                    attributionWindow: 2hrs
+                    winnerThreshold: 95%
+                    winner: null
+                  pagination:
+                    itemsPerPage: 100
+                    pageNumber: 1
+                    totalItems: 1
+                    nextPage: null
+                    previousPage: null
+                    all: /console/v1/autotunes
+              example:
+                message: Autotune Experiments listed successfully.
+                data:
+                - id: test_autotune_exp
+                  name: test_autotune_exp
+                  description: dsdsdsd test
+                  idType: userID
+                  lastModifierID: 24hiIXz1maFaDwtYEetv2i
+                  lastModifiedTime: 1716324033128
+                  lastModifierName: jairo Garciga
+                  lastModifierEmail: jairo@statsig.com
+                  creatorID: 5sgBiiuoBX4fscrWdCXVma
+                  createdTime: 1688072516890
+                  creatorName: Samuel Kitono
+                  creatorEmail: samuel@statsig.com
+                  targetApps: []
+                  holdoutIDs: []
+                  tags: []
+                  team: null
+                  isStarted: false
+                  inlineTargetingRulesJSON: '{}'
+                  inlineTargetingRules: []
+                  variants:
+                  - name: test_12
+                    id: 7eOW6aXU7F07KxrggOrAdy
+                    json:
+                      user:
+                        id: 12345
+                        name: Jane Doe
+                        email: jane.doe@example.com
+                        isActive: true
+                        roles:
+                        - admin
+                        - editor
+                        - subscriber
+                      posts:
+                      - id: 1
+                        title: Introduction to JSON5
+                        content: JSON5 is a superset of JSON that aims to be easier for humans to write and maintain.
+                        tags:
+                        - json5
+                        - json
+                        - javascript
+                        comments:
+                        - id: 101
+                          author: John Smith
+                          content: Great post! Very informative.
+                          likes: 5
+                        - id: 102
+                          author: Alice Johnson
+                          content: I found this very helpful. Thanks!
+                          likes: 3
+                      - id: 2
+                        title: Advanced JSON5 Features
+                        content: Explore the advanced features of JSON5, including comments, trailing commas, and more.
+                        tags:
+                        - json5
+                        - advanced
+                        - features
+                        comments:
+                        - id: 201
+                          author: Bob Brown
+                          content: I didn't know JSON5 could do this. Amazing!
+                          likes: 8
+                      settings:
+                        theme: dark
+                        notificationsEnabled: true
+                        language: en-US
+                        layout:
+                          header: true
+                          footer: true
+                          sidebar: collapsed
+                      metadata:
+                        version: 1.0.0
+                        author: Jane Doe
+                        lastUpdated: '2024-05-21T10:00:00Z'
+                  - name: var1
+                    id: 7eOW6cCWzX9C3WZbRWndwA
+                    json: {}
+                  - name: control
+                    id: 7GVLLJOBETDYXLn00FXFuQ
+                    json: {}
+                  successEvent: add_to_cart
+                  successEventValue: ''
+                  explorationWindow: 24hrs
+                  attributionWindow: 2hrs
+                  winnerThreshold: 95%
+                  winner: null
+                pagination:
+                  itemsPerPage: 100
+                  pageNumber: 1
+                  totalItems: 1
+                  nextPage: null
+                  previousPage: null
+                  all: /console/v1/autotunes
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1Autotunes
+      x-operation-id-source: derived
+    post:
+      summary: Create Autotune
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutotuneCreateDto'
+      responses:
+        '201':
+          description: Create Autotune Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AutotuneExperimentDto'
+                example:
+                  message: Autotune Experiments created successfully.
+                  data:
+                    id: button_color_test
+                    isStarted: false
+                    description: Which color button gets the most clicks.
+                    lastModifierID: ajv762klv9nx9hca
+                    lastModifierName: CONSOLE API
+                    inlineTargetingRulesJSON: '{}'
+                    inlineTargetingRules: []
+                    variants:
+                    - name: red
+                      json:
+                        color: red
+                    - name: blue
+                      json:
+                        color: blue
+                    successEvent: click
+                    successEventValue: ''
+                    explorationWindow: 1hr
+                    attributionWindow: 2hrs
+                    winnerThreshold: 99%
+              example:
+                message: Autotune Experiments created successfully.
+                data:
+                  id: button_color_test
+                  isStarted: false
+                  description: Which color button gets the most clicks.
+                  lastModifierID: ajv762klv9nx9hca
+                  lastModifierName: CONSOLE API
+                  inlineTargetingRulesJSON: '{}'
+                  inlineTargetingRules: []
+                  variants:
+                  - name: red
+                    json:
+                      color: red
+                  - name: blue
+                    json:
+                      color: blue
+                  successEvent: click
+                  successEventValue: ''
+                  explorationWindow: 1hr
+                  attributionWindow: 2hrs
+                  winnerThreshold: 99%
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1Autotunes
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/autotunes/{id}:
+    get:
+      summary: Read Autotune
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Read Autotune Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AutotuneExperimentDto'
+                example:
+                  message: Autotune Experiment read successfully.
+                  data:
+                    id: my_autotunes_are_best
+                    isStarted: false
+                    description: helpful summary of what this Autotune is
+                    lastModifierID: jd93DGSnvkauH9FijdGiajh
+                    lastModifierName: CONSOLE API
+                    inlineTargetingRulesJSON: '{}'
+                    inlineTargetingRules: []
+                    variants:
+                    - name: red
+                      json:
+                        foo: boo
+                    - name: blue
+                      json: {}
+                    successEvent: purchase_item
+                    successEventValue: ''
+                    explorationWindow: 1hr
+                    attributionWindow: 2hrs
+                    winnerThreshold: 99%
+              example:
+                message: Autotune Experiment read successfully.
+                data:
+                  id: my_autotunes_are_best
+                  isStarted: false
+                  description: helpful summary of what this Autotune is
+                  lastModifierID: jd93DGSnvkauH9FijdGiajh
+                  lastModifierName: CONSOLE API
+                  inlineTargetingRulesJSON: '{}'
+                  inlineTargetingRules: []
+                  variants:
+                  - name: red
+                    json:
+                      foo: boo
+                  - name: blue
+                    json: {}
+                  successEvent: purchase_item
+                  successEventValue: ''
+                  explorationWindow: 1hr
+                  attributionWindow: 2hrs
+                  winnerThreshold: 99%
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1AutotunesById
+      x-operation-id-source: derived
+    post:
+      summary: Fully Update Autotune
+      description: Update all properties of the experiment
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutotuneFullUpdateDto'
+      responses:
+        '200':
+          description: Fully Update Autotune Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AutotuneExperimentDto'
+                example:
+                  message: Autotune Experiment read successfully.
+                  data:
+                    id: my_autotunes_are_best
+                    isStarted: false
+                    description: helpful summary of what this Autotune is
+                    lastModifierID: jd93DGSnvkauH9FijdGiajh
+                    lastModifierName: CONSOLE API
+                    inlineTargetingRulesJSON: '{}'
+                    inlineTargetingRules: []
+                    variants:
+                    - name: red
+                      json:
+                        color: red
+                    - name: blue
+                      json:
+                        color: blue
+                    successEvent: purchase_item
+                    successEventValue: ''
+                    explorationWindow: 1hr
+                    attributionWindow: 2hrs
+                    winnerThreshold: 99%
+              example:
+                message: Autotune Experiment read successfully.
+                data:
+                  id: my_autotunes_are_best
+                  isStarted: false
+                  description: helpful summary of what this Autotune is
+                  lastModifierID: jd93DGSnvkauH9FijdGiajh
+                  lastModifierName: CONSOLE API
+                  inlineTargetingRulesJSON: '{}'
+                  inlineTargetingRules: []
+                  variants:
+                  - name: red
+                    json:
+                      color: red
+                  - name: blue
+                    json:
+                      color: blue
+                  successEvent: purchase_item
+                  successEventValue: ''
+                  explorationWindow: 1hr
+                  attributionWindow: 2hrs
+                  winnerThreshold: 99%
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1AutotunesById
+      x-operation-id-source: derived
+    patch:
+      summary: Partially Update Autotune
+      description: Update selected properties of the experiment
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutotunePartialUpdateDto'
+      responses:
+        '200':
+          description: Partially Update Autotune Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AutotuneExperimentDto'
+                example:
+                  message: Autotune Experiment updated successfully.
+                  data:
+                    id: a_autotune
+                    isStarted: false
+                    description: helpful summary of what this Autotune is
+                    lastModifierID: jd93DGSnvkauH9FijdGiajh
+                    lastModifierName: CONSOLE API
+                    inlineTargetingRulesJSON: '{}'
+                    inlineTargetingRules: []
+                    variants:
+                    - name: red
+                      json:
+                        color: red
+                    - name: blue
+                      json:
+                        color: blue
+                    successEvent: purchase_item
+                    successEventValue: ''
+                    explorationWindow: 1hr
+                    attributionWindow: 2hrs
+                    winnerThreshold: 99%
+              example:
+                message: Autotune Experiment updated successfully.
+                data:
+                  id: a_autotune
+                  isStarted: false
+                  description: helpful summary of what this Autotune is
+                  lastModifierID: jd93DGSnvkauH9FijdGiajh
+                  lastModifierName: CONSOLE API
+                  inlineTargetingRulesJSON: '{}'
+                  inlineTargetingRules: []
+                  variants:
+                  - name: red
+                    json:
+                      color: red
+                  - name: blue
+                    json:
+                      color: blue
+                  successEvent: purchase_item
+                  successEventValue: ''
+                  explorationWindow: 1hr
+                  attributionWindow: 2hrs
+                  winnerThreshold: 99%
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1AutotunesById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete Autotune
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete Autotune Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Autotune Experiment deleted successfully.
+              example:
+                message: Autotune Experiment deleted successfully.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Autotune Experiment not found.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1AutotunesById
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/autotunes/{id}/make_decision:
+    put:
+      summary: Finish Experiment Early
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExperimentStatusUpdateDto'
+      responses:
+        '200':
+          description: Finish Experiment Early Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Decision made for Autotune Experiment.
+              example:
+                message: Decision made for Autotune Experiment.
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Autotune experiment has not yet started
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Autotune Experiment not found.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1AutotunesByIdMakeDecision
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/autotunes/{id}/overrides:
+    get:
+      summary: Get Autotune Overrides
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Get Autotune Overrides Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AutotuneOverridesDto'
+                example:
+                  message: Autotune Overrides read successfully.
+                  data:
+                    overrides:
+                    - groupID: Control
+                      id: a_gate
+                      type: gate
+                    - groupID: Test
+                      id: a_segment
+                      type: segment
+                    userIDOverrides:
+                    - ids:
+                      - updated_id_list
+                      groupID: Control
+                    - ids:
+                      - updated_id_lists
+                      groupID: Test
+              example:
+                message: Autotune Overrides read successfully.
+                data:
+                  overrides:
+                  - groupID: Control
+                    id: a_gate
+                    type: gate
+                  - groupID: Test
+                    id: a_segment
+                    type: segment
+                  userIDOverrides:
+                  - ids:
+                    - updated_id_list
+                    groupID: Control
+                  - ids:
+                    - updated_id_lists
+                    groupID: Test
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Autotune not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1AutotunesByIdOverrides
+      x-operation-id-source: derived
+    post:
+      summary: Update Autotune Overrides
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutotuneOverridesDto'
+      responses:
+        '200':
+          description: Update Autotune Overrides Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AutotuneOverridesDto'
+                example:
+                  overrides:
+                  - type: segment
+                    id: a_segment
+                    groupID: Control
+                  - type: gate
+                    id: a_gate
+                    groupID: Test
+                  userIDOverrides:
+                  - groupID: Control
+                    ids:
+                    - updated_control_id_list
+                  - groupID: Test
+                    ids:
+                    - updated_test_id_list
+              example:
+                overrides:
+                - type: segment
+                  id: a_segment
+                  groupID: Control
+                - type: gate
+                  id: a_gate
+                  groupID: Test
+                userIDOverrides:
+                - groupID: Control
+                  ids:
+                  - updated_control_id_list
+                - groupID: Test
+                  ids:
+                  - updated_test_id_list
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Autotune not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1AutotunesByIdOverrides
+      x-operation-id-source: derived
+    patch:
+      summary: Partially Update Autotune Overrides
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutotuneOverridesDto'
+      responses:
+        '200':
+          description: Partially Update Autotune Overrides Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AutotuneOverridesDto'
+                example:
+                  overrides:
+                  - type: gate
+                    id: a_gate
+                    groupID: Control
+                  userIDOverrides:
+                  - groupID: Control
+                    ids:
+                    - patched_id_list
+              example:
+                overrides:
+                - type: gate
+                  id: a_gate
+                  groupID: Control
+                userIDOverrides:
+                - groupID: Control
+                  ids:
+                  - patched_id_list
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Autotune not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1AutotunesByIdOverrides
+      x-operation-id-source: derived
+    delete:
+      summary: Delete Autotune Overrides
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete Update Autotune Overrides Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AutotuneOverridesDto'
+                example:
+                  overrides: []
+                  userIDOverrides: []
+              example:
+                overrides: []
+                userIDOverrides: []
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Autotune not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1AutotunesByIdOverrides
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/autotunes/{id}/overrides/conditional/{type}/{name}:
+    delete:
+      summary: Delete a Single Autotune Override
+      description: 'Removes a single gate or segment override from the autotune. Idempotent: returns 200 even when no matching override exists.'
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Autotune name
+        schema:
+          type: string
+      - name: type
+        required: true
+        in: path
+        description: Override type
+        schema:
+          type: string
+          enum:
+          - gate
+          - segment
+      - name: name
+        required: true
+        in: path
+        description: Name of the gate or segment being overridden
+        schema:
+          type: string
+      - name: groupID
+        required: true
+        in: query
+        description: The autotune variant name the override targets
+        schema:
+          type: string
+      - name: environment
+        required: false
+        in: query
+        description: Environment the override is scoped to. Omit to target the override that applies to all environments.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete Single Autotune Override Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AutotuneOverridesDto'
+                example:
+                  overrides: []
+                  userIDOverrides: []
+              example:
+                overrides: []
+                userIDOverrides: []
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Autotune or variant not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1AutotunesByIdOverridesConditionalByTypeByName
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/autotunes/{id}/overrides/userID/{userID}:
+    delete:
+      summary: Delete a Single Autotune User ID Override
+      description: 'Removes a single user ID from the matching userID override bucket on the autotune. Idempotent: returns 200 even when the user ID is not currently overridden. Only clears the bucket named by `groupID`, `unitType`, and `environment`; every other override bucket stays in place. The response body carries the full override set for the autotune after the delete.'
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Autotune name
+        schema:
+          type: string
+      - name: userID
+        required: true
+        in: path
+        description: User ID to remove from the override
+        schema:
+          type: string
+      - name: groupID
+        required: true
+        in: query
+        description: The autotune variant name the override targets
+        schema:
+          example: Control
+          type: string
+      - name: unitType
+        required: false
+        in: query
+        description: The unit type of the override. Defaults to the autotune unit type when omitted.
+        schema:
+          type: string
+      - name: environment
+        required: false
+        in: query
+        description: Environment the override is scoped to. Omit to target the override that applies to all environments.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete Single Autotune User ID Override Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AutotuneOverridesDto'
+                example:
+                  message: Autotune Overrides updated successfully.
+                  data:
+                    overrides:
+                    - type: gate
+                      id: a_gate
+                      groupID: Test
+                      environment: null
+                    userIDOverrides:
+                    - groupID: Control
+                      ids:
+                      - user_a
+                      environment: null
+                      unitType: userID
+                    - groupID: Control
+                      ids:
+                      - user_b
+                      environment: staging
+                      unitType: userID
+                    - groupID: Test
+                      ids:
+                      - user_c
+                      environment: null
+                      unitType: userID
+              example:
+                message: Autotune Overrides updated successfully.
+                data:
+                  overrides:
+                  - type: gate
+                    id: a_gate
+                    groupID: Test
+                    environment: null
+                  userIDOverrides:
+                  - groupID: Control
+                    ids:
+                    - user_a
+                    environment: null
+                    unitType: userID
+                  - groupID: Control
+                    ids:
+                    - user_b
+                    environment: staging
+                    unitType: userID
+                  - groupID: Test
+                    ids:
+                    - user_c
+                    environment: null
+                    unitType: userID
+        '400':
+          description: '`groupID` is missing. The `errors` array names the parameter that failed validation.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Bad Request Exception
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Autotune or variant not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1AutotunesByIdOverridesUserIDByUserID
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/autotunes/{id}/reset:
+    put:
+      summary: Reset Experiment
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Reset Experiment Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Autotune Experiment successfully restarted.
+              example:
+                message: Autotune Experiment successfully restarted.
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Autotune experiment has not yet started
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Autotune Experiment not found.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1AutotunesByIdReset
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/autotunes/{id}/reviews:
+    get:
+      summary: List Autotune Reviews
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: A page of the autotune reviews, newest first.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ExperimentReviewEnvelopeDto'
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1AutotunesByIdReviews
+      x-operation-id-source: derived
+    post:
+      summary: Create Autotune Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAutotuneReviewRequestDto'
+      responses:
+        '201':
+          description: The created autotune review.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ExperimentReviewEnvelopeDto'
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1AutotunesByIdReviews
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/autotunes/{id}/reviews/{reviewID}:
+    get:
+      summary: Get Autotune Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The requested autotune review.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ExperimentReviewEnvelopeDto'
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1AutotunesByIdReviewsByReviewID
+      x-operation-id-source: derived
+    put:
+      summary: Edit Autotune Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditAutotuneReviewRequestDto'
+      responses:
+        '200':
+          description: The updated autotune review.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ExperimentReviewEnvelopeDto'
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1AutotunesByIdReviewsByReviewID
+      x-operation-id-source: derived
+    delete:
+      summary: Cancel Autotune Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Cancel an in-flight autotune review.
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Autotune review cancelled successfully
+              example:
+                message: Autotune review cancelled successfully
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1AutotunesByIdReviewsByReviewID
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/autotunes/{id}/reviews/{reviewID}/approve:
+    put:
+      summary: Approve Autotune Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApproveReviewRequestDto'
+      responses:
+        '200':
+          description: The approved autotune review.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ExperimentReviewEnvelopeDto'
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1AutotunesByIdReviewsByReviewIDApprove
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/autotunes/{id}/reviews/{reviewID}/commit:
+    put:
+      summary: Commit Autotune Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Commit an approved autotune review
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Autotune review committed successfully
+              example:
+                message: Autotune review committed successfully
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1AutotunesByIdReviewsByReviewIDCommit
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/autotunes/{id}/reviews/{reviewID}/reject:
+    put:
+      summary: Reject Autotune Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RejectReviewRequestDto'
+      responses:
+        '200':
+          description: The rejected autotune review.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ExperimentReviewEnvelopeDto'
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1AutotunesByIdReviewsByReviewIDReject
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/autotunes/{id}/schedule_start:
+    post:
+      summary: Schedule Autotune Start
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleExperimentStartParamDto'
+      responses:
+        '200':
+          description: Schedule Autotune Start Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Successfully scheduled autotune start
+              example:
+                message: Successfully scheduled autotune start
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Autotune Experiment not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1AutotunesByIdScheduleStart
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/autotunes/{id}/start:
+    put:
+      summary: Start Autotune Experiment
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Start Autotune Experiment Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Autotune Experiment successfully started.
+              example:
+                message: Autotune Experiment successfully started.
+      tags:
+      - Autotunes
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1AutotunesByIdStart
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
 components:
   responses:
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
     Unauthorized:
       description: Missing or invalid API key
       content:
@@ -86,15 +2112,16 @@ components:
               message:
                 type: string
                 description: Error message describing the authentication failure.
-  parameters:
-    ApiVersion:
-      name: STATSIG-API-VERSION
-      in: header
-      required: false
-      schema:
-        type: string
-        default: '20240601'
-      description: The Console API version. Currently the only version is 20240601.
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
   schemas:
     AutotuneCreate:
       type: object
@@ -155,12 +2182,1239 @@ components:
         successMetric:
           type: string
           description: The metric being optimized for.
+    AutotuneCreateDto:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A brief summary of what the autotune is being used for.
+        variants:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Variant name
+              json:
+                description: Variant JSON data
+              size:
+                type: number
+                description: Variant size
+            required:
+            - name
+            - json
+            description: An array of Variant objects
+          minItems: 2
+          description: An array of Variant objects.
+        successEvent:
+          type: string
+          description: The event you are trying to optimize for.
+        successEventValue:
+          type: string
+          description: The value that should come with the event for it to be considered successful.
+        explorationWindow:
+          type: string
+          enum:
+          - 1hr
+          - 24hr
+          - 48hr
+          - 168hr
+          - 336hr
+          - '1'
+          - '24'
+          - '48'
+          - '168'
+          - '336'
+          - 1hrs
+          - 24hrs
+          - 48hrs
+          - 168hrs
+          - 336hrs
+          description: The initial time period where Autotune will equally split the traffic.
+        attributionWindow:
+          type: string
+          enum:
+          - 1hr
+          - 2hr
+          - 4hr
+          - 24hr
+          - 1hrs
+          - 2hrs
+          - 4hrs
+          - 24hrs
+          - '1'
+          - '2'
+          - '4'
+          - '24'
+          description: The maximum duration between the exposure and success event that counts as a success.
+        attributionWindowUnit:
+          type: string
+          enum:
+          - min
+          - hour
+          - day
+          description: Time unit of attribution window
+        explorationWindowRate:
+          type: number
+          minimum: 0.001
+          maximum: 1
+          description: Exploration window rate
+          format: double
+        longtermExplorationAllocation:
+          type: number
+          minimum: 0.001
+          maximum: 1
+          description: Long term exploration allocation
+          format: double
+        winnerThreshold:
+          type: string
+          enum:
+          - 80%
+          - 90%
+          - 95%
+          - 98%
+          - 99%
+          description: The "probability of best" threshold a variant needs to achieve for Autotune to declare it the winner, stop collecting data, and direct all traffic.
+        metadataField:
+          type: string
+          description: Metadata field containing the numeric value to optimize for. If this field is null, autotune optimizes for the existence of a follow-up event. This is only used for contextual autotunes.
+        higherIsBetter:
+          type: boolean
+          description: Whether to optimize for an increase or decrease in the metadata field value. Default is true. This is only used for contextual autotunes.
+        isContextual:
+          type: boolean
+          description: Makes this autotune contextual
+        metricSourceID:
+          type: string
+          description: Metric source to pull success event data from
+        linkedExperimentName:
+          type: string
+          description: Linked experiment to measure the success of the Autotune
+        goalRichText:
+          type: string
+          description: Autotune goal
+        optimizationParameter:
+          type: string
+          enum:
+          - occurrence
+          - value
+          description: Optimize for event occurrence vs value
+        valueColumn:
+          type: string
+          description: Metric source column to optimize for
+        featureList:
+          type: array
+          items:
+            type: string
+          description: List of features that should be included in the analysis
+        name:
+          type: string
+          description: The name that was originally given to the autotune on creation but formatted as an ID ("A Autotune" -> "a_autotune").
+        idType:
+          type: string
+          description: idType of the autotune (userID, stableID, or a customID). Defaults to userID if not provided
+      required:
+      - variants
+      - successEvent
+      - explorationWindow
+      - attributionWindow
+      - winnerThreshold
+      - name
+    AutotuneExperimentDto:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Detailed description of the configuration’s purpose.
+        variants:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Variant name
+              json:
+                description: Variant JSON data
+              size:
+                type: number
+                description: Variant size
+              id:
+                type: string
+                description: The name that was originally given to the autotune on creation but formatted as an ID ("A Autotune" -> "a_autotune").
+            required:
+            - name
+            - json
+            - id
+        successEvent:
+          type: string
+          description: The event you are trying to optimize for.
+        successEventValue:
+          type: string
+          description: The value that should come with the event for it to be considered successful.
+        explorationWindow:
+          type: string
+          enum:
+          - 1hr
+          - 24hr
+          - 48hr
+          - 168hr
+          - 336hr
+          - '1'
+          - '24'
+          - '48'
+          - '168'
+          - '336'
+          - 1hrs
+          - 24hrs
+          - 48hrs
+          - 168hrs
+          - 336hrs
+          description: The initial time period where Autotune will equally split the traffic.
+        attributionWindow:
+          type: string
+          enum:
+          - 1hr
+          - 2hr
+          - 4hr
+          - 24hr
+          - 1hrs
+          - 2hrs
+          - 4hrs
+          - 24hrs
+          - '1'
+          - '2'
+          - '4'
+          - '24'
+          description: The maximum duration between the exposure and success event that counts as a success.
+        attributionWindowUnit:
+          type: string
+          enum:
+          - min
+          - hour
+          - day
+          description: Time unit of attribution window
+        explorationWindowRate:
+          type: number
+          minimum: 0.001
+          maximum: 1
+          description: Exploration window rate
+          format: double
+        longtermExplorationAllocation:
+          type: number
+          minimum: 0.001
+          maximum: 1
+          description: Long term exploration allocation
+          format: double
+        winnerThreshold:
+          type: string
+          enum:
+          - 80%
+          - 90%
+          - 95%
+          - 98%
+          - 99%
+          description: The "probability of best" threshold a variant needs to achieve for Autotune to declare it the winner, stop collecting data, and direct all traffic.
+        metadataField:
+          type: string
+          description: Metadata field containing the numeric value to optimize for. If this field is null, autotune optimizes for the existence of a follow-up event. This is only used for contextual autotunes.
+        higherIsBetter:
+          type: boolean
+          description: Whether to optimize for an increase or decrease in the metadata field value. Default is true. This is only used for contextual autotunes.
+        isContextual:
+          type: boolean
+          description: Whether this is a contextual autotune
+        metricSourceID:
+          type: string
+          description: Metric source to pull success event data from
+        linkedExperimentName:
+          type: string
+          description: Linked experiment to measure the success of the Autotune
+        goalRichText:
+          type: string
+          description: Autotune goal
+        optimizationParameter:
+          type: string
+          enum:
+          - occurrence
+          - value
+          description: Optimize for event occurrence vs value
+        valueColumn:
+          type: string
+          description: Metric source column to optimize for
+        featureList:
+          type: array
+          items:
+            type: string
+          description: List of features that should be included in the analysis
+        inlineTargetingRulesJSON:
+          type:
+          - string
+          - 'null'
+          description: A raw JSON string of the inline targeting rules
+        inlineTargetingRules:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this rule.
+              passPercentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                multipleOf: 0.01
+                description: Of the users that meet the conditions of this rule, what percent should return true.
+              conditions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    targetValue:
+                      oneOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: array
+                        items:
+                          type: number
+                      - type: string
+                      - type: number
+                    operator:
+                      type: string
+                      enum:
+                      - any
+                      - none
+                      - any_case_sensitive
+                      - none_case_sensitive
+                      - str_contains_any
+                      - str_contains_none
+                      - gt
+                      - lt
+                      - lte
+                      - gte
+                      - version_gt
+                      - version_lt
+                      - version_gte
+                      - version_lte
+                      - version_eq
+                      - after
+                      - before
+                      - 'on'
+                      - is_null
+                      - is_not_null
+                      - str_matches
+                      - encoded_any
+                      - array_contains_any
+                      - array_contains_none
+                      - array_contains_all
+                      - not_array_contains_all
+                    field:
+                      type:
+                      - string
+                      - 'null'
+                    customID:
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      type: string
+                      enum:
+                      - app_version
+                      - browser_name
+                      - browser_version
+                      - country
+                      - custom_field
+                      - email
+                      - environment_tier
+                      - fails_gate
+                      - fails_segment
+                      - ip_address
+                      - locale
+                      - os_name
+                      - os_version
+                      - passes_gate
+                      - passes_segment
+                      - public
+                      - time
+                      - unit_id
+                      - user_id
+                      - user_agent
+                      - url
+                      - javascript
+                      - device_model
+                      - target_app
+                      - experiment_group
+                  required:
+                  - type
+                description: An array of Condition objects.
+              environments:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+                description: The environments this rule is enabled for.
+              id:
+                type: string
+                description: The Statsig ID of this rule.
+              baseID:
+                type: string
+                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+              returnValue:
+                type: object
+                additionalProperties: {}
+                description: The return value of the rule.
+              completedAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that have already completed.'
+              pendingAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+            required:
+            - name
+            - passPercentage
+            - conditions
+          description: A formatted array of the inline targeting rules
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          description: Optional name for the configuration.
+        idType:
+          type: string
+          description: Type of ID
+        lastModifierID:
+          type:
+          - string
+          - 'null'
+          description: ID of the last modifier.
+        lastModifiedTime:
+          type:
+          - number
+          - 'null'
+          description: Time of the last modification.
+          format: double
+        lastModifierEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the last modifier.
+        lastModifierName:
+          type:
+          - string
+          - 'null'
+          description: Name of the last modifier.
+        creatorID:
+          type:
+          - string
+          - 'null'
+          description: ID of the user who created the entity.
+        createdTime:
+          type: number
+          description: Timestamp when the entity was created.
+          format: double
+        creatorName:
+          type:
+          - string
+          - 'null'
+          description: Name of the creator.
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the creator.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags for categorization.
+        targetApps:
+          type: array
+          items:
+            type: string
+          description: List of target applications associated with this configuration.
+        holdoutIDs:
+          type: array
+          items:
+            type: string
+          description: Holdouts applied to this configuration.
+        team:
+          type:
+          - string
+          - 'null'
+          description: Optional name for the responsible team.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: Optional ID of the responsible team.
+        version:
+          type: number
+          description: Version number
+          format: double
+        isStarted:
+          type: boolean
+          description: Is the autotune experiment currently running.
+        winner:
+          type:
+          - object
+          - 'null'
+          properties:
+            id:
+              type: string
+              description: The Statsig ID of the winner group.
+            name:
+              type: string
+              description: The name of the winner group.
+          required:
+          - id
+          - name
+      required:
+      - description
+      - variants
+      - successEvent
+      - successEventValue
+      - explorationWindow
+      - attributionWindow
+      - winnerThreshold
+      - id
+      - idType
+      - lastModifierID
+      - lastModifiedTime
+      - lastModifierEmail
+      - lastModifierName
+      - creatorID
+      - createdTime
+      - creatorName
+      - creatorEmail
+      - isStarted
+      - winner
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    CreateAutotuneReviewRequestDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - start
+          - scheduled_start
+          - scheduled_start_edit
+          - reallocate
+          - make_decision
+          - delete
+          - disable_reviews_locally
+          description: The kind of autotune change the review proposes.
+        description:
+          type: string
+          maxLength: 2000
+          description: Human-readable description of the proposed change. Optional; recorded empty when omitted.
+        reviewer_ids:
+          default: []
+          type: array
+          items:
+            type: string
+          description: User IDs to request review from.
+        reviewer_group_ids:
+          default: []
+          type: array
+          items:
+            type: string
+          description: Reviewer group IDs to request review from.
+        reason:
+          type: string
+          maxLength: 2000
+          description: Optional reason recorded with the change, applied when committed (e.g. reset / decision reason).
+        winning_group_id:
+          type: string
+          description: 'For `make_decision`: the group to ship. Required.'
+        remove_targeting:
+          type: boolean
+          description: 'For `make_decision`: drop targeting on ship (default false).'
+        remove_overrides:
+          type: boolean
+          description: 'For `make_decision`: drop overrides on ship (default false).'
+        start_date:
+          type: string
+          description: 'For `start`: optional scheduled start date.'
+        start_time:
+          type: integer
+          description: 'For `scheduled_start`: epoch-ms time to schedule the start. Required.'
+          format: int64
+        new_time:
+          type: integer
+          description: 'For `scheduled_start_edit`: epoch-ms time to reschedule the start to. Required.'
+          format: int64
+      required:
+      - type
+      additionalProperties: false
+      title: CreateAutotuneReviewRequest
+      description: Request body for POST /console/v1/autotunes/:id/reviews
+    ScheduleExperimentStartParamDto:
+      type: object
+      properties:
+        scheduledTime:
+          type: number
+          description: Unix timestamp (in milliseconds) to schedule the experiment to start
+          format: double
+      required:
+      - scheduledTime
+    RejectReviewRequestDto:
+      type: object
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: Required reason for rejecting the review.
+      required:
+      - reason
+      additionalProperties: false
+      title: RejectReviewRequest
+    ApproveReviewRequestDto:
+      type: object
+      properties:
+        reason:
+          type: string
+          maxLength: 2000
+          description: Optional comment recorded with the approval.
+      additionalProperties: false
+      title: ApproveReviewRequest
+    ExperimentStatusUpdateDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the group to launch
+          example: groupid123
+        decisionReason:
+          type: string
+          description: The reason for making the decision to update the experiment status
+          example: Your reason for stopping early
+        removeTargeting:
+          default: false
+          type: boolean
+          description: Indicates whether to remove targeting from the experiment
+          example: false
+        holdout:
+          type: integer
+          minimum: 0
+          maximum: 50
+          description: 'Integer percentage of users to hold back when shipping with holdback. Must be an integer between 0 and 50 (inclusive): the launched group size is computed as 100 - holdout * 2, so values above 50 would produce a negative-sized launched group. When set, the experiment remains live with a holdback group so long-term impact can be measured before making a final decision. Requires the ship_experiment_with_holdout gate to be enabled for the project.'
+          example: 10
+          format: int64
+      required:
+      - id
+      - decisionReason
+      description: Schema for updating the status of an experiment
+      example:
+        id: experiment123
+        decisionReason: Your reason for stopping early
+        removeTargeting: false
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    AutotuneFullUpdateDto:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A brief summary of what the autotune is being used for.
+        variants:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Variant name
+              json:
+                description: Variant JSON data
+              size:
+                type: number
+                description: Variant size
+            required:
+            - name
+            - json
+            description: An array of Variant objects
+          minItems: 2
+          description: An array of Variant objects.
+        successEvent:
+          type: string
+          description: The event you are trying to optimize for.
+        successEventValue:
+          type: string
+          description: The value that should come with the event for it to be considered successful.
+        explorationWindow:
+          type: string
+          enum:
+          - 1hr
+          - 24hr
+          - 48hr
+          - 168hr
+          - 336hr
+          - '1'
+          - '24'
+          - '48'
+          - '168'
+          - '336'
+          - 1hrs
+          - 24hrs
+          - 48hrs
+          - 168hrs
+          - 336hrs
+          description: The initial time period where Autotune will equally split the traffic.
+        attributionWindow:
+          type: string
+          enum:
+          - 1hr
+          - 2hr
+          - 4hr
+          - 24hr
+          - 1hrs
+          - 2hrs
+          - 4hrs
+          - 24hrs
+          - '1'
+          - '2'
+          - '4'
+          - '24'
+          description: The maximum duration between the exposure and success event that counts as a success.
+        attributionWindowUnit:
+          type: string
+          enum:
+          - min
+          - hour
+          - day
+          description: Time unit of attribution window
+        explorationWindowRate:
+          type: number
+          minimum: 0.001
+          maximum: 1
+          description: Exploration window rate
+          format: double
+        longtermExplorationAllocation:
+          type: number
+          minimum: 0.001
+          maximum: 1
+          description: Long term exploration allocation
+          format: double
+        winnerThreshold:
+          type: string
+          enum:
+          - 80%
+          - 90%
+          - 95%
+          - 98%
+          - 99%
+          description: The "probability of best" threshold a variant needs to achieve for Autotune to declare it the winner, stop collecting data, and direct all traffic.
+        metadataField:
+          type: string
+          description: Metadata field containing the numeric value to optimize for. If this field is null, autotune optimizes for the existence of a follow-up event. This is only used for contextual autotunes.
+        higherIsBetter:
+          type: boolean
+          description: Whether to optimize for an increase or decrease in the metadata field value. Default is true. This is only used for contextual autotunes.
+        isContextual:
+          type: boolean
+          description: Whether this is a contextual autotune
+        metricSourceID:
+          type: string
+          description: Metric source to pull success event data from
+        linkedExperimentName:
+          type: string
+          description: Linked experiment to measure the success of the Autotune
+        goalRichText:
+          type: string
+          description: Autotune goal
+        optimizationParameter:
+          type: string
+          enum:
+          - occurrence
+          - value
+          description: Optimize for event occurrence vs value
+        valueColumn:
+          type: string
+          description: Metric source column to optimize for
+        featureList:
+          type: array
+          items:
+            type: string
+          description: List of features that should be included in the analysis
+      required:
+      - variants
+      - successEvent
+      - explorationWindow
+      - attributionWindow
+      - winnerThreshold
+      description: Autotune object
+      example:
+        id: my_autotunes_are_best
+        isStarted: false
+        description: helpful summary of what this Autotune is
+        lastModifierID: ahKwUoaNauHu9AmJPc2
+        lastModifierName: CONSOLE API
+        variants:
+        - name: red
+          json:
+            foo: boo
+          size: 50
+        - name: blue
+          json: {}
+          size: 50
+        successEvent: purchase_item
+        successEventValue: ''
+        explorationWindow: 1hr
+        attributionWindow: 2hrs
+        winnerThreshold: 99%
+        idType: userID
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    AutotunePartialUpdateDto:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A brief summary of what the autotune is being used for.
+        variants:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Variant name
+              json:
+                description: Variant JSON data
+              size:
+                type: number
+                description: Variant size
+            required:
+            - name
+            - json
+            description: An array of Variant objects
+          minItems: 2
+          description: An array of Variant objects.
+        successEvent:
+          type: string
+          description: The event you are trying to optimize for.
+        successEventValue:
+          type: string
+          description: The value that should come with the event for it to be considered successful.
+        explorationWindow:
+          type: string
+          enum:
+          - 1hr
+          - 24hr
+          - 48hr
+          - 168hr
+          - 336hr
+          - '1'
+          - '24'
+          - '48'
+          - '168'
+          - '336'
+          - 1hrs
+          - 24hrs
+          - 48hrs
+          - 168hrs
+          - 336hrs
+          description: The initial time period where Autotune will equally split the traffic.
+        attributionWindow:
+          type: string
+          enum:
+          - 1hr
+          - 2hr
+          - 4hr
+          - 24hr
+          - 1hrs
+          - 2hrs
+          - 4hrs
+          - 24hrs
+          - '1'
+          - '2'
+          - '4'
+          - '24'
+          description: The maximum duration between the exposure and success event that counts as a success.
+        attributionWindowUnit:
+          type: string
+          enum:
+          - min
+          - hour
+          - day
+          description: Time unit of attribution window
+        explorationWindowRate:
+          type: number
+          minimum: 0.001
+          maximum: 1
+          description: Exploration window rate
+          format: double
+        longtermExplorationAllocation:
+          type: number
+          minimum: 0.001
+          maximum: 1
+          description: Long term exploration allocation
+          format: double
+        winnerThreshold:
+          type: string
+          enum:
+          - 80%
+          - 90%
+          - 95%
+          - 98%
+          - 99%
+          description: The "probability of best" threshold a variant needs to achieve for Autotune to declare it the winner, stop collecting data, and direct all traffic.
+        metadataField:
+          type: string
+          description: Metadata field containing the numeric value to optimize for. If this field is null, autotune optimizes for the existence of a follow-up event. This is only used for contextual autotunes.
+        higherIsBetter:
+          type: boolean
+          description: Whether to optimize for an increase or decrease in the metadata field value. Default is true. This is only used for contextual autotunes.
+        isContextual:
+          type: boolean
+          description: Whether this is a contextual autotune
+        metricSourceID:
+          type: string
+          description: Metric source to pull success event data from
+        linkedExperimentName:
+          type: string
+          description: Linked experiment to measure the success of the Autotune
+        goalRichText:
+          type: string
+          description: Autotune goal
+        optimizationParameter:
+          type: string
+          enum:
+          - occurrence
+          - value
+          description: Optimize for event occurrence vs value
+        valueColumn:
+          type: string
+          description: Metric source column to optimize for
+        featureList:
+          type: array
+          items:
+            type: string
+          description: List of features that should be included in the analysis
+    EditAutotuneReviewRequestDto:
+      type: object
+      properties:
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: New description. Omit to keep the current value.
+        reviewer_ids:
+          type: array
+          items:
+            type: string
+          description: Replacement reviewer user IDs. Omit to keep the current set.
+        reviewer_group_ids:
+          type: array
+          items:
+            type: string
+          description: Replacement reviewer group IDs. Omit to keep the current set.
+      additionalProperties: false
+      title: EditAutotuneReviewRequest
+      description: Request body for PUT /console/v1/autotunes/:id/reviews/:reviewID
+    AutotuneOverridesDto:
+      type: object
+      properties:
+        overrides:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - gate
+                - segment
+              id:
+                type: string
+                description: The id of the segment or gate
+              groupID:
+                type: string
+                description: The autotune variant which user will be forced into
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Optional environment designation (e.g., production, staging) for the autotune.
+            required:
+            - type
+            - id
+            - groupID
+          maxItems: 1000
+          description: Array of autotune overrides, each specifying type, ID, and variant ID.
+        userIDOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              groupID:
+                type: string
+                description: The autotune variant the user will be forced into.
+              ids:
+                type: array
+                items:
+                  type: string
+                maxItems: 1000
+                description: Array of user IDs to be assigned to the specified autotune variant.
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Optional environment designation (e.g., production, staging) for the autotune.
+              unitType:
+                type:
+                - string
+                - 'null'
+                description: Optional type of unit for the autotune, defining the scope of the override.
+            required:
+            - groupID
+            - ids
+          description: Array of user ID overrides, specifying which users to force into autotune variants.
+      required:
+      - overrides
+      - userIDOverrides
+    ExperimentReviewEnvelopeDto:
+      type: object
+      properties:
+        review_id:
+          type: string
+          description: Unique ID of the review.
+        status:
+          type: string
+          enum:
+          - pending
+          - accepted
+          - rejected
+          - committed
+          - changes_requested
+          - pending_webhook_validation
+          - failed_webhook_validation
+          - approved_webhook_validation
+          description: Lifecycle status of the review.
+        type:
+          type: string
+          enum:
+          - start
+          - stop
+          - pause
+          - restart
+          - abandon
+          - archive
+          - delete
+          - make_decision
+          - update_settings
+          - update_overrides
+          - update_target_applications
+          - update_allowed_reviewers
+          - update_default_impact_multiplier
+          - scheduled_start
+          - scheduled_start_edit
+          - disable_reviews_locally
+          - rollout
+          - schedule_rollout
+          - reallocate
+          - change_enabled_groups
+          - unarchive
+          - update_owners
+          - update_team
+          description: Kind of change the review proposes.
+        author:
+          type: object
+          properties:
+            id:
+              type: string
+            email:
+              type:
+              - string
+              - 'null'
+          required:
+          - id
+          - email
+          description: The user who created the review.
+        reviewers:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              kind:
+                type: string
+                enum:
+                - user
+                - group
+            required:
+            - id
+            - kind
+          description: Requested reviewers (users and groups).
+        description:
+          type: string
+          description: Human-readable description of the proposed change.
+        created_at:
+          type: string
+          description: ISO-8601 timestamp of when the review was created.
+        content:
+          type:
+          - object
+          - 'null'
+          properties:
+            type:
+              type: string
+              enum:
+              - start
+              - stop
+              - pause
+              - restart
+              - abandon
+              - archive
+              - delete
+              - make_decision
+              - update_settings
+              - update_overrides
+              - update_target_applications
+              - update_allowed_reviewers
+              - update_default_impact_multiplier
+              - scheduled_start
+              - scheduled_start_edit
+              - disable_reviews_locally
+              - rollout
+              - schedule_rollout
+              - reallocate
+              - change_enabled_groups
+              - unarchive
+              - update_owners
+              - update_team
+              description: Same value as the envelope `type`, repeated for self-containment.
+            current:
+              type: object
+              additionalProperties: {}
+              description: 'The entity''s live value at read time, for each field this review type updates. Matches the Console''s "Original Version (Before)" column for pending reviews. This is NOT status-dependent: for a committed or rejected review it is still the live entity as it stands now, which for a committed review normally equals `proposed`.'
+            proposed:
+              type: object
+              additionalProperties: {}
+              description: The value this review proposes — what commit will apply. Carries exactly the same keys as `current`. Array-valued fields carry the full array on both sides, never only the changed elements.
+            unavailable_reason:
+              type: string
+              enum:
+              - review_data_unavailable
+              - content_unreadable
+              description: 'Present ONLY when the change could not be read back, in which case `current` and `proposed` are both empty objects and carry no meaning. This exists so that "this review type has nothing to propose" (`content: null`) is never confused with "we could not tell you what this review would do". `review_data_unavailable`: the review''s stored change data is missing, or does not match the type the review declares — expected on legacy rows. `content_unreadable`: the data is present but the before/after could not be assembled; that is a server-side fault and is logged.'
+          required:
+          - type
+          - current
+          - proposed
+          title: ExperimentReviewContent
+          description: 'The proposed change this review would apply, as `{ current, proposed }` over exactly the fields committing the review would write. `current` is the live value read at request time; where commit treats an unset argument as "leave unchanged", `proposed` repeats the live value rather than a default. Populated on single-review responses only — list responses omit it so a page of reviews does not pay an extra read per row. When the review does propose something but it could not be read back, `content` is PRESENT with `unavailable_reason` set and both value objects empty, never `null` — so "this type proposes nothing" stays distinguishable from "we cannot tell you what this would do". This surface''s reasons are `review_data_unavailable` (the stored change data is missing or does not match the type the review declares; expected on legacy rows) and `content_unreadable` (the data is present but the before/after could not be assembled; a logged server-side fault). `null` when the review type is a bare action with no recoverable proposed value: `stop`, `pause`, `restart`, `reallocate`, `delete`, `disable_reviews_locally` (always), `start` (unless the review carries a backdated start date that commit will actually write — analysis-only experiments on warehouse-native projects), `scheduled_start_edit` when `new_time` is `ignore` (commit is a no-op), and `update_settings` on an autotune (the stored settings have no experiment-contract shape). Every other type carries content, including `archive`, `unarchive`, `update_owners`, `update_team`, `change_enabled_groups` and `update_allowed_reviewers`, for which the Console currently shows no before/after. Keys by type: `archive`/`unarchive` -> `archived`, `allocation` (archiving a layer-bound experiment zeroes its allocation); `abandon` -> `decision_note_title`, `decision_reason`; `start` -> `start_time`; `scheduled_start`/`scheduled_start_edit` -> `start_time`; `rollout` -> `group_id`, `rollout_percentage`, `rollout_phases`, `has_upcoming_automated_rollout`; `schedule_rollout` -> `group_id`, `rollout_phases`; `make_decision` -> `winning_group_id`, `decision_note_title`, `decision_reason`, and on experiments `overrides`, `id_overrides`, `inline_targeting_rules_json`, `targeting_gate_id`; `update_overrides` -> `overrides`, `id_overrides`, `allow_overrides_in_pulse`; `update_target_applications` -> `target_app_ids`; `update_default_impact_multiplier` -> `default_impact_multiplier`; `update_owners` -> `owners`; `update_team` -> `team_id`, `allowed_reviewer_user_ids`, `allowed_reviewer_group_ids` (moving to a team whose approval mode is `admin_only`/`team_only` widens who may approve future reviews); `update_allowed_reviewers` -> `allowed_reviewer_user_ids`, `allowed_reviewer_group_ids`; `change_enabled_groups` -> `groups` (the full list, with the delta applied); `update_settings` -> a single `settings` object holding the full resolved settings set, including `overrides`, `idOverrides`, `allowOverridesInPulse` and `customScorecardSections`.'
+      required:
+      - review_id
+      - status
+      - type
+      - author
+      - reviewers
+      - description
+      - created_at
+      title: ExperimentReview
+  parameters:
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
   securitySchemes:
     consoleApiKey:
       type: apiKey
       in: header
       name: STATSIG-API-KEY
       description: Console API Key created in Project Settings > API Keys tab. Required for all Console API requests.
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header
 externalDocs:
   description: Statsig Console API Documentation
   url: https://docs.statsig.com/console-api/
+x-refined-from:
+- statsig-console-api-openapi.yml
+- statsig-console-api-openapi.json

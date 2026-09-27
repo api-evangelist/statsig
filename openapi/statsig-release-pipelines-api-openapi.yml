@@ -1,0 +1,1445 @@
+openapi: 3.2.0
+info:
+  title: Console Release Pipelines API
+  description: The "Console API" is the CRUD API for performing the actions offered on console.statsig.com without needing to go through the web UI.
+  version: 20240601.0.0
+  contact: {}
+servers:
+- url: https://statsigapi.net
+tags:
+- name: Release Pipelines
+paths:
+  /console/v1/release_pipeline_triggers:
+    get:
+      summary: List Pipeline Triggers
+      parameters:
+      - name: releasePipelineID
+        required: false
+        in: query
+        description: Filter by Release Pipeline ID
+        schema:
+          type: string
+      - name: gateID
+        required: false
+        in: query
+        description: Filter by Gate ID
+        schema:
+          type: string
+      - name: dynamicConfigID
+        required: false
+        in: query
+        description: Filter by Dynamic Config ID
+        schema:
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: Filter by Status
+        schema:
+          oneOf:
+          - oneOf:
+            - type: string
+              enum:
+              - IN_PROGRESS
+              - PAUSED
+              - ABORTED
+              - COMPLETED
+            - type: string
+              enum:
+              - WAITING_FOR_REVIEW
+          - type: array
+            items:
+              oneOf:
+              - type: string
+                enum:
+                - IN_PROGRESS
+                - PAUSED
+                - ABORTED
+                - COMPLETED
+              - type: string
+                enum:
+                - WAITING_FOR_REVIEW
+      - name: startDate
+        required: false
+        in: query
+        description: Filter by the start date of the date range of the trigger's creation date in UTC, inclusive
+        schema:
+          example: '2024-01-01'
+          type: string
+      - name: endDate
+        required: false
+        in: query
+        description: Filter by the end date of the date range of the trigger's creation date in UTC, inclusive (i.e. until the end of the day); defaults to today's date if not provided
+        schema:
+          example: '2024-01-01'
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: List pipeline triggers success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ReleasePipelineTriggerResponseDto'
+                example:
+                  data:
+                  - id: trigger_1646560789123
+                    releasePipelineID: pipeline_123456
+                    status: IN_PROGRESS
+                    currentPhase: Phase 1
+                    currentPhaseID: phase_123456
+                    currentPhaseEndTime: 1646560799123
+                    actions:
+                    - type: STARTED
+                      timeMs: 1646560789123
+                      phaseID: phase_123456
+                      actorID: user_123456
+                      actorName: John Doe
+                    creatorID: user_123456
+                    createdTime: 1646560789123
+                    lastModifierID: user_123456
+                    lastModifierName: John Doe
+                    gateID: gate_123456
+                  - id: trigger_1646560789124
+                    releasePipelineID: pipeline_123456
+                    status: COMPLETED
+                    currentPhase: Phase 1
+                    currentPhaseID: phase_123456
+                    currentPhaseEndTime: 1646560799124
+                    actions:
+                    - type: STARTED
+                      timeMs: 1646560789123
+                      phaseID: phase_123456
+                      actorID: user_123456
+                      actorName: John Doe
+                    creatorID: user_123456
+                    createdTime: 1646560789124
+                    lastModifierID: user_654321
+                    lastModifierName: Jane Doe
+                    dynamicConfigID: dynamic_config_123456
+                  pagination:
+                    itemsPerPage: 10
+                    pageNumber: 1
+                    nextPage: null
+                    previousPage: null
+                    totalItems: 2
+                  message: Pipeline triggers listed correctly.
+              example:
+                data:
+                - id: trigger_1646560789123
+                  releasePipelineID: pipeline_123456
+                  status: IN_PROGRESS
+                  currentPhase: Phase 1
+                  currentPhaseID: phase_123456
+                  currentPhaseEndTime: 1646560799123
+                  actions:
+                  - type: STARTED
+                    timeMs: 1646560789123
+                    phaseID: phase_123456
+                    actorID: user_123456
+                    actorName: John Doe
+                  creatorID: user_123456
+                  createdTime: 1646560789123
+                  lastModifierID: user_123456
+                  lastModifierName: John Doe
+                  gateID: gate_123456
+                - id: trigger_1646560789124
+                  releasePipelineID: pipeline_123456
+                  status: COMPLETED
+                  currentPhase: Phase 1
+                  currentPhaseID: phase_123456
+                  currentPhaseEndTime: 1646560799124
+                  actions:
+                  - type: STARTED
+                    timeMs: 1646560789123
+                    phaseID: phase_123456
+                    actorID: user_123456
+                    actorName: John Doe
+                  creatorID: user_123456
+                  createdTime: 1646560789124
+                  lastModifierID: user_654321
+                  lastModifierName: Jane Doe
+                  dynamicConfigID: dynamic_config_123456
+                pagination:
+                  itemsPerPage: 10
+                  pageNumber: 1
+                  nextPage: null
+                  previousPage: null
+                  totalItems: 2
+                message: Pipeline triggers listed correctly.
+      tags:
+      - Release Pipelines
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1ReleasePipelineTriggers
+      x-operation-id-source: derived
+  /console/v1/release_pipeline_triggers/{id}:
+    get:
+      summary: Get Pipeline Trigger
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Get pipeline trigger success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReleasePipelineTriggerResponseDto'
+                example:
+                  data:
+                    id: trigger_1646560789123
+                    releasePipelineID: pipeline_123456
+                    status: IN_PROGRESS
+                    currentPhase: Phase 1
+                    currentPhaseID: phase_123456
+                    currentPhaseEndTime: 1646560799123
+                    creatorID: user_123456
+                    createdTime: 1646560789123
+                    gateID: gate_123456
+                    lastModifierID: user_123456
+                    lastModifierName: John Doe
+                    actions:
+                    - type: STARTED
+                      timeMs: 1646560789123
+                      phaseID: phase_123456
+                      actorID: user_123456
+                      actorName: John Doe
+                  message: Pipeline trigger retrieved successfully.
+              example:
+                data:
+                  id: trigger_1646560789123
+                  releasePipelineID: pipeline_123456
+                  status: IN_PROGRESS
+                  currentPhase: Phase 1
+                  currentPhaseID: phase_123456
+                  currentPhaseEndTime: 1646560799123
+                  creatorID: user_123456
+                  createdTime: 1646560789123
+                  gateID: gate_123456
+                  lastModifierID: user_123456
+                  lastModifierName: John Doe
+                  actions:
+                  - type: STARTED
+                    timeMs: 1646560789123
+                    phaseID: phase_123456
+                    actorID: user_123456
+                    actorName: John Doe
+                message: Pipeline trigger retrieved successfully.
+      tags:
+      - Release Pipelines
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1ReleasePipelineTriggersById
+      x-operation-id-source: derived
+  /console/v1/release_pipeline_triggers/{id}/abort:
+    put:
+      summary: Abort Pipeline Trigger
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Aborted pipeline trigger successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReleasePipelineTriggerResponseDto'
+      tags:
+      - Release Pipelines
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1ReleasePipelineTriggersByIdAbort
+      x-operation-id-source: derived
+  /console/v1/release_pipeline_triggers/{id}/approve:
+    put:
+      summary: Approve Pipeline Trigger Phase
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineTriggerActionBodyDto'
+      responses:
+        '200':
+          description: Approved pipeline trigger phase successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReleasePipelineTriggerResponseDto'
+      tags:
+      - Release Pipelines
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1ReleasePipelineTriggersByIdApprove
+      x-operation-id-source: derived
+  /console/v1/release_pipeline_triggers/{id}/pause:
+    put:
+      summary: Pause Pipeline Trigger
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineTriggerActionBodyDto'
+      responses:
+        '200':
+          description: Paused pipeline trigger successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReleasePipelineTriggerResponseDto'
+      tags:
+      - Release Pipelines
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1ReleasePipelineTriggersByIdPause
+      x-operation-id-source: derived
+  /console/v1/release_pipeline_triggers/{id}/rollout:
+    put:
+      summary: Fully Roll Out Pipeline Trigger
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Fully rolled out pipeline trigger successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReleasePipelineTriggerResponseDto'
+      tags:
+      - Release Pipelines
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1ReleasePipelineTriggersByIdRollout
+      x-operation-id-source: derived
+  /console/v1/release_pipeline_triggers/{id}/skip:
+    put:
+      summary: Skip to Pipeline Trigger Phase
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineTriggerActionBodyDto'
+      responses:
+        '200':
+          description: Skipped pipeline trigger phase successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReleasePipelineTriggerResponseDto'
+      tags:
+      - Release Pipelines
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1ReleasePipelineTriggersByIdSkip
+      x-operation-id-source: derived
+  /console/v1/release_pipeline_triggers/{id}/unpause:
+    put:
+      summary: Unpause Pipeline Trigger
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineTriggerActionBodyDto'
+      responses:
+        '200':
+          description: Unpaused pipeline trigger successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReleasePipelineTriggerResponseDto'
+      tags:
+      - Release Pipelines
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1ReleasePipelineTriggersByIdUnpause
+      x-operation-id-source: derived
+  /console/v1/release_pipelines:
+    get:
+      summary: List Pipelines
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: List pipelines
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ReleasePipelineDto'
+                example:
+                  message: List pipelines success
+                  data:
+                  - id: 45aiIXz4aaAadWtYEetjko
+                    name: Pipeline 1
+                    creatorID: 24hiIXz3kbFaDwtYEetv2i
+                    createdTime: 1705439406615
+                    lastModifierID: 24hiIXz3kbFaDwtYEetv2i
+                    lastModifiedTime: 1705439406615
+                    phases:
+                    - id: 24hiIXz3kbFaDwtYEetv2i
+                      name: Phase 1
+                      timeIntervalMs: 3600000
+                      requiredReview: false
+                      rules:
+                      - id: 24hiIXz3kbFaDwtYEetv2i
+                        name: Rule
+                        conditions:
+                        - type: app_version
+                          targetValue:
+                          - '1'
+                          - '222'
+                          operator: any
+                        environments: null
+                  - id: 24hiIXz3kbFaDwtYEetv2i
+                    name: Pipeline 2
+                    creatorID: 24hiIXz3kbFaDwtYEetv2i
+                    createdTime: 1705439406615
+                    lastModifierID: 24hiIXz3kbFaDwtYEetv2i
+                    lastModifiedTime: 1705439406615
+                    phases:
+                    - id: 24hiIXz3kbFaDwtYEetv2i
+                      name: Phase 1
+                      timeIntervalMs: 3600000
+                      requiredReview: false
+                      rules:
+                      - id: 24hiIXz3kbFaDwtYEetv2i
+                        name: Rule
+                        conditions:
+                        - type: app_version
+                          targetValue:
+                          - '1'
+                          - '222'
+                          operator: any
+                        environments: null
+              example:
+                message: List pipelines success
+                data:
+                - id: 45aiIXz4aaAadWtYEetjko
+                  name: Pipeline 1
+                  creatorID: 24hiIXz3kbFaDwtYEetv2i
+                  createdTime: 1705439406615
+                  lastModifierID: 24hiIXz3kbFaDwtYEetv2i
+                  lastModifiedTime: 1705439406615
+                  phases:
+                  - id: 24hiIXz3kbFaDwtYEetv2i
+                    name: Phase 1
+                    timeIntervalMs: 3600000
+                    requiredReview: false
+                    rules:
+                    - id: 24hiIXz3kbFaDwtYEetv2i
+                      name: Rule
+                      conditions:
+                      - type: app_version
+                        targetValue:
+                        - '1'
+                        - '222'
+                        operator: any
+                      environments: null
+                - id: 24hiIXz3kbFaDwtYEetv2i
+                  name: Pipeline 2
+                  creatorID: 24hiIXz3kbFaDwtYEetv2i
+                  createdTime: 1705439406615
+                  lastModifierID: 24hiIXz3kbFaDwtYEetv2i
+                  lastModifiedTime: 1705439406615
+                  phases:
+                  - id: 24hiIXz3kbFaDwtYEetv2i
+                    name: Phase 1
+                    timeIntervalMs: 3600000
+                    requiredReview: false
+                    rules:
+                    - id: 24hiIXz3kbFaDwtYEetv2i
+                      name: Rule
+                      conditions:
+                      - type: app_version
+                        targetValue:
+                        - '1'
+                        - '222'
+                        operator: any
+                      environments: null
+      tags:
+      - Release Pipelines
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1ReleasePipelines
+      x-operation-id-source: derived
+    post:
+      summary: Create Pipeline
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineCreateDto'
+      responses:
+        '200':
+          description: Create pipeline
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReleasePipelineDto'
+                example:
+                  message: Get pipeline success
+                  data:
+                    id: 45aiIXz4aaAadWtYEetjko
+                    name: Pipeline 1
+                    creatorID: 24hiIXz3kbFaDwtYEetv2i
+                    createdTime: 1705439406615
+                    lastModifierID: 24hiIXz3kbFaDwtYEetv2i
+                    lastModifiedTime: 1705439406615
+                    phases:
+                    - id: 24hiIXz3kbFaDwtYEetv2i
+                      name: Phase 1
+                      timeIntervalMs: 3600000
+                      requiredReview: false
+                      rules:
+                      - id: 24hiIXz3kbFaDwtYEetv2i
+                        name: Rule
+                        conditions:
+                        - type: app_version
+                          targetValue:
+                          - '1'
+                          - '222'
+                          operator: any
+                        environments: null
+              example:
+                message: Get pipeline success
+                data:
+                  id: 45aiIXz4aaAadWtYEetjko
+                  name: Pipeline 1
+                  creatorID: 24hiIXz3kbFaDwtYEetv2i
+                  createdTime: 1705439406615
+                  lastModifierID: 24hiIXz3kbFaDwtYEetv2i
+                  lastModifiedTime: 1705439406615
+                  phases:
+                  - id: 24hiIXz3kbFaDwtYEetv2i
+                    name: Phase 1
+                    timeIntervalMs: 3600000
+                    requiredReview: false
+                    rules:
+                    - id: 24hiIXz3kbFaDwtYEetv2i
+                      name: Rule
+                      conditions:
+                      - type: app_version
+                        targetValue:
+                        - '1'
+                        - '222'
+                        operator: any
+                      environments: null
+      tags:
+      - Release Pipelines
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1ReleasePipelines
+      x-operation-id-source: derived
+  /console/v1/release_pipelines/{id}:
+    get:
+      summary: Get Pipeline
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Get pipeline
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReleasePipelineDto'
+                example:
+                  message: Get pipeline success
+                  data:
+                    id: 45aiIXz4aaAadWtYEetjko
+                    name: Pipeline 1
+                    creatorID: 24hiIXz3kbFaDwtYEetv2i
+                    createdTime: 1705439406615
+                    lastModifierID: 24hiIXz3kbFaDwtYEetv2i
+                    lastModifiedTime: 1705439406615
+                    phases:
+                    - id: 24hiIXz3kbFaDwtYEetv2i
+                      name: Phase 1
+                      timeIntervalMs: 3600000
+                      requiredReview: false
+                      rules:
+                      - id: 24hiIXz3kbFaDwtYEetv2i
+                        name: Rule
+                        conditions:
+                        - type: app_version
+                          targetValue:
+                          - '1'
+                          - '222'
+                          operator: any
+                        environments: null
+              example:
+                message: Get pipeline success
+                data:
+                  id: 45aiIXz4aaAadWtYEetjko
+                  name: Pipeline 1
+                  creatorID: 24hiIXz3kbFaDwtYEetv2i
+                  createdTime: 1705439406615
+                  lastModifierID: 24hiIXz3kbFaDwtYEetv2i
+                  lastModifiedTime: 1705439406615
+                  phases:
+                  - id: 24hiIXz3kbFaDwtYEetv2i
+                    name: Phase 1
+                    timeIntervalMs: 3600000
+                    requiredReview: false
+                    rules:
+                    - id: 24hiIXz3kbFaDwtYEetv2i
+                      name: Rule
+                      conditions:
+                      - type: app_version
+                        targetValue:
+                        - '1'
+                        - '222'
+                        operator: any
+                      environments: null
+      tags:
+      - Release Pipelines
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1ReleasePipelinesById
+      x-operation-id-source: derived
+    post:
+      summary: Update Pipeline
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePipelineUpdateDto'
+      responses:
+        '200':
+          description: Update pipeline
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReleasePipelineDto'
+                example:
+                  message: Get pipeline success
+                  data:
+                    id: 45aiIXz4aaAadWtYEetjko
+                    name: Pipeline 1
+                    creatorID: 24hiIXz3kbFaDwtYEetv2i
+                    createdTime: 1705439406615
+                    lastModifierID: 24hiIXz3kbFaDwtYEetv2i
+                    lastModifiedTime: 1705439406615
+                    phases:
+                    - id: 24hiIXz3kbFaDwtYEetv2i
+                      name: Phase 1
+                      timeIntervalMs: 3600000
+                      requiredReview: false
+                      rules:
+                      - id: 24hiIXz3kbFaDwtYEetv2i
+                        name: Rule
+                        conditions:
+                        - type: app_version
+                          targetValue:
+                          - '1'
+                          - '222'
+                          operator: any
+                        environments: null
+              example:
+                message: Get pipeline success
+                data:
+                  id: 45aiIXz4aaAadWtYEetjko
+                  name: Pipeline 1
+                  creatorID: 24hiIXz3kbFaDwtYEetv2i
+                  createdTime: 1705439406615
+                  lastModifierID: 24hiIXz3kbFaDwtYEetv2i
+                  lastModifiedTime: 1705439406615
+                  phases:
+                  - id: 24hiIXz3kbFaDwtYEetv2i
+                    name: Phase 1
+                    timeIntervalMs: 3600000
+                    requiredReview: false
+                    rules:
+                    - id: 24hiIXz3kbFaDwtYEetv2i
+                      name: Rule
+                      conditions:
+                      - type: app_version
+                        targetValue:
+                        - '1'
+                        - '222'
+                        operator: any
+                      environments: null
+      tags:
+      - Release Pipelines
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1ReleasePipelinesById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete Pipeline
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete pipeline
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Pipeline deleted successfully.
+              example:
+                message: Pipeline deleted successfully.
+      tags:
+      - Release Pipelines
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1ReleasePipelinesById
+      x-operation-id-source: derived
+components:
+  schemas:
+    ReleasePipelineDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Pipeline ID
+        name:
+          type: string
+          description: Pipeline Name
+        creatorID:
+          type: string
+          description: Pipeline Creator ID
+        createdTime:
+          type: number
+          description: Pipeline Creation Time
+          format: double
+        lastModifierID:
+          type: string
+          description: Last Modifier ID
+        lastModifiedTime:
+          type: number
+          description: Last Modification Time
+          format: double
+        phases:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Phase ID
+              name:
+                type: string
+                description: Phase Name
+              timeIntervalMs:
+                type: number
+                description: Time interval in milliseconds for this phase
+              requiredReview:
+                type: boolean
+                description: Whether this phase requires review to proceed
+              rules:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The Statsig ID of this rule.
+                    name:
+                      type: string
+                      description: The name of this rule.
+                    conditions:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          targetValue:
+                            oneOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: array
+                              items:
+                                type: number
+                            - type: string
+                            - type: number
+                          operator:
+                            type: string
+                            enum:
+                            - any
+                            - none
+                            - any_case_sensitive
+                            - none_case_sensitive
+                            - str_contains_any
+                            - str_contains_none
+                            - gt
+                            - lt
+                            - lte
+                            - gte
+                            - version_gt
+                            - version_lt
+                            - version_gte
+                            - version_lte
+                            - version_eq
+                            - after
+                            - before
+                            - 'on'
+                            - is_null
+                            - is_not_null
+                            - str_matches
+                            - encoded_any
+                            - array_contains_any
+                            - array_contains_none
+                            - array_contains_all
+                            - not_array_contains_all
+                          field:
+                            type:
+                            - string
+                            - 'null'
+                          customID:
+                            type:
+                            - string
+                            - 'null'
+                          type:
+                            type: string
+                            enum:
+                            - app_version
+                            - browser_name
+                            - browser_version
+                            - country
+                            - custom_field
+                            - email
+                            - environment_tier
+                            - fails_gate
+                            - fails_segment
+                            - ip_address
+                            - locale
+                            - os_name
+                            - os_version
+                            - passes_gate
+                            - passes_segment
+                            - public
+                            - time
+                            - unit_id
+                            - user_id
+                            - user_agent
+                            - url
+                            - javascript
+                            - device_model
+                            - target_app
+                            - experiment_group
+                        required:
+                        - type
+                      description: An array of Condition objects.
+                    environments:
+                      type:
+                      - array
+                      - 'null'
+                      items:
+                        type: string
+                      description: The environments this rule is enabled for.
+                  required:
+                  - name
+                  - conditions
+                description: Rules to apply in this phase
+            required:
+            - name
+            - timeIntervalMs
+            - requiredReview
+            - rules
+          description: Phases of the release pipeline that will be executed in order.
+        triggerNotice:
+          type: string
+          description: A notice that will be displayed to the user on the config page when the release pipeline is triggered
+      required:
+      - id
+      - name
+      - creatorID
+      - createdTime
+      - lastModifierID
+      - lastModifiedTime
+    ReleasePipelineTriggerActionBodyDto:
+      type: object
+      properties:
+        phaseID:
+          type: string
+          description: Phase ID to ensure the correct state of the pipeline is updated
+      required:
+      - phaseID
+    ReleasePipelineUpdateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Pipeline Name
+        phases:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Phase ID
+              name:
+                type: string
+                description: Phase Name
+              timeIntervalMs:
+                type: number
+                description: Time interval in milliseconds for this phase
+              requiredReview:
+                type: boolean
+                description: Whether this phase requires review to proceed
+              rules:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The Statsig ID of this rule.
+                    name:
+                      type: string
+                      description: The name of this rule.
+                    conditions:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          targetValue:
+                            oneOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: array
+                              items:
+                                type: number
+                            - type: string
+                            - type: number
+                          operator:
+                            type: string
+                            enum:
+                            - any
+                            - none
+                            - any_case_sensitive
+                            - none_case_sensitive
+                            - str_contains_any
+                            - str_contains_none
+                            - gt
+                            - lt
+                            - lte
+                            - gte
+                            - version_gt
+                            - version_lt
+                            - version_gte
+                            - version_lte
+                            - version_eq
+                            - after
+                            - before
+                            - 'on'
+                            - is_null
+                            - is_not_null
+                            - str_matches
+                            - encoded_any
+                            - array_contains_any
+                            - array_contains_none
+                            - array_contains_all
+                            - not_array_contains_all
+                          field:
+                            type:
+                            - string
+                            - 'null'
+                          customID:
+                            type:
+                            - string
+                            - 'null'
+                          type:
+                            type: string
+                            enum:
+                            - app_version
+                            - browser_name
+                            - browser_version
+                            - country
+                            - custom_field
+                            - email
+                            - environment_tier
+                            - fails_gate
+                            - fails_segment
+                            - ip_address
+                            - locale
+                            - os_name
+                            - os_version
+                            - passes_gate
+                            - passes_segment
+                            - public
+                            - time
+                            - unit_id
+                            - user_id
+                            - user_agent
+                            - url
+                            - javascript
+                            - device_model
+                            - target_app
+                            - experiment_group
+                        required:
+                        - type
+                      description: An array of Condition objects.
+                    environments:
+                      type:
+                      - array
+                      - 'null'
+                      items:
+                        type: string
+                      description: The environments this rule is enabled for.
+                  required:
+                  - name
+                  - conditions
+                description: Rules to apply in this phase
+            required:
+            - name
+            - timeIntervalMs
+            - requiredReview
+            - rules
+          description: Phases of the release pipeline that will be executed in order.
+        triggerNotice:
+          type:
+          - string
+          - 'null'
+          description: A notice that will be displayed to the user on the config page when the release pipeline is triggered
+    ReleasePipelineCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Pipeline Name
+        phases:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Phase ID
+              name:
+                type: string
+                description: Phase Name
+              timeIntervalMs:
+                type: number
+                description: Time interval in milliseconds for this phase
+              requiredReview:
+                type: boolean
+                description: Whether this phase requires review to proceed
+              rules:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The Statsig ID of this rule.
+                    name:
+                      type: string
+                      description: The name of this rule.
+                    conditions:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          targetValue:
+                            oneOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: array
+                              items:
+                                type: number
+                            - type: string
+                            - type: number
+                          operator:
+                            type: string
+                            enum:
+                            - any
+                            - none
+                            - any_case_sensitive
+                            - none_case_sensitive
+                            - str_contains_any
+                            - str_contains_none
+                            - gt
+                            - lt
+                            - lte
+                            - gte
+                            - version_gt
+                            - version_lt
+                            - version_gte
+                            - version_lte
+                            - version_eq
+                            - after
+                            - before
+                            - 'on'
+                            - is_null
+                            - is_not_null
+                            - str_matches
+                            - encoded_any
+                            - array_contains_any
+                            - array_contains_none
+                            - array_contains_all
+                            - not_array_contains_all
+                          field:
+                            type:
+                            - string
+                            - 'null'
+                          customID:
+                            type:
+                            - string
+                            - 'null'
+                          type:
+                            type: string
+                            enum:
+                            - app_version
+                            - browser_name
+                            - browser_version
+                            - country
+                            - custom_field
+                            - email
+                            - environment_tier
+                            - fails_gate
+                            - fails_segment
+                            - ip_address
+                            - locale
+                            - os_name
+                            - os_version
+                            - passes_gate
+                            - passes_segment
+                            - public
+                            - time
+                            - unit_id
+                            - user_id
+                            - user_agent
+                            - url
+                            - javascript
+                            - device_model
+                            - target_app
+                            - experiment_group
+                        required:
+                        - type
+                      description: An array of Condition objects.
+                    environments:
+                      type:
+                      - array
+                      - 'null'
+                      items:
+                        type: string
+                      description: The environments this rule is enabled for.
+                  required:
+                  - name
+                  - conditions
+                description: Rules to apply in this phase
+            required:
+            - name
+            - timeIntervalMs
+            - requiredReview
+            - rules
+          description: Phases of the release pipeline that will be executed in order.
+        triggerNotice:
+          type:
+          - string
+          - 'null'
+          description: A notice that will be displayed to the user on the config page when the release pipeline is triggered
+      required:
+      - name
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    ReleasePipelineTriggerResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Trigger ID
+        releasePipelineID:
+          type: string
+          description: Release Pipeline ID
+        actions:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                oneOf:
+                - type: string
+                  enum:
+                  - STARTED
+                  - ABORTED
+                  - PAUSED
+                  - UNPAUSED
+                  - APPROVED_FOR
+                  - SKIPPED
+                  - FULL_ROLL_OUT
+                - type: string
+                  enum:
+                  - CLEANED_UP
+              timeMs:
+                type: number
+              phaseID:
+                type: string
+              actorID:
+                type: string
+              actorName:
+                type: string
+            required:
+            - type
+            - timeMs
+            - phaseID
+            - actorName
+          description: Actions
+        creatorID:
+          type: string
+          description: Trigger Creator ID
+        createdTime:
+          type: number
+          description: Trigger Creation Time
+          format: double
+        description:
+          type: string
+          description: Optional description for this trigger
+        gateID:
+          type: string
+          description: Gate ID
+        dynamicConfigID:
+          type: string
+          description: Dynamic Config ID
+        lastModifierID:
+          type: string
+          description: Last modifier ID
+        lastModifierName:
+          type: string
+          description: Last modifier name
+        configSnapshotID:
+          type: string
+          description: The snapshot of the config that this trigger is releasing
+        status:
+          type: string
+          description: Pipeline status with this trigger
+        currentPhase:
+          type:
+          - string
+          - 'null'
+          description: Current phase
+        currentPhaseID:
+          type:
+          - string
+          - 'null'
+          description: Current phase ID
+        currentPhaseEndTime:
+          type:
+          - number
+          - 'null'
+          description: Current phase end time
+          format: double
+      required:
+      - id
+      - releasePipelineID
+      - actions
+      - creatorID
+      - createdTime
+      - lastModifierID
+      - lastModifierName
+      - status
+      - currentPhase
+      - currentPhaseID
+      - currentPhaseEndTime
+  securitySchemes:
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header

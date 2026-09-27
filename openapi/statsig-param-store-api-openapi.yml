@@ -1,0 +1,1206 @@
+openapi: 3.2.0
+info:
+  title: Console Param Store API
+  description: The "Console API" is the CRUD API for performing the actions offered on console.statsig.com without needing to go through the web UI.
+  version: 20240601.0.0
+  contact: {}
+servers:
+- url: https://statsigapi.net
+tags:
+- name: Param Store
+paths:
+  /console/v1/param_stores:
+    get:
+      summary: List Param Stores
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: List param stores
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ParamStoreDto'
+                example:
+                  message: List param stores success
+                  data:
+                  - id: 6O13wytnLL1Lss5QgUSAeu
+                    name: param 1
+                    displayName: param 1
+                    description: ''
+                    createdTime: 1734618662756
+                    creatorID: 5O908pyGoCqw6QH1nt8v82
+                    lastModifierID: 5O908pyGoCqw6QH1nt8v82
+                    parameters:
+                    - name: prm1
+                      ref_type: static
+                      param_type: boolean
+                      value: false
+                    - name: prm2
+                      ref_type: static
+                      param_type: boolean
+                      value: false
+                  - id: 24hiIXz3kbFaDwtYEetv2i
+                    name: param 2
+                    displayName: param 1
+                    description: ''
+                    createdTime: 1734618662756
+                    creatorID: 5O908pyGoCqw6QH1nt8v82
+                    lastModifierID: 5O908pyGoCqw6QH1nt8v82
+                    parameters:
+                    - name: prm1
+                      ref_type: static
+                      param_type: boolean
+                      value: false
+                    - name: prm2
+                      ref_type: static
+                      param_type: boolean
+                      value: false
+              example:
+                message: List param stores success
+                data:
+                - id: 6O13wytnLL1Lss5QgUSAeu
+                  name: param 1
+                  displayName: param 1
+                  description: ''
+                  createdTime: 1734618662756
+                  creatorID: 5O908pyGoCqw6QH1nt8v82
+                  lastModifierID: 5O908pyGoCqw6QH1nt8v82
+                  parameters:
+                  - name: prm1
+                    ref_type: static
+                    param_type: boolean
+                    value: false
+                  - name: prm2
+                    ref_type: static
+                    param_type: boolean
+                    value: false
+                - id: 24hiIXz3kbFaDwtYEetv2i
+                  name: param 2
+                  displayName: param 1
+                  description: ''
+                  createdTime: 1734618662756
+                  creatorID: 5O908pyGoCqw6QH1nt8v82
+                  lastModifierID: 5O908pyGoCqw6QH1nt8v82
+                  parameters:
+                  - name: prm1
+                    ref_type: static
+                    param_type: boolean
+                    value: false
+                  - name: prm2
+                    ref_type: static
+                    param_type: boolean
+                    value: false
+      tags:
+      - Param Store
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1ParamStores
+      x-operation-id-source: derived
+    post:
+      summary: Create Param Store
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParamStoreCreateDto'
+      responses:
+        '200':
+          description: Create param store
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ParamStoreDto'
+                example:
+                  message: Param Store read successfully.
+                  data:
+                    id: 6O13wytnLL1Lss5QgUSAeu
+                    name: param 1
+                    displayName: param 1
+                    description: ''
+                    createdTime: 1734618662756
+                    creatorID: 5O908pyGoCqw6QH1nt8v82
+                    lastModifierID: 5O908pyGoCqw6QH1nt8v82
+                    parameters:
+                    - name: prm1
+                      ref_type: static
+                      param_type: boolean
+                      value: false
+                    - name: prm2
+                      ref_type: static
+                      param_type: boolean
+                      value: false
+              example:
+                message: Param Store read successfully.
+                data:
+                  id: 6O13wytnLL1Lss5QgUSAeu
+                  name: param 1
+                  displayName: param 1
+                  description: ''
+                  createdTime: 1734618662756
+                  creatorID: 5O908pyGoCqw6QH1nt8v82
+                  lastModifierID: 5O908pyGoCqw6QH1nt8v82
+                  parameters:
+                  - name: prm1
+                    ref_type: static
+                    param_type: boolean
+                    value: false
+                  - name: prm2
+                    ref_type: static
+                    param_type: boolean
+                    value: false
+      tags:
+      - Param Store
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1ParamStores
+      x-operation-id-source: derived
+  /console/v1/param_stores/{name}:
+    get:
+      summary: Get Param Store
+      parameters:
+      - name: name
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Get param store
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ParamStoreDto'
+                example:
+                  message: Param Store read successfully.
+                  data:
+                    id: 6O13wytnLL1Lss5QgUSAeu
+                    name: param 1
+                    displayName: param 1
+                    description: ''
+                    createdTime: 1734618662756
+                    creatorID: 5O908pyGoCqw6QH1nt8v82
+                    lastModifierID: 5O908pyGoCqw6QH1nt8v82
+                    parameters:
+                    - name: prm1
+                      ref_type: static
+                      param_type: boolean
+                      value: false
+                    - name: prm2
+                      ref_type: static
+                      param_type: boolean
+                      value: false
+              example:
+                message: Param Store read successfully.
+                data:
+                  id: 6O13wytnLL1Lss5QgUSAeu
+                  name: param 1
+                  displayName: param 1
+                  description: ''
+                  createdTime: 1734618662756
+                  creatorID: 5O908pyGoCqw6QH1nt8v82
+                  lastModifierID: 5O908pyGoCqw6QH1nt8v82
+                  parameters:
+                  - name: prm1
+                    ref_type: static
+                    param_type: boolean
+                    value: false
+                  - name: prm2
+                    ref_type: static
+                    param_type: boolean
+                    value: false
+      tags:
+      - Param Store
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1ParamStoresByName
+      x-operation-id-source: derived
+    post:
+      summary: Update Param Store
+      parameters:
+      - name: name
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParamStoreUpdateDto'
+      responses:
+        '200':
+          description: Update param store
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ParamStoreDto'
+                example:
+                  message: Param Store read successfully.
+                  data:
+                    id: 6O13wytnLL1Lss5QgUSAeu
+                    name: param 1
+                    displayName: param 1
+                    description: ''
+                    createdTime: 1734618662756
+                    creatorID: 5O908pyGoCqw6QH1nt8v82
+                    lastModifierID: 5O908pyGoCqw6QH1nt8v82
+                    parameters:
+                    - name: prm1
+                      ref_type: static
+                      param_type: boolean
+                      value: false
+                    - name: prm2
+                      ref_type: static
+                      param_type: boolean
+                      value: false
+              example:
+                message: Param Store read successfully.
+                data:
+                  id: 6O13wytnLL1Lss5QgUSAeu
+                  name: param 1
+                  displayName: param 1
+                  description: ''
+                  createdTime: 1734618662756
+                  creatorID: 5O908pyGoCqw6QH1nt8v82
+                  lastModifierID: 5O908pyGoCqw6QH1nt8v82
+                  parameters:
+                  - name: prm1
+                    ref_type: static
+                    param_type: boolean
+                    value: false
+                  - name: prm2
+                    ref_type: static
+                    param_type: boolean
+                    value: false
+      tags:
+      - Param Store
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1ParamStoresByName
+      x-operation-id-source: derived
+    delete:
+      summary: Delete Param Store
+      parameters:
+      - name: name
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete param store
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Param Store deleted successfully.
+              example:
+                message: Param Store deleted successfully.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Param Store not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Param Store
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1ParamStoresByName
+      x-operation-id-source: derived
+components:
+  schemas:
+    ParamStoreUpdateDto:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Param Store Description
+        parameters:
+          type: array
+          items:
+            oneOf:
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - boolean
+                value:
+                  type: boolean
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - number
+                value:
+                  type: number
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                value:
+                  type: string
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - object
+                value:
+                  type: object
+                  additionalProperties: {}
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - array
+                value:
+                  type: array
+                  items: {}
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - boolean
+                pass_value:
+                  type: boolean
+                fail_value:
+                  type: boolean
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - number
+                pass_value:
+                  type: number
+                fail_value:
+                  type: number
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                pass_value:
+                  type: string
+                fail_value:
+                  type: string
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - object
+                pass_value:
+                  type: object
+                  additionalProperties: {}
+                fail_value:
+                  type: object
+                  additionalProperties: {}
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - array
+                pass_value:
+                  type: array
+                  items: {}
+                fail_value:
+                  type: array
+                  items: {}
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - layer
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                  - boolean
+                  - number
+                  - array
+                  - object
+                  description: Parameter Type
+                layer_name:
+                  type: string
+                  description: Layer Name
+                param_name:
+                  type: string
+                  description: Parameter Name in Layer
+              required:
+              - ref_type
+              - name
+              - param_type
+              - layer_name
+              - param_name
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - dynamic_config
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                  - boolean
+                  - number
+                  - array
+                  - object
+                  description: Parameter Type
+                config_name:
+                  type: string
+                  description: Dynamic Config Name
+                param_name:
+                  type: string
+                  description: Parameter Name in Config
+              required:
+              - ref_type
+              - name
+              - param_type
+              - config_name
+              - param_name
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - experiment
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                  - boolean
+                  - number
+                  - array
+                  - object
+                  description: Parameter Type
+                experiment_name:
+                  type: string
+                  description: Experiment Name
+                param_name:
+                  type: string
+                  description: Parameter Name in Experiment
+              required:
+              - ref_type
+              - name
+              - param_type
+              - experiment_name
+              - param_name
+            description: Parameter Definition
+          description: List of Parameters
+    ParamStoreDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Param Store ID
+        name:
+          type: string
+          description: Param Store Name
+        displayName:
+          type: string
+          description: Param Store Display Name
+        description:
+          type: string
+          description: Param Store Description
+        createdTime:
+          type: number
+          description: Param Store Creation Time
+          format: double
+        creatorID:
+          type: string
+          description: Creator ID
+        lastModifierID:
+          type: string
+          description: Last Modifier ID
+        team:
+          type:
+          - string
+          - 'null'
+          description: Team Name
+        teamID:
+          type: string
+          description: Team ID
+        parameters:
+          type: array
+          items:
+            oneOf:
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - boolean
+                value:
+                  type: boolean
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - number
+                value:
+                  type: number
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                value:
+                  type: string
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - object
+                value:
+                  type: object
+                  additionalProperties: {}
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - array
+                value:
+                  type: array
+                  items: {}
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - boolean
+                pass_value:
+                  type: boolean
+                fail_value:
+                  type: boolean
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - number
+                pass_value:
+                  type: number
+                fail_value:
+                  type: number
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                pass_value:
+                  type: string
+                fail_value:
+                  type: string
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - object
+                pass_value:
+                  type: object
+                  additionalProperties: {}
+                fail_value:
+                  type: object
+                  additionalProperties: {}
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - array
+                pass_value:
+                  type: array
+                  items: {}
+                fail_value:
+                  type: array
+                  items: {}
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - layer
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                  - boolean
+                  - number
+                  - array
+                  - object
+                  description: Parameter Type
+                layer_name:
+                  type: string
+                  description: Layer Name
+                param_name:
+                  type: string
+                  description: Parameter Name in Layer
+              required:
+              - ref_type
+              - name
+              - param_type
+              - layer_name
+              - param_name
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - dynamic_config
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                  - boolean
+                  - number
+                  - array
+                  - object
+                  description: Parameter Type
+                config_name:
+                  type: string
+                  description: Dynamic Config Name
+                param_name:
+                  type: string
+                  description: Parameter Name in Config
+              required:
+              - ref_type
+              - name
+              - param_type
+              - config_name
+              - param_name
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - experiment
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                  - boolean
+                  - number
+                  - array
+                  - object
+                  description: Parameter Type
+                experiment_name:
+                  type: string
+                  description: Experiment Name
+                param_name:
+                  type: string
+                  description: Parameter Name in Experiment
+              required:
+              - ref_type
+              - name
+              - param_type
+              - experiment_name
+              - param_name
+            description: Parameter Definition
+          description: List of Parameters
+      required:
+      - id
+      - name
+      - displayName
+      - description
+      - createdTime
+      - creatorID
+      - lastModifierID
+      - parameters
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    ParamStoreCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Param Store Name
+        description:
+          type: string
+          description: Param Store Description
+        displayName:
+          type: string
+          description: Param Store Display Name
+        targetAppIDs:
+          type: array
+          items:
+            type: string
+          description: Target App IDs
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags
+        team:
+          type: string
+          description: Team
+      required:
+      - name
+      - description
+      - displayName
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+  securitySchemes:
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header

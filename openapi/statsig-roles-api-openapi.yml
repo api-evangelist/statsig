@@ -1,0 +1,846 @@
+openapi: 3.2.0
+info:
+  title: Console Roles API
+  description: The "Console API" is the CRUD API for performing the actions offered on console.statsig.com without needing to go through the web UI.
+  version: 20240601.0.0
+  contact: {}
+servers:
+- url: https://statsigapi.net
+tags:
+- name: Roles
+paths:
+  /console/v1/roles:
+    get:
+      summary: List Roles
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: List Roles Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/RoleContractDto'
+                example:
+                  message: Roles listed successfully.
+                  data:
+                  - name: Custom Role
+                    permissions:
+                      invitation_access: false
+                      create_configs: false
+                      edit_or_delete_configs: false
+                      delete_configs: false
+                      launch_to_production: false
+                      launch_or_disable_configs: false
+                      start_experiments: false
+                      create_or_edit_templates: false
+                      create_or_edit_dashboards: false
+                      create_teams: false
+                      edit_dynamic_config_schemas: false
+                      create_release_pipelines: false
+                      approve_required_review_release_pipeline_phase: false
+                      self_approve_review: false
+                      approve_reviews: false
+                      bypass_reviews_for_overrides: false
+                      metric_management: false
+                      verify_metrics: false
+                      use_metrics_explorer: false
+                      local_metrics: false
+                      manage_alerts: false
+                      integrations_edit_access: false
+                      source_connection_and_creation: false
+                      data_warehouse_ingestion_and_exports_edit_access: false
+                      edit_and_tag_configs_with_core_tag: false
+                      reset_experiments: false
+                  pagination:
+                    itemsPerPage: 100
+                    pageNumber: 1
+                    totalItems: 1
+                    nextPage: null
+                    previousPage: null
+                    all: /console/v1/roles
+              example:
+                message: Roles listed successfully.
+                data:
+                - name: Custom Role
+                  permissions:
+                    invitation_access: false
+                    create_configs: false
+                    edit_or_delete_configs: false
+                    delete_configs: false
+                    launch_to_production: false
+                    launch_or_disable_configs: false
+                    start_experiments: false
+                    create_or_edit_templates: false
+                    create_or_edit_dashboards: false
+                    create_teams: false
+                    edit_dynamic_config_schemas: false
+                    create_release_pipelines: false
+                    approve_required_review_release_pipeline_phase: false
+                    self_approve_review: false
+                    approve_reviews: false
+                    bypass_reviews_for_overrides: false
+                    metric_management: false
+                    verify_metrics: false
+                    use_metrics_explorer: false
+                    local_metrics: false
+                    manage_alerts: false
+                    integrations_edit_access: false
+                    source_connection_and_creation: false
+                    data_warehouse_ingestion_and_exports_edit_access: false
+                    edit_and_tag_configs_with_core_tag: false
+                    reset_experiments: false
+                pagination:
+                  itemsPerPage: 100
+                  pageNumber: 1
+                  totalItems: 1
+                  nextPage: null
+                  previousPage: null
+                  all: /console/v1/roles
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Roles
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1Roles
+      x-operation-id-source: derived
+    post:
+      summary: Create Role
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleContractDto'
+      responses:
+        '201':
+          description: Create Role Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/RoleContractDto'
+                example:
+                  message: Role created successfully.
+                  data:
+                    name: Custom Role
+                    permissions:
+                      invitation_access: false
+                      create_configs: false
+                      edit_or_delete_configs: false
+                      delete_configs: false
+                      launch_to_production: false
+                      launch_or_disable_configs: false
+                      start_experiments: false
+                      create_or_edit_templates: false
+                      create_or_edit_dashboards: false
+                      create_teams: false
+                      edit_dynamic_config_schemas: false
+                      create_release_pipelines: false
+                      approve_required_review_release_pipeline_phase: false
+                      self_approve_review: false
+                      approve_reviews: false
+                      bypass_reviews_for_overrides: false
+                      metric_management: false
+                      verify_metrics: false
+                      use_metrics_explorer: false
+                      local_metrics: false
+                      manage_alerts: false
+                      integrations_edit_access: false
+                      source_connection_and_creation: false
+                      data_warehouse_ingestion_and_exports_edit_access: false
+                      edit_and_tag_configs_with_core_tag: false
+                      reset_experiments: false
+              example:
+                message: Role created successfully.
+                data:
+                  name: Custom Role
+                  permissions:
+                    invitation_access: false
+                    create_configs: false
+                    edit_or_delete_configs: false
+                    delete_configs: false
+                    launch_to_production: false
+                    launch_or_disable_configs: false
+                    start_experiments: false
+                    create_or_edit_templates: false
+                    create_or_edit_dashboards: false
+                    create_teams: false
+                    edit_dynamic_config_schemas: false
+                    create_release_pipelines: false
+                    approve_required_review_release_pipeline_phase: false
+                    self_approve_review: false
+                    approve_reviews: false
+                    bypass_reviews_for_overrides: false
+                    metric_management: false
+                    verify_metrics: false
+                    use_metrics_explorer: false
+                    local_metrics: false
+                    manage_alerts: false
+                    integrations_edit_access: false
+                    source_connection_and_creation: false
+                    data_warehouse_ingestion_and_exports_edit_access: false
+                    edit_and_tag_configs_with_core_tag: false
+                    reset_experiments: false
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Roles
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1Roles
+      x-operation-id-source: derived
+  /console/v1/roles/{id}:
+    get:
+      summary: Get Role
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Get Role Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/RoleContractDto'
+                example:
+                  message: Role read successfully.
+                  data:
+                    name: Custom Role
+                    permissions:
+                      invitation_access: false
+                      create_configs: false
+                      edit_or_delete_configs: false
+                      delete_configs: false
+                      launch_to_production: false
+                      launch_or_disable_configs: false
+                      start_experiments: false
+                      create_or_edit_templates: false
+                      create_or_edit_dashboards: false
+                      create_teams: false
+                      edit_dynamic_config_schemas: false
+                      create_release_pipelines: false
+                      approve_required_review_release_pipeline_phase: false
+                      self_approve_review: false
+                      approve_reviews: false
+                      bypass_reviews_for_overrides: false
+                      metric_management: false
+                      verify_metrics: false
+                      use_metrics_explorer: false
+                      local_metrics: false
+                      manage_alerts: false
+                      integrations_edit_access: false
+                      source_connection_and_creation: false
+                      data_warehouse_ingestion_and_exports_edit_access: false
+                      edit_and_tag_configs_with_core_tag: false
+                      reset_experiments: false
+              example:
+                message: Role read successfully.
+                data:
+                  name: Custom Role
+                  permissions:
+                    invitation_access: false
+                    create_configs: false
+                    edit_or_delete_configs: false
+                    delete_configs: false
+                    launch_to_production: false
+                    launch_or_disable_configs: false
+                    start_experiments: false
+                    create_or_edit_templates: false
+                    create_or_edit_dashboards: false
+                    create_teams: false
+                    edit_dynamic_config_schemas: false
+                    create_release_pipelines: false
+                    approve_required_review_release_pipeline_phase: false
+                    self_approve_review: false
+                    approve_reviews: false
+                    bypass_reviews_for_overrides: false
+                    metric_management: false
+                    verify_metrics: false
+                    use_metrics_explorer: false
+                    local_metrics: false
+                    manage_alerts: false
+                    integrations_edit_access: false
+                    source_connection_and_creation: false
+                    data_warehouse_ingestion_and_exports_edit_access: false
+                    edit_and_tag_configs_with_core_tag: false
+                    reset_experiments: false
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Roles
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1RolesById
+      x-operation-id-source: derived
+    patch:
+      summary: Update Role
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleUpdateContractDto'
+      responses:
+        '200':
+          description: Update Role Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/RoleContractDto'
+                example:
+                  message: Role updated successfully.
+                  data:
+                    name: Custom Role
+                    permissions:
+                      invitation_access: true
+                      create_configs: false
+                      edit_or_delete_configs: false
+                      delete_configs: false
+                      launch_to_production: false
+                      launch_or_disable_configs: false
+                      start_experiments: false
+                      create_or_edit_templates: false
+                      create_or_edit_dashboards: false
+                      create_teams: false
+                      edit_dynamic_config_schemas: false
+                      create_release_pipelines: false
+                      approve_required_review_release_pipeline_phase: false
+                      self_approve_review: false
+                      approve_reviews: false
+                      bypass_reviews_for_overrides: false
+                      metric_management: false
+                      verify_metrics: false
+                      use_metrics_explorer: false
+                      local_metrics: false
+                      manage_alerts: false
+                      integrations_edit_access: false
+                      source_connection_and_creation: false
+                      data_warehouse_ingestion_and_exports_edit_access: false
+                      edit_and_tag_configs_with_core_tag: false
+                      reset_experiments: false
+              example:
+                message: Role updated successfully.
+                data:
+                  name: Custom Role
+                  permissions:
+                    invitation_access: true
+                    create_configs: false
+                    edit_or_delete_configs: false
+                    delete_configs: false
+                    launch_to_production: false
+                    launch_or_disable_configs: false
+                    start_experiments: false
+                    create_or_edit_templates: false
+                    create_or_edit_dashboards: false
+                    create_teams: false
+                    edit_dynamic_config_schemas: false
+                    create_release_pipelines: false
+                    approve_required_review_release_pipeline_phase: false
+                    self_approve_review: false
+                    approve_reviews: false
+                    bypass_reviews_for_overrides: false
+                    metric_management: false
+                    verify_metrics: false
+                    use_metrics_explorer: false
+                    local_metrics: false
+                    manage_alerts: false
+                    integrations_edit_access: false
+                    source_connection_and_creation: false
+                    data_warehouse_ingestion_and_exports_edit_access: false
+                    edit_and_tag_configs_with_core_tag: false
+                    reset_experiments: false
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Roles
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1RolesById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete Role
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete Role Response
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Role deleted successfully.
+              example:
+                message: Role deleted successfully.
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Roles
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1RolesById
+      x-operation-id-source: derived
+components:
+  schemas:
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    RoleUpdateContractDto:
+      type: object
+      properties:
+        permissions:
+          type: object
+          properties:
+            invitation_access:
+              type: boolean
+            create_configs:
+              type: boolean
+            edit_or_delete_configs:
+              type: boolean
+            delete_configs:
+              type: boolean
+            launch_to_production:
+              type: boolean
+            launch_or_disable_configs:
+              type: boolean
+            start_experiments:
+              type: boolean
+            create_or_edit_templates:
+              type: boolean
+            create_or_edit_dashboards:
+              type: boolean
+            create_teams:
+              type: boolean
+            edit_dynamic_config_schemas:
+              type: boolean
+            create_release_pipelines:
+              type: boolean
+            approve_required_review_release_pipeline_phase:
+              type: boolean
+            self_approve_review:
+              type: boolean
+            approve_reviews:
+              type: boolean
+            bypass_reviews_for_overrides:
+              type: boolean
+            bypass_precommit_webhook:
+              type: boolean
+            metric_management:
+              type: boolean
+            event_dimensions_access:
+              type: boolean
+            verify_metrics:
+              type: boolean
+            use_metrics_explorer:
+              type: boolean
+            local_metrics:
+              type: boolean
+            manage_alerts:
+              type: boolean
+            integrations_edit_access:
+              type: boolean
+            source_connection_and_creation:
+              type: boolean
+            whn_connection:
+              type: boolean
+            data_warehouse_ingestion_and_exports_edit_access:
+              type: boolean
+            edit_and_tag_configs_with_core_tag:
+              type: boolean
+            reset_experiments:
+              type: boolean
+            manual_whn_reload:
+              type: boolean
+          description: The permissions of the role.
+      required:
+      - permissions
+    RoleContractDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the role.
+        permissions:
+          type: object
+          properties:
+            invitation_access:
+              type: boolean
+            create_configs:
+              type: boolean
+            edit_or_delete_configs:
+              type: boolean
+            delete_configs:
+              type: boolean
+            launch_to_production:
+              type: boolean
+            launch_or_disable_configs:
+              type: boolean
+            start_experiments:
+              type: boolean
+            create_or_edit_templates:
+              type: boolean
+            create_or_edit_dashboards:
+              type: boolean
+            create_teams:
+              type: boolean
+            edit_dynamic_config_schemas:
+              type: boolean
+            create_release_pipelines:
+              type: boolean
+            approve_required_review_release_pipeline_phase:
+              type: boolean
+            self_approve_review:
+              type: boolean
+            approve_reviews:
+              type: boolean
+            bypass_reviews_for_overrides:
+              type: boolean
+            bypass_precommit_webhook:
+              type: boolean
+            metric_management:
+              type: boolean
+            event_dimensions_access:
+              type: boolean
+            verify_metrics:
+              type: boolean
+            use_metrics_explorer:
+              type: boolean
+            local_metrics:
+              type: boolean
+            manage_alerts:
+              type: boolean
+            integrations_edit_access:
+              type: boolean
+            source_connection_and_creation:
+              type: boolean
+            whn_connection:
+              type: boolean
+            data_warehouse_ingestion_and_exports_edit_access:
+              type: boolean
+            edit_and_tag_configs_with_core_tag:
+              type: boolean
+            reset_experiments:
+              type: boolean
+            manual_whn_reload:
+              type: boolean
+          description: The permissions of the role.
+      required:
+      - name
+      - permissions
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+  securitySchemes:
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header

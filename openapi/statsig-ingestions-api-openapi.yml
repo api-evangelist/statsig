@@ -1,0 +1,2939 @@
+openapi: 3.2.0
+info:
+  title: Console Ingestions API
+  description: The "Console API" is the CRUD API for performing the actions offered on console.statsig.com without needing to go through the web UI.
+  version: 20240601.0.0
+  contact: {}
+servers:
+- url: https://statsigapi.net
+tags:
+- name: Ingestions
+paths:
+  /console/v1/ingestion:
+    get:
+      summary: Read Ingestion
+      parameters:
+      - name: type
+        required: true
+        in: query
+        schema:
+          type: string
+          enum:
+          - redshift
+          - bigquery-v2
+          - snowflake-v2
+          - databricks
+          - azure-synapse
+          - s3
+          - athena
+          - adls
+      - name: dataset
+        required: true
+        in: query
+        schema:
+          type: string
+          enum:
+          - Events
+          - Metrics
+          - entity_properties
+          - export_exposures
+          - export_events
+      - name: source_name
+        required: false
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Read Ingestion Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/IngestionDto'
+                example:
+                  message: Ingestion schedule updated successfully.
+                  data:
+                    dataset: Metrics
+                    scheduled_hour_pst: 10
+              example:
+                message: Ingestion schedule updated successfully.
+                data:
+                  dataset: Metrics
+                  scheduled_hour_pst: 10
+      tags:
+      - Ingestions
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1Ingestion
+      x-operation-id-source: derived
+    post:
+      summary: Create Ingestion Source
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestionSourceCreateContractDto'
+      responses:
+        '200':
+          description: Create Ingestion Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/IngestionDto'
+                example:
+                  type: databricks
+                  dataset: Metrics
+                  source_name: ingestion-1
+                  query: SELECT * FROM TABLE
+                  column_mapping:
+                    unit_id: string
+                    id_type: string
+                    dateid: string
+                    metric_name: string
+                    metric_value: string
+                    numerator: string
+                    denominator: string
+                  use_delta_sharing: false
+                  share: string
+                  schema: string
+                  table: string
+                  enabled: false
+              example:
+                type: databricks
+                dataset: Metrics
+                source_name: ingestion-1
+                query: SELECT * FROM TABLE
+                column_mapping:
+                  unit_id: string
+                  id_type: string
+                  dateid: string
+                  metric_name: string
+                  metric_value: string
+                  numerator: string
+                  denominator: string
+                use_delta_sharing: false
+                share: string
+                schema: string
+                table: string
+                enabled: false
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Ingestion source already exists with name {source_name}
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Ingestion of type {type} not found.
+      tags:
+      - Ingestions
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1Ingestion
+      x-operation-id-source: derived
+    patch:
+      summary: Update Ingestion Source
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestionUpdateContractDto'
+      responses:
+        '200':
+          description: Update Ingestion Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/IngestionDto'
+                example:
+                  type: databricks
+                  dataset: Metrics
+                  source_name: ingestion-1
+                  query: SELECT * FROM TABLE
+                  column_mapping:
+                    unit_id: string
+                    id_type: string
+                    dateid: string
+                    metric_name: string
+                    metric_value: string
+                    numerator: string
+                    denominator: string
+                  share: string
+                  schema: string
+                  table: string
+                  enabled: false
+              example:
+                type: databricks
+                dataset: Metrics
+                source_name: ingestion-1
+                query: SELECT * FROM TABLE
+                column_mapping:
+                  unit_id: string
+                  id_type: string
+                  dateid: string
+                  metric_name: string
+                  metric_value: string
+                  numerator: string
+                  denominator: string
+                share: string
+                schema: string
+                table: string
+                enabled: false
+      tags:
+      - Ingestions
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1Ingestion
+      x-operation-id-source: derived
+    delete:
+      summary: Delete Ingestion Source
+      parameters:
+      - name: type
+        required: true
+        in: query
+        schema:
+          type: string
+          enum:
+          - redshift
+          - bigquery-v2
+          - snowflake-v2
+          - databricks
+          - azure-synapse
+          - s3
+          - athena
+          - adls
+      - name: dataset
+        required: true
+        in: query
+        schema:
+          type: string
+          enum:
+          - Events
+          - Metrics
+          - entity_properties
+          - export_exposures
+          - export_events
+      - name: source_name
+        required: false
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete Ingestion Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/IngestionDto'
+                example:
+                  message: Ingestion deleted successfully.
+              example:
+                message: Ingestion deleted successfully.
+      tags:
+      - Ingestions
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1Ingestion
+      x-operation-id-source: derived
+  /console/v1/ingestion/backfill:
+    post:
+      summary: Backfill Ingestion
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestionBackfillContractDto'
+      responses:
+        '200':
+          description: Backfill Ingestion Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/IngestionBackfillDataDto'
+                example:
+                  message: Ingestion backfilled successfully.
+                  data:
+                    runID: string
+              example:
+                message: Ingestion backfilled successfully.
+                data:
+                  runID: string
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+      tags:
+      - Ingestions
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1IngestionBackfill
+      x-operation-id-source: derived
+  /console/v1/ingestion/connection/databricks:
+    post:
+      summary: Create Ingestion Databricks
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestionCreateDatabricksConnectionContractDto'
+      responses:
+        '200':
+          description: Create Ingestion Databricks Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/IngestionDto'
+                example:
+                  token: string
+                  host: string
+                  path: string
+                  deltaSharingCredentials: string
+                  verified: false
+              example:
+                token: string
+                host: string
+                path: string
+                deltaSharingCredentials: string
+                verified: false
+      tags:
+      - Ingestions
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1IngestionConnectionDatabricks
+      x-operation-id-source: derived
+  /console/v1/ingestion/events/count:
+    get:
+      summary: Get Ingestion Event Count
+      parameters:
+      - name: source_name
+        required: false
+        in: query
+        schema:
+          type: string
+      - name: event_name
+        required: false
+        in: query
+        schema:
+          type: string
+      - name: start_date
+        required: true
+        in: query
+        description: Expected valid date in the form of YYYY-MM-DD
+        schema:
+          example: '2024-01-01'
+          type: string
+      - name: end_date
+        required: true
+        in: query
+        description: Expected valid date in the form of YYYY-MM-DD
+        schema:
+          example: '2024-01-01'
+          type: string
+      responses:
+        '200':
+          description: Get Ingestion Event Count Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/IngestionEventCountResponseDto'
+                example:
+                  type: databricks
+                  dataset: Metrics
+                  source_name: ingestion-1
+                  query: SELECT * FROM TABLE
+                  column_mapping:
+                    unit_id: string
+                    id_type: string
+                    dateid: string
+                    metric_name: string
+                    metric_value: string
+                    numerator: string
+                    denominator: string
+                  use_delta_sharing: false
+                  share: string
+                  schema: string
+                  table: string
+                  enabled: false
+              example:
+                type: databricks
+                dataset: Metrics
+                source_name: ingestion-1
+                query: SELECT * FROM TABLE
+                column_mapping:
+                  unit_id: string
+                  id_type: string
+                  dateid: string
+                  metric_name: string
+                  metric_value: string
+                  numerator: string
+                  denominator: string
+                use_delta_sharing: false
+                share: string
+                schema: string
+                table: string
+                enabled: false
+      tags:
+      - Ingestions
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1IngestionEventsCount
+      x-operation-id-source: derived
+  /console/v1/ingestion/events/delta:
+    get:
+      summary: Get Ingestion Event Delta Ledger
+      parameters:
+      - name: source_name
+        required: false
+        in: query
+        schema:
+          type: string
+      - name: event_name
+        required: false
+        in: query
+        schema:
+          type: string
+      - name: start_date
+        required: true
+        in: query
+        description: Expected valid date in the form of YYYY-MM-DD
+        schema:
+          example: '2024-01-01'
+          type: string
+      - name: end_date
+        required: true
+        in: query
+        description: Expected valid date in the form of YYYY-MM-DD
+        schema:
+          example: '2024-01-01'
+          type: string
+      responses:
+        '200':
+          description: Get Ingestion Event Delta Ledger Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/IngestionEventDeltaResponseDto'
+                example:
+                  type: databricks
+                  dataset: Metrics
+                  source_name: ingestion-1
+                  query: SELECT * FROM TABLE
+                  column_mapping:
+                    unit_id: string
+                    id_type: string
+                    dateid: string
+                    metric_name: string
+                    metric_value: string
+                    numerator: string
+                    denominator: string
+                  use_delta_sharing: false
+                  share: string
+                  schema: string
+                  table: string
+                  enabled: false
+              example:
+                type: databricks
+                dataset: Metrics
+                source_name: ingestion-1
+                query: SELECT * FROM TABLE
+                column_mapping:
+                  unit_id: string
+                  id_type: string
+                  dateid: string
+                  metric_name: string
+                  metric_value: string
+                  numerator: string
+                  denominator: string
+                use_delta_sharing: false
+                share: string
+                schema: string
+                table: string
+                enabled: false
+      tags:
+      - Ingestions
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1IngestionEventsDelta
+      x-operation-id-source: derived
+  /console/v1/ingestion/runs:
+    get:
+      summary: List Ingestion Runs
+      parameters:
+      - name: page
+        required: false
+        in: query
+        schema:
+          oneOf:
+          - type: string
+          - type: number
+      responses:
+        '200':
+          description: List Ingestion Runs Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/IngestionRunDataContractDto'
+                example:
+                  message: Ingestion Runs Listed Successfully.
+                  data:
+                  - runID: 5a09550b-75a1-4f98-908a-cd79ca729689
+                    latestStatus: download_error
+                    lastUpdatedAt: '2023-12-14T02:47:00.321Z'
+                    createdAt: '2023-12-14T02:31:46.896Z'
+                    trigger: scheduled
+                    sources:
+                    - Events 1
+                    - Events 2
+                    dateStamps:
+                    - '2023-12-12'
+                    runHistory:
+                    - statusTimestamp: '2023-12-14T02:47:01.422Z'
+                      status: download_error
+                    - statusTimestamp: '2023-12-14T02:46:46.800Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-14T02:44:32.597Z'
+                      status: download_error
+                    - statusTimestamp: '2023-12-14T02:43:34.056Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-14T02:34:27.056Z'
+                      status: started
+                    - statusTimestamp: '2023-12-14T02:31:46.896Z'
+                      status: enqueued
+                    granularHistory:
+                    - source: Events 1
+                      latestSourceStatus: download_error
+                      statusByDate:
+                      - dateStamp: '2023-12-12'
+                        statuses:
+                        - statusTimestamp: '2023-12-14T02:44:30.666Z'
+                          status: download_error
+                        - statusTimestamp: '2023-12-14T02:43:22.724Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-14T02:34:25.325Z'
+                          status: started
+                        - statusTimestamp: '2023-12-14T02:31:46.896Z'
+                          status: enqueued
+                    - source: Events 2
+                      latestSourceStatus: download_error
+                      statusByDate:
+                      - dateStamp: '2023-12-12'
+                        statuses:
+                        - statusTimestamp: '2023-12-14T02:44:30.666Z'
+                          status: download_error
+                        - statusTimestamp: '2023-12-14T02:43:22.724Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-14T02:34:25.325Z'
+                          status: started
+                        - statusTimestamp: '2023-12-14T02:31:46.896Z'
+                          status: enqueued
+                  - runID: 21b97020-e61a-49bf-a9f3-ce46cec50489
+                    latestStatus: pulse_complete
+                    lastUpdatedAt: '2023-12-14T04:18:54.603Z'
+                    createdAt: '2023-12-14T02:30:27.217Z'
+                    trigger: scheduled
+                    sources:
+                    - Metrics 1
+                    dateStamps:
+                    - '2023-12-12'
+                    runHistory:
+                    - statusTimestamp: '2023-12-14T04:18:55.556Z'
+                      status: pulse_complete
+                    - statusTimestamp: '2023-12-14T03:32:49.429Z'
+                      status: metrics_complete
+                    - statusTimestamp: '2023-12-14T03:21:40.015Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-14T03:21:33.322Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-14T03:21:27.046Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-14T03:21:15.449Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-14T02:45:17.161Z'
+                      status: download_complete
+                    - statusTimestamp: '2023-12-14T02:43:33.661Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-14T02:35:09.734Z'
+                      status: started
+                    - statusTimestamp: '2023-12-14T02:30:27.217Z'
+                      status: enqueued
+                    granularHistory:
+                    - source: Metrics 1
+                      latestSourceStatus: pulse_complete
+                      statusByDate:
+                      - dateStamp: '2023-12-12'
+                        statuses:
+                        - statusTimestamp: '2023-12-14T04:18:53.975Z'
+                          status: pulse_complete
+                        - statusTimestamp: '2023-12-14T04:04:48.761Z'
+                          status: pulse_started
+                        - statusTimestamp: '2023-12-14T03:32:48.019Z'
+                          status: metrics_complete
+                        - statusTimestamp: '2023-12-14T03:21:38.667Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-14T03:21:32.039Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-14T03:21:25.385Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-14T03:21:14.383Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-14T02:45:05.125Z'
+                          status: download_complete
+                        - statusTimestamp: '2023-12-14T02:43:27.013Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-14T02:35:07.577Z'
+                          status: started
+                        - statusTimestamp: '2023-12-14T02:30:27.217Z'
+                          status: enqueued
+                  - runID: de941fa2-3e0f-44ec-a44c-5c51eed07e0d
+                    latestStatus: download_error
+                    lastUpdatedAt: '2023-12-13T02:44:23.790Z'
+                    createdAt: '2023-12-13T02:30:55.992Z'
+                    trigger: scheduled
+                    sources:
+                    - Events 1
+                    - Events 2
+                    dateStamps:
+                    - '2023-12-11'
+                    runHistory:
+                    - statusTimestamp: '2023-12-13T02:44:24.865Z'
+                      status: download_error
+                    - statusTimestamp: '2023-12-13T02:44:12.421Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-13T02:41:48.458Z'
+                      status: download_error
+                    - statusTimestamp: '2023-12-13T02:40:56.694Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-13T02:32:35.607Z'
+                      status: started
+                    - statusTimestamp: '2023-12-13T02:30:55.992Z'
+                      status: enqueued
+                    granularHistory:
+                    - source: Events 1
+                      latestSourceStatus: download_error
+                      statusByDate:
+                      - dateStamp: '2023-12-11'
+                        statuses:
+                        - statusTimestamp: '2023-12-13T02:41:47.374Z'
+                          status: download_error
+                        - statusTimestamp: '2023-12-13T02:40:50.210Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-13T02:32:33.118Z'
+                          status: started
+                        - statusTimestamp: '2023-12-13T02:30:55.992Z'
+                          status: enqueued
+                    - source: Events 2
+                      latestSourceStatus: download_error
+                      statusByDate:
+                      - dateStamp: '2023-12-11'
+                        statuses:
+                        - statusTimestamp: '2023-12-13T02:41:47.374Z'
+                          status: download_error
+                        - statusTimestamp: '2023-12-13T02:40:50.210Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-13T02:32:33.118Z'
+                          status: started
+                        - statusTimestamp: '2023-12-13T02:30:55.992Z'
+                          status: enqueued
+                  - runID: 93b0150f-d53a-416e-876f-bac00634a872
+                    latestStatus: pulse_complete
+                    lastUpdatedAt: '2023-12-13T03:47:23.504Z'
+                    createdAt: '2023-12-13T02:29:32.793Z'
+                    trigger: scheduled
+                    sources:
+                    - Metrics 1
+                    dateStamps:
+                    - '2023-12-11'
+                    runHistory:
+                    - statusTimestamp: '2023-12-13T03:47:24.548Z'
+                      status: pulse_complete
+                    - statusTimestamp: '2023-12-13T03:41:19.158Z'
+                      status: pulse_started
+                    - statusTimestamp: '2023-12-13T03:35:05.780Z'
+                      status: pulse_started
+                    - statusTimestamp: '2023-12-13T03:28:52.123Z'
+                      status: pulse_started
+                    - statusTimestamp: '2023-12-13T03:22:38.140Z'
+                      status: pulse_started
+                    - statusTimestamp: '2023-12-13T03:20:48.982Z'
+                      status: metrics_complete
+                    - statusTimestamp: '2023-12-13T03:16:40.079Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-13T03:16:31.359Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-13T03:16:23.553Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-13T03:16:08.026Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-13T02:42:52.210Z'
+                      status: download_complete
+                    - statusTimestamp: '2023-12-13T02:41:01.394Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-13T02:33:26.492Z'
+                      status: started
+                    - statusTimestamp: '2023-12-13T02:29:32.793Z'
+                      status: enqueued
+                    granularHistory:
+                    - source: Metrics 1
+                      latestSourceStatus: pulse_complete
+                      statusByDate:
+                      - dateStamp: '2023-12-11'
+                        statuses:
+                        - statusTimestamp: '2023-12-13T03:47:22.812Z'
+                          status: pulse_complete
+                        - statusTimestamp: '2023-12-13T03:41:17.582Z'
+                          status: pulse_started
+                        - statusTimestamp: '2023-12-13T03:20:47.294Z'
+                          status: metrics_complete
+                        - statusTimestamp: '2023-12-13T03:16:38.421Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-13T03:16:29.827Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-13T03:16:21.847Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-13T03:16:05.864Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-13T02:42:36.220Z'
+                          status: download_complete
+                        - statusTimestamp: '2023-12-13T02:40:47.890Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-13T02:33:24.219Z'
+                          status: started
+                        - statusTimestamp: '2023-12-13T02:29:32.793Z'
+                          status: enqueued
+                  - runID: a4df397e-c816-4e39-9b1a-ab6b2e5f3811
+                    latestStatus: download_error
+                    lastUpdatedAt: '2023-12-12T02:43:29.739Z'
+                    createdAt: '2023-12-12T02:30:41.989Z'
+                    trigger: scheduled
+                    sources:
+                    - Events 1
+                    - Events 2
+                    dateStamps:
+                    - '2023-12-10'
+                    runHistory:
+                    - statusTimestamp: '2023-12-12T02:43:30.735Z'
+                      status: download_error
+                    - statusTimestamp: '2023-12-12T02:43:16.318Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-12T02:40:56.030Z'
+                      status: download_error
+                    - statusTimestamp: '2023-12-12T02:39:58.147Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-12T02:32:18.156Z'
+                      status: started
+                    - statusTimestamp: '2023-12-12T02:30:41.989Z'
+                      status: enqueued
+                    granularHistory:
+                    - source: Events 1
+                      latestSourceStatus: download_error
+                      statusByDate:
+                      - dateStamp: '2023-12-10'
+                        statuses:
+                        - statusTimestamp: '2023-12-12T02:40:54.406Z'
+                          status: download_error
+                        - statusTimestamp: '2023-12-12T02:39:51.150Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-12T02:32:16.419Z'
+                          status: started
+                        - statusTimestamp: '2023-12-12T02:30:41.989Z'
+                          status: enqueued
+                    - source: Events 2
+                      latestSourceStatus: download_error
+                      statusByDate:
+                      - dateStamp: '2023-12-10'
+                        statuses:
+                        - statusTimestamp: '2023-12-12T02:40:54.406Z'
+                          status: download_error
+                        - statusTimestamp: '2023-12-12T02:39:51.150Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-12T02:32:16.419Z'
+                          status: started
+                        - statusTimestamp: '2023-12-12T02:30:41.989Z'
+                          status: enqueued
+                  - runID: eedeb4c0-07dd-43d0-8014-5ac41ef7dab8
+                    latestStatus: pulse_complete
+                    lastUpdatedAt: '2023-12-12T03:50:41.473Z'
+                    createdAt: '2023-12-12T02:29:22.966Z'
+                    trigger: scheduled
+                    sources:
+                    - Metrics 1
+                    dateStamps:
+                    - '2023-12-10'
+                    runHistory:
+                    - statusTimestamp: '2023-12-12T03:50:42.631Z'
+                      status: pulse_complete
+                    - statusTimestamp: '2023-12-12T03:43:37.286Z'
+                      status: pulse_started
+                    - statusTimestamp: '2023-12-12T03:36:24.884Z'
+                      status: pulse_started
+                    - statusTimestamp: '2023-12-12T03:29:10.652Z'
+                      status: pulse_started
+                    - statusTimestamp: '2023-12-12T03:21:58.355Z'
+                      status: pulse_started
+                    - statusTimestamp: '2023-12-12T03:20:04.085Z'
+                      status: metrics_complete
+                    - statusTimestamp: '2023-12-12T03:15:24.760Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-12T03:15:18.051Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-12T03:15:10.427Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-12T03:14:55.187Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-12T02:42:29.345Z'
+                      status: download_complete
+                    - statusTimestamp: '2023-12-12T02:40:52.701Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-12T02:32:50.650Z'
+                      status: started
+                    - statusTimestamp: '2023-12-12T02:29:22.966Z'
+                      status: enqueued
+                    granularHistory:
+                    - source: Metrics 1
+                      latestSourceStatus: pulse_complete
+                      statusByDate:
+                      - dateStamp: '2023-12-07'
+                        statuses:
+                        - statusTimestamp: '2023-12-12T03:29:02.000Z'
+                          status: pulse_complete
+                        - statusTimestamp: '2023-12-12T03:21:56.433Z'
+                          status: pulse_started
+                        - statusTimestamp: '2023-12-12T03:20:02.276Z'
+                          status: metrics_complete
+                        - statusTimestamp: '2023-12-12T03:15:23.367Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-12T03:15:16.599Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-12T03:15:09.146Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-12T03:14:52.858Z'
+                          status: metrics_started
+                      - dateStamp: '2023-12-08'
+                        statuses:
+                        - statusTimestamp: '2023-12-12T03:36:14.414Z'
+                          status: pulse_complete
+                        - statusTimestamp: '2023-12-12T03:29:09.220Z'
+                          status: pulse_started
+                        - statusTimestamp: '2023-12-12T03:20:02.276Z'
+                          status: metrics_complete
+                        - statusTimestamp: '2023-12-12T03:15:23.367Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-12T03:15:16.599Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-12T03:15:09.146Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-12T03:14:52.858Z'
+                          status: metrics_started
+                      - dateStamp: '2023-12-09'
+                        statuses:
+                        - statusTimestamp: '2023-12-12T03:43:28.767Z'
+                          status: pulse_complete
+                        - statusTimestamp: '2023-12-12T03:36:23.369Z'
+                          status: pulse_started
+                        - statusTimestamp: '2023-12-12T03:20:02.276Z'
+                          status: metrics_complete
+                        - statusTimestamp: '2023-12-12T03:15:23.367Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-12T03:15:16.599Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-12T03:15:09.146Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-12T03:14:52.858Z'
+                          status: metrics_started
+                      - dateStamp: '2023-12-10'
+                        statuses:
+                        - statusTimestamp: '2023-12-12T03:50:40.851Z'
+                          status: pulse_complete
+                        - statusTimestamp: '2023-12-12T03:43:35.832Z'
+                          status: pulse_started
+                        - statusTimestamp: '2023-12-12T03:20:02.276Z'
+                          status: metrics_complete
+                        - statusTimestamp: '2023-12-12T03:15:23.367Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-12T03:15:16.599Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-12T03:15:09.146Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-12T03:14:52.858Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-12T02:42:12.290Z'
+                          status: download_complete
+                        - statusTimestamp: '2023-12-12T02:40:45.773Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-12T02:32:48.580Z'
+                          status: started
+                        - statusTimestamp: '2023-12-12T02:29:22.966Z'
+                          status: enqueued
+                  - runID: 93b8b43c-8d52-4c77-bf8b-26426031a937
+                    latestStatus: download_error
+                    lastUpdatedAt: '2023-12-12T05:23:34.419Z'
+                    createdAt: '2023-12-11T02:30:09.748Z'
+                    trigger: scheduled
+                    sources:
+                    - Events 1
+                    - Events 2
+                    dateStamps:
+                    - '2023-12-09'
+                    runHistory:
+                    - statusTimestamp: '2023-12-11T02:43:14.831Z'
+                      status: download_error
+                    - statusTimestamp: '2023-12-11T02:42:59.726Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-11T02:40:35.456Z'
+                      status: download_error
+                    - statusTimestamp: '2023-12-11T02:39:41.755Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-11T02:31:30.223Z'
+                      status: started
+                    - statusTimestamp: '2023-12-11T02:30:09.748Z'
+                      status: enqueued
+                    granularHistory:
+                    - source: Events 1
+                      latestSourceStatus: download_complete
+                      statusByDate:
+                      - dateStamp: '2023-12-09'
+                        statuses:
+                        - statusTimestamp: '2023-12-12T05:23:36.192Z'
+                          status: download_complete
+                        - statusTimestamp: '2023-12-11T02:40:33.565Z'
+                          status: download_error
+                        - statusTimestamp: '2023-12-11T02:39:34.990Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-11T02:31:28.492Z'
+                          status: started
+                        - statusTimestamp: '2023-12-11T02:30:09.748Z'
+                          status: enqueued
+                    - source: Events 2
+                      latestSourceStatus: download_complete
+                      statusByDate:
+                      - dateStamp: '2023-12-09'
+                        statuses:
+                        - statusTimestamp: '2023-12-12T05:23:36.193Z'
+                          status: download_complete
+                        - statusTimestamp: '2023-12-11T02:40:33.565Z'
+                          status: download_error
+                        - statusTimestamp: '2023-12-11T02:39:34.990Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-11T02:31:28.492Z'
+                          status: started
+                        - statusTimestamp: '2023-12-11T02:30:09.748Z'
+                          status: enqueued
+                  - runID: 97bbdee6-d77b-42c9-b4f0-d970eee9f983
+                    latestStatus: pulse_complete
+                    lastUpdatedAt: '2023-12-11T10:00:43.391Z'
+                    createdAt: '2023-12-11T02:29:04.866Z'
+                    trigger: scheduled
+                    sources:
+                    - Metrics 1
+                    dateStamps:
+                    - '2023-12-09'
+                    runHistory:
+                    - statusTimestamp: '2023-12-11T10:00:44.621Z'
+                      status: pulse_complete
+                    - statusTimestamp: '2023-12-11T09:54:39.521Z'
+                      status: pulse_started
+                    - statusTimestamp: '2023-12-11T09:47:27.810Z'
+                      status: pulse_started
+                    - statusTimestamp: '2023-12-11T09:40:15.586Z'
+                      status: pulse_started
+                    - statusTimestamp: '2023-12-11T09:33:02.761Z'
+                      status: pulse_started
+                    - statusTimestamp: '2023-12-11T09:31:14.238Z'
+                      status: metrics_complete
+                    - statusTimestamp: '2023-12-11T09:26:37.129Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-11T09:26:30.339Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-11T09:26:23.246Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-11T09:26:13.395Z'
+                      status: metrics_started
+                    - statusTimestamp: '2023-12-11T02:51:38.296Z'
+                      status: download_complete
+                    - statusTimestamp: '2023-12-11T02:49:59.185Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-11T02:42:14.545Z'
+                      status: started
+                    - statusTimestamp: '2023-12-11T02:29:04.866Z'
+                      status: enqueued
+                    granularHistory:
+                    - source: Metrics 1
+                      latestSourceStatus: pulse_complete
+                      statusByDate:
+                      - dateStamp: '2023-12-06'
+                        statuses:
+                        - statusTimestamp: '2023-12-11T09:40:06.488Z'
+                          status: pulse_complete
+                        - statusTimestamp: '2023-12-11T09:33:00.819Z'
+                          status: pulse_started
+                        - statusTimestamp: '2023-12-11T09:31:12.660Z'
+                          status: metrics_complete
+                        - statusTimestamp: '2023-12-11T09:26:35.749Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-11T09:26:28.818Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-11T09:26:22.624Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-11T09:26:11.934Z'
+                          status: metrics_started
+                      - dateStamp: '2023-12-07'
+                        statuses:
+                        - statusTimestamp: '2023-12-11T09:47:19.007Z'
+                          status: pulse_complete
+                        - statusTimestamp: '2023-12-11T09:40:14.371Z'
+                          status: pulse_started
+                        - statusTimestamp: '2023-12-11T09:31:12.660Z'
+                          status: metrics_complete
+                        - statusTimestamp: '2023-12-11T09:26:35.749Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-11T09:26:28.818Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-11T09:26:22.625Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-11T09:26:11.934Z'
+                          status: metrics_started
+                      - dateStamp: '2023-12-08'
+                        statuses:
+                        - statusTimestamp: '2023-12-11T09:54:31.386Z'
+                          status: pulse_complete
+                        - statusTimestamp: '2023-12-11T09:47:26.424Z'
+                          status: pulse_started
+                        - statusTimestamp: '2023-12-11T09:31:12.660Z'
+                          status: metrics_complete
+                        - statusTimestamp: '2023-12-11T09:26:35.749Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-11T09:26:28.818Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-11T09:26:22.625Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-11T09:26:11.934Z'
+                          status: metrics_started
+                      - dateStamp: '2023-12-09'
+                        statuses:
+                        - statusTimestamp: '2023-12-11T10:00:42.867Z'
+                          status: pulse_complete
+                        - statusTimestamp: '2023-12-11T09:54:38.280Z'
+                          status: pulse_started
+                        - statusTimestamp: '2023-12-11T09:31:12.660Z'
+                          status: metrics_complete
+                        - statusTimestamp: '2023-12-11T09:26:35.749Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-11T09:26:28.818Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-11T09:26:22.625Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-11T09:26:11.934Z'
+                          status: metrics_started
+                        - statusTimestamp: '2023-12-11T02:51:26.328Z'
+                          status: download_complete
+                        - statusTimestamp: '2023-12-11T02:49:52.797Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-11T02:42:12.424Z'
+                          status: started
+                        - statusTimestamp: '2023-12-11T02:29:04.866Z'
+                          status: enqueued
+                  pagination:
+                    itemsPerPage: 10
+                    pageNumber: 1
+                    nextPage: /console/v1/ingestion/runs?page=2
+                    previousPage: null
+              example:
+                message: Ingestion Runs Listed Successfully.
+                data:
+                - runID: 5a09550b-75a1-4f98-908a-cd79ca729689
+                  latestStatus: download_error
+                  lastUpdatedAt: '2023-12-14T02:47:00.321Z'
+                  createdAt: '2023-12-14T02:31:46.896Z'
+                  trigger: scheduled
+                  sources:
+                  - Events 1
+                  - Events 2
+                  dateStamps:
+                  - '2023-12-12'
+                  runHistory:
+                  - statusTimestamp: '2023-12-14T02:47:01.422Z'
+                    status: download_error
+                  - statusTimestamp: '2023-12-14T02:46:46.800Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-14T02:44:32.597Z'
+                    status: download_error
+                  - statusTimestamp: '2023-12-14T02:43:34.056Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-14T02:34:27.056Z'
+                    status: started
+                  - statusTimestamp: '2023-12-14T02:31:46.896Z'
+                    status: enqueued
+                  granularHistory:
+                  - source: Events 1
+                    latestSourceStatus: download_error
+                    statusByDate:
+                    - dateStamp: '2023-12-12'
+                      statuses:
+                      - statusTimestamp: '2023-12-14T02:44:30.666Z'
+                        status: download_error
+                      - statusTimestamp: '2023-12-14T02:43:22.724Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-14T02:34:25.325Z'
+                        status: started
+                      - statusTimestamp: '2023-12-14T02:31:46.896Z'
+                        status: enqueued
+                  - source: Events 2
+                    latestSourceStatus: download_error
+                    statusByDate:
+                    - dateStamp: '2023-12-12'
+                      statuses:
+                      - statusTimestamp: '2023-12-14T02:44:30.666Z'
+                        status: download_error
+                      - statusTimestamp: '2023-12-14T02:43:22.724Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-14T02:34:25.325Z'
+                        status: started
+                      - statusTimestamp: '2023-12-14T02:31:46.896Z'
+                        status: enqueued
+                - runID: 21b97020-e61a-49bf-a9f3-ce46cec50489
+                  latestStatus: pulse_complete
+                  lastUpdatedAt: '2023-12-14T04:18:54.603Z'
+                  createdAt: '2023-12-14T02:30:27.217Z'
+                  trigger: scheduled
+                  sources:
+                  - Metrics 1
+                  dateStamps:
+                  - '2023-12-12'
+                  runHistory:
+                  - statusTimestamp: '2023-12-14T04:18:55.556Z'
+                    status: pulse_complete
+                  - statusTimestamp: '2023-12-14T03:32:49.429Z'
+                    status: metrics_complete
+                  - statusTimestamp: '2023-12-14T03:21:40.015Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-14T03:21:33.322Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-14T03:21:27.046Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-14T03:21:15.449Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-14T02:45:17.161Z'
+                    status: download_complete
+                  - statusTimestamp: '2023-12-14T02:43:33.661Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-14T02:35:09.734Z'
+                    status: started
+                  - statusTimestamp: '2023-12-14T02:30:27.217Z'
+                    status: enqueued
+                  granularHistory:
+                  - source: Metrics 1
+                    latestSourceStatus: pulse_complete
+                    statusByDate:
+                    - dateStamp: '2023-12-12'
+                      statuses:
+                      - statusTimestamp: '2023-12-14T04:18:53.975Z'
+                        status: pulse_complete
+                      - statusTimestamp: '2023-12-14T04:04:48.761Z'
+                        status: pulse_started
+                      - statusTimestamp: '2023-12-14T03:32:48.019Z'
+                        status: metrics_complete
+                      - statusTimestamp: '2023-12-14T03:21:38.667Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-14T03:21:32.039Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-14T03:21:25.385Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-14T03:21:14.383Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-14T02:45:05.125Z'
+                        status: download_complete
+                      - statusTimestamp: '2023-12-14T02:43:27.013Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-14T02:35:07.577Z'
+                        status: started
+                      - statusTimestamp: '2023-12-14T02:30:27.217Z'
+                        status: enqueued
+                - runID: de941fa2-3e0f-44ec-a44c-5c51eed07e0d
+                  latestStatus: download_error
+                  lastUpdatedAt: '2023-12-13T02:44:23.790Z'
+                  createdAt: '2023-12-13T02:30:55.992Z'
+                  trigger: scheduled
+                  sources:
+                  - Events 1
+                  - Events 2
+                  dateStamps:
+                  - '2023-12-11'
+                  runHistory:
+                  - statusTimestamp: '2023-12-13T02:44:24.865Z'
+                    status: download_error
+                  - statusTimestamp: '2023-12-13T02:44:12.421Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-13T02:41:48.458Z'
+                    status: download_error
+                  - statusTimestamp: '2023-12-13T02:40:56.694Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-13T02:32:35.607Z'
+                    status: started
+                  - statusTimestamp: '2023-12-13T02:30:55.992Z'
+                    status: enqueued
+                  granularHistory:
+                  - source: Events 1
+                    latestSourceStatus: download_error
+                    statusByDate:
+                    - dateStamp: '2023-12-11'
+                      statuses:
+                      - statusTimestamp: '2023-12-13T02:41:47.374Z'
+                        status: download_error
+                      - statusTimestamp: '2023-12-13T02:40:50.210Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-13T02:32:33.118Z'
+                        status: started
+                      - statusTimestamp: '2023-12-13T02:30:55.992Z'
+                        status: enqueued
+                  - source: Events 2
+                    latestSourceStatus: download_error
+                    statusByDate:
+                    - dateStamp: '2023-12-11'
+                      statuses:
+                      - statusTimestamp: '2023-12-13T02:41:47.374Z'
+                        status: download_error
+                      - statusTimestamp: '2023-12-13T02:40:50.210Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-13T02:32:33.118Z'
+                        status: started
+                      - statusTimestamp: '2023-12-13T02:30:55.992Z'
+                        status: enqueued
+                - runID: 93b0150f-d53a-416e-876f-bac00634a872
+                  latestStatus: pulse_complete
+                  lastUpdatedAt: '2023-12-13T03:47:23.504Z'
+                  createdAt: '2023-12-13T02:29:32.793Z'
+                  trigger: scheduled
+                  sources:
+                  - Metrics 1
+                  dateStamps:
+                  - '2023-12-11'
+                  runHistory:
+                  - statusTimestamp: '2023-12-13T03:47:24.548Z'
+                    status: pulse_complete
+                  - statusTimestamp: '2023-12-13T03:41:19.158Z'
+                    status: pulse_started
+                  - statusTimestamp: '2023-12-13T03:35:05.780Z'
+                    status: pulse_started
+                  - statusTimestamp: '2023-12-13T03:28:52.123Z'
+                    status: pulse_started
+                  - statusTimestamp: '2023-12-13T03:22:38.140Z'
+                    status: pulse_started
+                  - statusTimestamp: '2023-12-13T03:20:48.982Z'
+                    status: metrics_complete
+                  - statusTimestamp: '2023-12-13T03:16:40.079Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-13T03:16:31.359Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-13T03:16:23.553Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-13T03:16:08.026Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-13T02:42:52.210Z'
+                    status: download_complete
+                  - statusTimestamp: '2023-12-13T02:41:01.394Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-13T02:33:26.492Z'
+                    status: started
+                  - statusTimestamp: '2023-12-13T02:29:32.793Z'
+                    status: enqueued
+                  granularHistory:
+                  - source: Metrics 1
+                    latestSourceStatus: pulse_complete
+                    statusByDate:
+                    - dateStamp: '2023-12-11'
+                      statuses:
+                      - statusTimestamp: '2023-12-13T03:47:22.812Z'
+                        status: pulse_complete
+                      - statusTimestamp: '2023-12-13T03:41:17.582Z'
+                        status: pulse_started
+                      - statusTimestamp: '2023-12-13T03:20:47.294Z'
+                        status: metrics_complete
+                      - statusTimestamp: '2023-12-13T03:16:38.421Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-13T03:16:29.827Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-13T03:16:21.847Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-13T03:16:05.864Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-13T02:42:36.220Z'
+                        status: download_complete
+                      - statusTimestamp: '2023-12-13T02:40:47.890Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-13T02:33:24.219Z'
+                        status: started
+                      - statusTimestamp: '2023-12-13T02:29:32.793Z'
+                        status: enqueued
+                - runID: a4df397e-c816-4e39-9b1a-ab6b2e5f3811
+                  latestStatus: download_error
+                  lastUpdatedAt: '2023-12-12T02:43:29.739Z'
+                  createdAt: '2023-12-12T02:30:41.989Z'
+                  trigger: scheduled
+                  sources:
+                  - Events 1
+                  - Events 2
+                  dateStamps:
+                  - '2023-12-10'
+                  runHistory:
+                  - statusTimestamp: '2023-12-12T02:43:30.735Z'
+                    status: download_error
+                  - statusTimestamp: '2023-12-12T02:43:16.318Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-12T02:40:56.030Z'
+                    status: download_error
+                  - statusTimestamp: '2023-12-12T02:39:58.147Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-12T02:32:18.156Z'
+                    status: started
+                  - statusTimestamp: '2023-12-12T02:30:41.989Z'
+                    status: enqueued
+                  granularHistory:
+                  - source: Events 1
+                    latestSourceStatus: download_error
+                    statusByDate:
+                    - dateStamp: '2023-12-10'
+                      statuses:
+                      - statusTimestamp: '2023-12-12T02:40:54.406Z'
+                        status: download_error
+                      - statusTimestamp: '2023-12-12T02:39:51.150Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-12T02:32:16.419Z'
+                        status: started
+                      - statusTimestamp: '2023-12-12T02:30:41.989Z'
+                        status: enqueued
+                  - source: Events 2
+                    latestSourceStatus: download_error
+                    statusByDate:
+                    - dateStamp: '2023-12-10'
+                      statuses:
+                      - statusTimestamp: '2023-12-12T02:40:54.406Z'
+                        status: download_error
+                      - statusTimestamp: '2023-12-12T02:39:51.150Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-12T02:32:16.419Z'
+                        status: started
+                      - statusTimestamp: '2023-12-12T02:30:41.989Z'
+                        status: enqueued
+                - runID: eedeb4c0-07dd-43d0-8014-5ac41ef7dab8
+                  latestStatus: pulse_complete
+                  lastUpdatedAt: '2023-12-12T03:50:41.473Z'
+                  createdAt: '2023-12-12T02:29:22.966Z'
+                  trigger: scheduled
+                  sources:
+                  - Metrics 1
+                  dateStamps:
+                  - '2023-12-10'
+                  runHistory:
+                  - statusTimestamp: '2023-12-12T03:50:42.631Z'
+                    status: pulse_complete
+                  - statusTimestamp: '2023-12-12T03:43:37.286Z'
+                    status: pulse_started
+                  - statusTimestamp: '2023-12-12T03:36:24.884Z'
+                    status: pulse_started
+                  - statusTimestamp: '2023-12-12T03:29:10.652Z'
+                    status: pulse_started
+                  - statusTimestamp: '2023-12-12T03:21:58.355Z'
+                    status: pulse_started
+                  - statusTimestamp: '2023-12-12T03:20:04.085Z'
+                    status: metrics_complete
+                  - statusTimestamp: '2023-12-12T03:15:24.760Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-12T03:15:18.051Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-12T03:15:10.427Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-12T03:14:55.187Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-12T02:42:29.345Z'
+                    status: download_complete
+                  - statusTimestamp: '2023-12-12T02:40:52.701Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-12T02:32:50.650Z'
+                    status: started
+                  - statusTimestamp: '2023-12-12T02:29:22.966Z'
+                    status: enqueued
+                  granularHistory:
+                  - source: Metrics 1
+                    latestSourceStatus: pulse_complete
+                    statusByDate:
+                    - dateStamp: '2023-12-07'
+                      statuses:
+                      - statusTimestamp: '2023-12-12T03:29:02.000Z'
+                        status: pulse_complete
+                      - statusTimestamp: '2023-12-12T03:21:56.433Z'
+                        status: pulse_started
+                      - statusTimestamp: '2023-12-12T03:20:02.276Z'
+                        status: metrics_complete
+                      - statusTimestamp: '2023-12-12T03:15:23.367Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-12T03:15:16.599Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-12T03:15:09.146Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-12T03:14:52.858Z'
+                        status: metrics_started
+                    - dateStamp: '2023-12-08'
+                      statuses:
+                      - statusTimestamp: '2023-12-12T03:36:14.414Z'
+                        status: pulse_complete
+                      - statusTimestamp: '2023-12-12T03:29:09.220Z'
+                        status: pulse_started
+                      - statusTimestamp: '2023-12-12T03:20:02.276Z'
+                        status: metrics_complete
+                      - statusTimestamp: '2023-12-12T03:15:23.367Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-12T03:15:16.599Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-12T03:15:09.146Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-12T03:14:52.858Z'
+                        status: metrics_started
+                    - dateStamp: '2023-12-09'
+                      statuses:
+                      - statusTimestamp: '2023-12-12T03:43:28.767Z'
+                        status: pulse_complete
+                      - statusTimestamp: '2023-12-12T03:36:23.369Z'
+                        status: pulse_started
+                      - statusTimestamp: '2023-12-12T03:20:02.276Z'
+                        status: metrics_complete
+                      - statusTimestamp: '2023-12-12T03:15:23.367Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-12T03:15:16.599Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-12T03:15:09.146Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-12T03:14:52.858Z'
+                        status: metrics_started
+                    - dateStamp: '2023-12-10'
+                      statuses:
+                      - statusTimestamp: '2023-12-12T03:50:40.851Z'
+                        status: pulse_complete
+                      - statusTimestamp: '2023-12-12T03:43:35.832Z'
+                        status: pulse_started
+                      - statusTimestamp: '2023-12-12T03:20:02.276Z'
+                        status: metrics_complete
+                      - statusTimestamp: '2023-12-12T03:15:23.367Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-12T03:15:16.599Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-12T03:15:09.146Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-12T03:14:52.858Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-12T02:42:12.290Z'
+                        status: download_complete
+                      - statusTimestamp: '2023-12-12T02:40:45.773Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-12T02:32:48.580Z'
+                        status: started
+                      - statusTimestamp: '2023-12-12T02:29:22.966Z'
+                        status: enqueued
+                - runID: 93b8b43c-8d52-4c77-bf8b-26426031a937
+                  latestStatus: download_error
+                  lastUpdatedAt: '2023-12-12T05:23:34.419Z'
+                  createdAt: '2023-12-11T02:30:09.748Z'
+                  trigger: scheduled
+                  sources:
+                  - Events 1
+                  - Events 2
+                  dateStamps:
+                  - '2023-12-09'
+                  runHistory:
+                  - statusTimestamp: '2023-12-11T02:43:14.831Z'
+                    status: download_error
+                  - statusTimestamp: '2023-12-11T02:42:59.726Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-11T02:40:35.456Z'
+                    status: download_error
+                  - statusTimestamp: '2023-12-11T02:39:41.755Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-11T02:31:30.223Z'
+                    status: started
+                  - statusTimestamp: '2023-12-11T02:30:09.748Z'
+                    status: enqueued
+                  granularHistory:
+                  - source: Events 1
+                    latestSourceStatus: download_complete
+                    statusByDate:
+                    - dateStamp: '2023-12-09'
+                      statuses:
+                      - statusTimestamp: '2023-12-12T05:23:36.192Z'
+                        status: download_complete
+                      - statusTimestamp: '2023-12-11T02:40:33.565Z'
+                        status: download_error
+                      - statusTimestamp: '2023-12-11T02:39:34.990Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-11T02:31:28.492Z'
+                        status: started
+                      - statusTimestamp: '2023-12-11T02:30:09.748Z'
+                        status: enqueued
+                  - source: Events 2
+                    latestSourceStatus: download_complete
+                    statusByDate:
+                    - dateStamp: '2023-12-09'
+                      statuses:
+                      - statusTimestamp: '2023-12-12T05:23:36.193Z'
+                        status: download_complete
+                      - statusTimestamp: '2023-12-11T02:40:33.565Z'
+                        status: download_error
+                      - statusTimestamp: '2023-12-11T02:39:34.990Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-11T02:31:28.492Z'
+                        status: started
+                      - statusTimestamp: '2023-12-11T02:30:09.748Z'
+                        status: enqueued
+                - runID: 97bbdee6-d77b-42c9-b4f0-d970eee9f983
+                  latestStatus: pulse_complete
+                  lastUpdatedAt: '2023-12-11T10:00:43.391Z'
+                  createdAt: '2023-12-11T02:29:04.866Z'
+                  trigger: scheduled
+                  sources:
+                  - Metrics 1
+                  dateStamps:
+                  - '2023-12-09'
+                  runHistory:
+                  - statusTimestamp: '2023-12-11T10:00:44.621Z'
+                    status: pulse_complete
+                  - statusTimestamp: '2023-12-11T09:54:39.521Z'
+                    status: pulse_started
+                  - statusTimestamp: '2023-12-11T09:47:27.810Z'
+                    status: pulse_started
+                  - statusTimestamp: '2023-12-11T09:40:15.586Z'
+                    status: pulse_started
+                  - statusTimestamp: '2023-12-11T09:33:02.761Z'
+                    status: pulse_started
+                  - statusTimestamp: '2023-12-11T09:31:14.238Z'
+                    status: metrics_complete
+                  - statusTimestamp: '2023-12-11T09:26:37.129Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-11T09:26:30.339Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-11T09:26:23.246Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-11T09:26:13.395Z'
+                    status: metrics_started
+                  - statusTimestamp: '2023-12-11T02:51:38.296Z'
+                    status: download_complete
+                  - statusTimestamp: '2023-12-11T02:49:59.185Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-11T02:42:14.545Z'
+                    status: started
+                  - statusTimestamp: '2023-12-11T02:29:04.866Z'
+                    status: enqueued
+                  granularHistory:
+                  - source: Metrics 1
+                    latestSourceStatus: pulse_complete
+                    statusByDate:
+                    - dateStamp: '2023-12-06'
+                      statuses:
+                      - statusTimestamp: '2023-12-11T09:40:06.488Z'
+                        status: pulse_complete
+                      - statusTimestamp: '2023-12-11T09:33:00.819Z'
+                        status: pulse_started
+                      - statusTimestamp: '2023-12-11T09:31:12.660Z'
+                        status: metrics_complete
+                      - statusTimestamp: '2023-12-11T09:26:35.749Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-11T09:26:28.818Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-11T09:26:22.624Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-11T09:26:11.934Z'
+                        status: metrics_started
+                    - dateStamp: '2023-12-07'
+                      statuses:
+                      - statusTimestamp: '2023-12-11T09:47:19.007Z'
+                        status: pulse_complete
+                      - statusTimestamp: '2023-12-11T09:40:14.371Z'
+                        status: pulse_started
+                      - statusTimestamp: '2023-12-11T09:31:12.660Z'
+                        status: metrics_complete
+                      - statusTimestamp: '2023-12-11T09:26:35.749Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-11T09:26:28.818Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-11T09:26:22.625Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-11T09:26:11.934Z'
+                        status: metrics_started
+                    - dateStamp: '2023-12-08'
+                      statuses:
+                      - statusTimestamp: '2023-12-11T09:54:31.386Z'
+                        status: pulse_complete
+                      - statusTimestamp: '2023-12-11T09:47:26.424Z'
+                        status: pulse_started
+                      - statusTimestamp: '2023-12-11T09:31:12.660Z'
+                        status: metrics_complete
+                      - statusTimestamp: '2023-12-11T09:26:35.749Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-11T09:26:28.818Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-11T09:26:22.625Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-11T09:26:11.934Z'
+                        status: metrics_started
+                    - dateStamp: '2023-12-09'
+                      statuses:
+                      - statusTimestamp: '2023-12-11T10:00:42.867Z'
+                        status: pulse_complete
+                      - statusTimestamp: '2023-12-11T09:54:38.280Z'
+                        status: pulse_started
+                      - statusTimestamp: '2023-12-11T09:31:12.660Z'
+                        status: metrics_complete
+                      - statusTimestamp: '2023-12-11T09:26:35.749Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-11T09:26:28.818Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-11T09:26:22.625Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-11T09:26:11.934Z'
+                        status: metrics_started
+                      - statusTimestamp: '2023-12-11T02:51:26.328Z'
+                        status: download_complete
+                      - statusTimestamp: '2023-12-11T02:49:52.797Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-11T02:42:12.424Z'
+                        status: started
+                      - statusTimestamp: '2023-12-11T02:29:04.866Z'
+                        status: enqueued
+                pagination:
+                  itemsPerPage: 10
+                  pageNumber: 1
+                  nextPage: /console/v1/ingestion/runs?page=2
+                  previousPage: null
+      tags:
+      - Ingestions
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1IngestionRuns
+      x-operation-id-source: derived
+  /console/v1/ingestion/runs/{id}:
+    get:
+      summary: Read Ingestion Run
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Read Ingestion Run Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/IngestionRunDataContractDto'
+                example:
+                  message: Ingestion Run Read Successfully
+                  data:
+                    runID: de941fa2-3e0f-44ec-a44c-5c51eed07e0d
+                    latestStatus: download_error
+                    lastUpdatedAt: '2023-12-13T02:44:23.790Z'
+                    createdAt: '2023-12-13T02:30:55.992Z'
+                    trigger: scheduled
+                    sources:
+                    - Events 1
+                    - Events 2
+                    dateStamps:
+                    - '2023-12-11'
+                    runHistory:
+                    - statusTimestamp: '2023-12-13T02:44:24.865Z'
+                      status: download_error
+                    - statusTimestamp: '2023-12-13T02:44:12.421Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-13T02:41:48.458Z'
+                      status: download_error
+                    - statusTimestamp: '2023-12-13T02:40:56.694Z'
+                      status: download_started
+                    - statusTimestamp: '2023-12-13T02:32:35.607Z'
+                      status: started
+                    - statusTimestamp: '2023-12-13T02:30:55.992Z'
+                      status: enqueued
+                    granularHistory:
+                    - source: Events 1
+                      latestSourceStatus: download_error
+                      statusByDate:
+                      - dateStamp: '2023-12-11'
+                        statuses:
+                        - statusTimestamp: '2023-12-13T02:41:47.374Z'
+                          status: download_error
+                        - statusTimestamp: '2023-12-13T02:40:50.210Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-13T02:32:33.118Z'
+                          status: started
+                        - statusTimestamp: '2023-12-13T02:30:55.992Z'
+                          status: enqueued
+                    - source: Events 2
+                      latestSourceStatus: download_error
+                      statusByDate:
+                      - dateStamp: '2023-12-11'
+                        statuses:
+                        - statusTimestamp: '2023-12-13T02:41:47.374Z'
+                          status: download_error
+                        - statusTimestamp: '2023-12-13T02:40:50.210Z'
+                          status: download_started
+                        - statusTimestamp: '2023-12-13T02:32:33.118Z'
+                          status: started
+                        - statusTimestamp: '2023-12-13T02:30:55.992Z'
+                          status: enqueued
+              example:
+                message: Ingestion Run Read Successfully
+                data:
+                  runID: de941fa2-3e0f-44ec-a44c-5c51eed07e0d
+                  latestStatus: download_error
+                  lastUpdatedAt: '2023-12-13T02:44:23.790Z'
+                  createdAt: '2023-12-13T02:30:55.992Z'
+                  trigger: scheduled
+                  sources:
+                  - Events 1
+                  - Events 2
+                  dateStamps:
+                  - '2023-12-11'
+                  runHistory:
+                  - statusTimestamp: '2023-12-13T02:44:24.865Z'
+                    status: download_error
+                  - statusTimestamp: '2023-12-13T02:44:12.421Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-13T02:41:48.458Z'
+                    status: download_error
+                  - statusTimestamp: '2023-12-13T02:40:56.694Z'
+                    status: download_started
+                  - statusTimestamp: '2023-12-13T02:32:35.607Z'
+                    status: started
+                  - statusTimestamp: '2023-12-13T02:30:55.992Z'
+                    status: enqueued
+                  granularHistory:
+                  - source: Events 1
+                    latestSourceStatus: download_error
+                    statusByDate:
+                    - dateStamp: '2023-12-11'
+                      statuses:
+                      - statusTimestamp: '2023-12-13T02:41:47.374Z'
+                        status: download_error
+                      - statusTimestamp: '2023-12-13T02:40:50.210Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-13T02:32:33.118Z'
+                        status: started
+                      - statusTimestamp: '2023-12-13T02:30:55.992Z'
+                        status: enqueued
+                  - source: Events 2
+                    latestSourceStatus: download_error
+                    statusByDate:
+                    - dateStamp: '2023-12-11'
+                      statuses:
+                      - statusTimestamp: '2023-12-13T02:41:47.374Z'
+                        status: download_error
+                      - statusTimestamp: '2023-12-13T02:40:50.210Z'
+                        status: download_started
+                      - statusTimestamp: '2023-12-13T02:32:33.118Z'
+                        status: started
+                      - statusTimestamp: '2023-12-13T02:30:55.992Z'
+                        status: enqueued
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: runID de941fa2-3e0f-44ec-a44c-5c51eed07e0z not found
+      tags:
+      - Ingestions
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1IngestionRunsById
+      x-operation-id-source: derived
+  /console/v1/ingestion/schedule:
+    get:
+      summary: Read Ingestion Schedule
+      parameters:
+      - name: dataset
+        required: true
+        in: query
+        schema:
+          type: string
+          enum:
+          - Events
+          - Metrics
+          - entity_properties
+          - export_exposures
+          - export_events
+      responses:
+        '200':
+          description: Read Ingestion Schedule Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/IngestionScheduleDto'
+                example:
+                  message: Ingestion schedule read successfully.
+                  data:
+                    dataset: Metrics
+                    scheduled_hour_pst: 10
+              example:
+                message: Ingestion schedule read successfully.
+                data:
+                  dataset: Metrics
+                  scheduled_hour_pst: 10
+      tags:
+      - Ingestions
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1IngestionSchedule
+      x-operation-id-source: derived
+    post:
+      summary: Update Ingestion Schedule
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestionScheduleUpdateContractDto'
+      responses:
+        '200':
+          description: Update Ingestion Schedule Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/IngestionScheduleDto'
+                example:
+                  message: Ingestion schedule updated successfully.
+                  data:
+                    dataset: Metrics
+                    scheduled_hour_pst: 10
+              example:
+                message: Ingestion schedule updated successfully.
+                data:
+                  dataset: Metrics
+                  scheduled_hour_pst: 10
+      tags:
+      - Ingestions
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1IngestionSchedule
+      x-operation-id-source: derived
+  /console/v1/ingestion/status:
+    get:
+      summary: List Ingestions Status
+      parameters:
+      - name: startDate
+        required: true
+        in: query
+        description: Expected valid date in the form of YYYY-MM-DD
+        schema:
+          example: '2024-01-01'
+          type: string
+      - name: endDate
+        required: true
+        in: query
+        description: Expected valid date in the form of YYYY-MM-DD
+        schema:
+          example: '2024-01-01'
+          type: string
+      - name: source
+        required: false
+        in: query
+        schema:
+          type: string
+      - name: dataset
+        required: false
+        in: query
+        schema:
+          type: string
+          enum:
+          - Events
+          - Metrics
+          - entity_properties
+          - export_exposures
+          - export_events
+      - name: status
+        required: false
+        in: query
+        schema:
+          type: string
+          enum:
+          - IMPORT_SUCCESSFUL
+          - ROWS_INSERTED
+          - LOADED_EMPTY_DATA
+          - IMPORT_SCHEDULED
+          - IMPORT_RESCHEDULED
+          - IMPORT_STARTED
+          - FILE_CREATED
+          - DOWNLOAD_COMPLETED
+          - BACKFILL_REQUESTED
+          - BACKFILL_STARTED
+          - ERROR
+          - CONNECTION_CONFIG_ERROR
+          - SSH_ERROR
+          - QUERY_CONSTRUCTION_ERROR
+          - INTERNAL_WRITE_ERROR_METRICS
+          - INTERNAL_WRITE_ERROR_EVENTS
+          - INTERNAL_WRITE_ERROR_EXPOSURES
+          - QUERY_ERROR
+          - SETUP_ERROR
+          - AUTHENTICATION_ERROR
+          - CONNECTION_ERROR
+          - INTERNAL_SERVER_ERROR
+          - BULK_LOAD_ERROR
+          - BULK_LOAD_SUCCESSFUL
+          - '%Other'
+      - name: statuses
+        required: false
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - IMPORT_SUCCESSFUL
+            - ROWS_INSERTED
+            - LOADED_EMPTY_DATA
+            - IMPORT_SCHEDULED
+            - IMPORT_RESCHEDULED
+            - IMPORT_STARTED
+            - FILE_CREATED
+            - DOWNLOAD_COMPLETED
+            - BACKFILL_REQUESTED
+            - BACKFILL_STARTED
+            - ERROR
+            - CONNECTION_CONFIG_ERROR
+            - SSH_ERROR
+            - QUERY_CONSTRUCTION_ERROR
+            - INTERNAL_WRITE_ERROR_METRICS
+            - INTERNAL_WRITE_ERROR_EVENTS
+            - INTERNAL_WRITE_ERROR_EXPOSURES
+            - QUERY_ERROR
+            - SETUP_ERROR
+            - AUTHENTICATION_ERROR
+            - CONNECTION_ERROR
+            - INTERNAL_SERVER_ERROR
+            - BULK_LOAD_ERROR
+            - BULK_LOAD_SUCCESSFUL
+            - '%Other'
+      responses:
+        '200':
+          description: List Ingestions Status Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/IngestionStatusDto'
+                example:
+                - message: Your job for events ingestion completed successfully
+                  timestamp: '2023-09-07T00:50:07.941Z'
+                  ingestion_dataset: events
+                  ingestion_source: null
+                  status: BACKFILL_STARTED
+              example:
+              - message: Your job for events ingestion completed successfully
+                timestamp: '2023-09-07T00:50:07.941Z'
+                ingestion_dataset: events
+                ingestion_source: null
+                status: BACKFILL_STARTED
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Ingestions
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1IngestionStatus
+      x-operation-id-source: derived
+components:
+  schemas:
+    IngestionUpdateContractDto:
+      oneOf:
+      - type: object
+        properties:
+          dataset:
+            type: string
+            enum:
+            - Metrics
+          column_mapping:
+            type: object
+            properties:
+              unit_id:
+                type: string
+                description: The unique user identifier this metric is for. This might not necessarily be a user_id - it could be a custom_id of some kind. Make sure this is in the same format as your logged unit_ids.
+              id_type:
+                type: string
+                description: The id_type the unit_id represents. Must be valid id_type. Default Statsig types are user_id/stable_id, but you may have generated custom id_types. Make sure this matches (case sensitive) a customID in your project, or you won’t get experiment results.
+              dateid:
+                type: string
+                description: Date of the daily metric, ISO formatted (ex. 2021-02-17). We’ll load custom metrics to whatever date you use here.
+              metric_name:
+                type: string
+                description: String format. Not null. Length < 128 characters.
+              metric_value:
+                default: 'null'
+                type: string
+                description: Numeric value for the metric. This OR both of numerator and denominator need to be provided.
+              numerator:
+                default: 'null'
+                type: string
+                description: Required for ratio metrics. If present along with a denominator in any record, the metric will be treated as ratio and only calculated for users with non-null denominators
+              denominator:
+                default: 'null'
+                type: string
+                description: Required for ratio metrics. If present along with a numerator in any record, the metric will be treated as ratio and only calculated for users with non-null numerators.
+            required:
+            - unit_id
+            - id_type
+            - dateid
+            - metric_name
+          type:
+            type: string
+            enum:
+            - redshift
+            - bigquery-v2
+            - snowflake-v2
+            - databricks
+            - azure-synapse
+            - s3
+            - athena
+            - adls
+          source_name:
+            type: string
+          query:
+            type: string
+          share:
+            type: string
+          schema:
+            type: string
+          table:
+            type: string
+          enabled:
+            type: boolean
+        required:
+        - dataset
+        - type
+      - type: object
+        properties:
+          dataset:
+            type: string
+            enum:
+            - Events
+          column_mapping:
+            type: object
+            properties:
+              unit_id:
+                type: string
+                description: The unique user identifier this event is for. This might not necessarily be a single column for userID - it could be spread across multiple columns for deviceID etc.
+              event_name:
+                type: string
+                description: Name of the event. String under 128 characters, using ‘_’ for spaces.
+              timestamp:
+                type: string
+                description: Unix timestamp in seconds of the event (ex. 1613584800)
+              ids:
+                default: {}
+                type: object
+                additionalProperties:
+                  type: string
+              metadata:
+                default: {}
+                type: object
+                additionalProperties:
+                  type: string
+              metadata_object:
+                default: 'null'
+                type: string
+              event_value:
+                default: ''
+                type: string
+            required:
+            - event_name
+            - timestamp
+            - ids
+          type:
+            type: string
+            enum:
+            - redshift
+            - bigquery-v2
+            - snowflake-v2
+            - databricks
+            - azure-synapse
+            - s3
+            - athena
+            - adls
+          source_name:
+            type: string
+          query:
+            type: string
+          share:
+            type: string
+          schema:
+            type: string
+          table:
+            type: string
+          enabled:
+            type: boolean
+        required:
+        - dataset
+        - type
+      - type: object
+        properties:
+          dataset:
+            type: string
+            enum:
+            - Exposures
+            - export_exposures
+          column_mapping:
+            type: object
+            properties:
+              experiment:
+                type: string
+                description: Unique identifier for the experiment.
+              group_id:
+                type: string
+                description: Unique identifier for the experiment groups.
+              unit_id:
+                type: string
+                description: The unique user identifier this exposure is for. This might not necessarily be a single column for userID - it could be spread across multiple columns for deviceID etc.
+              timestamp:
+                type: string
+                description: Unix timestamp in seconds of the event (ex. 1613584800)
+              ids:
+                default: {}
+                type: object
+                additionalProperties:
+                  type: string
+              metadata:
+                default: {}
+                type: object
+                additionalProperties:
+                  type: string
+              metadata_object:
+                default: 'null'
+                type: string
+              event_value:
+                default: ''
+                type: string
+            required:
+            - experiment
+            - group_id
+            - timestamp
+            - ids
+          type:
+            type: string
+            enum:
+            - redshift
+            - bigquery-v2
+            - snowflake-v2
+            - databricks
+            - azure-synapse
+            - s3
+            - athena
+            - adls
+          source_name:
+            type: string
+          query:
+            type: string
+          share:
+            type: string
+          schema:
+            type: string
+          table:
+            type: string
+          enabled:
+            type: boolean
+        required:
+        - dataset
+        - type
+    IngestionDto:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        enabled:
+          type: boolean
+        data:
+          type: object
+      required:
+      - id
+      - type
+      - enabled
+      - data
+    IngestionStatusDto:
+      type: object
+      properties:
+        ds:
+          type: string
+          format: date-time
+        ingestion_dataset:
+          type:
+          - string
+          - 'null'
+        ingestion_source:
+          type:
+          - string
+          - 'null'
+        source_name:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        error_message:
+          type: string
+        status:
+          type:
+          - string
+          - 'null'
+        rowCount:
+          type: number
+          format: double
+        metricCount:
+          type: number
+          format: double
+        timestamp:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - ingestion_dataset
+      - ingestion_source
+      - source_name
+      - message
+      - status
+      - timestamp
+    IngestionScheduleDto:
+      type: object
+      properties:
+        dataset:
+          type: string
+        scheduled_hour_pst:
+          type: number
+          format: double
+      required:
+      - dataset
+      - scheduled_hour_pst
+    IngestionEventCountResponseDto:
+      oneOf:
+      - type: array
+        items:
+          type: object
+          properties:
+            date:
+              type: string
+            event:
+              type: string
+            count:
+              type: number
+            last_updated_time:
+              type: string
+              format: date-time
+          required:
+          - date
+          - event
+          - count
+          - last_updated_time
+      - type: array
+        items:
+          type: object
+          properties:
+            date:
+              type: string
+            events:
+              type: array
+              items:
+                type: object
+                properties:
+                  event:
+                    type: string
+                  count:
+                    type: number
+                  last_updated_time:
+                    type: string
+                    format: date-time
+                required:
+                - event
+                - count
+                - last_updated_time
+          required:
+          - date
+          - events
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    IngestionBackfillDataDto:
+      type: object
+      properties:
+        runID:
+          type: string
+      required:
+      - runID
+    IngestionBackfillContractDto:
+      type: object
+      properties:
+        datestamp_start:
+          type: string
+          description: Expected valid date in the form of YYYY-MM-DD
+          example: '2024-01-01'
+        datestamp_end:
+          type: string
+          description: Expected valid date in the form of YYYY-MM-DD
+          example: '2024-01-01'
+        type:
+          type: string
+          enum:
+          - redshift
+          - bigquery-v2
+          - snowflake-v2
+          - databricks
+          - azure-synapse
+          - s3
+          - athena
+          - adls
+        source:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        dataset:
+          type: string
+          enum:
+          - Events
+          - Metrics
+          - entity_properties
+          - export_exposures
+          - export_events
+      required:
+      - datestamp_start
+      - datestamp_end
+      - type
+      - dataset
+    IngestionRunDataContractDto:
+      type: object
+      properties:
+        runID:
+          type: string
+        latestStatus:
+          type: string
+        lastUpdatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        trigger:
+          type: string
+        sources:
+          type: array
+          items:
+            type: string
+        dateStamps:
+          type: array
+          items:
+            type: string
+        runHistory:
+          type: array
+          items:
+            type: object
+            properties:
+              statusTimestamp:
+                type: string
+                format: date-time
+              status:
+                type: string
+            required:
+            - statusTimestamp
+            - status
+        granularHistory:
+          type: array
+          items:
+            type: object
+            properties:
+              source:
+                type: string
+              latestSourceStatus:
+                type: string
+              statusByDate:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    dateStamp:
+                      type: string
+                    statuses:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          statusTimestamp:
+                            type: string
+                            format: date-time
+                          status:
+                            type: string
+                        required:
+                        - statusTimestamp
+                        - status
+                  required:
+                  - dateStamp
+                  - statuses
+            required:
+            - source
+            - latestSourceStatus
+            - statusByDate
+      required:
+      - runID
+      - latestStatus
+      - lastUpdatedAt
+      - createdAt
+      - trigger
+      - sources
+      - dateStamps
+      - runHistory
+      - granularHistory
+    IngestionCreateDatabricksConnectionContractDto:
+      type: object
+      properties:
+        token:
+          type: string
+        host:
+          type: string
+        path:
+          type: string
+        deltaSharingCredentials:
+          type: string
+        verified:
+          type: boolean
+      required:
+      - token
+      - host
+      - path
+    IngestionEventDeltaResponseDto:
+      oneOf:
+      - type: array
+        items:
+          type: object
+          properties:
+            date:
+              type: string
+            source:
+              type: string
+            event:
+              type: string
+            internal_count:
+              type: number
+            external_count:
+              type: number
+            has_diff:
+              type: boolean
+            threshold:
+              type: number
+            last_updated_time:
+              type: string
+              format: date-time
+          required:
+          - date
+          - source
+          - event
+          - internal_count
+          - external_count
+          - has_diff
+          - threshold
+          - last_updated_time
+      - type: array
+        items:
+          type: object
+          properties:
+            date:
+              type: string
+            events:
+              type: array
+              items:
+                type: object
+                properties:
+                  source:
+                    type: string
+                  event:
+                    type: string
+                  internal_count:
+                    type: number
+                  external_count:
+                    type: number
+                  has_diff:
+                    type: boolean
+                  threshold:
+                    type: number
+                  last_updated_time:
+                    type: string
+                    format: date-time
+                required:
+                - source
+                - event
+                - internal_count
+                - external_count
+                - has_diff
+                - threshold
+                - last_updated_time
+          required:
+          - date
+          - events
+    IngestionScheduleUpdateContractDto:
+      type: object
+      properties:
+        dataset:
+          type: string
+          enum:
+          - Events
+          - Metrics
+          - entity_properties
+          - export_exposures
+          - export_events
+        scheduled_hour_pst:
+          default: 10
+          type: number
+          minimum: 0
+          maximum: 23
+          format: double
+      required:
+      - dataset
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    IngestionSourceCreateContractDto:
+      oneOf:
+      - type: object
+        properties:
+          dataset:
+            type: string
+            enum:
+            - Metrics
+          column_mapping:
+            type: object
+            properties:
+              unit_id:
+                type: string
+                description: The unique user identifier this metric is for. This might not necessarily be a user_id - it could be a custom_id of some kind. Make sure this is in the same format as your logged unit_ids.
+              id_type:
+                type: string
+                description: The id_type the unit_id represents. Must be valid id_type. Default Statsig types are user_id/stable_id, but you may have generated custom id_types. Make sure this matches (case sensitive) a customID in your project, or you won’t get experiment results.
+              dateid:
+                type: string
+                description: Date of the daily metric, ISO formatted (ex. 2021-02-17). We’ll load custom metrics to whatever date you use here.
+              metric_name:
+                type: string
+                description: String format. Not null. Length < 128 characters.
+              metric_value:
+                default: 'null'
+                type: string
+                description: Numeric value for the metric. This OR both of numerator and denominator need to be provided.
+              numerator:
+                default: 'null'
+                type: string
+                description: Required for ratio metrics. If present along with a denominator in any record, the metric will be treated as ratio and only calculated for users with non-null denominators
+              denominator:
+                default: 'null'
+                type: string
+                description: Required for ratio metrics. If present along with a numerator in any record, the metric will be treated as ratio and only calculated for users with non-null numerators.
+            required:
+            - unit_id
+            - id_type
+            - dateid
+            - metric_name
+          type:
+            type: string
+            enum:
+            - redshift
+            - bigquery-v2
+            - snowflake-v2
+            - databricks
+            - azure-synapse
+            - s3
+            - athena
+            - adls
+          source_name:
+            type: string
+          query:
+            type: string
+          use_delta_sharing:
+            type: boolean
+            enum:
+            - true
+          share:
+            type: string
+          schema:
+            type: string
+          table:
+            type: string
+          enabled:
+            type: boolean
+        required:
+        - dataset
+        - type
+        - source_name
+      - type: object
+        properties:
+          dataset:
+            type: string
+            enum:
+            - Events
+          column_mapping:
+            type: object
+            properties:
+              unit_id:
+                type: string
+                description: The unique user identifier this event is for. This might not necessarily be a single column for userID - it could be spread across multiple columns for deviceID etc.
+              event_name:
+                type: string
+                description: Name of the event. String under 128 characters, using ‘_’ for spaces.
+              timestamp:
+                type: string
+                description: Unix timestamp in seconds of the event (ex. 1613584800)
+              ids:
+                default: {}
+                type: object
+                additionalProperties:
+                  type: string
+              metadata:
+                default: {}
+                type: object
+                additionalProperties:
+                  type: string
+              metadata_object:
+                default: 'null'
+                type: string
+              event_value:
+                default: ''
+                type: string
+            required:
+            - event_name
+            - timestamp
+            - ids
+          type:
+            type: string
+            enum:
+            - redshift
+            - bigquery-v2
+            - snowflake-v2
+            - databricks
+            - azure-synapse
+            - s3
+            - athena
+            - adls
+          source_name:
+            type: string
+          query:
+            type: string
+          use_delta_sharing:
+            type: boolean
+            enum:
+            - true
+          share:
+            type: string
+          schema:
+            type: string
+          table:
+            type: string
+          enabled:
+            type: boolean
+        required:
+        - dataset
+        - type
+        - source_name
+      - type: object
+        properties:
+          dataset:
+            type: string
+            enum:
+            - Exposures
+            - export_exposures
+          column_mapping:
+            type: object
+            properties:
+              experiment:
+                type: string
+                description: Unique identifier for the experiment.
+              group_id:
+                type: string
+                description: Unique identifier for the experiment groups.
+              unit_id:
+                type: string
+                description: The unique user identifier this exposure is for. This might not necessarily be a single column for userID - it could be spread across multiple columns for deviceID etc.
+              timestamp:
+                type: string
+                description: Unix timestamp in seconds of the event (ex. 1613584800)
+              ids:
+                default: {}
+                type: object
+                additionalProperties:
+                  type: string
+              metadata:
+                default: {}
+                type: object
+                additionalProperties:
+                  type: string
+              metadata_object:
+                default: 'null'
+                type: string
+              event_value:
+                default: ''
+                type: string
+            required:
+            - experiment
+            - group_id
+            - timestamp
+            - ids
+          type:
+            type: string
+            enum:
+            - redshift
+            - bigquery-v2
+            - snowflake-v2
+            - databricks
+            - azure-synapse
+            - s3
+            - athena
+            - adls
+          source_name:
+            type: string
+          query:
+            type: string
+          use_delta_sharing:
+            type: boolean
+            enum:
+            - true
+          share:
+            type: string
+          schema:
+            type: string
+          table:
+            type: string
+          enabled:
+            type: boolean
+        required:
+        - dataset
+        - type
+        - source_name
+  securitySchemes:
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header

@@ -1,0 +1,66 @@
+openapi: 3.2.0
+info:
+  title: Console Project API
+  description: The "Console API" is the CRUD API for performing the actions offered on console.statsig.com without needing to go through the web UI.
+  version: 20240601.0.0
+  contact: {}
+servers:
+- url: https://statsigapi.net
+tags:
+- name: Project
+paths:
+  /console/v1/project:
+    get:
+      summary: Get Project Info
+      parameters: []
+      responses:
+        '200':
+          description: Get Project Info
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ExternalProjectDto'
+                example:
+                  message: Project Info Retrieved Successfully
+                  data:
+                    id: company_id
+              example:
+                message: Project Info Retrieved Successfully
+                data:
+                  id: company_id
+      tags:
+      - Project
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1Project
+      x-operation-id-source: derived
+components:
+  schemas:
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    ExternalProjectDto:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+      - id
+  securitySchemes:
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header

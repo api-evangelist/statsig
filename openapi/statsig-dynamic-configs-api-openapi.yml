@@ -1,17 +1,14 @@
 openapi: 3.2.0
 info:
   title: Statsig Dynamic Configs API
-  contact:
-    name: Statsig Support
-    url: https://statsig.com/support
-  termsOfService: https://statsig.com/terms
   version: '1.0'
-  description: 'Operations tagged Dynamic Configs across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-http-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Dynamic Configs across 3 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-http-api-openapi.yml, statsig-console-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://statsigapi.net/console/v1
   description: Statsig Console API Server
 - url: https://api.statsig.com/v1
   description: Statsig API Server
+- url: https://statsigapi.net
 tags:
 - name: Dynamic Configs
   description: Manage dynamic configurations with full CRUD operations for server-driven configuration values.
@@ -232,28 +229,1920 @@ paths:
     servers:
     - url: https://api.statsig.com/v1
       description: Statsig API Server
+  /console/v1/dynamic_configs:
+    get:
+      summary: List Dynamic Configs
+      parameters:
+      - name: releasePipelineID
+        required: false
+        in: query
+        description: The release pipeline ID associated with the dynamic config
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: teamID
+        required: false
+        in: query
+        description: Filter by team ID
+        schema:
+          type: string
+      - name: targetAppID
+        required: false
+        in: query
+        description: Filter by target app ID
+        schema:
+          type: string
+      - name: type
+        required: false
+        in: query
+        description: Filter by lifecycle type (TEMPORARY, PERMANENT, or STALE). Results depend on the nightly stale detection batch job having run.
+        schema:
+          type: string
+          enum:
+          - TEMPORARY
+          - PERMANENT
+          - STALE
+      - name: typeReason
+        required: false
+        in: query
+        description: Filter by stale classification reason. Results depend on the nightly stale detection batch job having run.
+        schema:
+          type: string
+          enum:
+          - NONE
+          - STALE_PROBABLY_DEAD_CHECK
+          - STALE_NO_RULES
+          - STALE_PROBABLY_FORGOTTEN
+          - STALE_PROBABLY_LAUNCHED
+          - STALE_PROBABLY_UNLAUNCHED
+      - name: creatorName
+        required: false
+        in: query
+        description: Name of the creator.
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: creatorID
+        required: false
+        in: query
+        description: ID of the user who created the entity.
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: tags
+        required: false
+        in: query
+        description: Filter by tags
+        examples:
+          single tag:
+            value: tag1
+          multiple tags:
+            value:
+            - tag1
+            - tag2
+        schema:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: List Dynamic Configs Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/DynamicConfigDto'
+                example:
+                  message: Dynamic Configs listed successfully.
+                  data:
+                  - id: example_config
+                    permalink: https://console.statsig.com/company_id/dynamic_configs/example_config
+                    name: Example Config
+                    description: An example dynamic configuration
+                    idType: userID
+                    lastModifierID: abc123
+                    lastModifiedTime: 1600000000000
+                    lastModifierName: Jane Doe
+                    lastModifierEmail: jane@example.com
+                    creatorID: def456
+                    createdTime: 1500000000000
+                    creatorName: John Smith
+                    creatorEmail: john@example.com
+                    targetApps:
+                    - myapp
+                    holdoutIDs: []
+                    tags:
+                    - example_tag
+                    type: TEMPORARY
+                    typeReason: NONE
+                    isPermanent: false
+                    team: Product
+                    isEnabled: true
+                    rules: []
+                    defaultValue: {}
+                    defaultValueJson5: '{}'
+                    schema: '{"$schema":"https://json-schema.org/draft/2020-12/schema","properties":{}}'
+                    schemaJson5: "{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"properties\": {}\n}"
+                    version: 1
+              example:
+                message: Dynamic Configs listed successfully.
+                data:
+                - id: example_config
+                  permalink: https://console.statsig.com/company_id/dynamic_configs/example_config
+                  name: Example Config
+                  description: An example dynamic configuration
+                  idType: userID
+                  lastModifierID: abc123
+                  lastModifiedTime: 1600000000000
+                  lastModifierName: Jane Doe
+                  lastModifierEmail: jane@example.com
+                  creatorID: def456
+                  createdTime: 1500000000000
+                  creatorName: John Smith
+                  creatorEmail: john@example.com
+                  targetApps:
+                  - myapp
+                  holdoutIDs: []
+                  tags:
+                  - example_tag
+                  type: TEMPORARY
+                  typeReason: NONE
+                  isPermanent: false
+                  team: Product
+                  isEnabled: true
+                  rules: []
+                  defaultValue: {}
+                  defaultValueJson5: '{}'
+                  schema: '{"$schema":"https://json-schema.org/draft/2020-12/schema","properties":{}}'
+                  schemaJson5: "{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"properties\": {}\n}"
+                  version: 1
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1DynamicConfigs
+      x-operation-id-source: derived
+    post:
+      summary: Create Dynamic Config
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DynamicConfigCreateDto'
+      responses:
+        '201':
+          description: Create Dynamic Config
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DynamicConfigDto'
+                example:
+                  message: Dynamic Config created successfully.
+                  data:
+                    id: a_dynamic_config
+                    permalink: https://console.statsig.com/company_id/dynamic_configs/a_dynamic_config
+                    name: a dynamic config
+                    description: helpful summary of what this dynamic config does
+                    idType: userID
+                    lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                    lastModifiedTime: 1707344887865
+                    lastModifierName: CONSOLE API
+                    lastModifierEmail: null
+                    creatorID: 1vaQaBoLlkauH9iiuOSBP2
+                    createdTime: 1707344887764
+                    creatorName: CONSOLE API
+                    creatorEmail: null
+                    targetApps: []
+                    holdoutIDs: []
+                    tags: []
+                    type: TEMPORARY
+                    typeReason: NONE
+                    isPermanent: false
+                    isEnabled: true
+                    rules: []
+                    defaultValue: {}
+              example:
+                message: Dynamic Config created successfully.
+                data:
+                  id: a_dynamic_config
+                  permalink: https://console.statsig.com/company_id/dynamic_configs/a_dynamic_config
+                  name: a dynamic config
+                  description: helpful summary of what this dynamic config does
+                  idType: userID
+                  lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                  lastModifiedTime: 1707344887865
+                  lastModifierName: CONSOLE API
+                  lastModifierEmail: null
+                  creatorID: 1vaQaBoLlkauH9iiuOSBP2
+                  createdTime: 1707344887764
+                  creatorName: CONSOLE API
+                  creatorEmail: null
+                  targetApps: []
+                  holdoutIDs: []
+                  tags: []
+                  type: TEMPORARY
+                  typeReason: NONE
+                  isPermanent: false
+                  isEnabled: true
+                  rules: []
+                  defaultValue: {}
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '403':
+          description: Forbidden. The request was valid, but the server is refusing action. You might not have the necessary permissions to access the resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden. The request was valid, but the server is refusing action. You might not have the necessary permissions to access the resource.
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1DynamicConfigs
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}:
+    get:
+      summary: Get Dynamic Config
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Get Dynamic Config Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DynamicConfigDto'
+                example:
+                  message: Dynamic config read successfully.
+                  data:
+                    id: a_dynamic_config
+                    permalink: https://console.statsig.com/company_id/dynamic_configs/a_dynamic_config
+                    description: helpful summary of what this dynamic config does
+                    idType: userID
+                    creatorEmail: johnsmith@mydomain.com
+                    creatorName: John Smith
+                    createdTime: 1674769467002
+                    lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                    lastModifierName: CONSOLE API
+                    lastModifiedTime: 1707344887865
+                    lastModifierEmail: null
+                    holdoutIDs: []
+                    isEnabled: true
+                    rules:
+                    - name: All Conditions
+                      id: 38ttpCpzrQFTMKcqFKk02l:10.00:1
+                      baseID: 38ttpCpzrQFTMKcqFKk02l
+                      passPercentage: 10
+                      conditions:
+                      - type: public
+                        operator: any
+                        targetValue: 0
+                        field: string
+                        customID: string
+                      returnValue:
+                        key: true
+                      completedAutomatedRollouts: []
+                      pendingAutomatedRollouts: []
+                    defaultValue:
+                      key: the default value
+                    tags:
+                    - a tag
+                    type: TEMPORARY
+                    typeReason: NONE
+                    isPermanent: false
+              example:
+                message: Dynamic config read successfully.
+                data:
+                  id: a_dynamic_config
+                  permalink: https://console.statsig.com/company_id/dynamic_configs/a_dynamic_config
+                  description: helpful summary of what this dynamic config does
+                  idType: userID
+                  creatorEmail: johnsmith@mydomain.com
+                  creatorName: John Smith
+                  createdTime: 1674769467002
+                  lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                  lastModifierName: CONSOLE API
+                  lastModifiedTime: 1707344887865
+                  lastModifierEmail: null
+                  holdoutIDs: []
+                  isEnabled: true
+                  rules:
+                  - name: All Conditions
+                    id: 38ttpCpzrQFTMKcqFKk02l:10.00:1
+                    baseID: 38ttpCpzrQFTMKcqFKk02l
+                    passPercentage: 10
+                    conditions:
+                    - type: public
+                      operator: any
+                      targetValue: 0
+                      field: string
+                      customID: string
+                    returnValue:
+                      key: true
+                    completedAutomatedRollouts: []
+                    pendingAutomatedRollouts: []
+                  defaultValue:
+                    key: the default value
+                  tags:
+                  - a tag
+                  type: TEMPORARY
+                  typeReason: NONE
+                  isPermanent: false
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1DynamicConfigsById
+      x-operation-id-source: derived
+    post:
+      summary: Fully Update Dynamic Config
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      - name: dryRun
+        required: false
+        in: query
+        description: Skips persisting updates to the entity (used to validate that inputs are correct)
+        schema:
+          example: true
+          type: boolean
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DynamicConfigFullUpdateDto'
+      responses:
+        '200':
+          description: Fully Update Dynamic Config Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DynamicConfigDto'
+                example:
+                  message: Dynamic config updated successfully.
+                  data:
+                    id: a_dynamic_config
+                    permalink: https://console.statsig.com/company_id/dynamic_configs/a_dynamic_config
+                    description: helpful summary of what this dynamic config does
+                    idType: userID
+                    creatorEmail: johnsmith@mydomain.com
+                    creatorName: John Smith
+                    createdTime: 1674769467002
+                    lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                    lastModifierName: CONSOLE API
+                    lastModifiedTime: 1707344887865
+                    lastModifierEmail: null
+                    holdoutIDs: []
+                    isEnabled: true
+                    rules:
+                    - name: All Conditions
+                      id: 38ttpCpzrQFTMKcqFKk02l:10.00:1
+                      baseID: 38ttpCpzrQFTMKcqFKk02l
+                      passPercentage: 10
+                      conditions:
+                      - type: public
+                        operator: any
+                        targetValue: 0
+                        field: string
+                        customID: string
+                      returnValue:
+                        key: true
+                      completedAutomatedRollouts: []
+                      pendingAutomatedRollouts: []
+                    defaultValue:
+                      key: the default value
+                    tags:
+                    - a tag
+                    type: TEMPORARY
+                    typeReason: NONE
+                    isPermanent: false
+              example:
+                message: Dynamic config updated successfully.
+                data:
+                  id: a_dynamic_config
+                  permalink: https://console.statsig.com/company_id/dynamic_configs/a_dynamic_config
+                  description: helpful summary of what this dynamic config does
+                  idType: userID
+                  creatorEmail: johnsmith@mydomain.com
+                  creatorName: John Smith
+                  createdTime: 1674769467002
+                  lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                  lastModifierName: CONSOLE API
+                  lastModifiedTime: 1707344887865
+                  lastModifierEmail: null
+                  holdoutIDs: []
+                  isEnabled: true
+                  rules:
+                  - name: All Conditions
+                    id: 38ttpCpzrQFTMKcqFKk02l:10.00:1
+                    baseID: 38ttpCpzrQFTMKcqFKk02l
+                    passPercentage: 10
+                    conditions:
+                    - type: public
+                      operator: any
+                      targetValue: 0
+                      field: string
+                      customID: string
+                    returnValue:
+                      key: true
+                    completedAutomatedRollouts: []
+                    pendingAutomatedRollouts: []
+                  defaultValue:
+                    key: the default value
+                  tags:
+                  - a tag
+                  type: TEMPORARY
+                  typeReason: NONE
+                  isPermanent: false
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '403':
+          description: Forbidden. The request was valid, but the server is refusing action. You might not have the necessary permissions to access the resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden. The request was valid, but the server is refusing action. You might not have the necessary permissions to access the resource.
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1DynamicConfigsById
+      x-operation-id-source: derived
+    patch:
+      summary: Partially Update Dynamic Config
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      - name: dryRun
+        required: false
+        in: query
+        description: Skips persisting updates to the entity (used to validate that inputs are correct)
+        schema:
+          example: true
+          type: boolean
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DynamicConfigPartialUpdateDto'
+      responses:
+        '200':
+          description: Partially Update Dynamic Config Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DynamicConfigDto'
+                example:
+                  message: Dynamic config updated successfully.
+                  data:
+                    id: a_dynamic_config
+                    permalink: https://console.statsig.com/company_id/dynamic_configs/a_dynamic_config
+                    description: helpful summary of what this dynamic config does
+                    idType: userID
+                    creatorEmail: johnsmith@mydomain.com
+                    creatorName: John Smith
+                    createdTime: 1674769467002
+                    lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                    lastModifierName: CONSOLE API
+                    lastModifiedTime: 1707344887865
+                    lastModifierEmail: null
+                    holdoutIDs: []
+                    isEnabled: true
+                    rules:
+                    - name: All Conditions
+                      id: 38ttpCpzrQFTMKcqFKk02l:10.00:1
+                      baseID: 38ttpCpzrQFTMKcqFKk02l
+                      passPercentage: 10
+                      conditions:
+                      - type: public
+                        operator: any
+                        targetValue: 0
+                        field: string
+                        customID: string
+                      returnValue:
+                        key: true
+                      completedAutomatedRollouts: []
+                      pendingAutomatedRollouts: []
+                    defaultValue:
+                      key: the default value
+                    tags:
+                    - a tag
+                    type: TEMPORARY
+                    typeReason: NONE
+                    isPermanent: false
+              example:
+                message: Dynamic config updated successfully.
+                data:
+                  id: a_dynamic_config
+                  permalink: https://console.statsig.com/company_id/dynamic_configs/a_dynamic_config
+                  description: helpful summary of what this dynamic config does
+                  idType: userID
+                  creatorEmail: johnsmith@mydomain.com
+                  creatorName: John Smith
+                  createdTime: 1674769467002
+                  lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                  lastModifierName: CONSOLE API
+                  lastModifiedTime: 1707344887865
+                  lastModifierEmail: null
+                  holdoutIDs: []
+                  isEnabled: true
+                  rules:
+                  - name: All Conditions
+                    id: 38ttpCpzrQFTMKcqFKk02l:10.00:1
+                    baseID: 38ttpCpzrQFTMKcqFKk02l
+                    passPercentage: 10
+                    conditions:
+                    - type: public
+                      operator: any
+                      targetValue: 0
+                      field: string
+                      customID: string
+                    returnValue:
+                      key: true
+                    completedAutomatedRollouts: []
+                    pendingAutomatedRollouts: []
+                  defaultValue:
+                    key: the default value
+                  tags:
+                  - a tag
+                  type: TEMPORARY
+                  typeReason: NONE
+                  isPermanent: false
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1DynamicConfigsById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete Dynamic Config
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete Dynamic Config Response
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Dynamic Config deleted successfully.
+              example:
+                message: Dynamic Config deleted successfully.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1DynamicConfigsById
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}/archive:
+    put:
+      summary: Archive Dynamic Config
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArchiveSchemaDto'
+      responses:
+        '200':
+          description: Archive Dynamic Config Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DynamicConfigDto'
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1DynamicConfigsByIdArchive
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}/disable:
+    put:
+      summary: Disable Dynamic Config
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Disable Dynamic Config Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DynamicConfigDto'
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1DynamicConfigsByIdDisable
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}/eligible_reviewers:
+    get:
+      summary: Get Eligible Reviewers
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Users and groups eligible to review changes to this dynamic config. `everyone_eligible` is true when no specific reviewers are configured. `users` is the flattened, deduped union of individual reviewers and all group members; `groups` lists each eligible group with its member `user_ids`. Project admins can always review and are not enumerated.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/EligibleReviewersDto'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1DynamicConfigsByIdEligibleReviewers
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}/enable:
+    put:
+      summary: Enable Dynamic Config
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Enable Dynamic Config Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DynamicConfigDto'
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1DynamicConfigsByIdEnable
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}/reviews:
+    get:
+      summary: List Dynamic Config Reviews
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: A page of the dynamic config reviews, newest first.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ReviewEnvelopeDto'
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1DynamicConfigsByIdReviews
+      x-operation-id-source: derived
+    post:
+      summary: Create Dynamic Config Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDCReviewRequestDto'
+      responses:
+        '201':
+          description: The created dynamic config review.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReviewEnvelopeDto'
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1DynamicConfigsByIdReviews
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}/reviews/{reviewID}:
+    get:
+      summary: Get Dynamic Config Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The requested dynamic config review.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReviewEnvelopeDto'
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1DynamicConfigsByIdReviewsByReviewID
+      x-operation-id-source: derived
+    put:
+      summary: Edit Dynamic Config Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditDCReviewRequestDto'
+      responses:
+        '200':
+          description: The updated dynamic config review.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReviewEnvelopeDto'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1DynamicConfigsByIdReviewsByReviewID
+      x-operation-id-source: derived
+    delete:
+      summary: Cancel Dynamic Config Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Cancel an in-flight dynamic config review.
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Dynamic config review cancelled successfully
+              example:
+                message: Dynamic config review cancelled successfully
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1DynamicConfigsByIdReviewsByReviewID
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}/reviews/{reviewID}/approve:
+    put:
+      summary: Approve Dynamic Config Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApproveReviewRequestDto'
+      responses:
+        '200':
+          description: The approved dynamic config review.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReviewEnvelopeDto'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1DynamicConfigsByIdReviewsByReviewIDApprove
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}/reviews/{reviewID}/commit:
+    put:
+      summary: Commit Dynamic Config Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Commit a dynamic config review, applying its proposed change.
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Dynamic config review committed successfully
+              example:
+                message: Dynamic config review committed successfully
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1DynamicConfigsByIdReviewsByReviewIDCommit
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}/reviews/{reviewID}/reject:
+    put:
+      summary: Reject Dynamic Config Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RejectReviewRequestDto'
+      responses:
+        '200':
+          description: The rejected dynamic config review.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/ReviewEnvelopeDto'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1DynamicConfigsByIdReviewsByReviewIDReject
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}/rule/{ruleId}:
+    get:
+      summary: Get Specific Dynamic Config Rule
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Dynamic Config ID
+        schema:
+          type: string
+      - name: ruleId
+        required: true
+        in: path
+        description: Rule ID
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Get Specific Dynamic Config Rule Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DynamicConfigRuleDto'
+                example:
+                  message: Dynamic Config rules read successfully.
+                  data:
+                    id: 6jQEnu1fCnXqjXhm1qGEnt
+                    baseID: 6jQEnu1fCnXqjXhm1qGEnt
+                    name: Other2
+                    passPercentage: 80
+                    conditions: []
+                    environments: null
+                    completedAutomatedRollouts: []
+                    pendingAutomatedRollouts: []
+              example:
+                message: Dynamic Config rules read successfully.
+                data:
+                  id: 6jQEnu1fCnXqjXhm1qGEnt
+                  baseID: 6jQEnu1fCnXqjXhm1qGEnt
+                  name: Other2
+                  passPercentage: 80
+                  conditions: []
+                  environments: null
+                  completedAutomatedRollouts: []
+                  pendingAutomatedRollouts: []
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1DynamicConfigsByIdRuleByRuleId
+      x-operation-id-source: derived
+    patch:
+      summary: Update Dynamic Config Rule By Id
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Dynamic Config ID
+        schema:
+          type: string
+      - name: ruleId
+        required: true
+        in: path
+        description: Rule ID
+        schema:
+          type: string
+      - name: dryRun
+        required: false
+        in: query
+        description: Skips persisting updates to the entity (used to validate that inputs are correct)
+        schema:
+          example: true
+          type: boolean
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DynamicConfigRulePartialDto'
+      responses:
+        '200':
+          description: Update Dynamic Config Rule Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DynamicConfigDto'
+                example:
+                  message: Dynamic Config rules updated successfully.
+                  data:
+                    id: a_dynamic_config
+                    permalink: https://console.statsig.com/company_id/dynamic_configs/a_dynamic_config
+                    description: helpful summary of what this dynamic config does
+                    idType: userID
+                    creatorEmail: johnsmith@mydomain.com
+                    creatorName: John Smith
+                    createdTime: 1674769467002
+                    lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                    lastModifierName: CONSOLE API
+                    lastModifiedTime: 1707344887865
+                    lastModifierEmail: null
+                    holdoutIDs: []
+                    isEnabled: true
+                    rules:
+                    - name: All Conditions
+                      id: 38ttpCpzrQFTMKcqFKk02l:10.00:1
+                      baseID: 38ttpCpzrQFTMKcqFKk02l
+                      passPercentage: 10
+                      conditions:
+                      - type: public
+                        operator: any
+                        targetValue: 0
+                        field: string
+                        customID: string
+                      returnValue:
+                        key: true
+                      completedAutomatedRollouts: []
+                      pendingAutomatedRollouts: []
+                    defaultValue:
+                      key: the default value
+                    tags:
+                    - a tag
+                    type: TEMPORARY
+                    typeReason: NONE
+                    isPermanent: false
+              example:
+                message: Dynamic Config rules updated successfully.
+                data:
+                  id: a_dynamic_config
+                  permalink: https://console.statsig.com/company_id/dynamic_configs/a_dynamic_config
+                  description: helpful summary of what this dynamic config does
+                  idType: userID
+                  creatorEmail: johnsmith@mydomain.com
+                  creatorName: John Smith
+                  createdTime: 1674769467002
+                  lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                  lastModifierName: CONSOLE API
+                  lastModifiedTime: 1707344887865
+                  lastModifierEmail: null
+                  holdoutIDs: []
+                  isEnabled: true
+                  rules:
+                  - name: All Conditions
+                    id: 38ttpCpzrQFTMKcqFKk02l:10.00:1
+                    baseID: 38ttpCpzrQFTMKcqFKk02l
+                    passPercentage: 10
+                    conditions:
+                    - type: public
+                      operator: any
+                      targetValue: 0
+                      field: string
+                      customID: string
+                    returnValue:
+                      key: true
+                    completedAutomatedRollouts: []
+                    pendingAutomatedRollouts: []
+                  defaultValue:
+                    key: the default value
+                  tags:
+                  - a tag
+                  type: TEMPORARY
+                  typeReason: NONE
+                  isPermanent: false
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1DynamicConfigsByIdRuleByRuleId
+      x-operation-id-source: derived
+    delete:
+      summary: Delete Dynamic Config Rule
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Dynamic Config ID
+        schema:
+          type: string
+      - name: ruleId
+        required: true
+        in: path
+        description: Rule ID
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete Dynamic Config Rule Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DynamicConfigDto'
+                example:
+                  message: Dynamic Config rule deleted successfully.
+                  data:
+                    id: a_dynamic_config
+                    permalink: https://console.statsig.com/company_id/dynamic_configs/a_dynamic_config
+                    description: helpful summary of what this dynamic config does
+                    idType: userID
+                    creatorEmail: johnsmith@mydomain.com
+                    creatorName: John Smith
+                    createdTime: 1674769467002
+                    lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                    lastModifierName: CONSOLE API
+                    lastModifiedTime: 1707344887865
+                    lastModifierEmail: null
+                    holdoutIDs: []
+                    isEnabled: true
+                    rules:
+                    - name: All Conditions
+                      id: 38ttpCpzrQFTMKcqFKk02l:10.00:1
+                      baseID: 38ttpCpzrQFTMKcqFKk02l
+                      passPercentage: 10
+                      conditions:
+                      - type: public
+                        operator: any
+                        targetValue: 0
+                        field: string
+                        customID: string
+                      returnValue:
+                        key: true
+                      completedAutomatedRollouts: []
+                      pendingAutomatedRollouts: []
+                    defaultValue:
+                      key: the default value
+                    tags:
+                    - a tag
+                    type: TEMPORARY
+                    typeReason: NONE
+                    isPermanent: false
+              example:
+                message: Dynamic Config rule deleted successfully.
+                data:
+                  id: a_dynamic_config
+                  permalink: https://console.statsig.com/company_id/dynamic_configs/a_dynamic_config
+                  description: helpful summary of what this dynamic config does
+                  idType: userID
+                  creatorEmail: johnsmith@mydomain.com
+                  creatorName: John Smith
+                  createdTime: 1674769467002
+                  lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                  lastModifierName: CONSOLE API
+                  lastModifiedTime: 1707344887865
+                  lastModifierEmail: null
+                  holdoutIDs: []
+                  isEnabled: true
+                  rules:
+                  - name: All Conditions
+                    id: 38ttpCpzrQFTMKcqFKk02l:10.00:1
+                    baseID: 38ttpCpzrQFTMKcqFKk02l
+                    passPercentage: 10
+                    conditions:
+                    - type: public
+                      operator: any
+                      targetValue: 0
+                      field: string
+                      customID: string
+                    returnValue:
+                      key: true
+                    completedAutomatedRollouts: []
+                    pendingAutomatedRollouts: []
+                  defaultValue:
+                    key: the default value
+                  tags:
+                  - a tag
+                  type: TEMPORARY
+                  typeReason: NONE
+                  isPermanent: false
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1DynamicConfigsByIdRuleByRuleId
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}/rules:
+    get:
+      summary: Get Dynamic Config Rules
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Get Dynamic Config Rules Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/DynamicConfigRulesDto'
+                example:
+                  message: Dynamic Config rules read successfully.
+                  data:
+                  - rules:
+                    - id: 5pjzfmF8KLFsh81kBPyxvR
+                      baseID: 5pjzfmF8KLFsh81kBPyxvR
+                      name: rule name
+                      passPercentage: 1
+                      conditions:
+                      - type: browser_name
+                        targetValue: []
+                        operator: any
+                      environments: null
+                      completedAutomatedRollouts: []
+                      pendingAutomatedRollouts: []
+                    - id: 6jQEnu1fCnXqjXhm1qGEnt
+                      baseID: 6jQEnu1fCnXqjXhm1qGEnt
+                      name: Other2
+                      passPercentage: 80
+                      conditions: []
+                      environments: null
+                      completedAutomatedRollouts: []
+                      pendingAutomatedRollouts: []
+                    - id: 4DonExIcOjSV8kG3WSQ5Zm
+                      baseID: 4DonExIcOjSV8kG3WSQ5Zm
+                      name: Austin's fav rule
+                      passPercentage: 8
+                      conditions: []
+                      environments: null
+                      completedAutomatedRollouts: []
+                      pendingAutomatedRollouts: []
+                  pagination:
+                    itemsPerPage: 20000
+                    pageNumber: 1
+                    totalItems: 1
+                    nextPage: null
+                    previousPage: null
+                    all: ''
+              example:
+                message: Dynamic Config rules read successfully.
+                data:
+                - rules:
+                  - id: 5pjzfmF8KLFsh81kBPyxvR
+                    baseID: 5pjzfmF8KLFsh81kBPyxvR
+                    name: rule name
+                    passPercentage: 1
+                    conditions:
+                    - type: browser_name
+                      targetValue: []
+                      operator: any
+                    environments: null
+                    completedAutomatedRollouts: []
+                    pendingAutomatedRollouts: []
+                  - id: 6jQEnu1fCnXqjXhm1qGEnt
+                    baseID: 6jQEnu1fCnXqjXhm1qGEnt
+                    name: Other2
+                    passPercentage: 80
+                    conditions: []
+                    environments: null
+                    completedAutomatedRollouts: []
+                    pendingAutomatedRollouts: []
+                  - id: 4DonExIcOjSV8kG3WSQ5Zm
+                    baseID: 4DonExIcOjSV8kG3WSQ5Zm
+                    name: Austin's fav rule
+                    passPercentage: 8
+                    conditions: []
+                    environments: null
+                    completedAutomatedRollouts: []
+                    pendingAutomatedRollouts: []
+                pagination:
+                  itemsPerPage: 20000
+                  pageNumber: 1
+                  totalItems: 1
+                  nextPage: null
+                  previousPage: null
+                  all: ''
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1DynamicConfigsByIdRules
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}/unarchive:
+    put:
+      summary: Unarchive Dynamic Config
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnarchiveSchemaDto'
+      responses:
+        '200':
+          description: Unarchive Dynamic Config Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DynamicConfigDto'
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1DynamicConfigsByIdUnarchive
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/dynamic_configs/{id}/versions:
+    get:
+      summary: List Dynamic Config Versions
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: startDate
+        required: false
+        in: query
+        description: Only return versions last modified on or after this date. Expected valid date in the form of YYYY-MM-DD
+        schema:
+          example: '2024-01-01'
+          type: string
+      - name: endDate
+        required: false
+        in: query
+        description: Only return versions last modified on or before this date, inclusive. Expected valid date in the form of YYYY-MM-DD
+        schema:
+          example: '2024-01-31'
+          type: string
+      responses:
+        '200':
+          description: List Dynamic Config Versions Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/DynamicConfigDto'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dynamic Configs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1DynamicConfigsByIdVersions
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
 components:
   responses:
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message indicating the resource was not found.
     Unauthorized:
       description: Missing or invalid API key
       content:
@@ -264,58 +2153,55 @@ components:
               message:
                 type: string
                 description: Error message describing the authentication failure.
-  parameters:
-    Limit:
-      name: limit
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: Maximum number of items to return per page.
-    ApiVersion:
-      name: STATSIG-API-VERSION
-      in: header
-      required: false
-      schema:
-        type: string
-        default: '20240601'
-      description: The Console API version. Currently the only version is 20240601.
-    DynamicConfigId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The name or identifier of the dynamic config.
-    Page:
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-      description: Page number for paginated results.
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message indicating the resource was not found.
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
   schemas:
-    DynamicConfigUpdate:
+    Rule:
       type: object
-      description: Request body for partially updating a dynamic config.
+      description: A targeting rule that defines conditions under which a gate passes or a config returns specific values.
       properties:
-        description:
+        id:
           type: string
-          description: Updated description.
-        isEnabled:
-          type: boolean
-          description: Whether the config should be enabled.
-        defaultValue:
+          description: The unique identifier of the rule.
+        name:
+          type: string
+          description: The name of the rule.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of users matching conditions who pass the rule.
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+          description: The conditions that must be met for this rule to apply.
+        returnValue:
           type: object
-          description: Updated default key-value pairs.
-        tags:
+          description: The value returned when this rule matches, for dynamic configs.
+        environments:
           type: array
           items:
             type: string
-          description: Updated tags.
+          description: Environments where this rule is active.
     DynamicConfigCreate:
       type: object
       description: Request body for creating a new dynamic config.
@@ -352,6 +2238,24 @@ components:
         hasMore:
           type: boolean
           description: Whether more pages are available.
+    DynamicConfigUpdate:
+      type: object
+      description: Request body for partially updating a dynamic config.
+      properties:
+        description:
+          type: string
+          description: Updated description.
+        isEnabled:
+          type: boolean
+          description: Whether the config should be enabled.
+        defaultValue:
+          type: object
+          description: Updated default key-value pairs.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Updated tags.
     DynamicConfig:
       type: object
       description: A dynamic configuration that provides key-value pairs to clients based on targeting rules.
@@ -389,34 +2293,6 @@ components:
           type: integer
           format: int64
           description: Timestamp when the config was last modified.
-    Rule:
-      type: object
-      description: A targeting rule that defines conditions under which a gate passes or a config returns specific values.
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the rule.
-        name:
-          type: string
-          description: The name of the rule.
-        passPercentage:
-          type: number
-          minimum: 0
-          maximum: 100
-          description: The percentage of users matching conditions who pass the rule.
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Condition'
-          description: The conditions that must be met for this rule to apply.
-        returnValue:
-          type: object
-          description: The value returned when this rule matches, for dynamic configs.
-        environments:
-          type: array
-          items:
-            type: string
-          description: Environments where this rule is active.
     Condition:
       type: object
       description: A condition within a targeting rule that evaluates user properties against specified criteria.
@@ -505,6 +2381,3284 @@ components:
           additionalProperties:
             type: string
           description: Custom identifier mappings for the user, such as companyID or teamID.
+    DynamicConfigRuleDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of this rule.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          multipleOf: 0.01
+          description: Of the users that meet the conditions of this rule, what percent should return true.
+          format: double
+        conditions:
+          type: array
+          items:
+            type: object
+            properties:
+              targetValue:
+                oneOf:
+                - type: array
+                  items:
+                    type: string
+                - type: array
+                  items:
+                    type: number
+                - type: string
+                - type: number
+              operator:
+                type: string
+                enum:
+                - any
+                - none
+                - any_case_sensitive
+                - none_case_sensitive
+                - str_contains_any
+                - str_contains_none
+                - gt
+                - lt
+                - lte
+                - gte
+                - version_gt
+                - version_lt
+                - version_gte
+                - version_lte
+                - version_eq
+                - after
+                - before
+                - 'on'
+                - is_null
+                - is_not_null
+                - str_matches
+                - encoded_any
+                - array_contains_any
+                - array_contains_none
+                - array_contains_all
+                - not_array_contains_all
+              field:
+                type:
+                - string
+                - 'null'
+              customID:
+                type:
+                - string
+                - 'null'
+              type:
+                type: string
+                enum:
+                - app_version
+                - browser_name
+                - browser_version
+                - country
+                - custom_field
+                - email
+                - environment_tier
+                - fails_gate
+                - fails_segment
+                - ip_address
+                - locale
+                - os_name
+                - os_version
+                - passes_gate
+                - passes_segment
+                - public
+                - time
+                - unit_id
+                - user_id
+                - user_agent
+                - url
+                - javascript
+                - device_model
+                - target_app
+                - experiment_group
+            required:
+            - type
+          description: An array of Condition objects.
+        environments:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: The environments this rule is enabled for.
+        id:
+          type: string
+          description: The Statsig ID of this rule.
+        baseID:
+          type: string
+          description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+        returnValue:
+          type: object
+          additionalProperties: {}
+          description: The return value of the rule.
+        completedAutomatedRollouts:
+          type: array
+          items:
+            type: object
+            properties:
+              time:
+                type: number
+              passPercent:
+                type: number
+            required:
+            - passPercent
+          readOnly: true
+          description: 'Read-only: Automated rollout phases that have already completed.'
+        pendingAutomatedRollouts:
+          type: array
+          items:
+            type: object
+            properties:
+              time:
+                type: number
+              passPercent:
+                type: number
+            required:
+            - passPercent
+          readOnly: true
+          description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+      required:
+      - name
+      - passPercentage
+      - conditions
+    RejectReviewRequestDto:
+      type: object
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: Required reason for rejecting the review.
+      required:
+      - reason
+      additionalProperties: false
+      title: RejectReviewRequest
+    DynamicConfigRulePartialDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of this rule.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          multipleOf: 0.01
+          description: Of the users that meet the conditions of this rule, what percent should return true.
+          format: double
+        conditions:
+          type: array
+          items:
+            type: object
+            properties:
+              targetValue:
+                oneOf:
+                - type: array
+                  items:
+                    type: string
+                - type: array
+                  items:
+                    type: number
+                - type: string
+                - type: number
+              operator:
+                type: string
+                enum:
+                - any
+                - none
+                - any_case_sensitive
+                - none_case_sensitive
+                - str_contains_any
+                - str_contains_none
+                - gt
+                - lt
+                - lte
+                - gte
+                - version_gt
+                - version_lt
+                - version_gte
+                - version_lte
+                - version_eq
+                - after
+                - before
+                - 'on'
+                - is_null
+                - is_not_null
+                - str_matches
+                - encoded_any
+                - array_contains_any
+                - array_contains_none
+                - array_contains_all
+                - not_array_contains_all
+              field:
+                type:
+                - string
+                - 'null'
+              customID:
+                type:
+                - string
+                - 'null'
+              type:
+                type: string
+                enum:
+                - app_version
+                - browser_name
+                - browser_version
+                - country
+                - custom_field
+                - email
+                - environment_tier
+                - fails_gate
+                - fails_segment
+                - ip_address
+                - locale
+                - os_name
+                - os_version
+                - passes_gate
+                - passes_segment
+                - public
+                - time
+                - unit_id
+                - user_id
+                - user_agent
+                - url
+                - javascript
+                - device_model
+                - target_app
+                - experiment_group
+            required:
+            - type
+          description: An array of Condition objects.
+        environments:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        id:
+          type: string
+          description: The Statsig ID of this rule.
+        baseID:
+          type: string
+          description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+        returnValue:
+          type: object
+          additionalProperties: {}
+        completedAutomatedRollouts:
+          type: array
+          items:
+            type: object
+            properties:
+              time:
+                type: number
+              passPercent:
+                type: number
+            required:
+            - passPercent
+          readOnly: true
+          description: 'Read-only: Automated rollout phases that have already completed.'
+        pendingAutomatedRollouts:
+          type: array
+          items:
+            type: object
+            properties:
+              time:
+                type: number
+              passPercent:
+                type: number
+            required:
+            - passPercent
+          readOnly: true
+          description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+        returnValueJson5:
+          type: string
+        variants:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              passPercentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                multipleOf: 0.01
+              returnValue:
+                type: object
+                additionalProperties: {}
+              returnValueJson5:
+                type: string
+            required:
+            - name
+            - passPercentage
+    ApproveReviewRequestDto:
+      type: object
+      properties:
+        reason:
+          type: string
+          maxLength: 2000
+          description: Optional comment recorded with the approval.
+      additionalProperties: false
+      title: ApproveReviewRequest
+    ArchiveSchemaDto:
+      type: object
+      properties:
+        forceArchive:
+          type: boolean
+        archiveReason:
+          type: string
+          description: The reason for archiving the gate
+          example: The gate is no longer needed
+    EligibleReviewersDto:
+      type: object
+      properties:
+        everyone_eligible:
+          type: boolean
+        users:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              email:
+                type: string
+              name:
+                type: string
+            required:
+            - id
+            - email
+            - name
+        groups:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              user_ids:
+                type: array
+                items:
+                  type: string
+            required:
+            - id
+            - name
+            - user_ids
+      required:
+      - everyone_eligible
+      - users
+      - groups
+    DynamicConfigDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\-. ]*$
+          description: Optional name for the configuration.
+          example: my_config
+        idType:
+          type: string
+          description: The type of ID which the dynamic config is based on.
+          example: userID
+        description:
+          type: string
+          maxLength: 1000
+          description: A brief summary of what the dynamic config is being used for
+          example: helpful summary of what this dynamic config does
+        lastModifierID:
+          type:
+          - string
+          - 'null'
+          description: ID of the last modifier.
+        lastModifiedTime:
+          type:
+          - number
+          - 'null'
+          description: Time of the last modification.
+          format: double
+        lastModifierEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the last modifier.
+        lastModifierName:
+          type:
+          - string
+          - 'null'
+          description: Name of the last modifier.
+        creatorID:
+          type:
+          - string
+          - 'null'
+        createdTime:
+          type: number
+          description: Timestamp when the entity was created.
+          format: double
+        creatorName:
+          type:
+          - string
+          - 'null'
+          description: Name of the creator.
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+        tags:
+          type: array
+          items:
+            type: string
+          description: The list of tag names attached to the dynamic config
+          example:
+          - a tag
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        holdoutIDs:
+          type: array
+          items:
+            type: string
+          description: Holdouts applied to this configuration.
+        team:
+          type:
+          - string
+          - 'null'
+          description: The team name associated with the dynamic config, Enterprise only.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: The team ID associated with the dynamic config, Enterprise only.
+        version:
+          type: number
+          description: Version number
+          format: double
+        isEnabled:
+          type: boolean
+          description: Is the dynamic config enabled
+          default: true
+        rules:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this rule.
+              passPercentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                multipleOf: 0.01
+                description: Of the users that meet the conditions of this rule, what percent should return true.
+              conditions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    targetValue:
+                      oneOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: array
+                        items:
+                          type: number
+                      - type: string
+                      - type: number
+                    operator:
+                      type: string
+                      enum:
+                      - any
+                      - none
+                      - any_case_sensitive
+                      - none_case_sensitive
+                      - str_contains_any
+                      - str_contains_none
+                      - gt
+                      - lt
+                      - lte
+                      - gte
+                      - version_gt
+                      - version_lt
+                      - version_gte
+                      - version_lte
+                      - version_eq
+                      - after
+                      - before
+                      - 'on'
+                      - is_null
+                      - is_not_null
+                      - str_matches
+                      - encoded_any
+                      - array_contains_any
+                      - array_contains_none
+                      - array_contains_all
+                      - not_array_contains_all
+                    field:
+                      type:
+                      - string
+                      - 'null'
+                    customID:
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      type: string
+                      enum:
+                      - app_version
+                      - browser_name
+                      - browser_version
+                      - country
+                      - custom_field
+                      - email
+                      - environment_tier
+                      - fails_gate
+                      - fails_segment
+                      - ip_address
+                      - locale
+                      - os_name
+                      - os_version
+                      - passes_gate
+                      - passes_segment
+                      - public
+                      - time
+                      - unit_id
+                      - user_id
+                      - user_agent
+                      - url
+                      - javascript
+                      - device_model
+                      - target_app
+                      - experiment_group
+                  required:
+                  - type
+                description: An array of Condition objects.
+              environments:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+              id:
+                type: string
+                description: The Statsig ID of this rule.
+              baseID:
+                type: string
+                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+              returnValue:
+                type: object
+                additionalProperties: {}
+              completedAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that have already completed.'
+              pendingAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+              returnValueJson5:
+                type: string
+              variants:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    passPercentage:
+                      type: number
+                      minimum: 0
+                      maximum: 100
+                      multipleOf: 0.01
+                    returnValue:
+                      type: object
+                      additionalProperties: {}
+                    returnValueJson5:
+                      type: string
+                  required:
+                  - name
+                  - passPercentage
+            required:
+            - name
+            - passPercentage
+            - conditions
+          description: An array of Rule objects
+        defaultValue:
+          type: object
+          additionalProperties: {}
+          description: The fallback JSON object when no rules are triggered
+        defaultValueJson5:
+          type: string
+          description: Can include comments. If provided with defaultValue, must parse to the same JSON
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
+        schema:
+          type:
+          - string
+          - 'null'
+          description: A schema using JSON Schema Draft 2020-12 to enforce return values of this dynamic config's rules.
+        schemaJson5:
+          type:
+          - string
+          - 'null'
+          description: '`schema` except with Json5 comments. Optional and should parse to same json as `schema`.'
+        releasePipelineID:
+          type:
+          - string
+          - 'null'
+          description: The release pipeline ID associated with the dynamic config
+        isTemplate:
+          type: boolean
+        status:
+          type: string
+          enum:
+          - Enabled
+          - Disabled
+          - Archived
+        checksPerHour:
+          type:
+          - number
+          - 'null'
+          format: double
+        permalink:
+          type: string
+          format: uri
+          description: A permalink to this dynamic config in the Statsig Console.
+        type:
+          type: string
+          enum:
+          - PERMANENT
+          - TEMPORARY
+          - STALE
+          - TEMPLATE
+          description: The lifecycle type of the config (TEMPORARY, PERMANENT, or STALE). STALE classification depends on the nightly stale detection batch job having run; a config not yet processed reads as TEMPORARY.
+        typeReason:
+          type: string
+          enum:
+          - NONE
+          - STALE_PROBABLY_DEAD_CHECK
+          - STALE_NO_RULES
+          - STALE_PROBABLY_FORGOTTEN
+          - STALE_PROBABLY_LAUNCHED
+          - STALE_PROBABLY_UNLAUNCHED
+          description: The reason for the current type classification. Depends on the nightly stale detection batch job having run.
+        isPermanent:
+          type: boolean
+          description: Whether the config has been explicitly marked as long-lived.
+      required:
+      - id
+      - description
+      - lastModifierID
+      - lastModifiedTime
+      - lastModifierEmail
+      - lastModifierName
+      - createdTime
+      - creatorName
+      - isEnabled
+      - rules
+      - permalink
+      - type
+      - typeReason
+      - isPermanent
+    DynamicConfigPartialUpdateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\-. ]*$
+          description: Optional name for the configuration.
+          example: my_config
+        isEnabled:
+          type: boolean
+          description: Is the dynamic config enabled
+          default: true
+        description:
+          type: string
+          maxLength: 1000
+          description: A brief summary of what the dynamic config is being used for
+          example: helpful summary of what this dynamic config does
+        rules:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this rule.
+              passPercentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                multipleOf: 0.01
+                description: Of the users that meet the conditions of this rule, what percent should return true.
+              conditions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    targetValue:
+                      oneOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: array
+                        items:
+                          type: number
+                      - type: string
+                      - type: number
+                    operator:
+                      type: string
+                      enum:
+                      - any
+                      - none
+                      - any_case_sensitive
+                      - none_case_sensitive
+                      - str_contains_any
+                      - str_contains_none
+                      - gt
+                      - lt
+                      - lte
+                      - gte
+                      - version_gt
+                      - version_lt
+                      - version_gte
+                      - version_lte
+                      - version_eq
+                      - after
+                      - before
+                      - 'on'
+                      - is_null
+                      - is_not_null
+                      - str_matches
+                      - encoded_any
+                      - array_contains_any
+                      - array_contains_none
+                      - array_contains_all
+                      - not_array_contains_all
+                    field:
+                      type:
+                      - string
+                      - 'null'
+                    customID:
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      type: string
+                      enum:
+                      - app_version
+                      - browser_name
+                      - browser_version
+                      - country
+                      - custom_field
+                      - email
+                      - environment_tier
+                      - fails_gate
+                      - fails_segment
+                      - ip_address
+                      - locale
+                      - os_name
+                      - os_version
+                      - passes_gate
+                      - passes_segment
+                      - public
+                      - time
+                      - unit_id
+                      - user_id
+                      - user_agent
+                      - url
+                      - javascript
+                      - device_model
+                      - target_app
+                      - experiment_group
+                  required:
+                  - type
+                description: An array of Condition objects.
+              environments:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+              id:
+                type: string
+                description: The Statsig ID of this rule.
+              baseID:
+                type: string
+                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+              returnValue:
+                type: object
+                additionalProperties: {}
+              completedAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that have already completed.'
+              pendingAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+              returnValueJson5:
+                type: string
+              variants:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    passPercentage:
+                      type: number
+                      minimum: 0
+                      maximum: 100
+                      multipleOf: 0.01
+                    returnValue:
+                      type: object
+                      additionalProperties: {}
+                    returnValueJson5:
+                      type: string
+                  required:
+                  - name
+                  - passPercentage
+            required:
+            - name
+            - conditions
+          description: An array of Rule objects
+        defaultValue:
+          type: object
+          additionalProperties: {}
+          description: The fallback JSON object when no rules are triggered
+        defaultValueJson5:
+          type: string
+          description: Can include comments. If provided with defaultValue, must parse to the same JSON
+        idType:
+          type: string
+          description: The type of ID which the dynamic config is based on.
+          example: userID
+        tags:
+          type: array
+          items:
+            type: string
+          description: The list of tag names attached to the dynamic config
+          example:
+          - a tag
+        creatorID:
+          type:
+          - string
+          - 'null'
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+        schema:
+          type:
+          - string
+          - 'null'
+          description: A schema using JSON Schema Draft 2020-12 to enforce return values of this dynamic config's rules.
+        schemaJson5:
+          type:
+          - string
+          - 'null'
+          description: '`schema` except with Json5 comments. Optional and should parse to same json as `schema`.'
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        team:
+          type:
+          - string
+          - 'null'
+          description: The team name associated with the dynamic config, Enterprise only.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: The team ID associated with the dynamic config, Enterprise only.
+        releasePipelineID:
+          type:
+          - string
+          - 'null'
+          description: The release pipeline ID associated with the dynamic config
+        type:
+          type: string
+          enum:
+          - PERMANENT
+          - TEMPORARY
+          description: Set to PERMANENT to mark this config as long-lived, or TEMPORARY to unmark it. Only honored on the update endpoints; this field is ignored when creating a config.
+    DynamicConfigFullUpdateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\-. ]*$
+          description: Optional name for the configuration.
+          example: my_config
+        isEnabled:
+          type: boolean
+          description: Is the dynamic config enabled
+          default: true
+        description:
+          type: string
+          maxLength: 1000
+          description: A brief summary of what the dynamic config is being used for
+          example: helpful summary of what this dynamic config does
+        rules:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this rule.
+              passPercentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                multipleOf: 0.01
+                description: Of the users that meet the conditions of this rule, what percent should return true.
+              conditions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    targetValue:
+                      oneOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: array
+                        items:
+                          type: number
+                      - type: string
+                      - type: number
+                    operator:
+                      type: string
+                      enum:
+                      - any
+                      - none
+                      - any_case_sensitive
+                      - none_case_sensitive
+                      - str_contains_any
+                      - str_contains_none
+                      - gt
+                      - lt
+                      - lte
+                      - gte
+                      - version_gt
+                      - version_lt
+                      - version_gte
+                      - version_lte
+                      - version_eq
+                      - after
+                      - before
+                      - 'on'
+                      - is_null
+                      - is_not_null
+                      - str_matches
+                      - encoded_any
+                      - array_contains_any
+                      - array_contains_none
+                      - array_contains_all
+                      - not_array_contains_all
+                    field:
+                      type:
+                      - string
+                      - 'null'
+                    customID:
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      type: string
+                      enum:
+                      - app_version
+                      - browser_name
+                      - browser_version
+                      - country
+                      - custom_field
+                      - email
+                      - environment_tier
+                      - fails_gate
+                      - fails_segment
+                      - ip_address
+                      - locale
+                      - os_name
+                      - os_version
+                      - passes_gate
+                      - passes_segment
+                      - public
+                      - time
+                      - unit_id
+                      - user_id
+                      - user_agent
+                      - url
+                      - javascript
+                      - device_model
+                      - target_app
+                      - experiment_group
+                  required:
+                  - type
+                description: An array of Condition objects.
+              environments:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+              id:
+                type: string
+                description: The Statsig ID of this rule.
+              baseID:
+                type: string
+                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+              returnValue:
+                type: object
+                additionalProperties: {}
+              completedAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that have already completed.'
+              pendingAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+              returnValueJson5:
+                type: string
+              variants:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    passPercentage:
+                      type: number
+                      minimum: 0
+                      maximum: 100
+                      multipleOf: 0.01
+                    returnValue:
+                      type: object
+                      additionalProperties: {}
+                    returnValueJson5:
+                      type: string
+                  required:
+                  - name
+                  - passPercentage
+            required:
+            - name
+            - conditions
+          description: An array of Rule objects
+        defaultValue:
+          type: object
+          additionalProperties: {}
+          description: The fallback JSON object when no rules are triggered
+        defaultValueJson5:
+          type: string
+          description: Can include comments. If provided with defaultValue, must parse to the same JSON
+        idType:
+          type: string
+          description: The type of ID which the dynamic config is based on.
+          example: userID
+        tags:
+          type: array
+          items:
+            type: string
+          description: The list of tag names attached to the dynamic config
+          example:
+          - a tag
+        creatorID:
+          type:
+          - string
+          - 'null'
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+        schema:
+          type:
+          - string
+          - 'null'
+          description: A schema using JSON Schema Draft 2020-12 to enforce return values of this dynamic config's rules.
+        schemaJson5:
+          type:
+          - string
+          - 'null'
+          description: '`schema` except with Json5 comments. Optional and should parse to same json as `schema`.'
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        team:
+          type:
+          - string
+          - 'null'
+          description: The team name associated with the dynamic config, Enterprise only.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: The team ID associated with the dynamic config, Enterprise only.
+        releasePipelineID:
+          type:
+          - string
+          - 'null'
+          description: The release pipeline ID associated with the dynamic config
+        type:
+          type: string
+          enum:
+          - PERMANENT
+          - TEMPORARY
+          description: Set to PERMANENT to mark this config as long-lived, or TEMPORARY to unmark it. Only honored on the update endpoints; this field is ignored when creating a config.
+      required:
+      - isEnabled
+      - description
+      - rules
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    CreateDCReviewRequestDto:
+      type: object
+      properties:
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: Human-readable description of the proposed change.
+        reviewer_ids:
+          default: []
+          type: array
+          items:
+            type: string
+          description: User IDs to request review from.
+        reviewer_group_ids:
+          default: []
+          type: array
+          items:
+            type: string
+          description: Reviewer group IDs to request review from.
+        change:
+          type: object
+          properties:
+            rules:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: The name of this rule.
+                  passPercentage:
+                    type: number
+                    minimum: 0
+                    maximum: 100
+                    multipleOf: 0.01
+                    description: Of the users that meet the conditions of this rule, what percent should return true.
+                  conditions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        targetValue:
+                          oneOf:
+                          - type: array
+                            items:
+                              type: string
+                          - type: array
+                            items:
+                              type: number
+                          - type: string
+                          - type: number
+                        operator:
+                          type: string
+                          enum:
+                          - any
+                          - none
+                          - any_case_sensitive
+                          - none_case_sensitive
+                          - str_contains_any
+                          - str_contains_none
+                          - gt
+                          - lt
+                          - lte
+                          - gte
+                          - version_gt
+                          - version_lt
+                          - version_gte
+                          - version_lte
+                          - version_eq
+                          - after
+                          - before
+                          - 'on'
+                          - is_null
+                          - is_not_null
+                          - str_matches
+                          - encoded_any
+                          - array_contains_any
+                          - array_contains_none
+                          - array_contains_all
+                          - not_array_contains_all
+                        field:
+                          type:
+                          - string
+                          - 'null'
+                        customID:
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          type: string
+                          enum:
+                          - app_version
+                          - browser_name
+                          - browser_version
+                          - country
+                          - custom_field
+                          - email
+                          - environment_tier
+                          - fails_gate
+                          - fails_segment
+                          - ip_address
+                          - locale
+                          - os_name
+                          - os_version
+                          - passes_gate
+                          - passes_segment
+                          - public
+                          - time
+                          - unit_id
+                          - user_id
+                          - user_agent
+                          - url
+                          - javascript
+                          - device_model
+                          - target_app
+                          - experiment_group
+                      required:
+                      - type
+                    description: An array of Condition objects.
+                  environments:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                  id:
+                    type: string
+                    description: The Statsig ID of this rule.
+                  baseID:
+                    type: string
+                    description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+                  returnValue:
+                    type: object
+                    additionalProperties: {}
+                  completedAutomatedRollouts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        time:
+                          type: number
+                        passPercent:
+                          type: number
+                      required:
+                      - passPercent
+                    readOnly: true
+                    description: 'Read-only: Automated rollout phases that have already completed.'
+                  pendingAutomatedRollouts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        time:
+                          type: number
+                        passPercent:
+                          type: number
+                      required:
+                      - passPercent
+                    readOnly: true
+                    description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+                  returnValueJson5:
+                    type: string
+                  variants:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        passPercentage:
+                          type: number
+                          minimum: 0
+                          maximum: 100
+                          multipleOf: 0.01
+                        returnValue:
+                          type: object
+                          additionalProperties: {}
+                        returnValueJson5:
+                          type: string
+                      required:
+                      - name
+                      - passPercentage
+                required:
+                - name
+                - conditions
+              description: Proposed full rule set for the dynamic config. Same shape as the DC update contract.
+            default_value:
+              type: object
+              additionalProperties: {}
+              description: Proposed default value for the dynamic config as a JSON object.
+            is_enabled:
+              type: boolean
+              description: Proposed enabled state for the dynamic config. An explicit target, not a toggle.
+            is_archived:
+              type: boolean
+              description: Proposed archived state for the dynamic config. `true` archives, `false` unarchives.
+            delete:
+              type: boolean
+              enum:
+              - true
+              description: Delete the dynamic config. Set to `true`.
+            resalt:
+              type: boolean
+              enum:
+              - true
+              description: Re-randomize the dynamic config's salt. Set to `true`.
+            disable_reviews_locally:
+              type: boolean
+              enum:
+              - true
+              description: Stop requiring review on this dynamic config. Set to `true`.
+            restore:
+              type: object
+              properties:
+                snapshot_id:
+                  type: string
+                  minLength: 1
+                  description: Snapshot ID (SUID) of the committed historical state to restore.
+              required:
+              - snapshot_id
+              additionalProperties: false
+              title: RestoreChange
+              description: Revert to a prior committed snapshot (review type `rules`).
+            release_pipeline_id:
+              type:
+              - string
+              - 'null'
+              minLength: 1
+              description: Set or clear the dynamic config's release pipeline (review type `update_release_pipeline`). Pass a pipeline ID to attach, or `null` to detach.
+            id_type:
+              type: string
+              minLength: 1
+              description: Change the dynamic config's primary unit ID type (review type `edit_id_type`).
+            allow_self_approval:
+              type: boolean
+              description: Whether this dynamic config's reviews may be self-approved (review type `update_allow_self_approval`).
+            target_app_ids:
+              type: array
+              items:
+                type: string
+              description: Replace the dynamic config's target applications (review type `update_target_applications`).
+            allowed_reviewers:
+              type: object
+              properties:
+                user_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: User IDs allowed to review. Replaces the existing set.
+                group_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: Reviewer group IDs allowed to review. Replaces the existing set.
+              additionalProperties: false
+              description: Set who may review this dynamic config (review type `allowed_reviewers`).
+          additionalProperties: false
+          title: DCReviewChange
+          description: 'The proposed change. Provide exactly one change slot: the content bundle (`rules` and/or `default_value`), one verb/metadata field, or `restore`.'
+      required:
+      - description
+      - change
+      additionalProperties: false
+      title: CreateDCReviewRequest
+      description: Request body for POST /console/v1/dynamic_configs/:id/reviews
+    ReviewEnvelopeDto:
+      type: object
+      properties:
+        review_id:
+          type: string
+          description: Unique ID of the review.
+        status:
+          type: string
+          enum:
+          - pending
+          - accepted
+          - rejected
+          - committed
+          - changes_requested
+          - pending_webhook_validation
+          - failed_webhook_validation
+          - approved_webhook_validation
+          description: Lifecycle status of the review.
+        type:
+          type: string
+          enum:
+          - rules
+          - toggle_enabled
+          - archive
+          - delete
+          - resalt
+          - disable_reviews_locally
+          - update_team
+          - update_release_pipeline
+          - edit_id_type
+          - update_allow_self_approval
+          - update_target_applications
+          - update_owners
+          - allowed_reviewers
+          description: Kind of change the review proposes.
+        author:
+          type: object
+          properties:
+            id:
+              type: string
+            email:
+              type:
+              - string
+              - 'null'
+          required:
+          - id
+          - email
+          description: The user who created the review.
+        reviewers:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              kind:
+                type: string
+                enum:
+                - user
+                - group
+            required:
+            - id
+            - kind
+          description: Requested reviewers (users and groups).
+        description:
+          type: string
+          description: Human-readable description of the proposed change.
+        created_at:
+          type: string
+          description: ISO-8601 timestamp of when the review was created.
+        content:
+          type:
+          - object
+          - 'null'
+          properties:
+            type:
+              type: string
+              enum:
+              - rules
+              - toggle_enabled
+              - archive
+              - delete
+              - resalt
+              - disable_reviews_locally
+              - update_team
+              - update_release_pipeline
+              - edit_id_type
+              - update_allow_self_approval
+              - update_target_applications
+              - update_owners
+              - allowed_reviewers
+              description: Same value as the envelope `type`, repeated for self-containment.
+            current:
+              type: object
+              properties:
+                rules:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: The name of this rule.
+                      passPercentage:
+                        type: number
+                        minimum: 0
+                        maximum: 100
+                        multipleOf: 0.01
+                        description: Of the users that meet the conditions of this rule, what percent should return true.
+                      conditions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            targetValue:
+                              oneOf:
+                              - type: array
+                                items:
+                                  type: string
+                              - type: array
+                                items:
+                                  type: number
+                              - type: string
+                              - type: number
+                            operator:
+                              type: string
+                              enum:
+                              - any
+                              - none
+                              - any_case_sensitive
+                              - none_case_sensitive
+                              - str_contains_any
+                              - str_contains_none
+                              - gt
+                              - lt
+                              - lte
+                              - gte
+                              - version_gt
+                              - version_lt
+                              - version_gte
+                              - version_lte
+                              - version_eq
+                              - after
+                              - before
+                              - 'on'
+                              - is_null
+                              - is_not_null
+                              - str_matches
+                              - encoded_any
+                              - array_contains_any
+                              - array_contains_none
+                              - array_contains_all
+                              - not_array_contains_all
+                            field:
+                              type:
+                              - string
+                              - 'null'
+                            customID:
+                              type:
+                              - string
+                              - 'null'
+                            type:
+                              type: string
+                              enum:
+                              - app_version
+                              - browser_name
+                              - browser_version
+                              - country
+                              - custom_field
+                              - email
+                              - environment_tier
+                              - fails_gate
+                              - fails_segment
+                              - ip_address
+                              - locale
+                              - os_name
+                              - os_version
+                              - passes_gate
+                              - passes_segment
+                              - public
+                              - time
+                              - unit_id
+                              - user_id
+                              - user_agent
+                              - url
+                              - javascript
+                              - device_model
+                              - target_app
+                              - experiment_group
+                          required:
+                          - type
+                        description: An array of Condition objects.
+                      environments:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                      id:
+                        type: string
+                        description: The Statsig ID of this rule.
+                      baseID:
+                        type: string
+                        description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+                      returnValue:
+                        type: object
+                        additionalProperties: {}
+                      completedAutomatedRollouts:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            time:
+                              type: number
+                            passPercent:
+                              type: number
+                          required:
+                          - passPercent
+                        readOnly: true
+                        description: 'Read-only: Automated rollout phases that have already completed.'
+                      pendingAutomatedRollouts:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            time:
+                              type: number
+                            passPercent:
+                              type: number
+                          required:
+                          - passPercent
+                        readOnly: true
+                        description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+                      returnValueJson5:
+                        type: string
+                      variants:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            passPercentage:
+                              type: number
+                              minimum: 0
+                              maximum: 100
+                              multipleOf: 0.01
+                            returnValue:
+                              type: object
+                              additionalProperties: {}
+                            returnValueJson5:
+                              type: string
+                          required:
+                          - name
+                          - passPercentage
+                    required:
+                    - name
+                    - passPercentage
+                    - conditions
+                  description: 'The FULL rule array for this side, not just the rules that changed — commit replaces the array wholesale and rule order is evaluation-significant. Rules are serialized exactly as the entity''s own read endpoint returns them, so this can be diffed against it with no translation: gates match `GET /gates/{id}` (no `returnValue`/`returnValueJson5`/`variants` — a gate rule has no return value), dynamic configs match `GET /dynamic_configs/{id}` and do carry those three.'
+                is_enabled:
+                  type: boolean
+                default_value:
+                  description: 'The config''s default value. Parsed JSON when parseable, otherwise the raw stored string. For a gate this is the launch flag: `true` means "launched" (serve the gate to everyone), `false` means plain enabled/disabled.'
+                is_launched:
+                  type: boolean
+                  description: 'Dynamic configs only. Whether the config is serving its launched payload to every user, bypassing rules. Derived: a dynamic config is launched when it is disabled AND has a launched payload. This is the dynamic-config equivalent of a gate''s `default_value: true`, and it is what a dynamic config `toggle_enabled` review actually moves — `default_value` plays no part in that decision.'
+                launched_payload:
+                  description: Dynamic configs only. The value served to every user while the config is launched; `null` when it is not launched. Parsed JSON when parseable. Omitted entirely for secret dynamic configs — unlike `default_value`, the launched payload has no ciphertext-preserving accessor, so surfacing it would put a secret in cleartext on a response that `GET /console/v1/dynamic_configs/{id}` never returns it on. Use `is_launched` to see the state change for those.
+                default_value_gradual_rollout:
+                  type:
+                  - object
+                  - 'null'
+                  properties:
+                    id:
+                      type: string
+                    target_value: {}
+                    percentage_pass:
+                      type: number
+                      format: double
+                    salt:
+                      type: string
+                    rollouts:
+                      type:
+                      - array
+                      - 'null'
+                      items:
+                        type: object
+                        properties:
+                          time:
+                            type: number
+                          pass_percent:
+                            type: number
+                          is_complete:
+                            type: boolean
+                        required:
+                        - time
+                        - pass_percent
+                        - is_complete
+                  required:
+                  - id
+                  - percentage_pass
+                  - salt
+                  - rollouts
+                  description: 'Dynamic configs only. The in-progress partial rollout of a new default value, or `null` when there is none. Omitted for secret dynamic configs: the target value is stored unencrypted inside the snapshot, so it is suppressed for the same reason as `launched_payload`.'
+                salt:
+                  type: string
+                  description: The bucketing salt. Present when committing would change it — which re-buckets every user in every percentage rollout on this config, even though no rule text moved. A `restore` review that reverts past a resalt is the case to watch for.
+                description:
+                  type: string
+                show_dev_rules:
+                  type: boolean
+                show_staging_rules:
+                  type: boolean
+                subscribers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - type
+                    - id
+                  description: Who is notified about alerts on this config (users, teams, Slack channels, PagerDuty on-calls).
+                analytics_enabled:
+                  type: boolean
+                scheduled_reload:
+                  type: object
+                  properties:
+                    hour:
+                      type:
+                      - number
+                      - 'null'
+                      format: double
+                    days:
+                      type:
+                      - array
+                      - 'null'
+                      items:
+                        type: number
+                    reload_type:
+                      type: string
+                      enum:
+                      - incremental
+                      - full
+                    turbo_mode:
+                      type:
+                      - boolean
+                      - 'null'
+                  required:
+                  - hour
+                  - days
+                  - reload_type
+                  - turbo_mode
+                  description: Gates only. The DWH-native scheduled-reload settings, which commit writes as a unit. Absent on non-warehouse-native projects, where none of it is set on either side.
+                is_archived:
+                  type: boolean
+                  description: Present on `archive` reviews. Archive and unarchive share the external type `archive`, so this field is what distinguishes them.
+                id_type:
+                  type: string
+                secondary_id_type:
+                  type:
+                  - string
+                  - 'null'
+                identity_resolution_source_id:
+                  type:
+                  - string
+                  - 'null'
+                target_app_ids:
+                  type: array
+                  items:
+                    type: string
+                owners:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      owner_id:
+                        type: string
+                      owner_type:
+                        type: string
+                    required:
+                    - owner_id
+                    - owner_type
+                team_id:
+                  type:
+                  - string
+                  - 'null'
+                allow_self_approval:
+                  type: boolean
+                release_pipeline_id:
+                  type:
+                  - string
+                  - 'null'
+                allowed_reviewers:
+                  type: object
+                  properties:
+                    user_ids:
+                      type: array
+                      items:
+                        type: string
+                    group_ids:
+                      type: array
+                      items:
+                        type: string
+                  required:
+                  - user_ids
+                  - group_ids
+                  description: 'Who may approve reviews on this config. Carried by `allowed_reviewers` reviews, which set it outright, and ALSO by `update_team` reviews, which can widen it as a side effect: moving a config onto a team whose review-approval mode is `admin_only` appends that team''s admins to `user_ids`, and `team_only` appends the team itself to `group_ids`. Identical values on both sides of an `update_team` review mean that move grants no new approval rights.'
+                schema:
+                  type:
+                  - string
+                  - 'null'
+                monitoring_metrics:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      type:
+                        type: string
+                    required:
+                    - name
+                    - type
+                monitoring_metric_tags:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                    required:
+                    - id
+                real_time_metrics:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      type:
+                        type: string
+                    required:
+                    - name
+                    - type
+                overrides:
+                  type: object
+                  properties:
+                    id_overrides:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          ids:
+                            type: array
+                            items:
+                              type: string
+                          groupID:
+                            type: string
+                          environment:
+                            type:
+                            - string
+                            - 'null'
+                          unitID:
+                            type:
+                            - string
+                            - 'null'
+                        required:
+                        - ids
+                        - groupID
+                    custom_id_overrides:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          ids:
+                            type: array
+                            items:
+                              type: string
+                          groupID:
+                            type: string
+                          environment:
+                            type:
+                            - string
+                            - 'null'
+                          unitID:
+                            type:
+                            - string
+                            - 'null'
+                        required:
+                        - ids
+                        - groupID
+                  required:
+                  - id_overrides
+                  - custom_id_overrides
+              title: ReviewContentValues
+              description: 'The entity''s live value at read time, for each field this review type updates. Matches the Console''s "Original Version (Before)" column for pending reviews. This is NOT status-dependent: for a committed or rejected review it is still the live entity as it stands now, which for a committed review normally equals `proposed`.'
+            proposed:
+              type: object
+              properties:
+                rules:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: The name of this rule.
+                      passPercentage:
+                        type: number
+                        minimum: 0
+                        maximum: 100
+                        multipleOf: 0.01
+                        description: Of the users that meet the conditions of this rule, what percent should return true.
+                      conditions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            targetValue:
+                              oneOf:
+                              - type: array
+                                items:
+                                  type: string
+                              - type: array
+                                items:
+                                  type: number
+                              - type: string
+                              - type: number
+                            operator:
+                              type: string
+                              enum:
+                              - any
+                              - none
+                              - any_case_sensitive
+                              - none_case_sensitive
+                              - str_contains_any
+                              - str_contains_none
+                              - gt
+                              - lt
+                              - lte
+                              - gte
+                              - version_gt
+                              - version_lt
+                              - version_gte
+                              - version_lte
+                              - version_eq
+                              - after
+                              - before
+                              - 'on'
+                              - is_null
+                              - is_not_null
+                              - str_matches
+                              - encoded_any
+                              - array_contains_any
+                              - array_contains_none
+                              - array_contains_all
+                              - not_array_contains_all
+                            field:
+                              type:
+                              - string
+                              - 'null'
+                            customID:
+                              type:
+                              - string
+                              - 'null'
+                            type:
+                              type: string
+                              enum:
+                              - app_version
+                              - browser_name
+                              - browser_version
+                              - country
+                              - custom_field
+                              - email
+                              - environment_tier
+                              - fails_gate
+                              - fails_segment
+                              - ip_address
+                              - locale
+                              - os_name
+                              - os_version
+                              - passes_gate
+                              - passes_segment
+                              - public
+                              - time
+                              - unit_id
+                              - user_id
+                              - user_agent
+                              - url
+                              - javascript
+                              - device_model
+                              - target_app
+                              - experiment_group
+                          required:
+                          - type
+                        description: An array of Condition objects.
+                      environments:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                      id:
+                        type: string
+                        description: The Statsig ID of this rule.
+                      baseID:
+                        type: string
+                        description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+                      returnValue:
+                        type: object
+                        additionalProperties: {}
+                      completedAutomatedRollouts:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            time:
+                              type: number
+                            passPercent:
+                              type: number
+                          required:
+                          - passPercent
+                        readOnly: true
+                        description: 'Read-only: Automated rollout phases that have already completed.'
+                      pendingAutomatedRollouts:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            time:
+                              type: number
+                            passPercent:
+                              type: number
+                          required:
+                          - passPercent
+                        readOnly: true
+                        description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+                      returnValueJson5:
+                        type: string
+                      variants:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            passPercentage:
+                              type: number
+                              minimum: 0
+                              maximum: 100
+                              multipleOf: 0.01
+                            returnValue:
+                              type: object
+                              additionalProperties: {}
+                            returnValueJson5:
+                              type: string
+                          required:
+                          - name
+                          - passPercentage
+                    required:
+                    - name
+                    - passPercentage
+                    - conditions
+                  description: 'The FULL rule array for this side, not just the rules that changed — commit replaces the array wholesale and rule order is evaluation-significant. Rules are serialized exactly as the entity''s own read endpoint returns them, so this can be diffed against it with no translation: gates match `GET /gates/{id}` (no `returnValue`/`returnValueJson5`/`variants` — a gate rule has no return value), dynamic configs match `GET /dynamic_configs/{id}` and do carry those three.'
+                is_enabled:
+                  type: boolean
+                default_value:
+                  description: 'The config''s default value. Parsed JSON when parseable, otherwise the raw stored string. For a gate this is the launch flag: `true` means "launched" (serve the gate to everyone), `false` means plain enabled/disabled.'
+                is_launched:
+                  type: boolean
+                  description: 'Dynamic configs only. Whether the config is serving its launched payload to every user, bypassing rules. Derived: a dynamic config is launched when it is disabled AND has a launched payload. This is the dynamic-config equivalent of a gate''s `default_value: true`, and it is what a dynamic config `toggle_enabled` review actually moves — `default_value` plays no part in that decision.'
+                launched_payload:
+                  description: Dynamic configs only. The value served to every user while the config is launched; `null` when it is not launched. Parsed JSON when parseable. Omitted entirely for secret dynamic configs — unlike `default_value`, the launched payload has no ciphertext-preserving accessor, so surfacing it would put a secret in cleartext on a response that `GET /console/v1/dynamic_configs/{id}` never returns it on. Use `is_launched` to see the state change for those.
+                default_value_gradual_rollout:
+                  type:
+                  - object
+                  - 'null'
+                  properties:
+                    id:
+                      type: string
+                    target_value: {}
+                    percentage_pass:
+                      type: number
+                      format: double
+                    salt:
+                      type: string
+                    rollouts:
+                      type:
+                      - array
+                      - 'null'
+                      items:
+                        type: object
+                        properties:
+                          time:
+                            type: number
+                          pass_percent:
+                            type: number
+                          is_complete:
+                            type: boolean
+                        required:
+                        - time
+                        - pass_percent
+                        - is_complete
+                  required:
+                  - id
+                  - percentage_pass
+                  - salt
+                  - rollouts
+                  description: 'Dynamic configs only. The in-progress partial rollout of a new default value, or `null` when there is none. Omitted for secret dynamic configs: the target value is stored unencrypted inside the snapshot, so it is suppressed for the same reason as `launched_payload`.'
+                salt:
+                  type: string
+                  description: The bucketing salt. Present when committing would change it — which re-buckets every user in every percentage rollout on this config, even though no rule text moved. A `restore` review that reverts past a resalt is the case to watch for.
+                description:
+                  type: string
+                show_dev_rules:
+                  type: boolean
+                show_staging_rules:
+                  type: boolean
+                subscribers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      id:
+                        type: string
+                    required:
+                    - type
+                    - id
+                  description: Who is notified about alerts on this config (users, teams, Slack channels, PagerDuty on-calls).
+                analytics_enabled:
+                  type: boolean
+                scheduled_reload:
+                  type: object
+                  properties:
+                    hour:
+                      type:
+                      - number
+                      - 'null'
+                      format: double
+                    days:
+                      type:
+                      - array
+                      - 'null'
+                      items:
+                        type: number
+                    reload_type:
+                      type: string
+                      enum:
+                      - incremental
+                      - full
+                    turbo_mode:
+                      type:
+                      - boolean
+                      - 'null'
+                  required:
+                  - hour
+                  - days
+                  - reload_type
+                  - turbo_mode
+                  description: Gates only. The DWH-native scheduled-reload settings, which commit writes as a unit. Absent on non-warehouse-native projects, where none of it is set on either side.
+                is_archived:
+                  type: boolean
+                  description: Present on `archive` reviews. Archive and unarchive share the external type `archive`, so this field is what distinguishes them.
+                id_type:
+                  type: string
+                secondary_id_type:
+                  type:
+                  - string
+                  - 'null'
+                identity_resolution_source_id:
+                  type:
+                  - string
+                  - 'null'
+                target_app_ids:
+                  type: array
+                  items:
+                    type: string
+                owners:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      owner_id:
+                        type: string
+                      owner_type:
+                        type: string
+                    required:
+                    - owner_id
+                    - owner_type
+                team_id:
+                  type:
+                  - string
+                  - 'null'
+                allow_self_approval:
+                  type: boolean
+                release_pipeline_id:
+                  type:
+                  - string
+                  - 'null'
+                allowed_reviewers:
+                  type: object
+                  properties:
+                    user_ids:
+                      type: array
+                      items:
+                        type: string
+                    group_ids:
+                      type: array
+                      items:
+                        type: string
+                  required:
+                  - user_ids
+                  - group_ids
+                  description: 'Who may approve reviews on this config. Carried by `allowed_reviewers` reviews, which set it outright, and ALSO by `update_team` reviews, which can widen it as a side effect: moving a config onto a team whose review-approval mode is `admin_only` appends that team''s admins to `user_ids`, and `team_only` appends the team itself to `group_ids`. Identical values on both sides of an `update_team` review mean that move grants no new approval rights.'
+                schema:
+                  type:
+                  - string
+                  - 'null'
+                monitoring_metrics:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      type:
+                        type: string
+                    required:
+                    - name
+                    - type
+                monitoring_metric_tags:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                    required:
+                    - id
+                real_time_metrics:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      type:
+                        type: string
+                    required:
+                    - name
+                    - type
+                overrides:
+                  type: object
+                  properties:
+                    id_overrides:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          ids:
+                            type: array
+                            items:
+                              type: string
+                          groupID:
+                            type: string
+                          environment:
+                            type:
+                            - string
+                            - 'null'
+                          unitID:
+                            type:
+                            - string
+                            - 'null'
+                        required:
+                        - ids
+                        - groupID
+                    custom_id_overrides:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          ids:
+                            type: array
+                            items:
+                              type: string
+                          groupID:
+                            type: string
+                          environment:
+                            type:
+                            - string
+                            - 'null'
+                          unitID:
+                            type:
+                            - string
+                            - 'null'
+                        required:
+                        - ids
+                        - groupID
+                  required:
+                  - id_overrides
+                  - custom_id_overrides
+              title: ReviewContentValues
+              description: The value this review proposes — what commit will apply. Carries exactly the same keys as `current`. Array-valued fields carry the full array on both sides, never only the changed elements.
+            unavailable_reason:
+              type: string
+              enum:
+              - snapshot_not_found
+              - snapshot_unreadable
+              description: 'Present ONLY when the change could not be read back, in which case `current` and `proposed` are both empty objects and carry no meaning. This exists so that "this review type has nothing to propose" (`content: null`) is never confused with "we could not tell you what this review would do". `snapshot_not_found`: the review''s snapshot no longer exists — expected for old reviews, whose snapshots are pruned as the config accumulates newer ones. `snapshot_unreadable`: the snapshot exists but could not be read or serialized; that is a server-side fault and is logged.'
+          required:
+          - type
+          - current
+          - proposed
+          title: ReviewContent
+          description: The proposed change, as a `current` / `proposed` pair over only the fields this review type updates. `null` means — and only ever means — that this review type carries no proposed value (`delete`, `resalt`, `disable_reviews_locally`); those are fully described by `type`. When the change exists but could not be read back, `content` is present with an `unavailable_reason` instead, so the two cases stay distinguishable. Only populated on single-review responses (get / create / edit / approve / reject); the list endpoint omits it entirely rather than paying a snapshot read per row.
+      required:
+      - review_id
+      - status
+      - type
+      - author
+      - reviewers
+      - description
+      - created_at
+      title: Review
+    UnarchiveSchemaDto:
+      type: object
+      properties:
+        unarchiveReason:
+          type: string
+          description: The reason for unarchiving the gate
+          example: The gate is needed again
+    DynamicConfigCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\-. ]*$
+          description: The dynamic config display name
+          example: my_config
+        isEnabled:
+          type: boolean
+          description: Is the dynamic config enabled
+          default: true
+        description:
+          type: string
+          maxLength: 1000
+        rules:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this rule.
+              passPercentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                multipleOf: 0.01
+                description: Of the users that meet the conditions of this rule, what percent should return true.
+              conditions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    targetValue:
+                      oneOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: array
+                        items:
+                          type: number
+                      - type: string
+                      - type: number
+                    operator:
+                      type: string
+                      enum:
+                      - any
+                      - none
+                      - any_case_sensitive
+                      - none_case_sensitive
+                      - str_contains_any
+                      - str_contains_none
+                      - gt
+                      - lt
+                      - lte
+                      - gte
+                      - version_gt
+                      - version_lt
+                      - version_gte
+                      - version_lte
+                      - version_eq
+                      - after
+                      - before
+                      - 'on'
+                      - is_null
+                      - is_not_null
+                      - str_matches
+                      - encoded_any
+                      - array_contains_any
+                      - array_contains_none
+                      - array_contains_all
+                      - not_array_contains_all
+                    field:
+                      type:
+                      - string
+                      - 'null'
+                    customID:
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      type: string
+                      enum:
+                      - app_version
+                      - browser_name
+                      - browser_version
+                      - country
+                      - custom_field
+                      - email
+                      - environment_tier
+                      - fails_gate
+                      - fails_segment
+                      - ip_address
+                      - locale
+                      - os_name
+                      - os_version
+                      - passes_gate
+                      - passes_segment
+                      - public
+                      - time
+                      - unit_id
+                      - user_id
+                      - user_agent
+                      - url
+                      - javascript
+                      - device_model
+                      - target_app
+                      - experiment_group
+                  required:
+                  - type
+                description: An array of Condition objects.
+              environments:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+              id:
+                type: string
+                description: The Statsig ID of this rule.
+              baseID:
+                type: string
+                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+              returnValue:
+                type: object
+                additionalProperties: {}
+              completedAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that have already completed.'
+              pendingAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+              returnValueJson5:
+                type: string
+              variants:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    passPercentage:
+                      type: number
+                      minimum: 0
+                      maximum: 100
+                      multipleOf: 0.01
+                    returnValue:
+                      type: object
+                      additionalProperties: {}
+                    returnValueJson5:
+                      type: string
+                  required:
+                  - name
+                  - passPercentage
+            required:
+            - name
+            - conditions
+          description: An array of Rule objects
+        defaultValue:
+          type: object
+          additionalProperties: {}
+          description: The fallback JSON object when no rules are triggered
+        defaultValueJson5:
+          type: string
+          description: Can include comments. If provided with defaultValue, must parse to the same JSON
+        idType:
+          type: string
+          description: The type of ID which the dynamic config is based on.
+          example: userID
+        tags:
+          type: array
+          items:
+            type: string
+          description: The list of tag names attached to the dynamic config
+        creatorID:
+          type:
+          - string
+          - 'null'
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+        schema:
+          type:
+          - string
+          - 'null'
+          description: A schema using JSON Schema Draft 2020-12 to enforce return values of this dynamic config's rules.
+        schemaJson5:
+          type:
+          - string
+          - 'null'
+          description: '`schema` except with Json5 comments. Optional and should parse to same json as `schema`.'
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        team:
+          type:
+          - string
+          - 'null'
+          description: The team name associated with the dynamic config, Enterprise only.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: The team ID associated with the dynamic config, Enterprise only.
+        releasePipelineID:
+          type:
+          - string
+          - 'null'
+          description: The release pipeline ID associated with the dynamic config
+        id:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\-.]*$
+          description: The dynamic config name ID
+        isTemplate:
+          type: boolean
+      required:
+      - name
+    EditDCReviewRequestDto:
+      type: object
+      properties:
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: Updated human-readable description of the proposed change.
+        reviewer_ids:
+          type: array
+          items:
+            type: string
+          description: Replacement set of user IDs to request review from. Replaces the existing set.
+        reviewer_group_ids:
+          type: array
+          items:
+            type: string
+          description: Replacement set of reviewer group IDs to request review from. Replaces the existing set.
+        change:
+          type: object
+          properties:
+            rules:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: The name of this rule.
+                  passPercentage:
+                    type: number
+                    minimum: 0
+                    maximum: 100
+                    multipleOf: 0.01
+                    description: Of the users that meet the conditions of this rule, what percent should return true.
+                  conditions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        targetValue:
+                          oneOf:
+                          - type: array
+                            items:
+                              type: string
+                          - type: array
+                            items:
+                              type: number
+                          - type: string
+                          - type: number
+                        operator:
+                          type: string
+                          enum:
+                          - any
+                          - none
+                          - any_case_sensitive
+                          - none_case_sensitive
+                          - str_contains_any
+                          - str_contains_none
+                          - gt
+                          - lt
+                          - lte
+                          - gte
+                          - version_gt
+                          - version_lt
+                          - version_gte
+                          - version_lte
+                          - version_eq
+                          - after
+                          - before
+                          - 'on'
+                          - is_null
+                          - is_not_null
+                          - str_matches
+                          - encoded_any
+                          - array_contains_any
+                          - array_contains_none
+                          - array_contains_all
+                          - not_array_contains_all
+                        field:
+                          type:
+                          - string
+                          - 'null'
+                        customID:
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          type: string
+                          enum:
+                          - app_version
+                          - browser_name
+                          - browser_version
+                          - country
+                          - custom_field
+                          - email
+                          - environment_tier
+                          - fails_gate
+                          - fails_segment
+                          - ip_address
+                          - locale
+                          - os_name
+                          - os_version
+                          - passes_gate
+                          - passes_segment
+                          - public
+                          - time
+                          - unit_id
+                          - user_id
+                          - user_agent
+                          - url
+                          - javascript
+                          - device_model
+                          - target_app
+                          - experiment_group
+                      required:
+                      - type
+                    description: An array of Condition objects.
+                  environments:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                  id:
+                    type: string
+                    description: The Statsig ID of this rule.
+                  baseID:
+                    type: string
+                    description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+                  returnValue:
+                    type: object
+                    additionalProperties: {}
+                  completedAutomatedRollouts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        time:
+                          type: number
+                        passPercent:
+                          type: number
+                      required:
+                      - passPercent
+                    readOnly: true
+                    description: 'Read-only: Automated rollout phases that have already completed.'
+                  pendingAutomatedRollouts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        time:
+                          type: number
+                        passPercent:
+                          type: number
+                      required:
+                      - passPercent
+                    readOnly: true
+                    description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+                  returnValueJson5:
+                    type: string
+                  variants:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        passPercentage:
+                          type: number
+                          minimum: 0
+                          maximum: 100
+                          multipleOf: 0.01
+                        returnValue:
+                          type: object
+                          additionalProperties: {}
+                        returnValueJson5:
+                          type: string
+                      required:
+                      - name
+                      - passPercentage
+                required:
+                - name
+                - conditions
+              description: Proposed full rule set for the dynamic config. Same shape as the DC update contract.
+            default_value:
+              type: object
+              additionalProperties: {}
+              description: Proposed default value for the dynamic config as a JSON object.
+            is_enabled:
+              type: boolean
+              description: Proposed enabled state for the dynamic config. An explicit target, not a toggle.
+            is_archived:
+              type: boolean
+              description: Proposed archived state for the dynamic config. `true` archives, `false` unarchives.
+            delete:
+              type: boolean
+              enum:
+              - true
+              description: Delete the dynamic config. Set to `true`.
+            resalt:
+              type: boolean
+              enum:
+              - true
+              description: Re-randomize the dynamic config's salt. Set to `true`.
+            disable_reviews_locally:
+              type: boolean
+              enum:
+              - true
+              description: Stop requiring review on this dynamic config. Set to `true`.
+            restore:
+              type: object
+              properties:
+                snapshot_id:
+                  type: string
+                  minLength: 1
+                  description: Snapshot ID (SUID) of the committed historical state to restore.
+              required:
+              - snapshot_id
+              additionalProperties: false
+              title: RestoreChange
+              description: Revert to a prior committed snapshot (review type `rules`).
+            release_pipeline_id:
+              type:
+              - string
+              - 'null'
+              minLength: 1
+              description: Set or clear the dynamic config's release pipeline (review type `update_release_pipeline`). Pass a pipeline ID to attach, or `null` to detach.
+            id_type:
+              type: string
+              minLength: 1
+              description: Change the dynamic config's primary unit ID type (review type `edit_id_type`).
+            allow_self_approval:
+              type: boolean
+              description: Whether this dynamic config's reviews may be self-approved (review type `update_allow_self_approval`).
+            target_app_ids:
+              type: array
+              items:
+                type: string
+              description: Replace the dynamic config's target applications (review type `update_target_applications`).
+            allowed_reviewers:
+              type: object
+              properties:
+                user_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: User IDs allowed to review. Replaces the existing set.
+                group_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: Reviewer group IDs allowed to review. Replaces the existing set.
+              additionalProperties: false
+              description: Set who may review this dynamic config (review type `allowed_reviewers`).
+          additionalProperties: false
+          title: DCReviewChange
+          description: 'The proposed change. Provide exactly one change slot: the content bundle (`rules` and/or `default_value`), one verb/metadata field, or `restore`.'
+      additionalProperties: false
+      title: EditDCReviewRequest
+      description: Request body for PUT /console/v1/dynamic_configs/:id/reviews/:reviewID
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    DynamicConfigRulesDto:
+      type: object
+      properties:
+        rules:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this rule.
+              passPercentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                multipleOf: 0.01
+                description: Of the users that meet the conditions of this rule, what percent should return true.
+              conditions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    targetValue:
+                      oneOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: array
+                        items:
+                          type: number
+                      - type: string
+                      - type: number
+                    operator:
+                      type: string
+                      enum:
+                      - any
+                      - none
+                      - any_case_sensitive
+                      - none_case_sensitive
+                      - str_contains_any
+                      - str_contains_none
+                      - gt
+                      - lt
+                      - lte
+                      - gte
+                      - version_gt
+                      - version_lt
+                      - version_gte
+                      - version_lte
+                      - version_eq
+                      - after
+                      - before
+                      - 'on'
+                      - is_null
+                      - is_not_null
+                      - str_matches
+                      - encoded_any
+                      - array_contains_any
+                      - array_contains_none
+                      - array_contains_all
+                      - not_array_contains_all
+                    field:
+                      type:
+                      - string
+                      - 'null'
+                    customID:
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      type: string
+                      enum:
+                      - app_version
+                      - browser_name
+                      - browser_version
+                      - country
+                      - custom_field
+                      - email
+                      - environment_tier
+                      - fails_gate
+                      - fails_segment
+                      - ip_address
+                      - locale
+                      - os_name
+                      - os_version
+                      - passes_gate
+                      - passes_segment
+                      - public
+                      - time
+                      - unit_id
+                      - user_id
+                      - user_agent
+                      - url
+                      - javascript
+                      - device_model
+                      - target_app
+                      - experiment_group
+                  required:
+                  - type
+                description: An array of Condition objects.
+              environments:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+                description: The environments this rule is enabled for.
+              id:
+                type: string
+                description: The Statsig ID of this rule.
+              baseID:
+                type: string
+                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+              returnValue:
+                type: object
+                additionalProperties: {}
+                description: The return value of the rule.
+              completedAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that have already completed.'
+              pendingAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+            required:
+            - name
+            - passPercentage
+            - conditions
+      required:
+      - rules
+  parameters:
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
+    DynamicConfigId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The name or identifier of the dynamic config.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
   securitySchemes:
     consoleApiKey:
       type: apiKey
@@ -516,6 +5670,11 @@ components:
       in: header
       name: statsig-api-key
       description: API key for authentication. Use a Server Secret Key for secure server-side requests or a Client-SDK Key for client-side applications.
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header
 x-refined-from:
 - statsig-console-api-openapi.yml
 - statsig-http-api-openapi.yml
+- statsig-console-api-openapi.json

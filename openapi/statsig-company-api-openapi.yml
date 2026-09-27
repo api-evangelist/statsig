@@ -1,0 +1,100 @@
+openapi: 3.2.0
+info:
+  title: Console Company API
+  description: The "Console API" is the CRUD API for performing the actions offered on console.statsig.com without needing to go through the web UI.
+  version: 20240601.0.0
+  contact: {}
+servers:
+- url: https://statsigapi.net
+tags:
+- name: Company
+paths:
+  /console/v1/company:
+    get:
+      summary: Get Company Info
+      parameters: []
+      responses:
+        '200':
+          description: Get company info response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/CompanyInfoResponseDto'
+        '403':
+          description: Forbidden resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                    enum:
+                    - Forbidden resource
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden resource
+      tags:
+      - Company
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1Company
+      x-operation-id-source: derived
+components:
+  schemas:
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    CompanyInfoResponseDto:
+      type: object
+      properties:
+        companyID:
+          type: string
+        companyName:
+          type: string
+        isWarehouseNative:
+          type: boolean
+        orgID:
+          type:
+          - string
+          - 'null'
+        orgName:
+          type:
+          - string
+          - 'null'
+        resultsUpTo:
+          type: number
+          format: double
+      required:
+      - companyID
+      - companyName
+      - isWarehouseNative
+      - orgID
+      - orgName
+  securitySchemes:
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header

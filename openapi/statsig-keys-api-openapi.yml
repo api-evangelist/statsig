@@ -1,17 +1,12 @@
 openapi: 3.2.0
 info:
-  title: Statsig Console Keys API
-  description: The Statsig Console API enables developers to programmatically manage their Statsig project configuration.
-  version: '20240601'
-  contact:
-    name: Statsig Support
-    url: https://statsig.com/support
-  termsOfService: https://statsig.com/terms
+  title: Statsig Keys API
+  version: '1.0'
+  description: 'Operations tagged Keys across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-console-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://statsigapi.net/console/v1
   description: Statsig Console API Server
-security:
-- consoleApiKey: []
+- url: https://statsigapi.net
 tags:
 - name: Keys
   description: Manage API keys for the project including server secret keys, client SDK keys, and console API keys.
@@ -39,7 +34,676 @@ paths:
                       $ref: '#/components/schemas/ApiKey'
         '401':
           $ref: '#/components/responses/Unauthorized'
+      security:
+      - consoleApiKey: []
+    servers:
+    - url: https://statsigapi.net/console/v1
+      description: Statsig Console API Server
+  /console/v1/keys:
+    get:
+      summary: List Keys
+      parameters:
+      - name: primaryTargetApp
+        required: false
+        in: query
+        schema:
+          type: string
+      - name: environment
+        required: false
+        in: query
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: Keys listed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/KeyDto'
+                example:
+                  message: Keys listed successfully.
+                  data:
+                  - key: secret-123
+                    type: SERVER
+                    description: Server secret key
+                    scopes: []
+                    environments:
+                    - production
+                    primaryTargetApp: primaryApp
+                    secondaryTargetApps:
+                    - secondaryApp
+                    status: active
+                  - key: console-123
+                    type: CONSOLE
+                    description: Console API key
+                    scopes:
+                    - omni_read_write
+                    - can_access_keys
+                    status: active
+              example:
+                message: Keys listed successfully.
+                data:
+                - key: secret-123
+                  type: SERVER
+                  description: Server secret key
+                  scopes: []
+                  environments:
+                  - production
+                  primaryTargetApp: primaryApp
+                  secondaryTargetApps:
+                  - secondaryApp
+                  status: active
+                - key: console-123
+                  type: CONSOLE
+                  description: Console API key
+                  scopes:
+                  - omni_read_write
+                  - can_access_keys
+                  status: active
+        '403':
+          description: Insufficient permissions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden. The request was valid, but the server is refusing action. You might not have the necessary permissions to access the resource.
+      tags:
+      - Keys
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1Keys
+      x-operation-id-source: derived
+    post:
+      summary: Create Key
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyCreateContractDto'
+      responses:
+        '200':
+          description: Key created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/KeyDto'
+                example:
+                  message: Key created successfully.
+                  data:
+                    key: secret-123
+                    type: SERVER
+                    description: Server secret key
+                    scopes: []
+                    environments:
+                    - production
+                    primaryTargetApp: primaryApp
+                    secondaryTargetApps:
+                    - secondaryApp
+                    status: active
+              example:
+                message: Key created successfully.
+                data:
+                  key: secret-123
+                  type: SERVER
+                  description: Server secret key
+                  scopes: []
+                  environments:
+                  - production
+                  primaryTargetApp: primaryApp
+                  secondaryTargetApps:
+                  - secondaryApp
+                  status: active
+        '403':
+          description: Insufficient permissions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden. The request was valid, but the server is refusing action. You might not have the necessary permissions to access the resource.
+      tags:
+      - Keys
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1Keys
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/keys/{id}:
+    get:
+      summary: Read Key
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Key read successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/KeyDto'
+                example:
+                  message: Key read successfully.
+                  data:
+                    key: secret-123
+                    type: SERVER
+                    description: Server secret key
+                    scopes: []
+                    environments:
+                    - production
+                    primaryTargetApp: primaryApp
+                    secondaryTargetApps:
+                    - secondaryApp
+                    status: active
+              example:
+                message: Key read successfully.
+                data:
+                  key: secret-123
+                  type: SERVER
+                  description: Server secret key
+                  scopes: []
+                  environments:
+                  - production
+                  primaryTargetApp: primaryApp
+                  secondaryTargetApps:
+                  - secondaryApp
+                  status: active
+        '403':
+          description: Insufficient permissions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden. The request was valid, but the server is refusing action. You might not have the necessary permissions to access the resource.
+        '404':
+          description: Key not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Keys
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1KeysById
+      x-operation-id-source: derived
+    patch:
+      summary: Update Key
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyUpdateContractDto'
+      responses:
+        '200':
+          description: Key updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/KeyDto'
+                example:
+                  message: Key updated successfully.
+                  data:
+                    environments:
+                    - staging
+                    targetAppID: primaryApp
+                    secondaryTargetAppIDs: null
+              example:
+                message: Key updated successfully.
+                data:
+                  environments:
+                  - staging
+                  targetAppID: primaryApp
+                  secondaryTargetAppIDs: null
+        '403':
+          description: Insufficient permissions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden. The request was valid, but the server is refusing action. You might not have the necessary permissions to access the resource.
+        '404':
+          description: Key not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Keys
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1KeysById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete Key
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Key deleted successfully
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Key deleted successfully.
+                  data:
+                    key: secret-123
+                    type: SERVER
+                    description: Server secret key
+                    scopes: []
+                    environments:
+                    - production
+                    primaryTargetApp: primaryApp
+                    secondaryTargetApps:
+                    - secondaryApp
+                    status: active
+              example:
+                message: Key deleted successfully.
+                data:
+                  key: secret-123
+                  type: SERVER
+                  description: Server secret key
+                  scopes: []
+                  environments:
+                  - production
+                  primaryTargetApp: primaryApp
+                  secondaryTargetApps:
+                  - secondaryApp
+                  status: active
+        '403':
+          description: Insufficient permissions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden. The request was valid, but the server is refusing action. You might not have the necessary permissions to access the resource.
+        '404':
+          description: Key not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Keys
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1KeysById
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/keys/{id}/deactivate:
+    patch:
+      summary: Deactivate Key
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Key deactivated successfully
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Key deactivated successfully.
+                  data:
+                    key: secret-123
+                    type: SERVER
+                    description: Server secret key
+                    scopes: []
+                    environments:
+                    - production
+                    primaryTargetApp: primaryApp
+                    secondaryTargetApps:
+                    - secondaryApp
+                    status: active
+              example:
+                message: Key deactivated successfully.
+                data:
+                  key: secret-123
+                  type: SERVER
+                  description: Server secret key
+                  scopes: []
+                  environments:
+                  - production
+                  primaryTargetApp: primaryApp
+                  secondaryTargetApps:
+                  - secondaryApp
+                  status: active
+        '403':
+          description: Insufficient permissions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden. The request was valid, but the server is refusing action. You might not have the necessary permissions to access the resource.
+        '404':
+          description: Key not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Keys
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1KeysByIdDeactivate
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/keys/{id}/rotate:
+    patch:
+      summary: Rotate Key
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Key rotated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/KeyDto'
+                example:
+                  message: Key rotated successfully,
+                  data:
+                    key: secret-123
+                    type: SERVER
+                    description: Server secret key
+                    scopes: []
+                    environments:
+                    - production
+                    primaryTargetApp: primaryApp
+                    secondaryTargetApps:
+                    - secondaryApp
+                    status: active
+              example:
+                message: Key rotated successfully,
+                data:
+                  key: secret-123
+                  type: SERVER
+                  description: Server secret key
+                  scopes: []
+                  environments:
+                  - production
+                  primaryTargetApp: primaryApp
+                  secondaryTargetApps:
+                  - secondaryApp
+                  status: active
+        '403':
+          description: Insufficient permissions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden. The request was valid, but the server is refusing action. You might not have the necessary permissions to access the resource.
+        '404':
+          description: Key not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Keys
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1KeysByIdRotate
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
   schemas:
     ApiKey:
       type: object
@@ -62,17 +726,196 @@ components:
           type: integer
           format: int64
           description: Timestamp when the key was created.
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
+    KeyDto:
+      type: object
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+        type:
+          type: string
+          enum:
+          - SERVER
+          - CLIENT
+          - CONSOLE
+          - SCIM
+          - ORG
+        description:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+            enum:
+            - omni_read_only
+            - omni_read_write
+            - client_download_config_specs
+            - none_hash_enabled
+            - can_access_keys
+            - client_can_write_user_store
+            - personal_read_only
+            - personal_read_write
+        environments:
+          type: array
+          items:
+            type: string
+        primaryTargetApp:
+          type:
+          - string
+          - 'null'
+        secondaryTargetApps:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        status:
+          type: string
+          enum:
+          - active
+          - deactivated
+        lastUsed:
+          type:
+          - string
+          - 'null'
+      required:
+      - key
+      - type
+      - description
+      - scopes
+      - status
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
             type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    KeyCreateContractDto:
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 1000
+        type:
+          type: string
+          enum:
+          - SERVER
+          - CLIENT
+          - CONSOLE
+          - SCIM
+          - ORG
+        scopes:
+          type: array
+          items:
+            type: string
+            enum:
+            - omni_read_only
+            - omni_read_write
+            - client_download_config_specs
+            - none_hash_enabled
+            - can_access_keys
+            - client_can_write_user_store
+            - personal_read_only
+            - personal_read_write
+        environments:
+          type: array
+          items:
+            type: string
+        targetAppID:
+          type: string
+        secondaryTargetAppIDs:
+          type: array
+          items:
+            type: string
+      required:
+      - description
+      - type
+    KeyUpdateContractDto:
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 1000
+        scopes:
+          type: array
+          items:
+            type: string
+            enum:
+            - omni_read_only
+            - omni_read_write
+            - client_download_config_specs
+            - none_hash_enabled
+            - can_access_keys
+            - client_can_write_user_store
+            - personal_read_only
+            - personal_read_write
+        environments:
+          type: array
+          items:
+            type: string
+        targetAppID:
+          type:
+          - string
+          - 'null'
+        secondaryTargetAppIDs:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
   parameters:
     ApiVersion:
       name: STATSIG-API-VERSION
@@ -88,6 +931,13 @@ components:
       in: header
       name: STATSIG-API-KEY
       description: Console API Key created in Project Settings > API Keys tab. Required for all Console API requests.
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header
 externalDocs:
   description: Statsig Console API Documentation
   url: https://docs.statsig.com/console-api/
+x-refined-from:
+- statsig-console-api-openapi.yml
+- statsig-console-api-openapi.json

@@ -1,0 +1,226 @@
+openapi: 3.2.0
+info:
+  title: Console Logs API
+  description: The "Console API" is the CRUD API for performing the actions offered on console.statsig.com without needing to go through the web UI.
+  version: 20240601.0.0
+  contact: {}
+servers:
+- url: https://statsigapi.net
+tags:
+- name: Logs
+paths:
+  /console/v1/logs:
+    get:
+      summary: List recent events for the Logs Explorer
+      parameters:
+      - name: query
+        required: false
+        in: query
+        description: Logs Explorer filter syntax (same as the console filter bar), e.g. `service:console AND @status:error` or `event_name:add_to_cart`. Do not start the filter with `#`; use the `source` param to choose logs, events, or spans.
+        schema:
+          minLength: 1
+          example: service:console AND @status:error
+          type: string
+      - name: source
+        required: false
+        in: query
+        description: 'Data source for `query`. Default: `logs`. Use `events` for custom events or `spans` for traces.'
+        schema:
+          example: logs
+          type: string
+          enum:
+          - logs
+          - events
+          - spans
+      - name: columns
+        required: false
+        in: query
+        description: Comma-separated Logs Explorer column ids to include in each row's `fields` map (e.g. `timestamp`, `user.service`, `metadata.body`, `custom_id:my_id_type`, `rule`).
+        schema:
+          minLength: 1
+          example: timestamp,user.service,metadata.body,value
+          type: string
+      - name: start_ts
+        required: false
+        in: query
+        description: Start of the time window, in milliseconds since epoch. Defaults to one hour before `end_ts` when omitted.
+        schema:
+          minimum: 0
+          example: 1736208000000
+          type: integer
+      - name: end_ts
+        required: false
+        in: query
+        description: End of the time window, in milliseconds since epoch. Defaults to the current time when omitted.
+        schema:
+          minimum: 0
+          example: 1736294400000
+          type: integer
+      - name: limit
+        required: false
+        in: query
+        description: 'Maximum number of events to return. Default: 100. Max: 1000.'
+        schema:
+          example: 100
+          type: integer
+          exclusiveMinimum: 0
+      - name: after
+        required: false
+        in: query
+        description: Opaque cursor from `pagination.next_cursor` in a previous response. Pass it back verbatim as `after` to fetch the next page. Cursors deeper than 100000 rows are rejected with a 400; narrow the time window with `start_ts`/`end_ts` instead of paginating deeper.
+        schema:
+          minLength: 1
+          type: string
+      responses:
+        '200':
+          description: Paginated event feed
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/CursorPaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/LogEntryDto'
+                    columns:
+                      type: array
+                      items:
+                        type: string
+                      description: Echoes the column ids requested via the `columns` query param, in order.
+                example:
+                  message: Logs listed successfully.
+                  data:
+                  - id: 1736208000000||abc123||add_to_cart
+                    timestamp: '2025-01-06T16:00:00.000Z'
+                    event_name: add_to_cart
+                    user_id: user_1
+                    value: '1'
+                    sdk_type: js-client
+                    sdk_version: 4.0.0
+                  - id: 1736207999000||def456||add_to_cart
+                    timestamp: '2025-01-06T15:59:59.000Z'
+                    event_name: add_to_cart
+                    user_id: user_2
+                    value: null
+                    sdk_type: js-client
+                    sdk_version: 4.0.0
+                  pagination:
+                    next_cursor: eyJpbmRleCI6Mn0
+                    has_more: true
+              example:
+                message: Logs listed successfully.
+                data:
+                - id: 1736208000000||abc123||add_to_cart
+                  timestamp: '2025-01-06T16:00:00.000Z'
+                  event_name: add_to_cart
+                  user_id: user_1
+                  value: '1'
+                  sdk_type: js-client
+                  sdk_version: 4.0.0
+                - id: 1736207999000||def456||add_to_cart
+                  timestamp: '2025-01-06T15:59:59.000Z'
+                  event_name: add_to_cart
+                  user_id: user_2
+                  value: null
+                  sdk_type: js-client
+                  sdk_version: 4.0.0
+                pagination:
+                  next_cursor: eyJpbmRleCI6Mn0
+                  has_more: true
+      tags:
+      - Logs
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1Logs
+      x-operation-id-source: derived
+components:
+  schemas:
+    LogEntryDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Stable identifier for the event. Used internally to derive pagination cursors.
+        timestamp:
+          type:
+          - string
+          - 'null'
+          description: When the event occurred (ISO 8601). Null when unavailable.
+        event_name:
+          type:
+          - string
+          - 'null'
+          description: Name of the event, e.g. "add_to_cart".
+        user_id:
+          type:
+          - string
+          - 'null'
+          description: User ID associated with the event, when present.
+        value:
+          type:
+          - string
+          - 'null'
+          description: Free-form value attached to the event.
+        sdk_type:
+          type:
+          - string
+          - 'null'
+          description: SDK that emitted the event, e.g. "javascript-client".
+        sdk_version:
+          type:
+          - string
+          - 'null'
+          description: SDK version string.
+        fields:
+          type: object
+          additionalProperties:
+            type:
+            - string
+            - 'null'
+          description: Present when the `columns` query param is set. Maps each requested column id to its string value.
+      required:
+      - id
+      - timestamp
+      - event_name
+      - user_id
+      - value
+      - sdk_type
+      - sdk_version
+    CursorPaginationMetadataDto:
+      type: object
+      properties:
+        next_cursor:
+          type:
+          - string
+          - 'null'
+        has_more:
+          type: boolean
+      required:
+      - next_cursor
+      - has_more
+    CursorPaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned for this page.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Opaque cursor pagination metadata.
+          allOf:
+          - $ref: '#/components/schemas/CursorPaginationMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+  securitySchemes:
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header

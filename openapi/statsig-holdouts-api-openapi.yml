@@ -1,17 +1,12 @@
 openapi: 3.2.0
 info:
-  title: Statsig Console Holdouts API
-  description: The Statsig Console API enables developers to programmatically manage their Statsig project configuration.
-  version: '20240601'
-  contact:
-    name: Statsig Support
-    url: https://statsig.com/support
-  termsOfService: https://statsig.com/terms
+  title: Statsig Holdouts API
+  version: '1.0'
+  description: 'Operations tagged Holdouts across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-console-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://statsigapi.net/console/v1
   description: Statsig Console API Server
-security:
-- consoleApiKey: []
+- url: https://statsigapi.net
 tags:
 - name: Holdouts
   description: Manage holdout groups that exclude users from receiving specific features for measuring long-term impact.
@@ -39,6 +34,8 @@ paths:
                       $ref: '#/components/schemas/Holdout'
         '401':
           $ref: '#/components/responses/Unauthorized'
+      security:
+      - consoleApiKey: []
     post:
       operationId: createHoldout
       summary: Create a holdout
@@ -64,28 +61,1209 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+      security:
+      - consoleApiKey: []
+    servers:
+    - url: https://statsigapi.net/console/v1
+      description: Statsig Console API Server
+  /console/v1/holdouts:
+    get:
+      summary: List Holdouts
+      parameters:
+      - name: creatorName
+        required: false
+        in: query
+        description: Name of the creator.
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: creatorID
+        required: false
+        in: query
+        description: ID of the user who created the entity.
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: tags
+        required: false
+        in: query
+        description: Filter by tags
+        examples:
+          single tag:
+            value: tag1
+          multiple tags:
+            value:
+            - tag1
+            - tag2
+        schema:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: List holdouts response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/HoldoutDto'
+                example:
+                  message: Holdouts listed successfully.
+                  data:
+                  - id: testing_holdout
+                    name: testing holdout
+                    description: helpful summary of what this holdout does
+                    idType: userID
+                    lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                    lastModifiedTime: 1719873874212
+                    lastModifierName: CONSOLE API
+                    lastModifierEmail: null
+                    creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                    createdTime: 1719873870785
+                    creatorName: CONSOLE API
+                    creatorEmail: null
+                    targetApps: []
+                    tags: []
+                    team: Console Team
+                    isEnabled: true
+                    isGlobal: false
+                    passPercentage: 0
+                    gateIDs: []
+                    experimentIDs: []
+                    layerIDs: []
+                    targetingGateID: null
+                    permalink: https://console.statsig.com/company_id/holdouts/testing_holdout
+                  - id: test123
+                    name: test123
+                    description: ''
+                    idType: userID
+                    lastModifierID: 5O908pyGoCqw6QH1nt8v82
+                    lastModifiedTime: 1719872028057
+                    lastModifierName: test
+                    lastModifierEmail: user@statsig.com
+                    creatorID: 5O908pyGoCqw6QH1nt8v82
+                    createdTime: 1719872027567
+                    creatorName: Test User
+                    creatorEmail: test@statsig.com
+                    targetApps: []
+                    tags: []
+                    team: Console Team
+                    isEnabled: true
+                    isGlobal: false
+                    passPercentage: 0
+                    gateIDs: []
+                    experimentIDs: []
+                    layerIDs: []
+                    targetingGateID: null
+                    permalink: https://console.statsig.com/company_id/holdouts/test123
+                  - id: test_target_gate
+                    name: test_target_gate
+                    description: test holdout
+                    idType: userID
+                    lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                    lastModifiedTime: 1710521134863
+                    lastModifierName: CONSOLE API
+                    lastModifierEmail: null
+                    creatorID: 5sgBiiuoBX4fscrWdCXVma
+                    createdTime: 1702237002465
+                    creatorName: Test User
+                    creatorEmail: test@statsig.com
+                    targetApps: []
+                    tags: []
+                    team: null
+                    isEnabled: true
+                    isGlobal: false
+                    passPercentage: 1
+                    gateIDs:
+                    - product_larger_image
+                    - product_larger_image_lower
+                    - test_new_gate
+                    - ma_test_rollout
+                    - empty_gate
+                    - new_gate_to_point_experiment_at
+                    - new_gate_with_monitoring_metrics
+                    - andy_test_gate
+                    experimentIDs:
+                    - mostly_test_experiment
+                    - test_123
+                    - new_test_exp
+                    - test_exp_start
+                    - andy_test_experiment
+                    layerIDs:
+                    - Homepage Feed Improvements
+                    - statsig_is_awesome
+                    - testing_tool
+                    - test_statsig_2
+                    - layer_holdout_parameters
+                    targetingGateID: ''
+                    permalink: https://console.statsig.com/company_id/holdouts/test_target_gate
+                  pagination:
+                    itemsPerPage: 20000
+                    pageNumber: 1
+                    totalItems: 3
+                    nextPage: null
+                    previousPage: null
+                    all: /console/v1/holdouts
+              example:
+                message: Holdouts listed successfully.
+                data:
+                - id: testing_holdout
+                  name: testing holdout
+                  description: helpful summary of what this holdout does
+                  idType: userID
+                  lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                  lastModifiedTime: 1719873874212
+                  lastModifierName: CONSOLE API
+                  lastModifierEmail: null
+                  creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                  createdTime: 1719873870785
+                  creatorName: CONSOLE API
+                  creatorEmail: null
+                  targetApps: []
+                  tags: []
+                  team: Console Team
+                  isEnabled: true
+                  isGlobal: false
+                  passPercentage: 0
+                  gateIDs: []
+                  experimentIDs: []
+                  layerIDs: []
+                  targetingGateID: null
+                  permalink: https://console.statsig.com/company_id/holdouts/testing_holdout
+                - id: test123
+                  name: test123
+                  description: ''
+                  idType: userID
+                  lastModifierID: 5O908pyGoCqw6QH1nt8v82
+                  lastModifiedTime: 1719872028057
+                  lastModifierName: test
+                  lastModifierEmail: user@statsig.com
+                  creatorID: 5O908pyGoCqw6QH1nt8v82
+                  createdTime: 1719872027567
+                  creatorName: Test User
+                  creatorEmail: test@statsig.com
+                  targetApps: []
+                  tags: []
+                  team: Console Team
+                  isEnabled: true
+                  isGlobal: false
+                  passPercentage: 0
+                  gateIDs: []
+                  experimentIDs: []
+                  layerIDs: []
+                  targetingGateID: null
+                  permalink: https://console.statsig.com/company_id/holdouts/test123
+                - id: test_target_gate
+                  name: test_target_gate
+                  description: test holdout
+                  idType: userID
+                  lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                  lastModifiedTime: 1710521134863
+                  lastModifierName: CONSOLE API
+                  lastModifierEmail: null
+                  creatorID: 5sgBiiuoBX4fscrWdCXVma
+                  createdTime: 1702237002465
+                  creatorName: Test User
+                  creatorEmail: test@statsig.com
+                  targetApps: []
+                  tags: []
+                  team: null
+                  isEnabled: true
+                  isGlobal: false
+                  passPercentage: 1
+                  gateIDs:
+                  - product_larger_image
+                  - product_larger_image_lower
+                  - test_new_gate
+                  - ma_test_rollout
+                  - empty_gate
+                  - new_gate_to_point_experiment_at
+                  - new_gate_with_monitoring_metrics
+                  - andy_test_gate
+                  experimentIDs:
+                  - mostly_test_experiment
+                  - test_123
+                  - new_test_exp
+                  - test_exp_start
+                  - andy_test_experiment
+                  layerIDs:
+                  - Homepage Feed Improvements
+                  - statsig_is_awesome
+                  - testing_tool
+                  - test_statsig_2
+                  - layer_holdout_parameters
+                  targetingGateID: ''
+                  permalink: https://console.statsig.com/company_id/holdouts/test_target_gate
+                pagination:
+                  itemsPerPage: 20000
+                  pageNumber: 1
+                  totalItems: 3
+                  nextPage: null
+                  previousPage: null
+                  all: /console/v1/holdouts
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Holdouts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1Holdouts
+      x-operation-id-source: derived
+    post:
+      summary: Create holdout
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HoldoutCreateContractDto'
+      responses:
+        '200':
+          description: Create holdout response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/HoldoutDto'
+                example:
+                  message: Holdout created successfully.
+                  data:
+                    id: a_holdout
+                    permalink: https://console.statsig.com/company_id/holdouts/a_holdout
+                    name: a holdout
+                    description: helpful summary of what this holdout does
+                    idType: userID
+                    lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                    lastModifiedTime: 1707768016211
+                    lastModifierName: CONSOLE API
+                    lastModifierEmail: null
+                    creatorID: 1vaQaBoLlkauH9iiuOSBP2
+                    createdTime: 1707768015729
+                    creatorName: CONSOLE API
+                    creatorEmail: null
+                    targetApps: []
+                    tags: []
+                    team: Console Team
+                    isEnabled: true
+                    isGlobal: false
+                    passPercentage: 0
+                    gateIDs: []
+                    experimentIDs: []
+                    layerIDs: []
+                    targetingGateID: null
+              example:
+                message: Holdout created successfully.
+                data:
+                  id: a_holdout
+                  permalink: https://console.statsig.com/company_id/holdouts/a_holdout
+                  name: a holdout
+                  description: helpful summary of what this holdout does
+                  idType: userID
+                  lastModifierID: 1vaQaBoLlkauH9iiuOSBP2
+                  lastModifiedTime: 1707768016211
+                  lastModifierName: CONSOLE API
+                  lastModifierEmail: null
+                  creatorID: 1vaQaBoLlkauH9iiuOSBP2
+                  createdTime: 1707768015729
+                  creatorName: CONSOLE API
+                  creatorEmail: null
+                  targetApps: []
+                  tags: []
+                  team: Console Team
+                  isEnabled: true
+                  isGlobal: false
+                  passPercentage: 0
+                  gateIDs: []
+                  experimentIDs: []
+                  layerIDs: []
+                  targetingGateID: null
+        '400':
+          description: Name is already in use
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found Exception
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Holdouts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1Holdouts
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/holdouts/{id}:
+    get:
+      summary: Get holdout by id
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Get holdout by id response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/HoldoutDto'
+                example:
+                  message: Holdout read successfully.
+                  data:
+                    id: testing_holdout
+                    name: testing holdout
+                    description: helpful summary of what this holdout does
+                    idType: userID
+                    lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                    lastModifiedTime: 1719873874212
+                    lastModifierName: CONSOLE API
+                    lastModifierEmail: null
+                    creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                    createdTime: 1719873870785
+                    creatorName: CONSOLE API
+                    creatorEmail: null
+                    targetApps: []
+                    tags: []
+                    team: Console Team
+                    isEnabled: true
+                    isGlobal: false
+                    passPercentage: 0
+                    gateIDs: []
+                    experimentIDs: []
+                    layerIDs: []
+                    targetingGateID: null
+                    permalink: https://console.statsig.com/company_id/holdouts/testing_holdout
+              example:
+                message: Holdout read successfully.
+                data:
+                  id: testing_holdout
+                  name: testing holdout
+                  description: helpful summary of what this holdout does
+                  idType: userID
+                  lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                  lastModifiedTime: 1719873874212
+                  lastModifierName: CONSOLE API
+                  lastModifierEmail: null
+                  creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                  createdTime: 1719873870785
+                  creatorName: CONSOLE API
+                  creatorEmail: null
+                  targetApps: []
+                  tags: []
+                  team: Console Team
+                  isEnabled: true
+                  isGlobal: false
+                  passPercentage: 0
+                  gateIDs: []
+                  experimentIDs: []
+                  layerIDs: []
+                  targetingGateID: null
+                  permalink: https://console.statsig.com/company_id/holdouts/testing_holdout
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Holdouts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1HoldoutsById
+      x-operation-id-source: derived
+    post:
+      summary: Update holdout by id
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HoldoutFullUpdateContractDto'
+      responses:
+        '200':
+          description: Update holdout response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/HoldoutDto'
+                example:
+                  message: Holdout updated successfully.
+                  data:
+                    id: testing_holdout
+                    name: testing holdout
+                    description: UPDATED summary of what this holdout does
+                    idType: userID
+                    lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                    lastModifiedTime: 1719941188286
+                    lastModifierName: CONSOLE API
+                    lastModifierEmail: null
+                    creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                    createdTime: 1719873870785
+                    creatorName: CONSOLE API
+                    creatorEmail: null
+                    targetApps: []
+                    tags: []
+                    team: Console Team
+                    isEnabled: true
+                    isGlobal: true
+                    passPercentage: 5
+                    gateIDs: []
+                    experimentIDs:
+                    - testing123
+                    layerIDs: []
+                    targetingGateID: ''
+                    permalink: https://console.statsig.com/company_id/holdouts/testing_holdout
+              example:
+                message: Holdout updated successfully.
+                data:
+                  id: testing_holdout
+                  name: testing holdout
+                  description: UPDATED summary of what this holdout does
+                  idType: userID
+                  lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                  lastModifiedTime: 1719941188286
+                  lastModifierName: CONSOLE API
+                  lastModifierEmail: null
+                  creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                  createdTime: 1719873870785
+                  creatorName: CONSOLE API
+                  creatorEmail: null
+                  targetApps: []
+                  tags: []
+                  team: Console Team
+                  isEnabled: true
+                  isGlobal: true
+                  passPercentage: 5
+                  gateIDs: []
+                  experimentIDs:
+                  - testing123
+                  layerIDs: []
+                  targetingGateID: ''
+                  permalink: https://console.statsig.com/company_id/holdouts/testing_holdout
+        '400':
+          description: Name is already in use
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Name is already in use
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Holdouts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1HoldoutsById
+      x-operation-id-source: derived
+    patch:
+      summary: Partially update holdout by id
+      description: You can pass in only the data you want to update.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HoldoutPartialUpdateContractDto'
+      responses:
+        '200':
+          description: Update holdout response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/HoldoutDto'
+                example:
+                  message: Holdout updated successfully.
+                  data:
+                    id: testing_holdout
+                    name: testing holdout
+                    description: helpful summary of what the holdout does
+                    idType: userID
+                    lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                    lastModifiedTime: 1719939380702
+                    lastModifierName: CONSOLE API
+                    lastModifierEmail: null
+                    creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                    createdTime: 1719873870785
+                    creatorName: CONSOLE API
+                    creatorEmail: null
+                    targetApps: []
+                    tags: []
+                    team: Console Team
+                    isEnabled: false
+                    isGlobal: false
+                    passPercentage: 0
+                    gateIDs: []
+                    experimentIDs: []
+                    layerIDs: []
+                    targetingGateID: null
+                    permalink: https://console.statsig.com/company_id/holdouts/testing_holdout
+              example:
+                message: Holdout updated successfully.
+                data:
+                  id: testing_holdout
+                  name: testing holdout
+                  description: helpful summary of what the holdout does
+                  idType: userID
+                  lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                  lastModifiedTime: 1719939380702
+                  lastModifierName: CONSOLE API
+                  lastModifierEmail: null
+                  creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                  createdTime: 1719873870785
+                  creatorName: CONSOLE API
+                  creatorEmail: null
+                  targetApps: []
+                  tags: []
+                  team: Console Team
+                  isEnabled: false
+                  isGlobal: false
+                  passPercentage: 0
+                  gateIDs: []
+                  experimentIDs: []
+                  layerIDs: []
+                  targetingGateID: null
+                  permalink: https://console.statsig.com/company_id/holdouts/testing_holdout
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Holdout not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Holdout not found.
+      tags:
+      - Holdouts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1HoldoutsById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete holdout by id
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete holdout response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/HoldoutDto'
+                example:
+                  message: Holdout deleted successfully.
+              example:
+                message: Holdout deleted successfully.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Holdout not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Holdout not found.
+      tags:
+      - Holdouts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1HoldoutsById
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/holdouts/{id}/overrides:
+    get:
+      summary: Read Holdout Overrides
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Read Holdout Overrides Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/OverrideDto'
+                example:
+                  message: Holdout Overrides read successfully.
+                  data:
+                    passingUserIDs:
+                    - string
+                    failingUserIDs:
+                    - string
+              example:
+                message: Holdout Overrides read successfully.
+                data:
+                  passingUserIDs:
+                  - string
+                  failingUserIDs:
+                  - string
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Holdouts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1HoldoutsByIdOverrides
+      x-operation-id-source: derived
+    post:
+      summary: Update Holdout Overrides
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOverridesContractDto'
+      responses:
+        '200':
+          description: Update Holdout Overrides Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/OverrideDto'
+                example:
+                  message: Holdout Overrides updated successfully.
+                  data:
+                    passingUserIDs:
+                    - passing-user
+                    failingUserIDs:
+                    - failing-user
+                    passingCustomIDs:
+                    - passing-custom-id
+                    failingCustomIDs:
+                    - failing-custom-id
+              example:
+                message: Holdout Overrides updated successfully.
+                data:
+                  passingUserIDs:
+                  - passing-user
+                  failingUserIDs:
+                  - failing-user
+                  passingCustomIDs:
+                  - passing-custom-id
+                  failingCustomIDs:
+                  - failing-custom-id
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Holdouts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1HoldoutsByIdOverrides
+      x-operation-id-source: derived
+    patch:
+      summary: Add Holdout Overrides
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOverridesContractDto'
+      responses:
+        '200':
+          description: Add Holdout Overrides Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/OverrideDto'
+                example:
+                  message: Holdout Overrides updated successfully.
+                  data:
+                    passingUserIDs:
+                    - passing-user
+                    failingUserIDs:
+                    - failing-user
+                    passingCustomIDs:
+                    - passing-custom-id
+                    failingCustomIDs:
+                    - failing-custom-id
+              example:
+                message: Holdout Overrides updated successfully.
+                data:
+                  passingUserIDs:
+                  - passing-user
+                  failingUserIDs:
+                  - failing-user
+                  passingCustomIDs:
+                  - passing-custom-id
+                  failingCustomIDs:
+                  - failing-custom-id
+      tags:
+      - Holdouts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1HoldoutsByIdOverrides
+      x-operation-id-source: derived
+    delete:
+      summary: Remove Holdout Overrides
+      description: Remove selected ids from an id list
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Remove Holdout Overrides Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/OverrideDto'
+                example:
+                  passingUserIDs:
+                  - remove-passing-user-id
+                  failingUserIDs:
+                  - remove-failing-user-id
+              example:
+                passingUserIDs:
+                - remove-passing-user-id
+                failingUserIDs:
+                - remove-failing-user-id
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Holdouts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1HoldoutsByIdOverrides
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/holdouts/{id}/pulse_results:
+    get:
+      summary: Retrieve Pulse Results
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      - name: cuped
+        required: false
+        in: query
+        description: Whether to apply CUPED. Allowed values are "true" or "false".
+        schema:
+          type: string
+      - name: confidence
+        required: false
+        in: query
+        description: Confidence interval (0-100)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Get Pulse Results Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/GatePulseResultsDto'
+      tags:
+      - Holdouts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1HoldoutsByIdPulseResults
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
 components:
-  responses:
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
   schemas:
     HoldoutCreate:
       type: object
@@ -135,6 +1313,862 @@ components:
         isEnabled:
           type: boolean
           description: Whether the holdout is currently active.
+    HoldoutCreateContractDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\- ]*$
+          example: team holdout
+          description: name of the holdout
+        description:
+          type: string
+          maxLength: 1000
+          example: holdout for this team
+          description: description of the holdout
+        idType:
+          type: string
+          example: userID
+          description: type of id
+        teamID:
+          type:
+          - string
+          - 'null'
+          example: 4pjeXYDjC2WinSgOiII7wh
+          description: id of the team
+      required:
+      - name
+    HoldoutDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          description: Optional name for the configuration.
+        idType:
+          type: string
+          description: type of id
+        description:
+          type: string
+          maxLength: 1000
+          example: example holdout description
+          description: brief summary of what the holdout is being used for
+        lastModifierID:
+          type:
+          - string
+          - 'null'
+          description: ID of the last modifier.
+        lastModifiedTime:
+          type:
+          - number
+          - 'null'
+          description: Time of the last modification.
+          format: double
+        lastModifierEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the last modifier.
+        lastModifierName:
+          type:
+          - string
+          - 'null'
+          description: Name of the last modifier.
+        creatorID:
+          type:
+          - string
+          - 'null'
+          description: ID of the user who created the entity.
+        createdTime:
+          type: number
+          description: Timestamp when the entity was created.
+          format: double
+        creatorName:
+          type:
+          - string
+          - 'null'
+          description: Name of the creator.
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the creator.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags for categorization.
+        targetApps:
+          type: array
+          items:
+            type: string
+          description: List of target applications associated with this configuration.
+        holdoutIDs:
+          type: array
+          items:
+            type: string
+          description: Holdouts applied to this configuration.
+        team:
+          type:
+          - string
+          - 'null'
+          description: Optional name for the responsible team.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: Optional ID of the responsible team.
+        version:
+          type: number
+          description: Version number
+          format: double
+        permalink:
+          type: string
+          format: uri
+          description: A permalink to this holdout in the Statsig Console.
+        isEnabled:
+          type: boolean
+          example: true
+          description: enable or disable the holdout
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 10
+          example: 5
+          description: percentage of users between 0-10% to pass through the holdout
+          format: double
+        gateIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_gate
+          description: an array of gate IDs which this holdout is applied to
+        experimentIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_experiment
+          description: an array of experiment IDs which this holdout is applied to
+        layerIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_layer
+          description: an array of layer IDs which this holdout is applied to
+        isGlobal:
+          type: boolean
+          example: false
+          description: whether the holdout is being applied to all new gates
+        targetingGateID:
+          type:
+          - string
+          - 'null'
+          example: 4pjeXYDjC2WinSgOiII7wh
+          description: the internal ID of the gate that the holdout is targeting; null or empty when unset
+        monitoringMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+            required:
+            - name
+            - type
+      required:
+      - id
+      - idType
+      - description
+      - lastModifierID
+      - lastModifiedTime
+      - lastModifierEmail
+      - lastModifierName
+      - creatorID
+      - createdTime
+      - creatorName
+      - creatorEmail
+      - permalink
+      - isEnabled
+      - passPercentage
+      - gateIDs
+      - experimentIDs
+      - layerIDs
+      - isGlobal
+      - targetingGateID
+    HoldoutFullUpdateContractDto:
+      type: object
+      properties:
+        isEnabled:
+          type: boolean
+          example: true
+          description: enable or disable the holdout
+        description:
+          type: string
+          maxLength: 1000
+          example: example holdout description
+          description: brief summary of what the holdout is being used for
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 10
+          example: 5
+          description: percentage of users between 0-10% to pass through the holdout
+          format: double
+        gateIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_gate
+          description: an array of gate IDs which this holdout is applied to
+        experimentIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_experiment
+          description: an array of experiment IDs which this holdout is applied to
+        layerIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_layer
+          description: an array of layer IDs which this holdout is applied to
+        isGlobal:
+          type: boolean
+          example: false
+          description: whether the holdout is being applied to all new gates
+        targetingGateID:
+          type:
+          - string
+          - 'null'
+          example: my_targeting_gate
+          description: the ID of the gate that the holdout is targeting; an empty string clears it, null leaves it unchanged
+        monitoringMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+            required:
+            - name
+            - type
+      required:
+      - isEnabled
+      - description
+      - passPercentage
+      - gateIDs
+      - experimentIDs
+      - layerIDs
+      - isGlobal
+      - targetingGateID
+    UpdateOverridesContractDto:
+      oneOf:
+      - type: object
+        properties:
+          environmentOverrides:
+            type: array
+            items:
+              type: object
+              properties:
+                environment:
+                  type:
+                  - string
+                  - 'null'
+                  description: Environment
+                  example: staging
+                unitID:
+                  type:
+                  - string
+                  - 'null'
+                  description: Unit ID
+                  example: unit123
+                passingIDs:
+                  type: array
+                  items:
+                    type: string
+                  description: List of passing IDs
+                  example:
+                  - id1
+                  - id2
+                failingIDs:
+                  type: array
+                  items:
+                    type: string
+                  description: List of failing IDs
+                  example:
+                  - id3
+                  - id4
+              required:
+              - unitID
+              - passingIDs
+              - failingIDs
+              description: Contract for environment override
+              example:
+                environment: staging
+                unitID: unit123
+                passingIDs:
+                - id1
+                - id2
+                failingIDs:
+                - id3
+                - id4
+        required:
+        - environmentOverrides
+        description: Contract for updating environment overrides
+        example:
+          environmentOverrides:
+          - environment: staging
+            unitID: unit123
+            passingIDs:
+            - id1
+            - id2
+            failingIDs:
+            - id3
+            - id4
+      - type: object
+        properties:
+          passingUserIDs:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              description: User ID
+              example: user123
+            maxItems: 2000
+            description: List of user IDs
+            example:
+            - user123
+            - user456
+            - user789
+          failingUserIDs:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              description: User ID
+              example: user123
+            maxItems: 2000
+            description: List of user IDs
+            example:
+            - user123
+            - user456
+            - user789
+          passingCustomIDs:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              description: Custom ID
+              example: custom123
+            maxItems: 2000
+            description: Optional list of custom IDs
+            example:
+            - custom123
+            - custom456
+          failingCustomIDs:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              description: Custom ID
+              example: custom123
+            maxItems: 2000
+            description: Optional list of custom IDs
+            example:
+            - custom123
+            - custom456
+        required:
+        - passingUserIDs
+        - failingUserIDs
+        description: Contract for updating ID overrides
+        example:
+          passingUserIDs:
+          - user123
+          - user456
+          failingUserIDs:
+          - user789
+          - user012
+          passingCustomIDs:
+          - custom123
+          failingCustomIDs:
+          - custom456
+      description: Contract for updating overrides
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    HoldoutPartialUpdateContractDto:
+      type: object
+      properties:
+        isEnabled:
+          type: boolean
+          example: true
+          description: enable or disable the holdout
+        description:
+          type: string
+          maxLength: 1000
+          example: example holdout description
+          description: brief summary of what the holdout is being used for
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 10
+          example: 5
+          description: percentage of users between 0-10% to pass through the holdout
+          format: double
+        gateIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_gate
+          description: an array of gate IDs which this holdout is applied to
+        experimentIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_experiment
+          description: an array of experiment IDs which this holdout is applied to
+        layerIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_layer
+          description: an array of layer IDs which this holdout is applied to
+        isGlobal:
+          type: boolean
+          example: false
+          description: whether the holdout is being applied to all new gates
+        targetingGateID:
+          type:
+          - string
+          - 'null'
+          example: my_targeting_gate
+          description: the ID of the gate that the holdout is targeting; an empty string clears it, null leaves it unchanged
+        monitoringMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+            required:
+            - name
+            - type
+    OverrideDto:
+      type: object
+      properties:
+        passingUserIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: User ID
+            example: user123
+          maxItems: 2000
+          description: List of user IDs
+          example:
+          - user123
+          - user456
+          - user789
+        failingUserIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: User ID
+            example: user123
+          maxItems: 2000
+          description: List of user IDs
+          example:
+          - user123
+          - user456
+          - user789
+        passingCustomIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: Custom ID
+            example: custom123
+          maxItems: 2000
+          description: Optional list of custom IDs
+          example:
+          - custom123
+          - custom456
+        failingCustomIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: Custom ID
+            example: custom123
+          maxItems: 2000
+          description: Optional list of custom IDs
+          example:
+          - custom123
+          - custom456
+        environmentOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Environment
+                example: staging
+              unitID:
+                type:
+                - string
+                - 'null'
+                description: Unit ID
+                example: unit123
+              passingIDs:
+                type: array
+                items:
+                  type: string
+                description: List of passing IDs
+                example:
+                - id1
+                - id2
+              failingIDs:
+                type: array
+                items:
+                  type: string
+                description: List of failing IDs
+                example:
+                - id3
+                - id4
+            required:
+            - unitID
+            - passingIDs
+            - failingIDs
+            description: Contract for environment override
+            example:
+              environment: staging
+              unitID: unit123
+              passingIDs:
+              - id1
+              - id2
+              failingIDs:
+              - id3
+              - id4
+      required:
+      - passingUserIDs
+      - failingUserIDs
+      - environmentOverrides
+      description: Contract for overrides
+    GatePulseResultsDto:
+      type: object
+      properties:
+        ds:
+          type: string
+        monitoringMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              metricID:
+                type: string
+              metricName:
+                type: string
+              directionality:
+                type: string
+                enum:
+                - increase
+                - decrease
+                description: Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
+                example: increase
+              error:
+                oneOf:
+                - type: string
+                  enum:
+                  - no_data
+                  - import_no_data
+                  - incompatible_types
+                  - echidna_unripe
+                  - setup_incomplete
+                  - hourly_metric_type_not_supported
+                  - control_or_test_no_units
+                  - no_subdimension_filter
+                - type: string
+                description: Machine-readable reason when pulse statistics are unavailable. Common values include no_data (insufficient data), echidna_unripe (not yet loaded), and setup_incomplete (misconfigured metric source). Additional string values may appear for cohort/bake windows or other load failures.
+                example: no_data
+              warnings:
+                type: array
+                items:
+                  type: string
+                description: Human-readable warnings about metric data quality, load state, or partial pipeline failures.
+              absoluteChange:
+                type: number
+              confidenceIntervalDelta:
+                type: number
+                description: Absolute confidence interval delta
+              confidenceInterval:
+                type: object
+                properties:
+                  lower:
+                    type: number
+                  upper:
+                    type: number
+                required:
+                - lower
+                - upper
+                additionalProperties: false
+                description: Confidence interval bounds
+                example:
+                  lower: -1.33
+                  upper: 1.33
+              percentChange:
+                type: number
+              sequentialTestingConfidenceIntervalDelta:
+                type: number
+              sequentialTestingConfidenceInterval:
+                type: object
+                properties:
+                  lower:
+                    type: number
+                  upper:
+                    type: number
+                required:
+                - lower
+                - upper
+                additionalProperties: false
+                description: Confidence interval bounds
+                example:
+                  lower: -1.33
+                  upper: 1.33
+              percentConfidenceIntervalDelta:
+                type: number
+              percentConfidenceInterval:
+                type: object
+                properties:
+                  lower:
+                    type: number
+                  upper:
+                    type: number
+                required:
+                - lower
+                - upper
+                additionalProperties: false
+                description: Confidence interval bounds
+                example:
+                  lower: -1.33
+                  upper: 1.33
+              percentSequentialTestingConfidenceIntervalDelta:
+                type: number
+              percentSequentialTestingConfidenceInterval:
+                type: object
+                properties:
+                  lower:
+                    type: number
+                  upper:
+                    type: number
+                required:
+                - lower
+                - upper
+                additionalProperties: false
+                description: Confidence interval bounds
+                example:
+                  lower: -1.33
+                  upper: 1.33
+              testMean:
+                type: number
+              controlMean:
+                type: number
+              testStd:
+                type: number
+              controlStd:
+                type: number
+              testUnits:
+                type: number
+              controlUnits:
+                type: number
+              pValue:
+                type: number
+              sequentialTestingPValue:
+                type:
+                - number
+                - 'null'
+              adjustedAlpha:
+                type: number
+              reversePower:
+                type: number
+              percentCredibleInterval:
+                type: object
+                properties:
+                  lower:
+                    type: number
+                  upper:
+                    type: number
+                required:
+                - lower
+                - upper
+                additionalProperties: false
+                description: Bayesian credible interval for the percent change. Only returned when results are computed with Bayesian analysis.
+                example:
+                  lower: -1.33
+                  upper: 1.33
+              expectedLoss:
+                type: number
+                description: Bayesian expected loss. Only returned when results are computed with Bayesian analysis.
+              chanceToBeat:
+                type: number
+                description: Bayesian probability that the test beats the control. Only returned when results are computed with Bayesian analysis.
+              sequentialTestingLikelihoodRatio:
+                type: number
+                description: SPRT likelihood ratio of the observed data under the alternative vs the null. This is the same value Pulse uses.
+              sequentialTestingLogLikelihoodRatio:
+                type: number
+                description: Natural log of the SPRT likelihood ratio Pulse uses. Compare this to `sprtLogLowerLimit` and `sprtLogUpperLimit`.
+              sprtLowerLimit:
+                type: number
+                description: Lower SPRT decision boundary on the likelihood-ratio scale. Crossing below this accepts the null.
+              sprtUpperLimit:
+                type: number
+                description: Upper SPRT decision boundary on the likelihood-ratio scale. Crossing above this accepts the alternative.
+              sprtLogLowerLimit:
+                type: number
+                description: Lower SPRT decision boundary on the log-likelihood-ratio scale. Crossing below this accepts the null.
+              sprtLogUpperLimit:
+                type: number
+                description: Upper SPRT decision boundary on the log-likelihood-ratio scale. Crossing above this accepts the alternative.
+              sprtDecision:
+                type: string
+                enum:
+                - alternative
+                - 'null'
+                - continue
+                description: SPRT decision from the log likelihood ratio. `alternative` accepts H1, `null` accepts H0, and `continue` means the ratio is still between the boundaries.
+              isSprtSignificant:
+                type: boolean
+                description: True when the SPRT decision is `alternative`, meaning the result is statistically significant.
+              sprtStatsigness:
+                type: string
+                enum:
+                - positive
+                - negative
+                - neutral
+                description: Direction of the SPRT decision relative to the metric's desired direction. `neutral` when the test has not accepted the alternative.
+              absoluteToplineImpact:
+                type: number
+              absoluteToplineImpactDelta:
+                type: number
+              relativeToplineImpact:
+                type: number
+              relativeToplineImpactDelta:
+                type: number
+              projectedAbsoluteToplineImpact:
+                type: number
+              projectedAbsoluteToplineImpactDelta:
+                type: number
+              projectedRelativeToplineImpact:
+                type: number
+              projectedRelativeToplineImpactDelta:
+                type: number
+            required:
+            - metricID
+            - metricName
+            - directionality
+            additionalProperties: false
+      required:
+      - ds
+      - monitoringMetrics
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
   parameters:
     ApiVersion:
       name: STATSIG-API-VERSION
@@ -150,6 +2184,13 @@ components:
       in: header
       name: STATSIG-API-KEY
       description: Console API Key created in Project Settings > API Keys tab. Required for all Console API requests.
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header
 externalDocs:
   description: Statsig Console API Documentation
   url: https://docs.statsig.com/console-api/
+x-refined-from:
+- statsig-console-api-openapi.yml
+- statsig-console-api-openapi.json

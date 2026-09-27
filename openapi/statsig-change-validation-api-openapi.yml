@@ -1,0 +1,114 @@
+openapi: 3.2.0
+info:
+  title: Console Change Validation API
+  description: The "Console API" is the CRUD API for performing the actions offered on console.statsig.com without needing to go through the web UI.
+  version: 20240601.0.0
+  contact: {}
+servers:
+- url: https://statsigapi.net
+tags:
+- name: Change Validation
+paths:
+  /console/v1/change_validation:
+    post:
+      summary: Change Validation
+      description: See how change validation works here
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeValidationDto'
+      responses:
+        '200':
+          description: Change Validation Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Validation status updated successfully
+              example:
+                message: Validation status updated successfully
+      tags:
+      - Change Validation
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1ChangeValidation
+      x-operation-id-source: derived
+  /console/v1/change_validation/message:
+    patch:
+      summary: Update change validation message
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeValidationUpdateMessageDto'
+      responses:
+        '200':
+          description: Update Change Validation Message Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Validation message updated successfully
+              example:
+                message: Validation message updated successfully
+      tags:
+      - Change Validation
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1ChangeValidationMessage
+      x-operation-id-source: derived
+components:
+  schemas:
+    ChangeValidationUpdateMessageDto:
+      type: object
+      properties:
+        reviewID:
+          type: string
+        message:
+          type: string
+      required:
+      - reviewID
+    ChangeValidationDto:
+      type: object
+      properties:
+        reviewID:
+          type: string
+        validated:
+          type: boolean
+        message:
+          type: string
+        debugLinks:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              url:
+                type: string
+            required:
+            - title
+            - url
+        releasePipelineIDForCommit:
+          type:
+          - string
+          - 'null'
+      required:
+      - reviewID
+      - validated
+  securitySchemes:
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header

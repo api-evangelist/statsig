@@ -367,38 +367,440 @@ apis:
     url: https://docs.statsig.com/client/introduction
   - type: Documentation
     url: https://docs.statsig.com/server/introduction
-- aid: statsig:statsig-console-api
-  name: statsig Console API
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/statsig.png
-  description: >-
-    The Statsig Console API is the provider's own published contract — the CRUD API for everything
-    available in console.statsig.com without the web UI. Statsig maintains an OpenAPI 3.0 document
-    for it at https://api.statsig.com/openapi/20240601.json covering 208 paths and 324 operations
-    across 34 resource groups: gates, experiments (including Warehouse Native), dynamic configs,
-    autotunes, layers, holdouts, segments, metrics, metric sources, ingestions, release pipelines,
-    dashboards, param stores, alerts, keys, roles, teams, tags, target apps and audit logs. It
-    authenticates with a Console API Key in the STATSIG-API-KEY header, versions by date through
-    STATSIG-API-VERSION, and is the same surface the authenticated Statsig MCP server projects.
-  humanURL: https://docs.statsig.com/console-api/introduction
-  baseURL: https://statsigapi.net
+- aid: statsig:statsig-alerts-api
+  name: Statsig Alerts API
+  description: The Alerts API from Statsig — 6 operation(s) for alerts.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
   tags:
-  - Feature Flags
-  - Experimentation
-  - Configuration
-  - Analytics
-  - Management
+  - Alerts
   properties:
   - type: OpenAPI
-    url: openapi/statsig-console-api-openapi.json
-  - type: OpenAPI
-    name: OpenAPI (provider-hosted)
-    url: https://api.statsig.com/openapi/20240601.json
-  - type: Overlay
-    url: overlays/statsig-console-api-overlay.yaml
+    url: openapi/statsig-alerts-api-openapi.yml
   - type: Documentation
     url: https://docs.statsig.com/console-api/introduction
-  - type: MCPServer
-    url: mcp/statsig-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-change-validation-api
+  name: Statsig Change Validation API
+  description: The Change Validation API from Statsig — 2 operation(s) for change validation.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Change Validation
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-change-validation-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-company-api
+  name: Statsig Company API
+  description: The Company API from Statsig — 1 operation(s) for company.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Company
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-company-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-configs-api
+  name: Statsig Configs API
+  description: The Configs API from Statsig — 1 operation(s) for configs.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Configs
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-configs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-dashboards-api
+  name: Statsig Dashboards API
+  description: The Dashboards API from Statsig — 4 operation(s) for dashboards.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Dashboards
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-dashboards-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-environments-api
+  name: Statsig Environments API
+  description: The Environments API from Statsig — 1 operation(s) for environments.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Environments
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-environments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-experiments-warehouse-native-api
+  name: Statsig Experiments (Warehouse Native) API
+  description: >-
+    The Experiments (Warehouse Native) API from Statsig — 10 operation(s) for experiments (warehouse native).
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Experiments (Warehouse Native)
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-experiments-warehouse-native-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-ingestions-api
+  name: Statsig Ingestions API
+  description: The Ingestions API from Statsig — 9 operation(s) for ingestions.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Ingestions
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-ingestions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-logs-api
+  name: Statsig Logs API
+  description: The Logs API from Statsig — 1 operation(s) for logs.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Logs
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-logs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-metrics-warehouse-native-api
+  name: Statsig Metrics (Warehouse Native) API
+  description: >-
+    The Metrics (Warehouse Native) API from Statsig — 5 operation(s) for metrics (warehouse native).
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Metrics (Warehouse Native)
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-metrics-warehouse-native-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-overrides-api
+  name: Statsig Overrides API
+  description: The Overrides API from Statsig — 1 operation(s) for overrides.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Overrides
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-overrides-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-param-store-api
+  name: Statsig Param Store API
+  description: The Param Store API from Statsig — 2 operation(s) for param store.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Param Store
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-param-store-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-project-api
+  name: Statsig Project API
+  description: The Project API from Statsig — 1 operation(s) for project.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Project
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-project-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-prompts-api
+  name: Statsig Prompts API
+  description: The Prompts API from Statsig — 4 operation(s) for prompts.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Prompts
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-prompts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-release-pipelines-api
+  name: Statsig Release Pipelines API
+  description: The Release Pipelines API from Statsig — 10 operation(s) for release pipelines.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Release Pipelines
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-release-pipelines-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-reports-api
+  name: Statsig Reports API
+  description: The Reports API from Statsig — 1 operation(s) for reports.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-reports-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-roles-api
+  name: Statsig Roles API
+  description: The Roles API from Statsig — 2 operation(s) for roles.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Roles
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-roles-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-settings-api
+  name: Statsig Settings API
+  description: The Settings API from Statsig — 4 operation(s) for settings.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Settings
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-settings-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-target-app-api
+  name: Statsig Target App API
+  description: The Target App API from Statsig — 2 operation(s) for target app.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Target App
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-target-app-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-unit-id-types-api
+  name: Statsig Unit ID Types API
+  description: The Unit ID Types API from Statsig — 2 operation(s) for unit id types.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Unit ID Types
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-unit-id-types-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-usage-api
+  name: Statsig Usage API
+  description: The Usage API from Statsig — 1 operation(s) for usage.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Usage
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-usage-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
+  - type: ToolCrosswalk
+    url: mcp/statsig-tool-crosswalk.yml
+  - type: ErrorCatalog
+    url: errors/statsig-problem-types.yml
+  - type: DataModel
+    url: data-model/statsig-data-model.yml
+  - type: Conventions
+    url: conventions/statsig-conventions.yml
+- aid: statsig:statsig-warehouse-connections-api
+  name: Statsig Warehouse Connections API
+  description: The Warehouse Connections API from Statsig — 1 operation(s) for warehouse connections.
+  humanURL: https://docs.statsig.com/http-api/
+  baseURL: https://events.statsigapi.net
+  tags:
+  - Warehouse Connections
+  properties:
+  - type: OpenAPI
+    url: openapi/statsig-warehouse-connections-api-openapi.yml
+  - type: Documentation
+    url: https://docs.statsig.com/console-api/introduction
   - type: ToolCrosswalk
     url: mcp/statsig-tool-crosswalk.yml
   - type: ErrorCatalog
@@ -408,6 +810,8 @@ apis:
   - type: Conventions
     url: conventions/statsig-conventions.yml
 common:
+  - type: Overlay
+    url: overlays/statsig-console-api-overlay.yaml
   - type: Website
     url: https://www.statsig.com/
   - type: AgenticAccess

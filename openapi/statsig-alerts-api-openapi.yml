@@ -1,0 +1,1458 @@
+openapi: 3.2.0
+info:
+  title: Console Alerts API
+  description: The "Console API" is the CRUD API for performing the actions offered on console.statsig.com without needing to go through the web UI.
+  version: 20240601.0.0
+  contact: {}
+servers:
+- url: https://statsigapi.net
+tags:
+- name: Alerts
+paths:
+  /console/v1/alerts:
+    get:
+      summary: List Topline Alerts
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: List Alerts success response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/AlertSchemaDto'
+        '403':
+          description: Forbidden resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                    enum:
+                    - Forbidden resource
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden resource
+      tags:
+      - Alerts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1Alerts
+      x-operation-id-source: derived
+    post:
+      summary: Create Topline Alert
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertCreateDto'
+      responses:
+        '201':
+          description: Create Alert success response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AlertDetailsSchemaDto'
+        '403':
+          description: Forbidden resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                    enum:
+                    - Forbidden resource
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden resource
+      tags:
+      - Alerts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1Alerts
+      x-operation-id-source: derived
+  /console/v1/alerts/{id}:
+    get:
+      summary: Read Topline Alert
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Read Alert success response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AlertDetailsSchemaDto'
+        '403':
+          description: Forbidden resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                    enum:
+                    - Forbidden resource
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden resource
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Alert not found.
+      tags:
+      - Alerts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1AlertsById
+      x-operation-id-source: derived
+    patch:
+      summary: Update Topline Alert
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertUpdateDto'
+      responses:
+        '200':
+          description: Update Alert success response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AlertDetailsSchemaDto'
+        '403':
+          description: Forbidden resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                    enum:
+                    - Forbidden resource
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden resource
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Alert not found.
+      tags:
+      - Alerts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1AlertsById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete Topline Alert
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete Alert success response
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Alert deleted successfully.
+              example:
+                message: Alert deleted successfully.
+        '403':
+          description: Forbidden resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                    enum:
+                    - Forbidden resource
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden resource
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Alert not found.
+      tags:
+      - Alerts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1AlertsById
+      x-operation-id-source: derived
+  /console/v1/alerts/{id}/events:
+    get:
+      summary: List Topline Alert Events
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: List Alert Events success response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/AlertEventSchemaDto'
+        '403':
+          description: Forbidden resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                    enum:
+                    - Forbidden resource
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden resource
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Alert not found.
+      tags:
+      - Alerts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1AlertsByIdEvents
+      x-operation-id-source: derived
+  /console/v1/alerts/{id}/events/{eventId}:
+    get:
+      summary: Read Topline Alert Event
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      - name: eventId
+        required: true
+        in: path
+        description: alert event id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Read Alert Event success response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AlertEventSchemaDto'
+        '403':
+          description: Forbidden resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                    enum:
+                    - Forbidden resource
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden resource
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Alert not found.
+      tags:
+      - Alerts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1AlertsByIdEventsByEventId
+      x-operation-id-source: derived
+  /console/v1/alerts/{id}/mute:
+    post:
+      summary: Mute Topline Alert
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertMuteDto'
+      responses:
+        '200':
+          description: Mute Alert success response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AlertDetailsSchemaDto'
+        '403':
+          description: Forbidden resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                    enum:
+                    - Forbidden resource
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden resource
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Alert not found.
+      tags:
+      - Alerts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1AlertsByIdMute
+      x-operation-id-source: derived
+  /console/v1/alerts/{id}/unmute:
+    post:
+      summary: Unmute Topline Alert
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertUnmuteDto'
+      responses:
+        '200':
+          description: Unmute Alert success response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/AlertDetailsSchemaDto'
+        '403':
+          description: Forbidden resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    enum:
+                    - 403
+                  message:
+                    type: string
+                    enum:
+                    - Forbidden resource
+                required:
+                - status
+                - message
+              examples:
+                Forbidden resource:
+                  value:
+                    status: 403
+                    message: Forbidden resource
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Alert not found.
+      tags:
+      - Alerts
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1AlertsByIdUnmute
+      x-operation-id-source: derived
+components:
+  schemas:
+    AlertUnmuteDto:
+      type: object
+      properties:
+        groupBys:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                description: Group-by property key
+              value:
+                type: string
+                description: Group-by value to mute
+            required:
+            - key
+            - value
+          description: Unmute only alert evaluations matching these group-by values. Omit to unmute the entire alert.
+        currentSchedule:
+          type:
+          - object
+          - 'null'
+          properties:
+            start:
+              type: number
+              description: Start timestamp in seconds for the schedule being replaced (matches GraphQL mute schedule format)
+              format: double
+            end:
+              type: number
+              description: End timestamp in seconds for the schedule being replaced (0 means indefinite)
+              format: double
+            groupBys:
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    description: Group-by property key
+                  value:
+                    type: string
+                    description: Group-by value to mute
+                required:
+                - key
+                - value
+              description: Group-by values for the schedule being replaced (required to update a grouped mute)
+          required:
+          - start
+          - end
+          - groupBys
+          description: Existing mute schedule to clear. Omit to clear a mute that matches groupBys; use GET /alerts/:id activeMuteSchedules to discover values.
+    AlertUpdateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 4
+          maxLength: 100
+          description: Name of the alert (4-100 characters)
+        message:
+          type: string
+          description: Alert message shown when the alert fires
+        alertThreshold:
+          type: number
+          description: Threshold value that triggers the alert
+          format: double
+        warningThreshold:
+          type:
+          - number
+          - 'null'
+          description: Optional warning threshold value. Pass null to clear.
+          format: double
+        formula:
+          type:
+          - string
+          - 'null'
+          description: Formula expression. Pass null to clear.
+        windowMs:
+          type: number
+          minimum: 60000
+          maximum: 2592000000
+          description: How far back and how frequently a metric should be checked, in milliseconds. Must be between 60_000 and 30 days.
+          format: double
+        condition:
+          type: string
+          enum:
+          - greater
+          - greater_or_equal
+          - less
+          - less_or_equal
+          - equal
+          - not_equal
+          description: Condition under which a metric change triggers an alert
+        priority:
+          type: string
+          enum:
+          - P1
+          - P2
+          - P3
+          - P4
+          description: Alert priority
+        renotificationConditions:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+            enum:
+            - raise
+            - warn
+            - no-data
+          description: Conditions under which a re-notification is sent. Pass null to clear.
+        renotificationWindowMs:
+          type: number
+          description: How long to wait before re-notifying, in ms
+          format: double
+        evaluationDelayMs:
+          type: number
+          minimum: 0
+          maximum: 2592000000
+          description: Delay before evaluating metrics, in milliseconds. Pass 0 to clear.
+          format: double
+        renotificationMessage:
+          type: string
+          description: Re-notification message
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: ID of the team that owns this alert. Pass null to clear.
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
+        definitionMetricsJson:
+          type: array
+          items:
+            type: string
+          description: JSON-encoded metric definitions evaluated by the alert. Each entry is a stringified ToplineAlertMExDefinitionOrUnresolved. When omitted, existing definitions are preserved. Pass an empty array to clear all metrics.
+        groupBys:
+          type: array
+          items:
+            type: object
+            properties:
+              column:
+                type: string
+                description: Property column to group by
+              key:
+                type: string
+                description: Property key to group by
+            required:
+            - column
+            - key
+          description: Properties to group the alert metrics by. When omitted, existing group-bys are preserved. Pass an empty array to clear all group-bys.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags to attach to the alert. When omitted, existing tags are preserved. Pass an empty array to clear all tags.
+        subscribers:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - user
+                - slackChannel
+                - pagerDutyOncall
+                - pagerDutyService
+                description: Typed integration subscriber kind (entity subscribersV2). pagerDutyService ids come from the company PagerDuty integration. pagerDutyOncall is legacy/inert. type=user here is a typed row only — it is not the legacy member email/Slack-DM subscriber edge.
+              id:
+                type: string
+                description: Subscriber id (user id, Slack channel id, or PagerDuty service id). For pagerDutyService this is the integration services[].id, not a routing key.
+            required:
+            - type
+            - id
+          description: Replace typed subscribersV2 targets (Slack/PagerDuty). When omitted, existing typed subscribers are preserved. Pass an empty array to clear. Does not modify the legacy member-subscriber edge.
+    AlertSchemaDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the alert
+        name:
+          type: string
+          description: Name of the alert
+        alertType:
+          type: string
+          enum:
+          - threshold
+          - change
+          - pct_change
+          description: Type of alert
+        metrics:
+          type: object
+          properties: {}
+          description: List of metrics associated with this alert
+        metricGroupBys:
+          type: object
+          properties: {}
+          description: Metric groupbys
+        formula:
+          type: string
+          description: Formula for the alert
+        message:
+          type: string
+          description: Alert message
+        creatorID:
+          type: string
+        companyID:
+          type: string
+        priority:
+          type: string
+          enum:
+          - P0
+          - P1
+          - P2
+          - P3
+          - P4
+          - P5
+          description: Priority of this alert
+        alertThreshold:
+          type: number
+          format: double
+        warningThreshold:
+          type: number
+          format: double
+        windowMs:
+          type: number
+          description: How far back and how frequently a metric should be checked, in milliseconds
+          format: double
+        evaluationDelayMs:
+          type:
+          - number
+          - 'null'
+          description: Delay before evaluating metrics, in milliseconds. Use 0 or null to clear.
+          format: double
+        condition:
+          type: string
+          enum:
+          - greater
+          - greater_or_equal
+          - less
+          - less_or_equal
+          - equal
+          - not_equal
+          description: Condition under which a metric change triggers an alert in milliseconds
+        renotificationConditions:
+          type: array
+          items:
+            type: string
+            enum:
+            - raise
+            - warn
+            - no-data
+          description: Condition under which a re-notification is sent
+        renotificationWindowMs:
+          type: number
+          description: How long to wait before re-notifying in milliseconds
+          format: double
+        renotificationMessage:
+          type: string
+          description: Re-notification message
+        team:
+          type:
+          - string
+          - 'null'
+          description: Team associated with this alert
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with this alert
+        subscribers:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - user
+                - slackChannel
+                - pagerDutyOncall
+                - pagerDutyService
+                description: Typed integration subscriber kind (entity subscribersV2). pagerDutyService ids come from the company PagerDuty integration. pagerDutyOncall is legacy/inert. type=user here is a typed row only — it is not the legacy member email/Slack-DM subscriber edge.
+              id:
+                type: string
+                description: Subscriber id (user id, Slack channel id, or PagerDuty service id). For pagerDutyService this is the integration services[].id, not a routing key.
+            required:
+            - type
+            - id
+          description: 'Typed notification targets (subscribersV2): Slack channels and PagerDuty services used by direct alerty paging. Distinct from the legacy console member-subscriber edge (email/Slack DM), which CAPI does not expose.'
+      required:
+      - id
+      - name
+      - alertType
+      - metrics
+      - metricGroupBys
+      - message
+      - companyID
+      - priority
+      - alertThreshold
+      - windowMs
+      - condition
+      - tags
+      - subscribers
+    AlertMuteDto:
+      type: object
+      properties:
+        indefinite:
+          type: boolean
+          description: Mute the alert indefinitely until manually unmuted
+        durationSeconds:
+          type: integer
+          description: Mute duration in whole seconds
+          format: int64
+          exclusiveMinimum: 0
+        groupBys:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                description: Group-by property key
+              value:
+                type: string
+                description: Group-by value to mute
+            required:
+            - key
+            - value
+          description: Mute only alert evaluations matching these group-by values. Omit to mute the entire alert.
+        currentSchedule:
+          type:
+          - object
+          - 'null'
+          properties:
+            start:
+              type: number
+              description: Start timestamp in seconds for the schedule being replaced (matches GraphQL mute schedule format)
+              format: double
+            end:
+              type: number
+              description: End timestamp in seconds for the schedule being replaced (0 means indefinite)
+              format: double
+            groupBys:
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    description: Group-by property key
+                  value:
+                    type: string
+                    description: Group-by value to mute
+                required:
+                - key
+                - value
+              description: Group-by values for the schedule being replaced (required to update a grouped mute)
+          required:
+          - start
+          - end
+          - groupBys
+          description: Existing mute schedule to replace. Omit to update a mute that matches groupBys; use GET /alerts/:id activeMuteSchedules to discover values.
+    AlertDetailsSchemaDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the alert
+        name:
+          type: string
+          description: Name of the alert
+        alertType:
+          type: string
+          enum:
+          - threshold
+          - change
+          - pct_change
+          description: Type of alert
+        metrics:
+          type: object
+          properties: {}
+          description: List of metrics associated with this alert
+        metricGroupBys:
+          type: object
+          properties: {}
+          description: Metric groupbys
+        formula:
+          type: string
+          description: Formula for the alert
+        message:
+          type: string
+          description: Alert message
+        creatorID:
+          type: string
+        companyID:
+          type: string
+        priority:
+          type: string
+          enum:
+          - P0
+          - P1
+          - P2
+          - P3
+          - P4
+          - P5
+          description: Priority of this alert
+        alertThreshold:
+          type: number
+          format: double
+        warningThreshold:
+          type: number
+          format: double
+        windowMs:
+          type: number
+          description: How far back and how frequently a metric should be checked, in milliseconds
+          format: double
+        evaluationDelayMs:
+          type:
+          - number
+          - 'null'
+          description: Delay before evaluating metrics, in milliseconds. Use 0 or null to clear.
+          format: double
+        condition:
+          type: string
+          enum:
+          - greater
+          - greater_or_equal
+          - less
+          - less_or_equal
+          - equal
+          - not_equal
+          description: Condition under which a metric change triggers an alert in milliseconds
+        renotificationConditions:
+          type: array
+          items:
+            type: string
+            enum:
+            - raise
+            - warn
+            - no-data
+          description: Condition under which a re-notification is sent
+        renotificationWindowMs:
+          type: number
+          description: How long to wait before re-notifying in milliseconds
+          format: double
+        renotificationMessage:
+          type: string
+          description: Re-notification message
+        team:
+          type:
+          - string
+          - 'null'
+          description: Team associated with this alert
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with this alert
+        subscribers:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - user
+                - slackChannel
+                - pagerDutyOncall
+                - pagerDutyService
+                description: Typed integration subscriber kind (entity subscribersV2). pagerDutyService ids come from the company PagerDuty integration. pagerDutyOncall is legacy/inert. type=user here is a typed row only — it is not the legacy member email/Slack-DM subscriber edge.
+              id:
+                type: string
+                description: Subscriber id (user id, Slack channel id, or PagerDuty service id). For pagerDutyService this is the integration services[].id, not a routing key.
+            required:
+            - type
+            - id
+          description: 'Typed notification targets (subscribersV2): Slack channels and PagerDuty services used by direct alerty paging. Distinct from the legacy console member-subscriber edge (email/Slack DM), which CAPI does not expose.'
+        status:
+          type:
+          - string
+          - 'null'
+          enum:
+          - alert
+          - setup_incomplete
+          - stable
+          - warn
+          description: Current evaluation status of the alert
+        lastTriggeredTime:
+          type:
+          - number
+          - 'null'
+          description: Timestamp in milliseconds of the last time this alert triggered
+          format: double
+        activeMuteSchedules:
+          type: array
+          items:
+            type: object
+            properties:
+              start:
+                type: number
+                description: Mute schedule start timestamp in seconds
+              end:
+                type: number
+                description: Mute schedule end timestamp in seconds (0 means indefinite)
+              groupBys:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                      description: Group-by property key
+                    value:
+                      type: string
+                      description: Group-by value to mute
+                  required:
+                  - key
+                  - value
+                description: Group-by values covered by this mute schedule (empty means whole alert)
+            required:
+            - start
+            - end
+            - groupBys
+          description: Active v2 mute schedules for this alert, for use as currentSchedule when remuting
+      required:
+      - id
+      - name
+      - alertType
+      - metrics
+      - metricGroupBys
+      - message
+      - companyID
+      - priority
+      - alertThreshold
+      - windowMs
+      - condition
+      - tags
+      - subscribers
+      - status
+      - lastTriggeredTime
+      - activeMuteSchedules
+    AlertEventSchemaDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the alert event
+        eventType:
+          type: string
+          enum:
+          - raise
+          - warn
+          - resolve
+          - no-data
+          description: Type of alert event
+        title:
+          type: string
+          description: Title of the alert event
+        message:
+          type: string
+          description: Message for the alert event
+        reason:
+          type: string
+          description: Reason the event was created
+        createdTime:
+          type: number
+          description: Timestamp in milliseconds when the event was created
+          format: double
+        evaluationWindowStartTimestamp:
+          type: number
+          description: Timestamp in milliseconds for the start of the evaluated alert window
+          format: double
+        evaluationWindowEndTimestamp:
+          type: number
+          description: Timestamp in milliseconds for the end of the evaluated alert window
+          format: double
+        multiAlertGroupBys:
+          type: object
+          additionalProperties:
+            type: string
+          description: Group-by values associated with this event
+      required:
+      - id
+      - eventType
+      - title
+      - message
+      - reason
+      - createdTime
+      - multiAlertGroupBys
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    AlertCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 4
+          maxLength: 100
+          description: Name of the alert (4-100 characters)
+        message:
+          type: string
+          description: Alert message shown when the alert fires
+        teamID:
+          type: string
+          description: ID of the team that owns this alert
+        formula:
+          type: string
+          description: Formula expression combining the alert metrics
+        definitionMetricsJson:
+          type: array
+          items:
+            type: string
+          description: JSON-encoded metric definitions evaluated by the alert. Each entry is a stringified ToplineAlertMExDefinitionOrUnresolved.
+        groupBys:
+          type: array
+          items:
+            type: object
+            properties:
+              column:
+                type: string
+                description: Property column to group by
+              key:
+                type: string
+                description: Property key to group by
+            required:
+            - column
+            - key
+          description: Properties to group the alert metrics by
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID of the tag
+              name:
+                type: string
+                description: Name of the tag
+            required:
+            - id
+            - name
+          description: Tags to attach to the alert on creation
+      required:
+      - name
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+  securitySchemes:
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header

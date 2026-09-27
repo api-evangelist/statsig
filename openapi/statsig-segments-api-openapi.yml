@@ -1,17 +1,12 @@
 openapi: 3.2.0
 info:
-  title: Statsig Console Segments API
-  description: The Statsig Console API enables developers to programmatically manage their Statsig project configuration.
-  version: '20240601'
-  contact:
-    name: Statsig Support
-    url: https://statsig.com/support
-  termsOfService: https://statsig.com/terms
+  title: Statsig Segments API
+  version: '1.0'
+  description: 'Operations tagged Segments across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-console-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://statsigapi.net/console/v1
   description: Statsig Console API Server
-security:
-- consoleApiKey: []
+- url: https://statsigapi.net
 tags:
 - name: Segments
   description: Manage user segments for targeting rules across gates, configs, and experiments.
@@ -43,6 +38,8 @@ paths:
                     $ref: '#/components/schemas/Pagination'
         '401':
           $ref: '#/components/responses/Unauthorized'
+      security:
+      - consoleApiKey: []
     post:
       operationId: createSegment
       summary: Create a segment
@@ -68,6 +65,11 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+      security:
+      - consoleApiKey: []
+    servers:
+    - url: https://statsigapi.net/console/v1
+      description: Statsig Console API Server
   /segments/{id}:
     get:
       operationId: getSegment
@@ -94,6 +96,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+      security:
+      - consoleApiKey: []
     patch:
       operationId: partiallyUpdateSegment
       summary: Partially update a segment
@@ -127,6 +131,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+      security:
+      - consoleApiKey: []
     delete:
       operationId: deleteSegment
       summary: Delete a segment
@@ -148,64 +154,1191 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+      security:
+      - consoleApiKey: []
+    servers:
+    - url: https://statsigapi.net/console/v1
+      description: Statsig Console API Server
+  /console/v1/segments:
+    get:
+      summary: List Segments
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: List Segments Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/SegmentDto'
+                example:
+                  message: Segments listed successfully.
+                  data:
+                  - id: an_id_list
+                    isEnabled: true
+                    description: helpful summary of what this segment is
+                    lastModifierName: CONSOLE API
+                    lastModifierID: ahKwUoaNauHu9AmJPc2
+                    type: id_list
+                    count: 0
+                    tags:
+                    - a tag
+                  - id: a_rule_based_segment
+                    isEnabled: true
+                    description: helpful summary of what this segment is
+                    lastModifierName: CONSOLE API
+                    lastModifierID: ahKwUoaNauHu9AmJPc2
+                    type: rule_based
+                    count: 0
+                    rules:
+                      name: All Conditions
+                      passPercentage: 10
+                      conditions:
+                      - type: public
+                        operator: string
+                        targetValue: 0
+                        field: string
+                        customID: string
+                      returnValue:
+                        key: true
+                    tags:
+                    - a tag
+              example:
+                message: Segments listed successfully.
+                data:
+                - id: an_id_list
+                  isEnabled: true
+                  description: helpful summary of what this segment is
+                  lastModifierName: CONSOLE API
+                  lastModifierID: ahKwUoaNauHu9AmJPc2
+                  type: id_list
+                  count: 0
+                  tags:
+                  - a tag
+                - id: a_rule_based_segment
+                  isEnabled: true
+                  description: helpful summary of what this segment is
+                  lastModifierName: CONSOLE API
+                  lastModifierID: ahKwUoaNauHu9AmJPc2
+                  type: rule_based
+                  count: 0
+                  rules:
+                    name: All Conditions
+                    passPercentage: 10
+                    conditions:
+                    - type: public
+                      operator: string
+                      targetValue: 0
+                      field: string
+                      customID: string
+                    returnValue:
+                      key: true
+                  tags:
+                  - a tag
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1Segments
+      x-operation-id-source: derived
+    post:
+      summary: Create Segment
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentCreateContractDto'
+      responses:
+        '201':
+          description: Create Segment Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/SegmentDto'
+              examples:
+                id_list:
+                  value:
+                    message: Segment created successfully.
+                    data:
+                      id: an_id_list
+                      isEnabled: true
+                      description: helpful summary of what this segment is
+                      lastModifierName: CONSOLE API
+                      lastModifierID: ahKwUoaNauHu9AmJPc2
+                      type: id_list
+                      count: 0
+                      tags:
+                      - a tag
+                  summary: ID list segment
+                rule_based:
+                  value:
+                    message: Segment created successfully.
+                    data:
+                      id: a_rule_based_segment
+                      isEnabled: true
+                      description: helpful summary of what this segment is
+                      lastModifierName: CONSOLE API
+                      lastModifierID: ahKwUoaNauHu9AmJPc2
+                      type: rule_based
+                      count: 0
+                      rules:
+                        name: All Conditions
+                        passPercentage: 10
+                        conditions:
+                        - type: public
+                          operator: string
+                          targetValue: 0
+                          field: string
+                          customID: string
+                        returnValue:
+                          key: true
+                      tags:
+                      - a tag
+                  summary: Rule-based segment
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1Segments
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/segments/{id}:
+    get:
+      summary: Get Segment
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Get Segment Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/SegmentDto'
+                example:
+                  id_list:
+                    message: Segment read successfully.
+                    data:
+                      id: an_id_list
+                      isEnabled: true
+                      description: helpful summary of what this segment is
+                      lastModifierName: CONSOLE API
+                      lastModifierID: ahKwUoaNauHu9AmJPc2
+                      type: id_list
+                      count: 0
+                      tags:
+                      - a tag
+                  rule_based:
+                    message: Segment read successfully.
+                    data:
+                      id: a_rule_based_segment
+                      isEnabled: true
+                      description: helpful summary of what this segment is
+                      lastModifierName: CONSOLE API
+                      lastModifierID: ahKwUoaNauHu9AmJPc2
+                      type: rule_based
+                      count: 0
+                      rules:
+                        name: All Conditions
+                        passPercentage: 10
+                        conditions:
+                        - type: public
+                          operator: string
+                          targetValue: 0
+                          field: string
+                          customID: string
+                        returnValue:
+                          key: true
+                      tags:
+                      - a tag
+              example:
+                id_list:
+                  message: Segment read successfully.
+                  data:
+                    id: an_id_list
+                    isEnabled: true
+                    description: helpful summary of what this segment is
+                    lastModifierName: CONSOLE API
+                    lastModifierID: ahKwUoaNauHu9AmJPc2
+                    type: id_list
+                    count: 0
+                    tags:
+                    - a tag
+                rule_based:
+                  message: Segment read successfully.
+                  data:
+                    id: a_rule_based_segment
+                    isEnabled: true
+                    description: helpful summary of what this segment is
+                    lastModifierName: CONSOLE API
+                    lastModifierID: ahKwUoaNauHu9AmJPc2
+                    type: rule_based
+                    count: 0
+                    rules:
+                      name: All Conditions
+                      passPercentage: 10
+                      conditions:
+                      - type: public
+                        operator: string
+                        targetValue: 0
+                        field: string
+                        customID: string
+                      returnValue:
+                        key: true
+                    tags:
+                    - a tag
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Segment not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1SegmentsById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete Segment
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete Segment Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Segment deleted successfully.
+              example:
+                message: Segment deleted successfully.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Segment not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1SegmentsById
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/segments/{id}/add_ids:
+    patch:
+      summary: Add IDs to User Store ID List
+      description: This endpoint has a limit of 1000 ids per request
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentIDListUserStoreContractDto'
+      responses:
+        '200':
+          description: User Store ID List updated successfully.
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: IDs successfully added to Segment ID List
+              example:
+                message: IDs successfully added to Segment ID List
+        '400':
+          description: Segment must be of type 'user_store_id_list' to be modified on this endpoint
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '404':
+          description: Segment not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1SegmentsByIdAddIds
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/segments/{id}/archive:
+    put:
+      summary: Archive Segment
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Archive Segment Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/SegmentDto'
+                example:
+                  message: Segment archived successfully.
+              example:
+                message: Segment archived successfully.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Segment not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1SegmentsByIdArchive
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/segments/{id}/conditional:
+    post:
+      summary: Update Segment Rules
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentRulesDto'
+      responses:
+        '200':
+          description: Rules Successfully Updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/SegmentDto'
+                example:
+                  message: Rules successfully updated
+              example:
+                message: Rules successfully updated
+        '400':
+          description: Segment must be of type 'rule_based' to be modified on this endpoint
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Segment not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1SegmentsByIdConditional
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/segments/{id}/id_list:
+    get:
+      summary: Get IDs in a Segment
+      description: This endpoint is rate limited to 100
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: IDs read successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/IDListDto'
+                example:
+                  message: Segments listed successfully.
+                  data:
+                    name: small_id_list
+                    count: 3
+                    ids:
+                    - 1, 2, 3
+              example:
+                message: Segments listed successfully.
+                data:
+                  name: small_id_list
+                  count: 3
+                  ids:
+                  - 1, 2, 3
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1SegmentsByIdIdList
+      x-operation-id-source: derived
+    patch:
+      summary: Add IDs to Segment
+      description: This endpoint is rate limited to 900 requests /15m or 12 requests /10s.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentIDListContractDto'
+      responses:
+        '200':
+          description: Segment ids updated successfully.
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: IDs successfully added to Segment ID List
+              example:
+                message: IDs successfully added to Segment ID List
+        '400':
+          description: Segment must be of type 'id_list' to be modified on this endpoint
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Segment not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+        '409':
+          description: Another update is already in progress for this ID list
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1SegmentsByIdIdList
+      x-operation-id-source: derived
+    delete:
+      summary: Remove IDs from Segment
+      description: This endpoint is rate limited to 900 requests /15m or 12 requests /10s.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentIDListContractDto'
+      responses:
+        '200':
+          description: Segment ids deleted successfully.
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: IDs successfully removed from Segment ID List
+              example:
+                message: IDs successfully removed from Segment ID List
+        '400':
+          description: Segment must be of type 'id_list' to be modified on this endpoint
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Segment not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+        '409':
+          description: Another update is already in progress for this ID list
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1SegmentsByIdIdList
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/segments/{id}/id_list/reset:
+    post:
+      summary: Reset ID List Segment
+      description: 'Warning: Not atomic for big ID lists (> 1000)'
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentIDListResetContractDto'
+      responses:
+        '200':
+          description: Reset ID List Segment Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Segment Reset reset successfully.
+              example:
+                message: Segment Reset reset successfully.
+        '409':
+          description: Another update is already in progress for this ID list
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1SegmentsByIdIdListReset
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/segments/{id}/idlist_metadata:
+    get:
+      summary: Get ID List Metadata
+      description: This endpoint gets the metadata of the ID List.
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ID List metadata read successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/IDListMetadataDto'
+                example:
+                  message: ID List metadata read successfully
+                  data:
+                    currentVersion: 3
+                    isUpdating: true
+              example:
+                message: ID List metadata read successfully
+                data:
+                  currentVersion: 3
+                  isUpdating: true
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1SegmentsByIdIdlistMetadata
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/segments/{id}/remove_ids:
+    patch:
+      summary: Remove IDs from User Store ID List
+      description: This endpoint has a limit of 1000 ids per request
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentIDListUserStoreContractDto'
+      responses:
+        '200':
+          description: User Store ID List updated successfully.
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: IDs successfully removed from Segment ID List
+              example:
+                message: IDs successfully removed from Segment ID List
+        '400':
+          description: Segment must be of type 'user_store_id_list' to be modified on this endpoint
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '404':
+          description: Segment not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1SegmentsByIdRemoveIds
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/segments/{id}/reviews/{reviewID}:
+    delete:
+      summary: Cancel Segment Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Cancel an in-flight segment review.
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Segment review cancelled successfully
+              example:
+                message: Segment review cancelled successfully
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1SegmentsByIdReviewsByReviewID
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/segments/{id}/reviews/{reviewID}/commit:
+    put:
+      summary: Commit Segment Review
+      parameters:
+      - name: id
+        required: true
+        in: path
+        schema:
+          type: string
+      - name: reviewID
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Commit an approved segment review
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Segment review committed successfully
+              example:
+                message: Segment review committed successfully
+      tags:
+      - Segments
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1SegmentsByIdReviewsByReviewIDCommit
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
 components:
-  responses:
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message indicating the resource was not found.
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
-  parameters:
-    Limit:
-      name: limit
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: Maximum number of items to return per page.
-    ApiVersion:
-      name: STATSIG-API-VERSION
-      in: header
-      required: false
-      schema:
-        type: string
-        default: '20240601'
-      description: The Console API version. Currently the only version is 20240601.
-    Page:
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-      description: Page number for paginated results.
   schemas:
     SegmentCreate:
       type: object
@@ -233,52 +1366,6 @@ components:
           items:
             type: string
           description: Tags to associate with the segment.
-    Pagination:
-      type: object
-      description: Pagination metadata for list responses.
-      properties:
-        total:
-          type: integer
-          description: Total number of items available.
-        page:
-          type: integer
-          description: Current page number.
-        limit:
-          type: integer
-          description: Number of items per page.
-        hasMore:
-          type: boolean
-          description: Whether more pages are available.
-    Segment:
-      type: object
-      description: A user segment defining a group of users for targeting.
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the segment.
-        name:
-          type: string
-          description: The name of the segment.
-        description:
-          type: string
-          description: A human-readable description of the segment.
-        type:
-          type: string
-          description: The type of segment (e.g., id_list, rule_based).
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/Rule'
-          description: The rules defining segment membership.
-        tags:
-          type: array
-          items:
-            type: string
-          description: Tags associated with the segment.
-        createdTime:
-          type: integer
-          format: int64
-          description: Timestamp when the segment was created.
     Rule:
       type: object
       description: A targeting rule that defines conditions under which a gate passes or a config returns specific values.
@@ -307,6 +1394,22 @@ components:
           items:
             type: string
           description: Environments where this rule is active.
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
     Condition:
       type: object
       description: A condition within a targeting rule that evaluates user properties against specified criteria.
@@ -356,12 +1459,801 @@ components:
           - after
           - true
           description: The comparison operator to use.
+    Segment:
+      type: object
+      description: A user segment defining a group of users for targeting.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the segment.
+        name:
+          type: string
+          description: The name of the segment.
+        description:
+          type: string
+          description: A human-readable description of the segment.
+        type:
+          type: string
+          description: The type of segment (e.g., id_list, rule_based).
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+          description: The rules defining segment membership.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the segment.
+        createdTime:
+          type: integer
+          format: int64
+          description: Timestamp when the segment was created.
+    SegmentIDListContractDto:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+          maxItems: 100000
+      required:
+      - ids
+    IDListDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name associated with the list of IDs
+          example: Example List
+        count:
+          type: number
+          description: The count of IDs in the list
+          example: 5
+          format: double
+        ids:
+          type: array
+          items:
+            type: string
+          description: The array of IDs
+          example:
+          - id1
+          - id2
+          - id3
+          - id4
+          - id5
+      required:
+      - name
+      - count
+      - ids
+      description: Schema for a list of IDs with a name and count
+      example:
+        name: Example List
+        count: 5
+        ids:
+        - id1
+        - id2
+        - id3
+        - id4
+        - id5
+    SegmentDto:
+      type: object
+      properties:
+        isEnabled:
+          type: boolean
+          description: Is the segment enabled.
+        type:
+          type: string
+          enum:
+          - id_list
+          - rule_based
+          - analysis_list
+          - user_store_id_list
+        count:
+          type: number
+          description: 'For id_list segments: the length of the ID list'
+          format: double
+        rules:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this rule.
+              passPercentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                multipleOf: 0.01
+                description: Of the users that meet the conditions of this rule, what percent should return true.
+              conditions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    targetValue:
+                      oneOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: array
+                        items:
+                          type: number
+                      - type: string
+                      - type: number
+                    operator:
+                      type: string
+                      enum:
+                      - any
+                      - none
+                      - any_case_sensitive
+                      - none_case_sensitive
+                      - str_contains_any
+                      - str_contains_none
+                      - gt
+                      - lt
+                      - lte
+                      - gte
+                      - version_gt
+                      - version_lt
+                      - version_gte
+                      - version_lte
+                      - version_eq
+                      - after
+                      - before
+                      - 'on'
+                      - is_null
+                      - is_not_null
+                      - str_matches
+                      - encoded_any
+                      - array_contains_any
+                      - array_contains_none
+                      - array_contains_all
+                      - not_array_contains_all
+                    field:
+                      type:
+                      - string
+                      - 'null'
+                    customID:
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      type: string
+                      enum:
+                      - app_version
+                      - browser_name
+                      - browser_version
+                      - country
+                      - custom_field
+                      - email
+                      - environment_tier
+                      - fails_gate
+                      - fails_segment
+                      - ip_address
+                      - locale
+                      - os_name
+                      - os_version
+                      - passes_gate
+                      - passes_segment
+                      - public
+                      - time
+                      - unit_id
+                      - user_id
+                      - user_agent
+                      - url
+                      - javascript
+                      - device_model
+                      - target_app
+                      - experiment_group
+                  required:
+                  - type
+                description: An array of Condition objects.
+              environments:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+                description: The environments this rule is enabled for.
+              id:
+                type: string
+                description: The Statsig ID of this rule.
+              baseID:
+                type: string
+                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+              returnValue:
+                type: object
+                additionalProperties: {}
+                description: The return value of the rule.
+            required:
+            - name
+            - passPercentage
+            - conditions
+          description: Rule Object
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags for categorization.
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          description: Optional name for the configuration.
+        idType:
+          type: string
+          description: Type of ID
+        description:
+          type: string
+          description: Detailed description of the configuration’s purpose.
+        lastModifierID:
+          type:
+          - string
+          - 'null'
+          description: ID of the last modifier.
+        lastModifiedTime:
+          type:
+          - number
+          - 'null'
+          description: Time of the last modification.
+          format: double
+        lastModifierEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the last modifier.
+        lastModifierName:
+          type:
+          - string
+          - 'null'
+          description: Name of the last modifier.
+        creatorID:
+          type:
+          - string
+          - 'null'
+          description: ID of the user who created the entity.
+        createdTime:
+          type: number
+          description: Timestamp when the entity was created.
+          format: double
+        creatorName:
+          type:
+          - string
+          - 'null'
+          description: Name of the creator.
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the creator.
+        targetApps:
+          type: array
+          items:
+            type: string
+          description: List of target applications associated with this configuration.
+        holdoutIDs:
+          type: array
+          items:
+            type: string
+          description: Holdouts applied to this configuration.
+        team:
+          type:
+          - string
+          - 'null'
+          description: Optional name for the responsible team.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: Optional ID of the responsible team.
+        version:
+          type: number
+          description: Version number
+          format: double
+      required:
+      - isEnabled
+      - type
+      - id
+      - idType
+      - description
+      - lastModifierID
+      - lastModifiedTime
+      - lastModifierEmail
+      - lastModifierName
+      - creatorID
+      - createdTime
+      - creatorName
+      - creatorEmail
+    SegmentRulesDto:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: The name of this rule.
+          passPercentage:
+            type: number
+            minimum: 0
+            maximum: 100
+            multipleOf: 0.01
+            description: Of the users that meet the conditions of this rule, what percent should return true.
+          conditions:
+            type: array
+            items:
+              type: object
+              properties:
+                targetValue:
+                  oneOf:
+                  - type: array
+                    items:
+                      type: string
+                  - type: array
+                    items:
+                      type: number
+                  - type: string
+                  - type: number
+                operator:
+                  type: string
+                  enum:
+                  - any
+                  - none
+                  - any_case_sensitive
+                  - none_case_sensitive
+                  - str_contains_any
+                  - str_contains_none
+                  - gt
+                  - lt
+                  - lte
+                  - gte
+                  - version_gt
+                  - version_lt
+                  - version_gte
+                  - version_lte
+                  - version_eq
+                  - after
+                  - before
+                  - 'on'
+                  - is_null
+                  - is_not_null
+                  - str_matches
+                  - encoded_any
+                  - array_contains_any
+                  - array_contains_none
+                  - array_contains_all
+                  - not_array_contains_all
+                field:
+                  type:
+                  - string
+                  - 'null'
+                customID:
+                  type:
+                  - string
+                  - 'null'
+                type:
+                  type: string
+                  enum:
+                  - app_version
+                  - browser_name
+                  - browser_version
+                  - country
+                  - custom_field
+                  - email
+                  - environment_tier
+                  - fails_segment
+                  - ip_address
+                  - os_name
+                  - os_version
+                  - passes_segment
+                  - unit_id
+                  - user_id
+              required:
+              - type
+          environments:
+            type:
+            - array
+            - 'null'
+            items:
+              type: string
+            description: The environments this rule is enabled for.
+          id:
+            type: string
+            description: The Statsig ID of this rule.
+          baseID:
+            type: string
+            description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+          returnValue:
+            type: object
+            additionalProperties: {}
+            description: The return value of the rule.
+          completedAutomatedRollouts:
+            type: array
+            items:
+              type: object
+              properties:
+                time:
+                  type: number
+                passPercent:
+                  type: number
+              required:
+              - passPercent
+            readOnly: true
+            description: 'Read-only: Automated rollout phases that have already completed.'
+          pendingAutomatedRollouts:
+            type: array
+            items:
+              type: object
+              properties:
+                time:
+                  type: number
+                passPercent:
+                  type: number
+              required:
+              - passPercent
+            readOnly: true
+            description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+        required:
+        - name
+        - passPercentage
+        - conditions
+    SegmentIDListResetContractDto:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+          maxItems: 100000
+      required:
+      - ids
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    IDListMetadataDto:
+      type: object
+      properties:
+        currentVersion:
+          type: number
+          description: The current version of the ID list
+          example: 4
+          format: double
+        isUpdating:
+          type: boolean
+          description: If the ID list is currently being updated
+          example: true
+    SegmentCreateContractDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\- ]*$
+          description: name of the segment
+        id:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_-]*$
+          description: optional id of the segment (defaults to name)
+        description:
+          type: string
+          maxLength: 1000
+          description: description of the segment
+        type:
+          type: string
+          enum:
+          - id_list
+          - rule_based
+          - analysis_list
+          - user_store_id_list
+          description: type of the segment
+        idType:
+          default: userID
+          type: string
+          description: type of id
+        tags:
+          type: array
+          items:
+            type: string
+          description: optional tags for categorization
+        creatorID:
+          type:
+          - string
+          - 'null'
+          description: the Statsig ID of the creator of this segment
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+          description: the email of the creator of this segment
+        team:
+          type:
+          - string
+          - 'null'
+          description: optional name identifier for the responsible team (enterprise only)
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: optional identifier for the responsible team (enterprise only)
+        rules:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this rule.
+              passPercentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                multipleOf: 0.01
+                description: Of the users that meet the conditions of this rule, what percent should return true.
+              conditions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    targetValue:
+                      oneOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: array
+                        items:
+                          type: number
+                      - type: string
+                      - type: number
+                    operator:
+                      type: string
+                      enum:
+                      - any
+                      - none
+                      - any_case_sensitive
+                      - none_case_sensitive
+                      - str_contains_any
+                      - str_contains_none
+                      - gt
+                      - lt
+                      - lte
+                      - gte
+                      - version_gt
+                      - version_lt
+                      - version_gte
+                      - version_lte
+                      - version_eq
+                      - after
+                      - before
+                      - 'on'
+                      - is_null
+                      - is_not_null
+                      - str_matches
+                      - encoded_any
+                      - array_contains_any
+                      - array_contains_none
+                      - array_contains_all
+                      - not_array_contains_all
+                    field:
+                      type:
+                      - string
+                      - 'null'
+                    customID:
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      type: string
+                      enum:
+                      - app_version
+                      - browser_name
+                      - browser_version
+                      - country
+                      - custom_field
+                      - email
+                      - environment_tier
+                      - fails_segment
+                      - ip_address
+                      - os_name
+                      - os_version
+                      - passes_segment
+                      - unit_id
+                      - user_id
+                  required:
+                  - type
+              environments:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+                description: The environments this rule is enabled for.
+              id:
+                type: string
+                description: The Statsig ID of this rule.
+              baseID:
+                type: string
+                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+              returnValue:
+                type: object
+                additionalProperties: {}
+                description: The return value of the rule.
+              completedAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that have already completed.'
+              pendingAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+            required:
+            - name
+            - passPercentage
+            - conditions
+          description: Rule Object
+      required:
+      - name
+      - type
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    SegmentIDListUserStoreContractDto:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+          maxItems: 1000
+        version:
+          type: number
+          format: double
+      required:
+      - ids
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message indicating the resource was not found.
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
+  parameters:
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
   securitySchemes:
     consoleApiKey:
       type: apiKey
       in: header
       name: STATSIG-API-KEY
       description: Console API Key created in Project Settings > API Keys tab. Required for all Console API requests.
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header
 externalDocs:
   description: Statsig Console API Documentation
   url: https://docs.statsig.com/console-api/
+x-refined-from:
+- statsig-console-api-openapi.yml
+- statsig-console-api-openapi.json

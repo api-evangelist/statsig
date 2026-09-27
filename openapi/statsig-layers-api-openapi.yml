@@ -1,17 +1,14 @@
 openapi: 3.2.0
 info:
   title: Statsig Layers API
-  contact:
-    name: Statsig Support
-    url: https://statsig.com/support
-  termsOfService: https://statsig.com/terms
   version: '1.0'
-  description: 'Operations tagged Layers across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-http-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Layers across 3 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-http-api-openapi.yml, statsig-console-api-openapi.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://statsigapi.net/console/v1
   description: Statsig Console API Server
 - url: https://api.statsig.com/v1
   description: Statsig API Server
+- url: https://statsigapi.net
 tags:
 - name: Layers
   description: Manage layers that enable sharing parameters across multiple experiments while maintaining mutual exclusivity.
@@ -167,7 +164,7 @@ paths:
       description: Statsig Console API Server
   /get_layer:
     post:
-      operationId: getLayer
+      operationId: postGetLayer
       summary: Get layer parameters
       description: Fetches parameter values from a layer for the specified user. Layers allow sharing parameters across multiple experiments. An exposure event is logged only when a specific parameter is accessed.
       tags:
@@ -211,31 +208,1615 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       security:
       - statsigApiKey: []
+      x-operation-id-source: normalized
+      x-operation-id-original: getLayer
     servers:
     - url: https://api.statsig.com/v1
       description: Statsig API Server
+  /console/v1/layers:
+    get:
+      summary: Get Layers
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: Get Layers response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/LayerContractDto'
+                example:
+                  message: Layers listed successfully.
+                  data:
+                  - id: statsig::product_logo_icon_shapes_multi_group_layer
+                    description: ''
+                    idType: userID
+                    lastModifierID: 5sgBiiuoBX4fscrWdCXVma
+                    lastModifiedTime: 1677893118949
+                    lastModifierName: Test User
+                    lastModifierEmail: test@statsig.com
+                    creatorID: 5sgBiiuoBX4fscrWdCXVma
+                    createdTime: 1677893118889
+                    creatorName: Test User
+                    creatorEmail: test@statsig.com
+                    targetApps: []
+                    holdoutIDs: []
+                    tags: []
+                    team: null
+                    isImplicitLayer: true
+                    parameters: []
+                    targeting_gate_parameter_values: []
+                    holdout_parameter_values: []
+                    permalink: https://console.statsig.com/company_id/layers/statsig%3A%3Aproduct_logo_icon_shapes_multi_group_layer
+                  - id: Homepage Feed Improvements
+                    description: test description
+                    idType: userID
+                    lastModifierID: 5sgBiiuoBX4fscrWdCXVma
+                    lastModifiedTime: 1702925736079
+                    lastModifierName: Test User
+                    lastModifierEmail: test@statsig.com
+                    creatorID: 6Q78Ih2m3FnOoECDsvzoms
+                    createdTime: 1678122232525
+                    creatorName: Test User
+                    creatorEmail: test@statsig.com
+                    targetApps: []
+                    holdoutIDs:
+                    - global_holdout
+                    - test_target_gate
+                    tags: []
+                    team: null
+                    isImplicitLayer: false
+                    parameters:
+                    - name: ranking_model
+                      type: string
+                      defaultValue: 4v2
+                    - name: test
+                      type: string
+                      defaultValue: randomtextfdafs
+                    - name: newparam
+                      type: string
+                      defaultValue: ''
+                    - name: test!!!
+                      type: string
+                      defaultValue: ''
+                    - name: test_object
+                      type: object
+                      defaultValue:
+                        test: hello
+                    targeting_gate_parameter_values:
+                    - targetingGateName: test_target_gate
+                      parameters:
+                        ranking_model: 5v1
+                        test: randomtextfdafs
+                        newparam: ''
+                        test!!!: ''
+                        test_object:
+                          test: hello
+                    holdout_parameter_values:
+                    - holdoutID: global_holdout
+                      parameters:
+                        ranking_model: holdout_model
+                        test: randomtextfdafs
+                        newparam: ''
+                        test!!!: ''
+                        test_object:
+                          test: hello
+                      excludeNewParams: false
+                    permalink: https://console.statsig.com/company_id/layers/Homepage%20Feed%20Improvements
+                  - id: statsig::mostly_test_experiment_layer
+                    description: ''
+                    idType: userID
+                    lastModifierID: 6Q78Ih2m3FnOoECDsvzoms
+                    lastModifiedTime: 1678401652668
+                    lastModifierName: Test User
+                    lastModifierEmail: test@statsig.com
+                    creatorID: 6Q78Ih2m3FnOoECDsvzoms
+                    createdTime: 1678401652627
+                    creatorName: Test User
+                    creatorEmail: test@statsig.com
+                    targetApps: []
+                    holdoutIDs: []
+                    tags: []
+                    team: null
+                    isImplicitLayer: true
+                    parameters: []
+                    targeting_gate_parameter_values: []
+                    holdout_parameter_values: []
+                    permalink: https://console.statsig.com/company_id/layers/statsig%3A%3Amostly_test_experiment_layer
+                  pagination:
+                    itemsPerPage: 3
+                    pageNumber: 1
+                    totalItems: 1189
+                    nextPage: /console/v1/layers?page=2&limit=3
+                    previousPage: null
+                    all: /console/v1/layers
+              example:
+                message: Layers listed successfully.
+                data:
+                - id: statsig::product_logo_icon_shapes_multi_group_layer
+                  description: ''
+                  idType: userID
+                  lastModifierID: 5sgBiiuoBX4fscrWdCXVma
+                  lastModifiedTime: 1677893118949
+                  lastModifierName: Test User
+                  lastModifierEmail: test@statsig.com
+                  creatorID: 5sgBiiuoBX4fscrWdCXVma
+                  createdTime: 1677893118889
+                  creatorName: Test User
+                  creatorEmail: test@statsig.com
+                  targetApps: []
+                  holdoutIDs: []
+                  tags: []
+                  team: null
+                  isImplicitLayer: true
+                  parameters: []
+                  targeting_gate_parameter_values: []
+                  holdout_parameter_values: []
+                  permalink: https://console.statsig.com/company_id/layers/statsig%3A%3Aproduct_logo_icon_shapes_multi_group_layer
+                - id: Homepage Feed Improvements
+                  description: test description
+                  idType: userID
+                  lastModifierID: 5sgBiiuoBX4fscrWdCXVma
+                  lastModifiedTime: 1702925736079
+                  lastModifierName: Test User
+                  lastModifierEmail: test@statsig.com
+                  creatorID: 6Q78Ih2m3FnOoECDsvzoms
+                  createdTime: 1678122232525
+                  creatorName: Test User
+                  creatorEmail: test@statsig.com
+                  targetApps: []
+                  holdoutIDs:
+                  - global_holdout
+                  - test_target_gate
+                  tags: []
+                  team: null
+                  isImplicitLayer: false
+                  parameters:
+                  - name: ranking_model
+                    type: string
+                    defaultValue: 4v2
+                  - name: test
+                    type: string
+                    defaultValue: randomtextfdafs
+                  - name: newparam
+                    type: string
+                    defaultValue: ''
+                  - name: test!!!
+                    type: string
+                    defaultValue: ''
+                  - name: test_object
+                    type: object
+                    defaultValue:
+                      test: hello
+                  targeting_gate_parameter_values:
+                  - targetingGateName: test_target_gate
+                    parameters:
+                      ranking_model: 5v1
+                      test: randomtextfdafs
+                      newparam: ''
+                      test!!!: ''
+                      test_object:
+                        test: hello
+                  holdout_parameter_values:
+                  - holdoutID: global_holdout
+                    parameters:
+                      ranking_model: holdout_model
+                      test: randomtextfdafs
+                      newparam: ''
+                      test!!!: ''
+                      test_object:
+                        test: hello
+                    excludeNewParams: false
+                  permalink: https://console.statsig.com/company_id/layers/Homepage%20Feed%20Improvements
+                - id: statsig::mostly_test_experiment_layer
+                  description: ''
+                  idType: userID
+                  lastModifierID: 6Q78Ih2m3FnOoECDsvzoms
+                  lastModifiedTime: 1678401652668
+                  lastModifierName: Test User
+                  lastModifierEmail: test@statsig.com
+                  creatorID: 6Q78Ih2m3FnOoECDsvzoms
+                  createdTime: 1678401652627
+                  creatorName: Test User
+                  creatorEmail: test@statsig.com
+                  targetApps: []
+                  holdoutIDs: []
+                  tags: []
+                  team: null
+                  isImplicitLayer: true
+                  parameters: []
+                  targeting_gate_parameter_values: []
+                  holdout_parameter_values: []
+                  permalink: https://console.statsig.com/company_id/layers/statsig%3A%3Amostly_test_experiment_layer
+                pagination:
+                  itemsPerPage: 3
+                  pageNumber: 1
+                  totalItems: 1189
+                  nextPage: /console/v1/layers?page=2&limit=3
+                  previousPage: null
+                  all: /console/v1/layers
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Layers
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1Layers
+      x-operation-id-source: derived
+    post:
+      summary: Create a Layer
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LayerCreateContractDto'
+      responses:
+        '201':
+          description: Create Layer Response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/LayerContractDto'
+                example:
+                  message: Layer created successfully.
+                  data:
+                    id: the_best_layer
+                    description: helpful summary of what this layer does
+                    idType: userID
+                    lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                    lastModifiedTime: 1720733945538
+                    lastModifierName: CONSOLE API
+                    lastModifierEmail: null
+                    creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                    createdTime: 1720733942515
+                    creatorName: CONSOLE API
+                    creatorEmail: null
+                    targetApps:
+                    - Android
+                    holdoutIDs:
+                    - global_holdout
+                    - test_holdout
+                    tags: []
+                    team: Console Team
+                    isImplicitLayer: false
+                    parameters: []
+                    targeting_gate_parameter_values: []
+                    holdout_parameter_values: []
+                    permalink: https://console.statsig.com/company_id/layers/the_best_layer
+              example:
+                message: Layer created successfully.
+                data:
+                  id: the_best_layer
+                  description: helpful summary of what this layer does
+                  idType: userID
+                  lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                  lastModifiedTime: 1720733945538
+                  lastModifierName: CONSOLE API
+                  lastModifierEmail: null
+                  creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                  createdTime: 1720733942515
+                  creatorName: CONSOLE API
+                  creatorEmail: null
+                  targetApps:
+                  - Android
+                  holdoutIDs:
+                  - global_holdout
+                  - test_holdout
+                  tags: []
+                  team: Console Team
+                  isImplicitLayer: false
+                  parameters: []
+                  targeting_gate_parameter_values: []
+                  holdout_parameter_values: []
+                  permalink: https://console.statsig.com/company_id/layers/the_best_layer
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Layers
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1Layers
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/layers/{id}:
+    get:
+      summary: Get one layer
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Get one layer response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/LayerContractDto'
+                example:
+                  message: Layer read successfully.
+                  data:
+                    id: the_best_layer
+                    description: helpful summary of what this layer does
+                    idType: userID
+                    lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                    lastModifiedTime: 1720733945538
+                    lastModifierName: CONSOLE API
+                    lastModifierEmail: null
+                    creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                    createdTime: 1720733942515
+                    creatorName: CONSOLE API
+                    creatorEmail: null
+                    targetApps:
+                    - Android
+                    holdoutIDs:
+                    - global_holdout
+                    - test_holdout
+                    tags: []
+                    team: Console Team
+                    isImplicitLayer: false
+                    parameters: []
+                    targeting_gate_parameter_values:
+                    - targetingGateName: test_target_gate
+                      parameters: {}
+                    holdout_parameter_values:
+                    - holdoutID: global_holdout
+                      parameters: {}
+                      excludeNewParams: false
+                    permalink: https://console.statsig.com/company_id/layers/the_best_layer
+              example:
+                message: Layer read successfully.
+                data:
+                  id: the_best_layer
+                  description: helpful summary of what this layer does
+                  idType: userID
+                  lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                  lastModifiedTime: 1720733945538
+                  lastModifierName: CONSOLE API
+                  lastModifierEmail: null
+                  creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                  createdTime: 1720733942515
+                  creatorName: CONSOLE API
+                  creatorEmail: null
+                  targetApps:
+                  - Android
+                  holdoutIDs:
+                  - global_holdout
+                  - test_holdout
+                  tags: []
+                  team: Console Team
+                  isImplicitLayer: false
+                  parameters: []
+                  targeting_gate_parameter_values:
+                  - targetingGateName: test_target_gate
+                    parameters: {}
+                  holdout_parameter_values:
+                  - holdoutID: global_holdout
+                    parameters: {}
+                    excludeNewParams: false
+                  permalink: https://console.statsig.com/company_id/layers/the_best_layer
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Layers
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1LayersById
+      x-operation-id-source: derived
+    post:
+      summary: Update a layer
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LayerFullUpdateContractDto'
+      responses:
+        '200':
+          description: Update layer response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/LayerContractDto'
+                example:
+                  message: Layer updated successfully.
+                  data:
+                    id: the_best_layer
+                    description: new description
+                    idType: userID
+                    lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                    lastModifiedTime: 1720734957520
+                    lastModifierName: CONSOLE API
+                    lastModifierEmail: null
+                    creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                    createdTime: 1720733942515
+                    creatorName: CONSOLE API
+                    creatorEmail: null
+                    targetApps:
+                    - Android
+                    holdoutIDs:
+                    - global_holdout
+                    - test_holdout
+                    tags: []
+                    team: Console Team
+                    isImplicitLayer: false
+                    parameters:
+                    - name: a_parameter
+                      type: boolean
+                      defaultValue: true
+                    - name: b_parameter
+                      type: number
+                      defaultValue: 123
+                    - name: c_parameter
+                      type: string
+                      defaultValue: this is a string
+                    - name: d_parameter
+                      type: array
+                      defaultValue: []
+                    - name: e_parameter
+                      type: object
+                      defaultValue:
+                        key: value
+                    targeting_gate_parameter_values: []
+                    holdout_parameter_values: []
+                    permalink: https://console.statsig.com/company_id/layers/the_best_layer
+              example:
+                message: Layer updated successfully.
+                data:
+                  id: the_best_layer
+                  description: new description
+                  idType: userID
+                  lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                  lastModifiedTime: 1720734957520
+                  lastModifierName: CONSOLE API
+                  lastModifierEmail: null
+                  creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                  createdTime: 1720733942515
+                  creatorName: CONSOLE API
+                  creatorEmail: null
+                  targetApps:
+                  - Android
+                  holdoutIDs:
+                  - global_holdout
+                  - test_holdout
+                  tags: []
+                  team: Console Team
+                  isImplicitLayer: false
+                  parameters:
+                  - name: a_parameter
+                    type: boolean
+                    defaultValue: true
+                  - name: b_parameter
+                    type: number
+                    defaultValue: 123
+                  - name: c_parameter
+                    type: string
+                    defaultValue: this is a string
+                  - name: d_parameter
+                    type: array
+                    defaultValue: []
+                  - name: e_parameter
+                    type: object
+                    defaultValue:
+                      key: value
+                  targeting_gate_parameter_values: []
+                  holdout_parameter_values: []
+                  permalink: https://console.statsig.com/company_id/layers/the_best_layer
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Layers
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1LayersById
+      x-operation-id-source: derived
+    patch:
+      summary: Partially update a layer
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LayerPartialUpdateContractDto'
+      responses:
+        '200':
+          description: Partial update layer response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/LayerContractDto'
+                example:
+                  message: Layer updated successfully.
+                  data:
+                    id: the_best_layer
+                    description: new description
+                    idType: userID
+                    lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                    lastModifiedTime: 1720734756985
+                    lastModifierName: CONSOLE API
+                    lastModifierEmail: null
+                    creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                    createdTime: 1720733942515
+                    creatorName: CONSOLE API
+                    creatorEmail: null
+                    targetApps:
+                    - new fo
+                    holdoutIDs:
+                    - global_holdout
+                    - test_holdout
+                    tags: []
+                    team: Console Team
+                    isImplicitLayer: false
+                    parameters:
+                    - name: a_parameter
+                      type: boolean
+                      defaultValue: true
+                    - name: b_parameter
+                      type: number
+                      defaultValue: 123
+                    - name: c_parameter
+                      type: string
+                      defaultValue: this is a string
+                    - name: d_parameter
+                      type: array
+                      defaultValue: []
+                    - name: e_parameter
+                      type: object
+                      defaultValue:
+                        key: value
+                    targeting_gate_parameter_values: []
+                    holdout_parameter_values: []
+                    permalink: https://console.statsig.com/company_id/layers/the_best_layer
+              example:
+                message: Layer updated successfully.
+                data:
+                  id: the_best_layer
+                  description: new description
+                  idType: userID
+                  lastModifierID: 4dcQUIpS8PHObBGD7HJwOx
+                  lastModifiedTime: 1720734756985
+                  lastModifierName: CONSOLE API
+                  lastModifierEmail: null
+                  creatorID: 4dcQUIpS8PHObBGD7HJwOx
+                  createdTime: 1720733942515
+                  creatorName: CONSOLE API
+                  creatorEmail: null
+                  targetApps:
+                  - new fo
+                  holdoutIDs:
+                  - global_holdout
+                  - test_holdout
+                  tags: []
+                  team: Console Team
+                  isImplicitLayer: false
+                  parameters:
+                  - name: a_parameter
+                    type: boolean
+                    defaultValue: true
+                  - name: b_parameter
+                    type: number
+                    defaultValue: 123
+                  - name: c_parameter
+                    type: string
+                    defaultValue: this is a string
+                  - name: d_parameter
+                    type: array
+                    defaultValue: []
+                  - name: e_parameter
+                    type: object
+                    defaultValue:
+                      key: value
+                  targeting_gate_parameter_values: []
+                  holdout_parameter_values: []
+                  permalink: https://console.statsig.com/company_id/layers/the_best_layer
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Layers
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1LayersById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete a layer
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete layer repsonse
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Layer deleted successfully.
+              example:
+                message: Layer deleted successfully.
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Layers
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1LayersById
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/layers/{id}/experiments:
+    get:
+      summary: 'Lineage: List Experiment related to Layer'
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      responses:
+        '200':
+          description: List Experiment related to Layer Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ExternalExperimentDto'
+      tags:
+      - Layers
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1LayersByIdExperiments
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/layers/{id}/overrides:
+    get:
+      summary: Get Layer Overrides
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Get Layer Overrides Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/LayerOverridesDto'
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Layer not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Layers
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1LayersByIdOverrides
+      x-operation-id-source: derived
+    post:
+      summary: Update Layer Overrides
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LayerOverridesDto'
+      responses:
+        '200':
+          description: Update Layer Overrides Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/LayerOverridesDto'
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Layer not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Layers
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1LayersByIdOverrides
+      x-operation-id-source: derived
+    patch:
+      summary: Add Layer Overrides
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LayerOverridesPatchDto'
+      responses:
+        '200':
+          description: Add Layer Overrides Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/LayerOverridesDto'
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Layer not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Layers
+      security:
+      - STATSIG-API-KEY: []
+      operationId: patchConsoleV1LayersByIdOverrides
+      x-operation-id-source: derived
+    delete:
+      summary: Delete Layer Overrides
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete Update Layer Overrides Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/LayerOverridesDto'
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Layer not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Layers
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1LayersByIdOverrides
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/layers/{id}/overrides/conditional/{type}/{name}:
+    delete:
+      summary: Delete a Single Layer Override
+      description: 'Removes a single gate or segment override from the layer. Idempotent: returns 200 even when no matching override exists.'
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Layer name
+        schema:
+          type: string
+      - name: type
+        required: true
+        in: path
+        description: Override type
+        schema:
+          type: string
+          enum:
+          - gate
+          - segment
+      - name: name
+        required: true
+        in: path
+        description: Name of the gate or segment being overridden
+        schema:
+          type: string
+      - name: groupName
+        required: true
+        in: query
+        description: Experiment group the override targets
+        schema:
+          type: string
+      - name: experimentName
+        required: true
+        in: query
+        description: Experiment within the layer that owns the override
+        schema:
+          type: string
+      - name: environment
+        required: false
+        in: query
+        description: Environment the override is scoped to. Omit to target the override that applies to all environments.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete Single Layer Override Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/LayerOverridesDto'
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Layer not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Layers
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1LayersByIdOverridesConditionalByTypeByName
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
+  /console/v1/layers/{id}/overrides/userID/{userID}:
+    delete:
+      summary: Delete a Single Layer User ID Override
+      description: 'Removes a single user ID from the matching layer userID override bucket. Idempotent: returns 200 even when the user ID is not currently overridden. Only clears the bucket named by `experimentName`, `groupName`, `idType`, and `environment`; every other override bucket stays in place. The response body carries the full override set for the layer after the delete.'
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: Layer name
+        schema:
+          type: string
+      - name: userID
+        required: true
+        in: path
+        description: User ID to remove from the override
+        schema:
+          type: string
+      - name: groupName
+        required: true
+        in: query
+        description: Experiment group the override targets
+        schema:
+          example: Control
+          type: string
+      - name: experimentName
+        required: true
+        in: query
+        description: Experiment within the layer that owns the override
+        schema:
+          example: my_experiment
+          type: string
+      - name: idType
+        required: false
+        in: query
+        description: The unit type of the override. Defaults to the experiment unit type when omitted.
+        schema:
+          type: string
+      - name: environment
+        required: false
+        in: query
+        description: Environment the override is scoped to. Omit to target the override that applies to all environments.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delete Single Layer User ID Override Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/LayerOverridesDto'
+                example:
+                  message: Layer Overrides updated successfully.
+                  data:
+                    conditionalOverrides:
+                    - type: gate
+                      name: a_gate
+                      experimentName: my_experiment
+                      groupName: Test
+                      environment: null
+                    idOverrides:
+                    - groupName: Control
+                      ids:
+                      - user_a
+                      idType: userID
+                      environment: null
+                      experimentName: my_experiment
+                    - groupName: Control
+                      ids:
+                      - user_b
+                      idType: userID
+                      environment: staging
+                      experimentName: my_experiment
+                    - groupName: Control
+                      ids:
+                      - user_b
+                      idType: userID
+                      environment: null
+                      experimentName: another_experiment
+              example:
+                message: Layer Overrides updated successfully.
+                data:
+                  conditionalOverrides:
+                  - type: gate
+                    name: a_gate
+                    experimentName: my_experiment
+                    groupName: Test
+                    environment: null
+                  idOverrides:
+                  - groupName: Control
+                    ids:
+                    - user_a
+                    idType: userID
+                    environment: null
+                    experimentName: my_experiment
+                  - groupName: Control
+                    ids:
+                    - user_b
+                    idType: userID
+                    environment: staging
+                    experimentName: my_experiment
+                  - groupName: Control
+                    ids:
+                    - user_b
+                    idType: userID
+                    environment: null
+                    experimentName: another_experiment
+        '400':
+          description: '`groupName` or `experimentName` is missing. The `errors` array names the parameter that failed validation.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Bad Request Exception
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+        '404':
+          description: Layer not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Layers
+      security:
+      - STATSIG-API-KEY: []
+      operationId: deleteConsoleV1LayersByIdOverridesUserIDByUserID
+      x-operation-id-source: derived
+    servers:
+    - url: https://statsigapi.net
 components:
   responses:
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message indicating the resource was not found.
     Unauthorized:
       description: Missing or invalid API key
       content:
@@ -246,7 +1827,73 @@ components:
               message:
                 type: string
                 description: Error message describing the authentication failure.
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message indicating the resource was not found.
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
   schemas:
+    ExperimentGroup:
+      type: object
+      description: An experiment group defining parameter values for a set of users.
+      properties:
+        name:
+          type: string
+          description: The name of the group (e.g., control, test).
+        size:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of allocated users assigned to this group.
+        parameterValues:
+          type: object
+          description: The parameter key-value pairs for this group.
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
+    LayerCreate:
+      type: object
+      description: Request body for creating a new layer.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the layer to create.
+        description:
+          type: string
+          description: A human-readable description.
+        parameters:
+          type: object
+          description: The default parameter values for the layer.
     Layer:
       type: object
       description: A layer that enables sharing parameters across multiple experiments while maintaining mutual exclusivity.
@@ -272,36 +1919,6 @@ components:
           type: integer
           format: int64
           description: Timestamp when the layer was created.
-    LayerCreate:
-      type: object
-      description: Request body for creating a new layer.
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: The name of the layer to create.
-        description:
-          type: string
-          description: A human-readable description.
-        parameters:
-          type: object
-          description: The default parameter values for the layer.
-    ExperimentGroup:
-      type: object
-      description: An experiment group defining parameter values for a set of users.
-      properties:
-        name:
-          type: string
-          description: The name of the group (e.g., control, test).
-        size:
-          type: number
-          minimum: 0
-          maximum: 100
-          description: The percentage of allocated users assigned to this group.
-        parameterValues:
-          type: object
-          description: The parameter key-value pairs for this group.
     Experiment:
       type: object
       description: An A/B test experiment with defined groups, parameters, and analysis configuration.
@@ -355,22 +1972,6 @@ components:
           type: integer
           format: int64
           description: Timestamp when the experiment was last modified.
-    Pagination:
-      type: object
-      description: Pagination metadata for list responses.
-      properties:
-        total:
-          type: integer
-          description: Total number of items available.
-        page:
-          type: integer
-          description: Current page number.
-        limit:
-          type: integer
-          description: Number of items per page.
-        hasMore:
-          type: boolean
-          description: Whether more pages are available.
     StatsigUser:
       type: object
       description: The user object representing the end user being evaluated. At minimum, a userID should be provided. Additional properties enable more sophisticated targeting.
@@ -410,6 +2011,1896 @@ components:
           additionalProperties:
             type: string
           description: Custom identifier mappings for the user, such as companyID or teamID.
+    LayerPartialUpdateContractDto:
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 1000
+          description: A detailed description of the layer, explaining its purpose and functionality.
+        parameters:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this parameter, used for identification within the layer.
+              type:
+                type: string
+                enum:
+                - string
+                - number
+                - boolean
+                - object
+                - array
+                description: 'The data type that this parameter returns. Allowed types include: string, boolean, number, object, and array.'
+              defaultValue:
+                oneOf:
+                - type: string
+                - type: number
+                - type: boolean
+                - type: object
+                  additionalProperties: {}
+                - type: array
+                  items:
+                    oneOf:
+                    - type: string
+                    - type: number
+                    - type: boolean
+                    - type: object
+                      additionalProperties: {}
+                description: The default value for this parameter, which must match the specified type.
+              description:
+                type: string
+                description: An optional helpful description of what this layer parameter does, providing context for its purpose.
+              schema:
+                type:
+                - string
+                - 'null'
+                description: Optional JSON schema for object parameters. If provided, defaultValue must satisfy the schema.
+            required:
+            - name
+            - type
+            - defaultValue
+          description: An array of parameters associated with the layer, each defining specific attributes.
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+          description: List of target applications that this layer is intended for.
+    LayerCreateContractDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[A-Za-z0-9_ -]*$
+          description: The unique name of the layer, formatted as an ID (e.g., "A Layer" becomes "a_layer").
+        description:
+          type: string
+          maxLength: 1000
+          description: A helpful description of what this layer does, providing context for its purpose.
+        idType:
+          type: string
+          description: The type of ID used for this layer, essential for validation in services.
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+          description: List of target applications that this layer is associated with.
+        team:
+          type: string
+          description: Optional identifier for the team responsible for this layer.
+      required:
+      - name
+      - idType
+    LayerFullUpdateContractDto:
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 1000
+          description: A detailed description of the layer, explaining its purpose and functionality.
+        parameters:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this parameter, used for identification within the layer.
+              type:
+                type: string
+                enum:
+                - string
+                - number
+                - boolean
+                - object
+                - array
+                description: 'The data type that this parameter returns. Allowed types include: string, boolean, number, object, and array.'
+              defaultValue:
+                oneOf:
+                - type: string
+                - type: number
+                - type: boolean
+                - type: object
+                  additionalProperties: {}
+                - type: array
+                  items:
+                    oneOf:
+                    - type: string
+                    - type: number
+                    - type: boolean
+                    - type: object
+                      additionalProperties: {}
+                description: The default value for this parameter, which must match the specified type.
+              description:
+                type: string
+                description: An optional helpful description of what this layer parameter does, providing context for its purpose.
+              schema:
+                type:
+                - string
+                - 'null'
+                description: Optional JSON schema for object parameters. If provided, defaultValue must satisfy the schema.
+            required:
+            - name
+            - type
+            - defaultValue
+          description: An array of parameters associated with the layer, each defining specific attributes.
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+          description: List of target applications that this layer is intended for.
+      required:
+      - description
+      - parameters
+    LayerOverridesDto:
+      type: object
+      properties:
+        conditionalOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Describes whether layer override is segment or gate
+              name:
+                type: string
+                description: Name of override entity
+              experimentName:
+                type: string
+              groupName:
+                type: string
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Optional environment scope (e.g. production, staging). Omit or pass null to target the all-environments bucket.
+            required:
+            - type
+            - name
+            - experimentName
+            - groupName
+        idOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              groupName:
+                type: string
+                description: Group that ID is overriden into
+              ids:
+                type: array
+                items:
+                  type: string
+                description: ID being overriden into a particular group
+              idType:
+                type:
+                - string
+                - 'null'
+              environment:
+                type:
+                - string
+                - 'null'
+              experimentName:
+                type:
+                - string
+                - 'null'
+            required:
+            - groupName
+            - ids
+      required:
+      - conditionalOverrides
+      - idOverrides
+    LayerOverridesPatchDto:
+      type: object
+      properties:
+        op:
+          type: string
+          enum:
+          - add
+          description: Add a layer override
+        conditionalOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Describes whether layer override is segment or gate
+              name:
+                type: string
+                description: Name of override entity
+              experimentName:
+                type: string
+              groupName:
+                type: string
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Optional environment scope (e.g. production, staging). Omit or pass null to target the all-environments bucket.
+            required:
+            - type
+            - name
+            - experimentName
+            - groupName
+        idOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              groupName:
+                type: string
+                description: Group that ID is overriden into
+              ids:
+                type: array
+                items:
+                  type: string
+                description: ID being overriden into a particular group
+              idType:
+                type:
+                - string
+                - 'null'
+              environment:
+                type:
+                - string
+                - 'null'
+              experimentName:
+                type:
+                - string
+                - 'null'
+            required:
+            - groupName
+            - ids
+      required:
+      - op
+      - conditionalOverrides
+      - idOverrides
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    LayerContractDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          description: Optional name for the configuration.
+        idType:
+          type: string
+          description: The ID type used for this layer, important for validation.
+        description:
+          type: string
+          maxLength: 1000
+          description: A detailed description of the layer, explaining its purpose and functionality.
+        lastModifierID:
+          type:
+          - string
+          - 'null'
+          description: ID of the last modifier.
+        lastModifiedTime:
+          type:
+          - number
+          - 'null'
+          description: Time of the last modification.
+          format: double
+        lastModifierEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the last modifier.
+        lastModifierName:
+          type:
+          - string
+          - 'null'
+          description: Name of the last modifier.
+        creatorID:
+          type:
+          - string
+          - 'null'
+          description: ID of the user who created the entity.
+        createdTime:
+          type: number
+          description: Timestamp when the entity was created.
+          format: double
+        creatorName:
+          type:
+          - string
+          - 'null'
+          description: Name of the creator.
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the creator.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags for categorization.
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+          description: List of target applications that this layer is intended for.
+        holdoutIDs:
+          type: array
+          items:
+            type: string
+          description: Holdouts applied to this configuration.
+        team:
+          type:
+          - string
+          - 'null'
+          description: Optional name for the responsible team.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: Optional ID of the responsible team.
+        version:
+          type: number
+          description: Version number
+          format: double
+        isImplicitLayer:
+          type: boolean
+          description: Indicates if the layer was automatically created by Statsig during experiment creation.
+        parameters:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this parameter, used for identification within the layer.
+              type:
+                type: string
+                enum:
+                - string
+                - number
+                - boolean
+                - object
+                - array
+                description: 'The data type that this parameter returns. Allowed types include: string, boolean, number, object, and array.'
+              defaultValue:
+                oneOf:
+                - type: string
+                - type: number
+                - type: boolean
+                - type: object
+                  additionalProperties: {}
+                - type: array
+                  items:
+                    oneOf:
+                    - type: string
+                    - type: number
+                    - type: boolean
+                    - type: object
+                      additionalProperties: {}
+                description: The default value for this parameter, which must match the specified type.
+              description:
+                type: string
+                description: An optional helpful description of what this layer parameter does, providing context for its purpose.
+              schema:
+                type:
+                - string
+                - 'null'
+                description: Optional JSON schema for object parameters. If provided, defaultValue must satisfy the schema.
+            required:
+            - name
+            - type
+            - defaultValue
+          description: An array of parameters associated with the layer, each defining specific attributes.
+        targeting_gate_parameter_values:
+          type: array
+          items:
+            type: object
+            properties:
+              targetingGateName:
+                type: string
+                description: The name of the targeting gate for these shipped values.
+              parameters:
+                type: object
+                additionalProperties:
+                  oneOf:
+                  - type: string
+                  - type: number
+                  - type: boolean
+                  - type: object
+                    additionalProperties: {}
+                  - type: array
+                    items:
+                      oneOf:
+                      - type: string
+                      - type: number
+                      - type: boolean
+                      - type: object
+                        additionalProperties: {}
+                description: Layer parameter values returned when the targeting gate passes.
+            required:
+            - targetingGateName
+            - parameters
+          description: Parameter values returned when a targeting gate passes during ship-with-targeting.
+        holdout_parameter_values:
+          type: array
+          items:
+            type: object
+            properties:
+              holdoutID:
+                type: string
+                description: The ID of the holdout for these layer parameter values.
+              parameters:
+                type: object
+                additionalProperties:
+                  oneOf:
+                  - type: string
+                  - type: number
+                  - type: boolean
+                  - type: object
+                    additionalProperties: {}
+                  - type: array
+                    items:
+                      oneOf:
+                      - type: string
+                      - type: number
+                      - type: boolean
+                      - type: object
+                        additionalProperties: {}
+                description: Layer parameter values returned when the holdout gate passes.
+              excludeNewParams:
+                type: boolean
+                description: Whether newly added layer parameters should be excluded from this holdout edge.
+            required:
+            - holdoutID
+            - parameters
+            - excludeNewParams
+          description: Holdout-specific parameter values for this layer.
+        permalink:
+          type: string
+          format: uri
+          description: A permalink to this layer in the Statsig Console.
+      required:
+      - id
+      - idType
+      - description
+      - lastModifierID
+      - lastModifiedTime
+      - lastModifierEmail
+      - lastModifierName
+      - creatorID
+      - createdTime
+      - creatorName
+      - creatorEmail
+      - isImplicitLayer
+      - parameters
+      - targeting_gate_parameter_values
+      - holdout_parameter_values
+      - permalink
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    ExternalExperimentDto:
+      type: object
+      properties:
+        reviewSettings:
+          type: object
+          properties:
+            requiredReview:
+              type: boolean
+            allowedReviewers:
+              type:
+              - array
+              - 'null'
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                required:
+                - id
+                - name
+                - email
+          required:
+          - requiredReview
+        activeReview:
+          type: object
+          properties:
+            reviewID:
+              type: string
+            reviewStatus:
+              type: string
+            description:
+              type: string
+          required:
+          - reviewID
+          - reviewStatus
+          - description
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\- ]*$
+          description: The display name of the experiment
+        idType:
+          type: string
+        description:
+          type: string
+          maxLength: 1000
+          description: A helpful summary of what this experiment does
+        lastModifierID:
+          type:
+          - string
+          - 'null'
+          description: ID of the last modifier.
+        lastModifiedTime:
+          type:
+          - number
+          - 'null'
+          description: Time of the last modification.
+          format: double
+        lastModifierEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the last modifier.
+        lastModifierName:
+          type:
+          - string
+          - 'null'
+          description: Name of the last modifier.
+        creatorID:
+          type:
+          - string
+          - 'null'
+          description: The Statsig ID of the creator of this experiment
+        createdTime:
+          type: number
+          description: Timestamp when the entity was created.
+          format: double
+        creatorName:
+          type:
+          - string
+          - 'null'
+          description: Name of the creator.
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+          description: The email of the creator of this experiment
+        tags:
+          type: array
+          items:
+            type: string
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+          description: Target apps assigned to this experiment
+        holdoutIDs:
+          type: array
+          items:
+            type: string
+          description: Holdouts applied to this configuration.
+        team:
+          type:
+          - string
+          - 'null'
+          description: The team name associated with the experiment, Enterprise only.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: The team ID associated with the experiment, Enterprise only.
+        version:
+          type: number
+          description: Version number
+          format: double
+        secondaryIDType:
+          type:
+          - string
+          - 'null'
+          description: The secondary ID type for the experiment used in WHN for ID resolution
+        identifierMappingMode:
+          type: string
+          enum:
+          - strictOneToOne
+          - firstTouchOneToMany
+          - lastTouchOneToMany
+          description: The identifier mapping mode for the experiment used in WHN for ID resolution
+        identityResolutionSource:
+          type:
+          - string
+          - 'null'
+          description: The identity resolution entity property source for the experiment used in WHN for ID resolution
+        hypothesis:
+          type: string
+          description: A statement that will be tested by this experiment
+        links:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                format: uri
+                description: The URL of the link
+              title:
+                type: string
+                description: The title of the link
+            required:
+            - url
+          description: Links to relevant documentation or resources
+        externalEvents:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              timestamp:
+                type: number
+            required:
+            - name
+            - timestamp
+        groups:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              id:
+                type:
+                - string
+                - 'null'
+              size:
+                type: number
+                minimum: 0
+                maximum: 100
+              parameterValues:
+                type: object
+                additionalProperties: {}
+                description: A map of parameter name to the value this group serves. Sidecar (Visual Editor) experiments also return `sidecarURLFilters`, `sidecarDisableAutoRun`, `sidecarPrerunScript`, and `sidecarExperimentName` here, copied from the experiment itself on read. Sending them here does nothing; set them as experiment fields instead.
+              disabled:
+                type: boolean
+              description:
+                type: string
+              foreignGroupID:
+                type: string
+              highlighted:
+                type: boolean
+                description: Marks this experiment group as highlighted in analysis views. Highlighted groups are prioritized (shown first) and can be used to filter.
+              isControl:
+                type: boolean
+                description: 'Whether this group is the experiment''s control. Derived from the experiment''s `controlGroupID`, so it is always consistent with the `controlGroupID` returned alongside it. Read-only: to change the control group, set `controlGroupID` on the experiment.'
+              shipped:
+                type: boolean
+                description: Whether this group is the one that was shipped. Derived from the experiment's `launchedGroupID`, so it is always consistent with the `launchedGroupID` returned alongside it. Read-only.
+              images:
+                type: array
+                items:
+                  type: string
+                description: Names of images attached to this group.
+              foreignGroupIDVerified:
+                type:
+                - boolean
+                - 'null'
+                description: Whether `foreignGroupID` has been verified against the external system. Read-only.
+            required:
+            - name
+            - size
+            - parameterValues
+          description: The test groups for your experiment
+        controlGroupID:
+          type: string
+          description: Optional control group ID
+        allocation:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Percent of layer allocated to this experiment
+          format: double
+        userBuckets:
+          type: array
+          items:
+            type: number
+            minimum: 0
+            exclusiveMaximum: 1000
+        primaryMetricTags:
+          type: array
+          items:
+            type: string
+          description: Primary metric tags for the experiment
+        secondaryMetricTags:
+          type: array
+          items:
+            type: string
+          description: Secondary metric tags for the experiment
+        primaryMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The metric name.
+              type:
+                type: string
+                description: The metric type.
+              direction:
+                type: string
+                enum:
+                - increase
+                - decrease
+                description: The expected direction for one-sided testing (a feature to only measure metric movements in a single direction)
+              hypothesizedValue:
+                type: number
+                description: The comparison value for the one-sample testing (a feature to use a fixed baseline as the control value)
+            required:
+            - name
+            - type
+        secondaryMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The metric name.
+              type:
+                type: string
+                description: The metric type.
+              direction:
+                type: string
+                enum:
+                - increase
+                - decrease
+                description: The expected direction for one-sided testing (a feature to only measure metric movements in a single direction)
+              hypothesizedValue:
+                type: number
+                description: The comparison value for the one-sample testing (a feature to use a fixed baseline as the control value)
+            required:
+            - name
+            - type
+        otherMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The metric name.
+              type:
+                type: string
+                description: The metric type.
+              direction:
+                type: string
+                enum:
+                - increase
+                - decrease
+                description: The expected direction for one-sided testing (a feature to only measure metric movements in a single direction)
+              hypothesizedValue:
+                type: number
+                description: The comparison value for the one-sample testing (a feature to use a fixed baseline as the control value)
+            required:
+            - name
+            - type
+          description: Additional metrics you want to investigate or learn from. The usual corrections applied to Primary and Secondary metrics are not applied to these.
+        duration:
+          type: integer
+          description: How long the experiment is expected to last in days
+          format: int64
+          exclusiveMinimum: 1
+        targetExposures:
+          type: integer
+          description: Target exposures for the experiment
+          format: int64
+          exclusiveMinimum: 1
+        targetingGateID:
+          type:
+          - string
+          - 'null'
+          description: Restrict your experiment to users passing the selected feature gate
+        sequentialTesting:
+          type: boolean
+          description: Apply sequential testing?
+        bonferroniCorrection:
+          type: boolean
+          description: Is Bonferroni correction applied per variant?
+        bonferroniCorrectionPerMetric:
+          type: boolean
+          description: Is Bonferroni correction applied per metric?
+        benjaminiHochbergPerVariant:
+          type: boolean
+          description: Is Benjamini-Hochberg procedure applied per variant?
+        benjaminiHochbergPerMetric:
+          type: boolean
+          description: Is Benjamini-Hochberg procedure applied per metric?
+        benjaminiPrimaryMetricsOnly:
+          type: boolean
+          description: Is Benjamini-Hochberg procedure applied for primary metrics only?
+        defaultConfidenceInterval:
+          type: string
+          enum:
+          - '80'
+          - '90'
+          - '95'
+          - '98'
+          - '99'
+          description: Default error margin used for results
+        defaultRollupWindow:
+          type: integer
+          description: Default rollup window in days for experiment results. Use -1 for cumulative. Only -1, 1, and 7 allowed for cloud experiments.
+          format: int64
+        defaultChanceToBeatThreshold:
+          type: number
+          description: Default chance-to-beat threshold used for Bayesian results.
+          format: double
+        bayesianPriors:
+          type: array
+          items:
+            type: object
+            properties:
+              metric:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  type:
+                    type: string
+                required:
+                - name
+                - type
+              priorMean:
+                type: number
+              priorStdDev:
+                type: number
+                exclusiveMinimum: 0
+            required:
+            - metric
+            - priorMean
+            - priorStdDev
+          description: Bayesian prior settings by metric.
+        manualQualityScores:
+          type: array
+          items:
+            type: object
+            properties:
+              criteriaName:
+                oneOf:
+                - type: string
+                  enum:
+                  - HYPOTHESIS_LENGTH
+                  - BALANCED_EXPOSURE
+                  - PRIMARY_METRICS_LENGTH
+                  - SECONDARY_METRICS_LENGTH
+                  - COMPARISON_CORRECTION
+                  - GUARDRAIL_METRIC_TAGS
+                  - SUFFICIENT_SAMPLE
+                  - POWER_ANALYSIS
+                  - SEQUENTIAL_TESTING
+                - type: string
+              status:
+                type: string
+                enum:
+                - PASSED
+                - FAILED
+                - WARNING
+              criteriaDescription:
+                type: string
+              score:
+                type: number
+              weight:
+                type: number
+            required:
+            - criteriaName
+            - status
+            - criteriaDescription
+            - score
+            - weight
+          description: 'Up to 10 manually set quality scores for an experiment. The scores and weights will be added to the existing weights and scores, and then weights will be renormalized to 100. This can be set via the Statsig Console API. If targeting a default check, the weight of the check will be updated, but not the status or description. A default score can be removed by setting the weight to 0. The default score identifiers are one of: HYPOTHESIS_LENGTH, BALANCED_EXPOSURE, PRIMARY_METRICS_LENGTH, COMPARISON_CORRECTION, GUARDRAIL_METRIC_TAGS, SUFFICIENT_SAMPLE, POWER_ANALYSIS, SEQUENTIAL_TESTING'
+        status:
+          type: string
+          enum:
+          - active
+          - setup
+          - decision_made
+          - abandoned
+          - archived
+          - experiment_stopped
+          - assignment_stopped
+          description: The current status of the experiment
+        launchedGroupID:
+          type:
+          - string
+          - 'null'
+          description: ID of the launched group, null otherwise
+        assignmentSourceName:
+          type: string
+        assignmentSourceExperimentName:
+          type: string
+          description: Name of the source experiment for assignment
+        isAnalysisOnly:
+          type: boolean
+        allocationDuration:
+          type:
+          - integer
+          - 'null'
+          description: Warehouse Native Only - Allocation duration in days
+          format: int64
+          exclusiveMinimum: 1
+        cohortedAnalysisDuration:
+          type: integer
+          description: Warehouse Native Only - Cohorted analysis duration in days
+          format: int64
+          exclusiveMinimum: 1
+        cohortedMetricsMatureAfterEnd:
+          type: boolean
+          description: Warehouse Native Only - Allow cohort metrics to mature after experiment end
+        cohortWaitUntilEndToInclude:
+          type: boolean
+          description: Warehouse Native Only - Whether to filter to units whose experiment cohort analysis duration is complete, if cohortedAnalysisDuration exists
+        fixedAnalysisDuration:
+          type: integer
+          description: Fixed analysis duration in days
+          format: int64
+          exclusiveMinimum: 1
+        scheduledReloadHour:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          maximum: 23
+          description: Warehouse Native only - UTC hour at which to run scheduled pulse loads
+          format: int64
+        scheduledReloadType:
+          type: string
+          enum:
+          - full
+          - incremental
+          description: Warehouse Native only - reload type for scheduled reloads
+        scheduledReloadDays:
+          type:
+          - array
+          - 'null'
+          items:
+            type: integer
+            minimum: 0
+            maximum: 6
+          description: Warehouse Native only - days on which to run scheduled reloads from 0 to 6, 0 meaning Sunday. Null to run reloads on all days.
+        turboMode:
+          type: boolean
+          description: Warehouse Native only - whether to run scheduled reloads with Turbo mode.
+        autoLoadToplineImpact:
+          type: boolean
+          description: Warehouse Native only - whether to automatically run topline and projected launch impact calculations when reloading experiments.
+        analysisEndTime:
+          type: string
+        assignmentSourceFilters:
+          type: array
+          items:
+            type: object
+            properties:
+              column:
+                type: string
+                description: Column to filter on.
+              condition:
+                type: string
+                enum:
+                - in
+                - not_in
+                - '='
+                - '>'
+                - <
+                - '>='
+                - <=
+                - is_null
+                - non_null
+                - contains
+                - not_contains
+                - sql_filter
+                - starts_with
+                - ends_with
+                - after_exposure
+                - before_exposure
+                - is_true
+                - is_false
+              values:
+                type: array
+                items:
+                  type: string
+                description: Optional array of values for the criterion to match against.
+            required:
+            - condition
+          description: Array of criteria for filtering assignment sources.
+        analyticsType:
+          type:
+          - string
+          - 'null'
+        defaultSPRTPowerParam:
+          type: number
+          format: double
+        defaultSPRTMDE:
+          type: number
+          format: double
+        sprtBaselineMode:
+          type: string
+          enum:
+          - manual
+          - in_experiment_control
+        sprtMDESettings:
+          type: array
+          items:
+            type: object
+            properties:
+              metricKey:
+                type: string
+              groupSettings:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    groupKey:
+                      type: string
+                    mde:
+                      type: number
+                    mean:
+                      type: number
+                    stdDev:
+                      type: number
+                  required:
+                  - groupKey
+                  - mde
+            required:
+            - metricKey
+            - groupSettings
+        isSidecar:
+          type: boolean
+          description: Whether this is a Statsig Sidecar experiment. `sidecarEditorURL`, `sidecarURLFilters`, `sidecarDisableAutoRun`, and `sidecarPrerunScript` are saved only when this is `true`.
+        sidecarEditorURL:
+          type: string
+          description: 'Sidecar (Visual Editor) only: the URL of the page being modified. The Visual Editor cannot open without it, and it must be an `http` or `https` URL.'
+        sidecarURLFilters:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - contains
+                - equals
+                - regex
+                - path
+              value:
+                type: string
+            required:
+            - type
+            - value
+          description: 'Sidecar (Visual Editor) only: filters on the current URL used to determine whether the experiment should be applied. Each entry looks like `{ "type": "contains", "value": "/pricing" }`, where `type` is `contains`, `equals`, `regex`, or `path`. Put `type` inside each filter object, not alongside the array.'
+        sidecarDisableAutoRun:
+          type: boolean
+          description: 'Sidecar (Visual Editor) only: whether to disable auto-running the experiment on page load. By default the experiment auto runs.'
+        sidecarPrerunScript:
+          type:
+          - string
+          - 'null'
+          description: 'Sidecar (Visual Editor) only: a script to run before the experiment starts. Send `null` to clear it.'
+        decisionReason:
+          type:
+          - string
+          - 'null'
+        preComputedUserDimensions:
+          type: array
+          items:
+            type: object
+            properties:
+              propertySource:
+                type: string
+              name:
+                type: string
+            required:
+            - name
+          description: User dimensions that will be computed for every metric in WHN
+        cureCovariates:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+            required:
+            - name
+            - type
+          description: CURE Covariates to use in this experiment
+        stratifiedSampling:
+          type:
+          - object
+          - 'null'
+          properties:
+            status:
+              type: string
+              enum:
+              - pending
+              - success
+              - error
+            metric:
+              type: object
+              properties:
+                name:
+                  type: string
+                type:
+                  type: string
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+              required:
+              - name
+              - startDate
+              - endDate
+            entityPropertySource:
+              type: object
+              properties:
+                propertySourceName:
+                  type: string
+                column:
+                  type: string
+              required:
+              - propertySourceName
+              - column
+            csv:
+              type: object
+              properties:
+                original:
+                  type: string
+                identifier:
+                  type: string
+              required:
+              - original
+              - identifier
+            useStratifiedSalt:
+              type: boolean
+              description: Whether successful stratified sampling is currently used for experiment assignment.
+            useUnits:
+              type: boolean
+              description: Whether stratified sampling was configured to use allocated units directly.
+            deltaReduction:
+              type: number
+              description: Observed reduction in delta after running stratified sampling.
+              format: double
+            spreadReduction:
+              type: number
+              description: Observed reduction in spread after running stratified sampling.
+              format: double
+          required:
+          - status
+          description: The stratified sampling settings for the experiment
+        enabledNonProdEnvironments:
+          type: array
+          items:
+            type: string
+        subtype:
+          type: string
+          enum:
+          - conversion
+          - reactivation
+          - retention
+        externalExperimentName:
+          type: string
+        salt:
+          type: string
+          description: The salt used to bucket units for this experiment. Read-only; needed to reproduce assignment outside Statsig.
+        scheduledStartTime:
+          type: number
+          description: Epoch millis at which the experiment is scheduled to start, if a start has been scheduled via `POST /experiments/{id}/schedule_start`.
+          format: double
+        restartReason:
+          type:
+          - string
+          - 'null'
+          description: Why the experiment was restarted, if it was restarted as new. Null otherwise.
+        originalTargetDuration:
+          type:
+          - number
+          - 'null'
+          description: The originally configured target duration in days, retained when `duration` is later changed.
+          format: double
+        wasAutoDisabled:
+          type: boolean
+          description: Whether the experiment was automatically disabled (e.g. by an auto-disable rule) rather than stopped by a user.
+        isPromptExperiment:
+          type: boolean
+          description: Whether this experiment is a prompt experiment.
+        isTemplate:
+          type: boolean
+          description: Whether this experiment is a template that other experiments can be created from.
+        allowOverridesInPulse:
+          type: boolean
+          description: Whether units assigned by an override are included in results. Affects how results should be interpreted.
+        excludePausedExposuresAndEvents:
+          type: boolean
+          description: Whether exposures and events recorded while the experiment was paused are excluded from analysis.
+        defaultImpactMultiplier:
+          type: number
+          description: Multiplier applied to reported impact figures for this experiment.
+          format: double
+        bonferroniPrimaryMetricWeight:
+          type: number
+          description: The share of α allocated to primary metrics for the Bonferroni-per-metric correction. Matches the `bonferroniPrimaryMetricWeight` query parameter on the pulse endpoints, which previously accepted this value without exposing the experiment’s configured one.
+          format: double
+        defaultSPRTTestDelta:
+          type: number
+          description: Default SPRT test-group delta.
+          format: double
+        defaultSPRTControlDelta:
+          type: number
+          description: Default SPRT control-group delta.
+          format: double
+        isImpactBankEnabled:
+          type: boolean
+          description: Whether Impact Bank is enabled for this experiment.
+        originalTargetExposures:
+          type:
+          - number
+          - 'null'
+          description: The originally configured target exposures, retained when `targetExposures` is later changed. Counterpart to `originalTargetDuration`.
+          format: double
+        reviewsRequiredLocally:
+          type: boolean
+          description: Whether a review requirement is set on this experiment itself, as opposed to being inherited from project or team settings. `reviewSettings.requiredReview` reports the effective requirement.
+        isHistoricalCloudExperiment:
+          type: boolean
+          description: Whether this is a pre-existing cloud (non-warehouse-native) experiment inside a warehouse-native project.
+        originalScheduledReloadHour:
+          type:
+          - number
+          - 'null'
+          description: The originally configured scheduled reload hour, retained when `scheduledReloadHour` is later changed.
+          format: double
+        layerID:
+          type:
+          - string
+          - 'null'
+        startTime:
+          type:
+          - number
+          - 'null'
+          format: double
+        endTime:
+          type:
+          - number
+          - 'null'
+          format: double
+        decisionTime:
+          type:
+          - number
+          - 'null'
+          format: double
+        healthChecks:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              status:
+                type: string
+                enum:
+                - PASSED
+                - FAILED
+                - WAITING
+                - WARNING
+                - NOT_APPLIED
+              metadata:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  lastPulseLoadTime:
+                    type: number
+                  crossoverPercent:
+                    type: number
+                  p_value:
+                    type: number
+                  assignmentSourceID:
+                    type: string
+                  assignmentSourceName:
+                    type: string
+                  foreignExperimentID:
+                    type: string
+                  deduplication_rate:
+                    type: number
+                  deduplication_rates:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        group_id:
+                          type: string
+                        rate:
+                          type: number
+                        group_name:
+                          type: string
+                      required:
+                      - group_id
+                      - rate
+                      - group_name
+                  primary_id_type:
+                    type: string
+                  secondary_id_type:
+                    type: string
+                  missingMetrics:
+                    type: array
+                    items:
+                      type: string
+                  metrics:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        metric_name:
+                          type: string
+                        earliest_date:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        latest_date:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                      required:
+                      - metric_name
+                      - earliest_date
+                      - latest_date
+                  lastUpdatedDs:
+                    type: string
+                  groups:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        groupID:
+                          type: string
+                        groupName:
+                          type: string
+                        status:
+                          type: string
+                          enum:
+                          - PASSED
+                          - FAILED
+                          - WAITING
+                          - WARNING
+                          - NOT_APPLIED
+                        metrics:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              metricKey:
+                                type: string
+                              metricTitle:
+                                type: string
+                              status:
+                                type: string
+                                enum:
+                                - PASSED
+                                - FAILED
+                                - WAITING
+                                - WARNING
+                                - NOT_APPLIED
+                            required:
+                            - metricKey
+                            - metricTitle
+                            - status
+                      required:
+                      - groupID
+                      - groupName
+                      - status
+                      - metrics
+                  groupBucketInfo:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        groupID:
+                          type: string
+                        averageBucketSize:
+                          type: number
+                      required:
+                      - groupID
+                      - averageBucketSize
+                required:
+                - type
+                - primary_id_type
+              type:
+                type: string
+                enum:
+                - has_checks
+                - has_valid_unit_type
+                - has_balanced_exposures
+                - has_event_metrics
+                - has_pulse_metrics
+                - assignment_health
+                - has_crossover
+                - has_exposures
+                - has_recent_exposures_for_analyze_whn
+                - user_metrics_exist
+                - deduplication_rate
+                - deduplication_rate_group_level
+                - windowed_metrics_have_outliers
+                - exposures_data_is_behind
+                - pre_experimental_bias_check
+                - segments_of_interest_analysis
+                - has_changed_parameter
+                - metric_history_for_topline_impact
+                - default_value_mismatch
+                - has_data_gaps
+                - has_correct_target_app
+                - has_dag_failures
+                - has_exploration_completed
+                - autotune_has_outcomes
+                - metric_stability
+                - has_balanced_exposures
+            required:
+            - name
+            - description
+            - status
+        healthCheckStatus:
+          type: string
+          enum:
+          - PASSED
+          - FAILED
+          - WAITING
+          - WARNING
+          - NOT_APPLIED
+          description: Overall health check status
+        experimentType:
+          type: string
+          enum:
+          - BASE
+          - GEO
+          - SWITCHBACK
+          - PROMPT
+          - SIDECAR
+          - GRID_SEARCH
+          description: The type of experiment
+        isStale:
+          type: boolean
+          description: Whether the experiment is considered stale (e.g. in progress or decision-made and not modified in 30+ days).
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
+        inlineTargetingRulesJSON:
+          type:
+          - string
+          - 'null'
+          description: A raw JSON string of the inline targeting rules
+        inlineTargetingRules:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this rule.
+              passPercentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                multipleOf: 0.01
+                description: Of the users that meet the conditions of this rule, what percent should return true.
+              conditions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    targetValue:
+                      oneOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: array
+                        items:
+                          type: number
+                      - type: string
+                      - type: number
+                    operator:
+                      type: string
+                      enum:
+                      - any
+                      - none
+                      - any_case_sensitive
+                      - none_case_sensitive
+                      - str_contains_any
+                      - str_contains_none
+                      - gt
+                      - lt
+                      - lte
+                      - gte
+                      - version_gt
+                      - version_lt
+                      - version_gte
+                      - version_lte
+                      - version_eq
+                      - after
+                      - before
+                      - 'on'
+                      - is_null
+                      - is_not_null
+                      - str_matches
+                      - encoded_any
+                      - array_contains_any
+                      - array_contains_none
+                      - array_contains_all
+                      - not_array_contains_all
+                    field:
+                      type:
+                      - string
+                      - 'null'
+                    customID:
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      type: string
+                      enum:
+                      - app_version
+                      - browser_name
+                      - browser_version
+                      - country
+                      - custom_field
+                      - email
+                      - environment_tier
+                      - fails_gate
+                      - fails_segment
+                      - ip_address
+                      - locale
+                      - os_name
+                      - os_version
+                      - passes_gate
+                      - passes_segment
+                      - public
+                      - time
+                      - unit_id
+                      - user_id
+                      - user_agent
+                      - url
+                      - javascript
+                      - device_model
+                      - target_app
+                      - experiment_group
+                  required:
+                  - type
+                description: An array of Condition objects.
+              environments:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+                description: The environments this rule is enabled for.
+              id:
+                type: string
+                description: The Statsig ID of this rule.
+              baseID:
+                type: string
+                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+              returnValue:
+                type: object
+                additionalProperties: {}
+                description: The return value of the rule.
+              completedAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that have already completed.'
+              pendingAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+            required:
+            - name
+            - passPercentage
+            - conditions
+          description: A formatted array of the inline targeting rules
+        qualityScore:
+          type:
+          - object
+          - 'null'
+          properties:
+            score:
+              type: number
+              description: The normalized experiment quality score.
+              format: double
+            breakdown:
+              type: array
+              items:
+                type: object
+                properties:
+                  criterion:
+                    type: string
+                    description: The quality score criterion name.
+                  status:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - PASSED
+                    - FAILED
+                    - WAITING
+                    - WARNING
+                    - NOT_APPLIED
+                    description: The quality score status for the criterion.
+                  passingDescription:
+                    type: string
+                    description: The passing description for the criterion.
+                  score:
+                    type: number
+                    description: The normalized score contribution for this criterion.
+                  weight:
+                    type: number
+                    description: The normalized weight for this criterion.
+                required:
+                - criterion
+                - status
+                - passingDescription
+                - score
+                - weight
+              description: The per-criterion quality score breakdown.
+          required:
+          - score
+          - breakdown
+          description: The experiment quality score and per-criterion breakdown.
+        summarySections:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              content:
+                type:
+                - string
+                - 'null'
+            required:
+            - name
+            - content
+        permalink:
+          type: string
+          format: uri
+          description: A permalink to this experiment in the Statsig Console.
+        shipWithHoldout:
+          type: object
+          properties:
+            holdoutPercent:
+              type: integer
+              description: Integer percentage of users held back when the experiment was shipped with holdback. Each non-shipped group receives this percentage of traffic and the shipped group receives the remainder.
+              example: 10
+              format: int64
+            shippedGroupID:
+              type: string
+              description: ID of the group that was shipped (i.e. the winning variant).
+            shippedGroupName:
+              type: string
+              description: Name of the group that was shipped.
+            shippedWithHoldoutTime:
+              type: number
+              description: Unix timestamp (ms) at which the experiment was shipped with holdback.
+              format: double
+            expectedDuration:
+              type: number
+              description: Expected duration of the holdback period in days, if specified when shipping.
+              format: double
+          required:
+          - holdoutPercent
+          - shippedGroupID
+          - shippedGroupName
+          description: Present when the experiment has been shipped with a holdback group via make_decision (i.e. the winning variant is live for most users but a control slice is held back for ongoing measurement). Absent for experiments that have not been shipped, or that were shipped fully without a holdback.
+        powerAnalyses:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The ID of the linked power analysis report.
+              name:
+                type:
+                - string
+                - 'null'
+                description: The name of the linked power analysis report.
+              status:
+                type: string
+                enum:
+                - pending
+                - failed
+                - ready
+                - expired
+                description: The status of the linked power analysis report.
+              isPrimary:
+                type: boolean
+                description: Whether this is the experiment's primary attached power analysis report.
+            required:
+            - id
+            - name
+            - status
+            - isPrimary
+          description: The power analyses linked to this experiment. Empty when no power analysis is linked.
+      required:
+      - id
+      - idType
+      - description
+      - lastModifierID
+      - lastModifiedTime
+      - lastModifierEmail
+      - lastModifierName
+      - createdTime
+      - creatorName
+      - tags
+      - hypothesis
+      - groups
+      - allocation
+      - primaryMetrics
+      - secondaryMetrics
+      - targetingGateID
+      - bonferroniCorrection
+      - defaultConfidenceInterval
+      - status
+      - decisionReason
+      - layerID
+      - startTime
+      - endTime
+      - decisionTime
+      - healthCheckStatus
+      - experimentType
+      - isStale
+      - permalink
+      - powerAnalyses
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
   parameters:
     Limit:
       name: limit
@@ -420,14 +3911,6 @@ components:
         minimum: 1
         maximum: 100
       description: Maximum number of items to return per page.
-    ApiVersion:
-      name: STATSIG-API-VERSION
-      in: header
-      required: false
-      schema:
-        type: string
-        default: '20240601'
-      description: The Console API version. Currently the only version is 20240601.
     Page:
       name: page
       in: query
@@ -436,6 +3919,14 @@ components:
         type: integer
         minimum: 1
       description: Page number for paginated results.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
   securitySchemes:
     consoleApiKey:
       type: apiKey
@@ -447,6 +3938,11 @@ components:
       in: header
       name: statsig-api-key
       description: API key for authentication. Use a Server Secret Key for secure server-side requests or a Client-SDK Key for client-side applications.
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header
 x-refined-from:
 - statsig-console-api-openapi.yml
 - statsig-http-api-openapi.yml
+- statsig-console-api-openapi.json

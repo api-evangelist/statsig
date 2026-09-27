@@ -1,0 +1,2107 @@
+openapi: 3.2.0
+info:
+  title: Console Dashboards API
+  description: The "Console API" is the CRUD API for performing the actions offered on console.statsig.com without needing to go through the web UI.
+  version: 20240601.0.0
+  contact: {}
+servers:
+- url: https://statsigapi.net
+tags:
+- name: Dashboards
+paths:
+  /console/v1/dashboards:
+    get:
+      summary: List Dashboards
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Results per page
+        schema:
+          example: 10
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: Page number
+        schema:
+          example: 1
+          oneOf:
+          - type: string
+          - type: number
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: Filter dashboards by name using a partial match.
+        schema:
+          minLength: 1
+          example: growth
+          type: string
+      responses:
+        '200':
+          description: List dashboards response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginationResponseWithMessage'
+                - properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/DashboardListItemResponseDto'
+                example:
+                  message: Dashboards Listed Successfully
+                  data:
+                  - id: dashboard_id
+                    name: My Dashboard
+                    description: desc
+                    defaults:
+                      date:
+                        value: 14
+                        unit: day
+                      granularity: daily
+                    created_time: 1736208000
+                    modified_time: 1736294400
+                    widget_count: 1
+                    is_verified: true
+                  pagination:
+                    itemsPerPage: 20
+                    pageNumber: 1
+                    nextPage: null
+                    previousPage: null
+                    totalItems: 1
+                    all: /console/v1/dashboards
+              example:
+                message: Dashboards Listed Successfully
+                data:
+                - id: dashboard_id
+                  name: My Dashboard
+                  description: desc
+                  defaults:
+                    date:
+                      value: 14
+                      unit: day
+                    granularity: daily
+                  created_time: 1736208000
+                  modified_time: 1736294400
+                  widget_count: 1
+                  is_verified: true
+                pagination:
+                  itemsPerPage: 20
+                  pageNumber: 1
+                  nextPage: null
+                  previousPage: null
+                  totalItems: 1
+                  all: /console/v1/dashboards
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dashboards
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1Dashboards
+      x-operation-id-source: derived
+    post:
+      summary: Create Dashboard
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDashboardDto'
+      responses:
+        '200':
+          description: Create dashboard response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DashboardCreateResponseDto'
+                example:
+                  message: Dashboard Created Successfully
+                  data:
+                    id: dashboard_id
+                    dashboard_url: https://console.statsig.com/company_id/dashboards/dashboard_id
+              example:
+                message: Dashboard Created Successfully
+                data:
+                  id: dashboard_id
+                  dashboard_url: https://console.statsig.com/company_id/dashboards/dashboard_id
+      tags:
+      - Dashboards
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1Dashboards
+      x-operation-id-source: derived
+  /console/v1/dashboards/{id}:
+    get:
+      summary: Read Dashboard
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Read dashboard response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DashboardReadResponseDto'
+                example:
+                  message: Dashboard Read Successfully
+                  data:
+                    id: dashboard_id
+                    name: My Dashboard
+                    description: desc
+                    defaults:
+                      date:
+                        value: 14
+                        unit: day
+                      granularity: daily
+                    widgets:
+                    - id: widget_id
+                      type: header
+                      title: Overview
+                      width: 12
+                      height: 1
+              example:
+                message: Dashboard Read Successfully
+                data:
+                  id: dashboard_id
+                  name: My Dashboard
+                  description: desc
+                  defaults:
+                    date:
+                      value: 14
+                      unit: day
+                    granularity: daily
+                  widgets:
+                  - id: widget_id
+                    type: header
+                    title: Overview
+                    width: 12
+                    height: 1
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dashboards
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1DashboardsById
+      x-operation-id-source: derived
+  /console/v1/dashboards/{id}/widgets:
+    post:
+      summary: Add Widgets to Dashboard
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddDashboardWidgetsDto'
+      responses:
+        '200':
+          description: Add dashboard widgets response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DashboardAddWidgetsResponseDto'
+                example:
+                  message: Dashboard Widgets Added Successfully
+                  data:
+                    ids:
+                    - widget_id
+              example:
+                message: Dashboard Widgets Added Successfully
+                data:
+                  ids:
+                  - widget_id
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dashboards
+      security:
+      - STATSIG-API-KEY: []
+      operationId: postConsoleV1DashboardsByIdWidgets
+      x-operation-id-source: derived
+    put:
+      summary: Replace Widgets on Dashboard
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: id
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReplaceDashboardWidgetsDto'
+      responses:
+        '200':
+          description: Replace dashboard widgets response
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DashboardReplaceWidgetsResponseDto'
+                example:
+                  message: Dashboard Widgets Replaced Successfully
+                  data:
+                    ids:
+                    - widget_id
+              example:
+                message: Dashboard Widgets Replaced Successfully
+                data:
+                  ids:
+                  - widget_id
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dashboards
+      security:
+      - STATSIG-API-KEY: []
+      operationId: putConsoleV1DashboardsByIdWidgets
+      x-operation-id-source: derived
+  /console/v1/dashboards/{id}/widgets/{widgetId}/results:
+    get:
+      summary: Read Dashboard Widget Results
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: dashboard id
+        schema:
+          type: string
+      - name: widgetId
+        required: true
+        in: path
+        description: widget id
+        schema:
+          type: string
+      - name: sampling_enabled
+        required: false
+        in: query
+        description: Whether funnel sampling should be enabled for this results query. Defaults to true.
+        schema:
+          example: true
+          type: boolean
+      responses:
+        '200':
+          description: Read dashboard widget results response. Currently only supported for funnel widgets.
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SingleDataResponse'
+                - properties:
+                    data:
+                      $ref: '#/components/schemas/DashboardWidgetResultsResponseDto'
+                example:
+                  message: Dashboard Read Successfully
+                  data:
+                    id: widget_id
+                    type: funnel
+                    funnel:
+                      datasets:
+                      - key: default
+                        steps:
+                        - rank: 0
+                          name: signup
+                          count: 100
+                          conversion_rate: 1
+                          previous_step_conversion_rate: 1
+                        - rank: 1
+                          name: purchase
+                          count: 42
+                          conversion_rate: 0.42
+                          previous_step_conversion_rate: 0.42
+              example:
+                message: Dashboard Read Successfully
+                data:
+                  id: widget_id
+                  type: funnel
+                  funnel:
+                    datasets:
+                    - key: default
+                      steps:
+                      - rank: 0
+                        name: signup
+                        count: 100
+                        conversion_rate: 1
+                        previous_step_conversion_rate: 1
+                      - rank: 1
+                        name: purchase
+                        count: 42
+                        conversion_rate: 0.42
+                        previous_step_conversion_rate: 0.42
+        '400':
+          description: Invalid request. Please check the request input and try again.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '404':
+          description: Not Found. The requested resource could not be found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 404
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Not Found:
+                  value:
+                    status: 404
+                    message: Not Found. The requested resource could not be found.
+      tags:
+      - Dashboards
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1DashboardsByIdWidgetsByWidgetIdResults
+      x-operation-id-source: derived
+components:
+  schemas:
+    DashboardReadResponseDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 10000
+        defaults:
+          type: object
+          properties:
+            date:
+              type: object
+              properties:
+                value:
+                  type: integer
+                  format: int64
+                  exclusiveMinimum: 0
+                unit:
+                  type: string
+                  enum:
+                  - day
+                  - week
+                  - month
+              required:
+              - value
+              - unit
+            granularity:
+              type: string
+              enum:
+              - auto
+              - daily
+              - weekly
+              - monthly
+          additionalProperties: false
+        id:
+          type: string
+        widgets:
+          type: array
+          items:
+            discriminator:
+              propertyName: type
+            oneOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - text
+                title:
+                  type: string
+                content:
+                  type: string
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+                id:
+                  type: string
+              required:
+              - type
+              - title
+              - content
+              - id
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - header
+                title:
+                  type: string
+                color:
+                  type: string
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+                id:
+                  type: string
+              required:
+              - type
+              - title
+              - id
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - timeseries
+                title:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                query:
+                  type: object
+                  properties:
+                    source:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - event
+                        event_name:
+                          type: string
+                        filters:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              property:
+                                type: object
+                                properties:
+                                  key:
+                                    type: string
+                                  column: {}
+                                required:
+                                - key
+                                - column
+                                additionalProperties: false
+                              operator: {}
+                              values:
+                                default: []
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                            - property
+                            - operator
+                            additionalProperties: false
+                      required:
+                      - type
+                      - event_name
+                      additionalProperties: false
+                    sources:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - event
+                          event_name:
+                            type: string
+                          filters:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                property:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    column: {}
+                                  required:
+                                  - key
+                                  - column
+                                  additionalProperties: false
+                                operator: {}
+                                values:
+                                  default: []
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - property
+                              - operator
+                              additionalProperties: false
+                        required:
+                        - type
+                        - event_name
+                        additionalProperties: false
+                    aggregation:
+                      type: object
+                      properties:
+                        type: {}
+                        property:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            column: {}
+                          required:
+                          - key
+                          - column
+                          additionalProperties: false
+                      required:
+                      - type
+                      additionalProperties: false
+                    unit_type:
+                      type: string
+                    group_bys:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                          column: {}
+                        required:
+                        - key
+                        - column
+                        additionalProperties: false
+                    viz:
+                      type: object
+                      properties:
+                        chart_type: {}
+                      required:
+                      - chart_type
+                      additionalProperties: false
+                  required:
+                  - aggregation
+                  additionalProperties: false
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+                id:
+                  type: string
+              required:
+              - type
+              - title
+              - query
+              - id
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - funnel
+                title:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                query:
+                  type: object
+                  properties:
+                    steps:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          event_name:
+                            type: string
+                          filters:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                property:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    column: {}
+                                  required:
+                                  - key
+                                  - column
+                                  additionalProperties: false
+                                operator: {}
+                                values:
+                                  default: []
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - property
+                              - operator
+                              additionalProperties: false
+                        required:
+                        - event_name
+                        additionalProperties: false
+                      minItems: 2
+                    unit_type:
+                      type: string
+                    conversion_window:
+                      type: object
+                      properties:
+                        value:
+                          type: integer
+                          exclusiveMinimum: 0
+                        unit:
+                          type: string
+                          enum:
+                          - second
+                          - minute
+                          - hour
+                          - day
+                      required:
+                      - value
+                      - unit
+                      additionalProperties: false
+                    chart_type:
+                      type: string
+                      enum:
+                      - conversion-rate
+                      - conversions
+                    group_bys:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                          column: {}
+                        required:
+                        - key
+                        - column
+                        additionalProperties: false
+                    cohorts:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          name:
+                            type: string
+                        required:
+                        - name
+                        additionalProperties: false
+                  required:
+                  - steps
+                  additionalProperties: false
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+                id:
+                  type: string
+              required:
+              - type
+              - title
+              - query
+              - id
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - unsupported
+                title:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                reason:
+                  type: string
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+                id:
+                  type: string
+              required:
+              - type
+              - title
+              - reason
+              - id
+              additionalProperties: false
+      required:
+      - name
+      - id
+    DashboardReplaceWidgetsResponseDto:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+      required:
+      - ids
+    CreateDashboardDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 10000
+        defaults:
+          type: object
+          properties:
+            date:
+              type: object
+              properties:
+                value:
+                  type: integer
+                  format: int64
+                  exclusiveMinimum: 0
+                unit:
+                  type: string
+                  enum:
+                  - day
+                  - week
+                  - month
+              required:
+              - value
+              - unit
+            granularity:
+              type: string
+              enum:
+              - auto
+              - daily
+              - weekly
+              - monthly
+          additionalProperties: false
+        widgets:
+          type: array
+          items:
+            discriminator:
+              propertyName: type
+            oneOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - text
+                title:
+                  type: string
+                content:
+                  type: string
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - content
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - header
+                title:
+                  type: string
+                color:
+                  type: string
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - timeseries
+                title:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                query:
+                  type: object
+                  properties:
+                    source:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - event
+                        event_name:
+                          type: string
+                        filters:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              property:
+                                type: object
+                                properties:
+                                  key:
+                                    type: string
+                                  column: {}
+                                required:
+                                - key
+                                - column
+                                additionalProperties: false
+                              operator: {}
+                              values:
+                                default: []
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                            - property
+                            - operator
+                            additionalProperties: false
+                      required:
+                      - type
+                      - event_name
+                      additionalProperties: false
+                    sources:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - event
+                          event_name:
+                            type: string
+                          filters:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                property:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    column: {}
+                                  required:
+                                  - key
+                                  - column
+                                  additionalProperties: false
+                                operator: {}
+                                values:
+                                  default: []
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - property
+                              - operator
+                              additionalProperties: false
+                        required:
+                        - type
+                        - event_name
+                        additionalProperties: false
+                    aggregation:
+                      type: object
+                      properties:
+                        type: {}
+                        property:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            column: {}
+                          required:
+                          - key
+                          - column
+                          additionalProperties: false
+                      required:
+                      - type
+                      additionalProperties: false
+                    unit_type:
+                      type: string
+                    group_bys:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                          column: {}
+                        required:
+                        - key
+                        - column
+                        additionalProperties: false
+                    viz:
+                      type: object
+                      properties:
+                        chart_type: {}
+                      required:
+                      - chart_type
+                      additionalProperties: false
+                  required:
+                  - aggregation
+                  additionalProperties: false
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - query
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - funnel
+                title:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                query:
+                  type: object
+                  properties:
+                    steps:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          event_name:
+                            type: string
+                          filters:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                property:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    column: {}
+                                  required:
+                                  - key
+                                  - column
+                                  additionalProperties: false
+                                operator: {}
+                                values:
+                                  default: []
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - property
+                              - operator
+                              additionalProperties: false
+                        required:
+                        - event_name
+                        additionalProperties: false
+                      minItems: 2
+                    unit_type:
+                      type: string
+                    conversion_window:
+                      type: object
+                      properties:
+                        value:
+                          type: integer
+                          exclusiveMinimum: 0
+                        unit:
+                          type: string
+                          enum:
+                          - second
+                          - minute
+                          - hour
+                          - day
+                      required:
+                      - value
+                      - unit
+                      additionalProperties: false
+                    chart_type:
+                      type: string
+                      enum:
+                      - conversion-rate
+                      - conversions
+                  required:
+                  - steps
+                  additionalProperties: false
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - query
+              additionalProperties: false
+      required:
+      - name
+    DashboardAddWidgetsResponseDto:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+      required:
+      - ids
+    DashboardCreateResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        dashboard_url:
+          type: string
+      required:
+      - id
+      - dashboard_url
+    ReplaceDashboardWidgetsDto:
+      type: object
+      properties:
+        widgets:
+          type: array
+          items:
+            discriminator:
+              propertyName: type
+            oneOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - text
+                title:
+                  type: string
+                content:
+                  type: string
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - content
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - header
+                title:
+                  type: string
+                color:
+                  type: string
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - timeseries
+                title:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                query:
+                  type: object
+                  properties:
+                    source:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - event
+                        event_name:
+                          type: string
+                        filters:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              property:
+                                type: object
+                                properties:
+                                  key:
+                                    type: string
+                                  column: {}
+                                required:
+                                - key
+                                - column
+                                additionalProperties: false
+                              operator: {}
+                              values:
+                                default: []
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                            - property
+                            - operator
+                            additionalProperties: false
+                      required:
+                      - type
+                      - event_name
+                      additionalProperties: false
+                    sources:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - event
+                          event_name:
+                            type: string
+                          filters:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                property:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    column: {}
+                                  required:
+                                  - key
+                                  - column
+                                  additionalProperties: false
+                                operator: {}
+                                values:
+                                  default: []
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - property
+                              - operator
+                              additionalProperties: false
+                        required:
+                        - type
+                        - event_name
+                        additionalProperties: false
+                    aggregation:
+                      type: object
+                      properties:
+                        type: {}
+                        property:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            column: {}
+                          required:
+                          - key
+                          - column
+                          additionalProperties: false
+                      required:
+                      - type
+                      additionalProperties: false
+                    unit_type:
+                      type: string
+                    group_bys:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                          column: {}
+                        required:
+                        - key
+                        - column
+                        additionalProperties: false
+                    viz:
+                      type: object
+                      properties:
+                        chart_type: {}
+                      required:
+                      - chart_type
+                      additionalProperties: false
+                  required:
+                  - aggregation
+                  additionalProperties: false
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - query
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - funnel
+                title:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                query:
+                  type: object
+                  properties:
+                    steps:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          event_name:
+                            type: string
+                          filters:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                property:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    column: {}
+                                  required:
+                                  - key
+                                  - column
+                                  additionalProperties: false
+                                operator: {}
+                                values:
+                                  default: []
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - property
+                              - operator
+                              additionalProperties: false
+                        required:
+                        - event_name
+                        additionalProperties: false
+                      minItems: 2
+                    unit_type:
+                      type: string
+                    conversion_window:
+                      type: object
+                      properties:
+                        value:
+                          type: integer
+                          exclusiveMinimum: 0
+                        unit:
+                          type: string
+                          enum:
+                          - second
+                          - minute
+                          - hour
+                          - day
+                      required:
+                      - value
+                      - unit
+                      additionalProperties: false
+                    chart_type:
+                      type: string
+                      enum:
+                      - conversion-rate
+                      - conversions
+                  required:
+                  - steps
+                  additionalProperties: false
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - query
+              additionalProperties: false
+        defaults:
+          type: object
+          properties:
+            date:
+              type: object
+              properties:
+                value:
+                  type: integer
+                  format: int64
+                  exclusiveMinimum: 0
+                unit:
+                  type: string
+                  enum:
+                  - day
+                  - week
+                  - month
+              required:
+              - value
+              - unit
+            granularity:
+              type: string
+              enum:
+              - auto
+              - daily
+              - weekly
+              - monthly
+          additionalProperties: false
+        max_cols:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      required:
+      - widgets
+      additionalProperties: false
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    DashboardListItemResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        defaults:
+          type: object
+          properties:
+            date:
+              type: object
+              properties:
+                value:
+                  type: integer
+                  format: int64
+                  exclusiveMinimum: 0
+                unit:
+                  type: string
+                  enum:
+                  - day
+                  - week
+                  - month
+              required:
+              - value
+              - unit
+            granularity:
+              type: string
+              enum:
+              - auto
+              - daily
+              - weekly
+              - monthly
+          additionalProperties: false
+        created_time:
+          type: number
+          format: double
+        modified_time:
+          type: number
+          format: double
+        widget_count:
+          type: integer
+          minimum: 0
+          format: int64
+        is_verified:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - id
+      - name
+      - description
+      - created_time
+      - modified_time
+      - widget_count
+      additionalProperties: false
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    DashboardWidgetResultsResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+          - funnel
+        funnel:
+          type: object
+          properties:
+            datasets:
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  label:
+                    type:
+                    - string
+                    - 'null'
+                  group:
+                    type:
+                    - string
+                    - 'null'
+                  cohort:
+                    type:
+                    - string
+                    - 'null'
+                  excludes_optional_steps:
+                    type: boolean
+                  steps:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        rank:
+                          type: integer
+                          minimum: 0
+                        name:
+                          type: string
+                        count:
+                          type: number
+                        conversion_rate:
+                          type:
+                          - number
+                          - 'null'
+                        previous_step_conversion_rate:
+                          type:
+                          - number
+                          - 'null'
+                        time_to_convert:
+                          type:
+                          - number
+                          - 'null'
+                        cumulative_time_to_convert:
+                          type:
+                          - number
+                          - 'null'
+                        total_prop_sum:
+                          type:
+                          - number
+                          - 'null'
+                      required:
+                      - rank
+                      - name
+                      - count
+                      additionalProperties: false
+                required:
+                - key
+                - steps
+                additionalProperties: false
+          required:
+          - datasets
+          additionalProperties: false
+      required:
+      - id
+      - type
+      - funnel
+      additionalProperties: false
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    AddDashboardWidgetsDto:
+      type: object
+      properties:
+        widgets:
+          type: array
+          items:
+            discriminator:
+              propertyName: type
+            oneOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - text
+                title:
+                  type: string
+                content:
+                  type: string
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - content
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - header
+                title:
+                  type: string
+                color:
+                  type: string
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - timeseries
+                title:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                query:
+                  type: object
+                  properties:
+                    source:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - event
+                        event_name:
+                          type: string
+                        filters:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              property:
+                                type: object
+                                properties:
+                                  key:
+                                    type: string
+                                  column: {}
+                                required:
+                                - key
+                                - column
+                                additionalProperties: false
+                              operator: {}
+                              values:
+                                default: []
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                            - property
+                            - operator
+                            additionalProperties: false
+                      required:
+                      - type
+                      - event_name
+                      additionalProperties: false
+                    sources:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - event
+                          event_name:
+                            type: string
+                          filters:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                property:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    column: {}
+                                  required:
+                                  - key
+                                  - column
+                                  additionalProperties: false
+                                operator: {}
+                                values:
+                                  default: []
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - property
+                              - operator
+                              additionalProperties: false
+                        required:
+                        - type
+                        - event_name
+                        additionalProperties: false
+                    aggregation:
+                      type: object
+                      properties:
+                        type: {}
+                        property:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            column: {}
+                          required:
+                          - key
+                          - column
+                          additionalProperties: false
+                      required:
+                      - type
+                      additionalProperties: false
+                    unit_type:
+                      type: string
+                    group_bys:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                          column: {}
+                        required:
+                        - key
+                        - column
+                        additionalProperties: false
+                    viz:
+                      type: object
+                      properties:
+                        chart_type: {}
+                      required:
+                      - chart_type
+                      additionalProperties: false
+                  required:
+                  - aggregation
+                  additionalProperties: false
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - query
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - funnel
+                title:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                query:
+                  type: object
+                  properties:
+                    steps:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          event_name:
+                            type: string
+                          filters:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                property:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    column: {}
+                                  required:
+                                  - key
+                                  - column
+                                  additionalProperties: false
+                                operator: {}
+                                values:
+                                  default: []
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - property
+                              - operator
+                              additionalProperties: false
+                        required:
+                        - event_name
+                        additionalProperties: false
+                      minItems: 2
+                    unit_type:
+                      type: string
+                    conversion_window:
+                      type: object
+                      properties:
+                        value:
+                          type: integer
+                          exclusiveMinimum: 0
+                        unit:
+                          type: string
+                          enum:
+                          - second
+                          - minute
+                          - hour
+                          - day
+                      required:
+                      - value
+                      - unit
+                      additionalProperties: false
+                    chart_type:
+                      type: string
+                      enum:
+                      - conversion-rate
+                      - conversions
+                  required:
+                  - steps
+                  additionalProperties: false
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - query
+              additionalProperties: false
+          minItems: 1
+        defaults:
+          type: object
+          properties:
+            date:
+              type: object
+              properties:
+                value:
+                  type: integer
+                  format: int64
+                  exclusiveMinimum: 0
+                unit:
+                  type: string
+                  enum:
+                  - day
+                  - week
+                  - month
+              required:
+              - value
+              - unit
+            granularity:
+              type: string
+              enum:
+              - auto
+              - daily
+              - weekly
+              - monthly
+          additionalProperties: false
+        max_cols:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      required:
+      - widgets
+      additionalProperties: false
+  securitySchemes:
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header

@@ -1,0 +1,91 @@
+openapi: 3.2.0
+info:
+  title: Console Usage API
+  description: The "Console API" is the CRUD API for performing the actions offered on console.statsig.com without needing to go through the web UI.
+  version: 20240601.0.0
+  contact: {}
+servers:
+- url: https://statsigapi.net
+tags:
+- name: Usage
+paths:
+  /console/v1/project/usage_billing/report:
+    get:
+      summary: Get Report in CSV format
+      parameters:
+      - name: start
+        required: false
+        in: query
+        description: Unix timestamp in ms
+        schema:
+          minimum: 0
+          type: integer
+      - name: end
+        required: true
+        in: query
+        description: Unix timestamp in ms
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+      responses:
+        '200':
+          description: Report URL generated successfully
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Data is not available
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 400
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Request:
+                  value:
+                    status: 400
+                    message: Invalid request. Please check the request input and try again.
+        '401':
+          description: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    enum:
+                    - 401
+                  message:
+                    type: string
+                required:
+                - status
+                - message
+              examples:
+                Invalid Endpoint:
+                  value:
+                    status: 401
+                    message: 'This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx'
+      tags:
+      - Usage
+      security:
+      - STATSIG-API-KEY: []
+      operationId: getConsoleV1ProjectUsageBillingReport
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    STATSIG-API-KEY:
+      type: apiKey
+      name: STATSIG-API-KEY
+      in: header
