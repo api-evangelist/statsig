@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Statsig Audit Logs API
   version: '1.0'
-  description: 'Operations tagged Audit Logs across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-console-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Audit Logs across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-audit-logs-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://statsigapi.net/console/v1
   description: Statsig Console API Server
@@ -44,6 +44,8 @@ paths:
     - url: https://statsigapi.net/console/v1
       description: Statsig Console API Server
   /console/v1/audit_logs:
+    servers:
+    - url: https://statsigapi.net
     get:
       summary: List Audit Logs
       parameters:
@@ -1840,37 +1842,34 @@ paths:
       - STATSIG-API-KEY: []
       operationId: getConsoleV1AuditLogs
       x-operation-id-source: derived
-    servers:
-    - url: https://statsigapi.net
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
   schemas:
-    Pagination:
-      type: object
-      description: Pagination metadata for list responses.
-      properties:
-        total:
-          type: integer
-          description: Total number of items available.
-        page:
-          type: integer
-          description: Current page number.
-        limit:
-          type: integer
-          description: Number of items per page.
-        hasMore:
-          type: boolean
-          description: Whether more pages are available.
     AuditLogEntry:
       type: object
       description: An audit log entry recording a change to the project configuration.
@@ -1905,6 +1904,68 @@ components:
         changes:
           type: object
           description: Details of the changes made.
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
     AuditLogDto:
       type: object
       properties:
@@ -1962,78 +2023,17 @@ components:
       - modifierEmail
       - changes
       - tags
-    PaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
             type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
-    PaginationResponseMetadataDto:
-      type: object
-      properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
-          type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
-  parameters:
-    Limit:
-      name: limit
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: Maximum number of items to return per page.
-    Page:
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-      description: Page number for paginated results.
-    ApiVersion:
-      name: STATSIG-API-VERSION
-      in: header
-      required: false
-      schema:
-        type: string
-        default: '20240601'
-      description: The Console API version. Currently the only version is 20240601.
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
   securitySchemes:
     consoleApiKey:
       type: apiKey
@@ -2049,4 +2049,4 @@ externalDocs:
   url: https://docs.statsig.com/console-api/
 x-refined-from:
 - statsig-console-api-openapi.yml
-- statsig-console-api-openapi.json
+- statsig-audit-logs-api-openapi.yml

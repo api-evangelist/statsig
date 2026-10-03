@@ -548,27 +548,6 @@ apis:
     url: data-model/statsig-data-model.yml
   - type: Conventions
     url: conventions/statsig-conventions.yml
-- aid: statsig:statsig-metrics-warehouse-native-api
-  name: Statsig Metrics (Warehouse Native) API
-  description: >-
-    The Metrics (Warehouse Native) API from Statsig — 5 operation(s) for metrics (warehouse native).
-  humanURL: https://docs.statsig.com/http-api/
-  baseURL: https://events.statsigapi.net
-  tags:
-  - Metrics (Warehouse Native)
-  properties:
-  - type: OpenAPI
-    url: openapi/statsig-metrics-warehouse-native-api-openapi.yml
-  - type: Documentation
-    url: https://docs.statsig.com/console-api/introduction
-  - type: ToolCrosswalk
-    url: mcp/statsig-tool-crosswalk.yml
-  - type: ErrorCatalog
-    url: errors/statsig-problem-types.yml
-  - type: DataModel
-    url: data-model/statsig-data-model.yml
-  - type: Conventions
-    url: conventions/statsig-conventions.yml
 - aid: statsig:statsig-overrides-api
   name: Statsig Overrides API
   description: The Overrides API from Statsig — 1 operation(s) for overrides.

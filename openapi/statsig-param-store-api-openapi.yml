@@ -390,349 +390,52 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ParamStoreUpdateDto:
+    PaginationResponseMetadataDto:
       type: object
       properties:
-        description:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
           type: string
-          description: Param Store Description
-        parameters:
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
           type: array
           items:
-            oneOf:
-            - type: object
-              properties:
-                ref_type:
-                  type: string
-                  enum:
-                  - static
-                name:
-                  type: string
-                  description: Parameter Name
-                param_type:
-                  type: string
-                  enum:
-                  - boolean
-                value:
-                  type: boolean
-              required:
-              - ref_type
-              - name
-              - param_type
-              - value
-            - type: object
-              properties:
-                ref_type:
-                  type: string
-                  enum:
-                  - static
-                name:
-                  type: string
-                  description: Parameter Name
-                param_type:
-                  type: string
-                  enum:
-                  - number
-                value:
-                  type: number
-              required:
-              - ref_type
-              - name
-              - param_type
-              - value
-            - type: object
-              properties:
-                ref_type:
-                  type: string
-                  enum:
-                  - static
-                name:
-                  type: string
-                  description: Parameter Name
-                param_type:
-                  type: string
-                  enum:
-                  - string
-                value:
-                  type: string
-              required:
-              - ref_type
-              - name
-              - param_type
-              - value
-            - type: object
-              properties:
-                ref_type:
-                  type: string
-                  enum:
-                  - static
-                name:
-                  type: string
-                  description: Parameter Name
-                param_type:
-                  type: string
-                  enum:
-                  - object
-                value:
-                  type: object
-                  additionalProperties: {}
-              required:
-              - ref_type
-              - name
-              - param_type
-              - value
-            - type: object
-              properties:
-                ref_type:
-                  type: string
-                  enum:
-                  - static
-                name:
-                  type: string
-                  description: Parameter Name
-                param_type:
-                  type: string
-                  enum:
-                  - array
-                value:
-                  type: array
-                  items: {}
-              required:
-              - ref_type
-              - name
-              - param_type
-              - value
-            - type: object
-              properties:
-                ref_type:
-                  type: string
-                  enum:
-                  - gate
-                name:
-                  type: string
-                  description: Parameter Name
-                gate_name:
-                  type: string
-                  description: Gate Name
-                param_type:
-                  type: string
-                  enum:
-                  - boolean
-                pass_value:
-                  type: boolean
-                fail_value:
-                  type: boolean
-              required:
-              - ref_type
-              - name
-              - gate_name
-              - param_type
-              - pass_value
-              - fail_value
-            - type: object
-              properties:
-                ref_type:
-                  type: string
-                  enum:
-                  - gate
-                name:
-                  type: string
-                  description: Parameter Name
-                gate_name:
-                  type: string
-                  description: Gate Name
-                param_type:
-                  type: string
-                  enum:
-                  - number
-                pass_value:
-                  type: number
-                fail_value:
-                  type: number
-              required:
-              - ref_type
-              - name
-              - gate_name
-              - param_type
-              - pass_value
-              - fail_value
-            - type: object
-              properties:
-                ref_type:
-                  type: string
-                  enum:
-                  - gate
-                name:
-                  type: string
-                  description: Parameter Name
-                gate_name:
-                  type: string
-                  description: Gate Name
-                param_type:
-                  type: string
-                  enum:
-                  - string
-                pass_value:
-                  type: string
-                fail_value:
-                  type: string
-              required:
-              - ref_type
-              - name
-              - gate_name
-              - param_type
-              - pass_value
-              - fail_value
-            - type: object
-              properties:
-                ref_type:
-                  type: string
-                  enum:
-                  - gate
-                name:
-                  type: string
-                  description: Parameter Name
-                gate_name:
-                  type: string
-                  description: Gate Name
-                param_type:
-                  type: string
-                  enum:
-                  - object
-                pass_value:
-                  type: object
-                  additionalProperties: {}
-                fail_value:
-                  type: object
-                  additionalProperties: {}
-              required:
-              - ref_type
-              - name
-              - gate_name
-              - param_type
-              - pass_value
-              - fail_value
-            - type: object
-              properties:
-                ref_type:
-                  type: string
-                  enum:
-                  - gate
-                name:
-                  type: string
-                  description: Parameter Name
-                gate_name:
-                  type: string
-                  description: Gate Name
-                param_type:
-                  type: string
-                  enum:
-                  - array
-                pass_value:
-                  type: array
-                  items: {}
-                fail_value:
-                  type: array
-                  items: {}
-              required:
-              - ref_type
-              - name
-              - gate_name
-              - param_type
-              - pass_value
-              - fail_value
-            - type: object
-              properties:
-                ref_type:
-                  type: string
-                  enum:
-                  - layer
-                name:
-                  type: string
-                  description: Parameter Name
-                param_type:
-                  type: string
-                  enum:
-                  - string
-                  - boolean
-                  - number
-                  - array
-                  - object
-                  description: Parameter Type
-                layer_name:
-                  type: string
-                  description: Layer Name
-                param_name:
-                  type: string
-                  description: Parameter Name in Layer
-              required:
-              - ref_type
-              - name
-              - param_type
-              - layer_name
-              - param_name
-            - type: object
-              properties:
-                ref_type:
-                  type: string
-                  enum:
-                  - dynamic_config
-                name:
-                  type: string
-                  description: Parameter Name
-                param_type:
-                  type: string
-                  enum:
-                  - string
-                  - boolean
-                  - number
-                  - array
-                  - object
-                  description: Parameter Type
-                config_name:
-                  type: string
-                  description: Dynamic Config Name
-                param_name:
-                  type: string
-                  description: Parameter Name in Config
-              required:
-              - ref_type
-              - name
-              - param_type
-              - config_name
-              - param_name
-            - type: object
-              properties:
-                ref_type:
-                  type: string
-                  enum:
-                  - experiment
-                name:
-                  type: string
-                  description: Parameter Name
-                param_type:
-                  type: string
-                  enum:
-                  - string
-                  - boolean
-                  - number
-                  - array
-                  - object
-                  description: Parameter Type
-                experiment_name:
-                  type: string
-                  description: Experiment Name
-                param_name:
-                  type: string
-                  description: Parameter Name in Experiment
-              required:
-              - ref_type
-              - name
-              - param_type
-              - experiment_name
-              - param_name
-            description: Parameter Definition
-          description: List of Parameters
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
     ParamStoreDto:
       type: object
       properties:
@@ -1112,6 +815,349 @@ components:
       - creatorID
       - lastModifierID
       - parameters
+    ParamStoreUpdateDto:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Param Store Description
+        parameters:
+          type: array
+          items:
+            oneOf:
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - boolean
+                value:
+                  type: boolean
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - number
+                value:
+                  type: number
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                value:
+                  type: string
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - object
+                value:
+                  type: object
+                  additionalProperties: {}
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - static
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - array
+                value:
+                  type: array
+                  items: {}
+              required:
+              - ref_type
+              - name
+              - param_type
+              - value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - boolean
+                pass_value:
+                  type: boolean
+                fail_value:
+                  type: boolean
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - number
+                pass_value:
+                  type: number
+                fail_value:
+                  type: number
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                pass_value:
+                  type: string
+                fail_value:
+                  type: string
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - object
+                pass_value:
+                  type: object
+                  additionalProperties: {}
+                fail_value:
+                  type: object
+                  additionalProperties: {}
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - gate
+                name:
+                  type: string
+                  description: Parameter Name
+                gate_name:
+                  type: string
+                  description: Gate Name
+                param_type:
+                  type: string
+                  enum:
+                  - array
+                pass_value:
+                  type: array
+                  items: {}
+                fail_value:
+                  type: array
+                  items: {}
+              required:
+              - ref_type
+              - name
+              - gate_name
+              - param_type
+              - pass_value
+              - fail_value
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - layer
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                  - boolean
+                  - number
+                  - array
+                  - object
+                  description: Parameter Type
+                layer_name:
+                  type: string
+                  description: Layer Name
+                param_name:
+                  type: string
+                  description: Parameter Name in Layer
+              required:
+              - ref_type
+              - name
+              - param_type
+              - layer_name
+              - param_name
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - dynamic_config
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                  - boolean
+                  - number
+                  - array
+                  - object
+                  description: Parameter Type
+                config_name:
+                  type: string
+                  description: Dynamic Config Name
+                param_name:
+                  type: string
+                  description: Parameter Name in Config
+              required:
+              - ref_type
+              - name
+              - param_type
+              - config_name
+              - param_name
+            - type: object
+              properties:
+                ref_type:
+                  type: string
+                  enum:
+                  - experiment
+                name:
+                  type: string
+                  description: Parameter Name
+                param_type:
+                  type: string
+                  enum:
+                  - string
+                  - boolean
+                  - number
+                  - array
+                  - object
+                  description: Parameter Type
+                experiment_name:
+                  type: string
+                  description: Experiment Name
+                param_name:
+                  type: string
+                  description: Parameter Name in Experiment
+              required:
+              - ref_type
+              - name
+              - param_type
+              - experiment_name
+              - param_name
+            description: Parameter Definition
+          description: List of Parameters
     SingleDataResponse:
       type: object
       properties:
@@ -1124,25 +1170,6 @@ components:
       required:
       - message
       - data
-    PaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
     ParamStoreCreateDto:
       type: object
       properties:
@@ -1172,33 +1199,6 @@ components:
       - name
       - description
       - displayName
-    PaginationResponseMetadataDto:
-      type: object
-      properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
-          type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

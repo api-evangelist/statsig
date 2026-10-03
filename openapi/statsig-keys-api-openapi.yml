@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Statsig Keys API
   version: '1.0'
-  description: 'Operations tagged Keys across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-console-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Keys across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-keys-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://statsigapi.net/console/v1
   description: Statsig Console API Server
@@ -40,6 +40,8 @@ paths:
     - url: https://statsigapi.net/console/v1
       description: Statsig Console API Server
   /console/v1/keys:
+    servers:
+    - url: https://statsigapi.net
     get:
       summary: List Keys
       parameters:
@@ -226,9 +228,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: postConsoleV1Keys
       x-operation-id-source: derived
+  /console/v1/keys/{id}:
     servers:
     - url: https://statsigapi.net
-  /console/v1/keys/{id}:
     get:
       summary: Read Key
       parameters:
@@ -500,9 +502,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: deleteConsoleV1KeysById
       x-operation-id-source: derived
+  /console/v1/keys/{id}/deactivate:
     servers:
     - url: https://statsigapi.net
-  /console/v1/keys/{id}/deactivate:
     patch:
       summary: Deactivate Key
       parameters:
@@ -594,9 +596,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: patchConsoleV1KeysByIdDeactivate
       x-operation-id-source: derived
+  /console/v1/keys/{id}/rotate:
     servers:
     - url: https://statsigapi.net
-  /console/v1/keys/{id}/rotate:
     patch:
       summary: Rotate Key
       parameters:
@@ -690,20 +692,7 @@ paths:
       - STATSIG-API-KEY: []
       operationId: patchConsoleV1KeysByIdRotate
       x-operation-id-source: derived
-    servers:
-    - url: https://statsigapi.net
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
   schemas:
     ApiKey:
       type: object
@@ -726,6 +715,65 @@ components:
           type: integer
           format: int64
           description: Timestamp when the key was created.
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    KeyCreateContractDto:
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 1000
+        type:
+          type: string
+          enum:
+          - SERVER
+          - CLIENT
+          - CONSOLE
+          - SCIM
+          - ORG
+        scopes:
+          type: array
+          items:
+            type: string
+            enum:
+            - omni_read_only
+            - omni_read_write
+            - client_download_config_specs
+            - none_hash_enabled
+            - can_access_keys
+            - client_can_write_user_store
+            - personal_read_only
+            - personal_read_write
+        environments:
+          type: array
+          items:
+            type: string
+        targetAppID:
+          type: string
+        secondaryTargetAppIDs:
+          type: array
+          items:
+            type: string
+      required:
+      - description
+      - type
     KeyDto:
       type: object
       properties:
@@ -797,65 +845,6 @@ components:
       required:
       - message
       - data
-    PaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
-    KeyCreateContractDto:
-      type: object
-      properties:
-        description:
-          type: string
-          maxLength: 1000
-        type:
-          type: string
-          enum:
-          - SERVER
-          - CLIENT
-          - CONSOLE
-          - SCIM
-          - ORG
-        scopes:
-          type: array
-          items:
-            type: string
-            enum:
-            - omni_read_only
-            - omni_read_write
-            - client_download_config_specs
-            - none_hash_enabled
-            - can_access_keys
-            - client_can_write_user_store
-            - personal_read_only
-            - personal_read_write
-        environments:
-          type: array
-          items:
-            type: string
-        targetAppID:
-          type: string
-        secondaryTargetAppIDs:
-          type: array
-          items:
-            type: string
-      required:
-      - description
-      - type
     KeyUpdateContractDto:
       type: object
       properties:
@@ -925,6 +914,17 @@ components:
         type: string
         default: '20240601'
       description: The Console API version. Currently the only version is 20240601.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
   securitySchemes:
     consoleApiKey:
       type: apiKey
@@ -940,4 +940,4 @@ externalDocs:
   url: https://docs.statsig.com/console-api/
 x-refined-from:
 - statsig-console-api-openapi.yml
-- statsig-console-api-openapi.json
+- statsig-keys-api-openapi.yml

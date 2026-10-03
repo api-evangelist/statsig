@@ -615,6 +615,25 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    SettingsProjectContractDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the project.
+        visibility:
+          type: string
+          enum:
+          - OPEN
+          - CLOSED
+          - EXTERNAL
+          description: The visibility type of the project.
+        default_unit_type:
+          type: string
+          description: The default unit ID type of the project for newly created gates, experiments, and metrics. If not provided, there will be no default unit type.
+      required:
+      - name
+      - visibility
     SettingsReviewsContractDto:
       type: object
       properties:
@@ -637,33 +656,14 @@ components:
       - is_config_review_required
       - is_metric_review_required
       - is_metric_review_required_on_verified_only
-    SettingsTeamsContractDto:
+    SettingsRolesContractDto:
       type: object
       properties:
-        require_teams_on_configs:
-          type: boolean
-          description: Whether a team is required on each new config.
+        default_project_role:
+          type: string
+          description: The name of the default project role. This is the role that will be initially assigned to new users joining the project.
       required:
-      - require_teams_on_configs
-    SettingsProjectContractDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the project.
-        visibility:
-          type: string
-          enum:
-          - OPEN
-          - CLOSED
-          - EXTERNAL
-          description: The visibility type of the project.
-        default_unit_type:
-          type: string
-          description: The default unit ID type of the project for newly created gates, experiments, and metrics. If not provided, there will be no default unit type.
-      required:
-      - name
-      - visibility
+      - default_project_role
     SingleDataResponse:
       type: object
       properties:
@@ -676,14 +676,14 @@ components:
       required:
       - message
       - data
-    SettingsRolesContractDto:
+    SettingsTeamsContractDto:
       type: object
       properties:
-        default_project_role:
-          type: string
-          description: The name of the default project role. This is the role that will be initially assigned to new users joining the project.
+        require_teams_on_configs:
+          type: boolean
+          description: Whether a team is required on each new config.
       required:
-      - default_project_role
+      - require_teams_on_configs
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

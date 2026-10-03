@@ -188,18 +188,6 @@ components:
       - value
       - sdk_type
       - sdk_version
-    CursorPaginationMetadataDto:
-      type: object
-      properties:
-        next_cursor:
-          type:
-          - string
-          - 'null'
-        has_more:
-          type: boolean
-      required:
-      - next_cursor
-      - has_more
     CursorPaginationResponseWithMessage:
       type: object
       properties:
@@ -219,6 +207,18 @@ components:
       - message
       - data
       - pagination
+    CursorPaginationMetadataDto:
+      type: object
+      properties:
+        next_cursor:
+          type:
+          - string
+          - 'null'
+        has_more:
+          type: boolean
+      required:
+      - next_cursor
+      - has_more
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

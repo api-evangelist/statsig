@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Statsig Events API
   version: '1.0'
-  description: 'Operations tagged Events across 2 of this provider''s published API definitions: statsig-http-api-openapi.yml, statsig-console-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Events across 2 of this provider''s published API definitions: statsig-http-api-openapi.yml, statsig-events-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.statsig.com/v1
   description: Statsig API Server
@@ -59,6 +59,8 @@ paths:
     - url: https://api.statsig.com/v1
       description: Statsig API Server
   /console/v1/events:
+    servers:
+    - url: https://statsigapi.net
     get:
       summary: List Events
       description: Returns recently logged events across all event names in your project. Results cover a limited rolling window of recent traffic, not full event history. `limit` and `page` paginate only within the returned set; `totalItems` is the size of that set, not lifetime event volume.
@@ -224,9 +226,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: getConsoleV1Events
       x-operation-id-source: derived
+  /console/v1/events/{eventName}:
     servers:
     - url: https://statsigapi.net
-  /console/v1/events/{eventName}:
     get:
       summary: Get specific events
       description: Returns recently logged events for the given event name. Results cover a limited rolling window of recent occurrences, not full historical volume for that event. `limit` and `page` paginate only within the returned set; `totalItems` is the size of that set, not lifetime event volume.
@@ -421,9 +423,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: getConsoleV1EventsByEventName
       x-operation-id-source: derived
+  /console/v1/events/{eventName}/metrics:
     servers:
     - url: https://statsigapi.net
-  /console/v1/events/{eventName}/metrics:
     get:
       summary: Get metrics using event name
       parameters:
@@ -763,36 +765,8 @@ paths:
       - STATSIG-API-KEY: []
       operationId: getConsoleV1EventsByEventNameMetrics
       x-operation-id-source: derived
-    servers:
-    - url: https://statsigapi.net
 components:
   schemas:
-    StatsigEvent:
-      type: object
-      description: An event object representing a custom event or exposure to log.
-      required:
-      - user
-      - eventName
-      - time
-      properties:
-        user:
-          $ref: '#/components/schemas/StatsigUser'
-        eventName:
-          type: string
-          description: The name of the event being logged.
-        time:
-          type: integer
-          format: int64
-          description: The timestamp of the event in milliseconds since epoch.
-        value:
-          oneOf:
-          - type: string
-          - type: number
-          description: An optional value associated with the event.
-        metadata:
-          type: object
-          additionalProperties: true
-          description: Optional metadata key-value pairs associated with the event.
     StatsigUser:
       type: object
       description: The user object representing the end user being evaluated. At minimum, a userID should be provided. Additional properties enable more sophisticated targeting.
@@ -832,6 +806,123 @@ components:
           additionalProperties:
             type: string
           description: Custom identifier mappings for the user, such as companyID or teamID.
+    StatsigEvent:
+      type: object
+      description: An event object representing a custom event or exposure to log.
+      required:
+      - user
+      - eventName
+      - time
+      properties:
+        user:
+          $ref: '#/components/schemas/StatsigUser'
+        eventName:
+          type: string
+          description: The name of the event being logged.
+        time:
+          type: integer
+          format: int64
+          description: The timestamp of the event in milliseconds since epoch.
+        value:
+          oneOf:
+          - type: string
+          - type: number
+          description: An optional value associated with the event.
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Optional metadata key-value pairs associated with the event.
+    MetricEventsCriteriaDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - value
+          - metadata
+          - user
+          - user_custom
+          description: Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`.
+        column:
+          type: string
+          description: Optional column specifying which data attribute to filter on.
+        condition:
+          type: string
+          enum:
+          - in
+          - not_in
+          - '='
+          - '>'
+          - <
+          - '>='
+          - <=
+          - is_null
+          - non_null
+          - contains
+          - not_contains
+          - sql_filter
+          - starts_with
+          - ends_with
+          - after_exposure
+          - before_exposure
+          - is_true
+          - is_false
+          description: sql_filter, starts_with, ends_with, after_exposure, and before_exposure are only applicable in Warehouse Native
+        values:
+          type: array
+          items:
+            type: string
+          description: Optional array of values for the criterion to match against.
+        nullVacuousOverride:
+          type: boolean
+          description: If true, overrides null values in criterion evaluation.
+      required:
+      - type
+      - condition
+      description: Array of event criteria for defining filtering conditions in metrics analysis.
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    LoggedEventDto:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: The timestamp when the event occurred, represented as a string.
+        name:
+          type: string
+          description: The name of the event (e.g., "add_to_cart").
+        source:
+          type: string
+          description: The source of the event, indicating where it was triggered from.
+        value:
+          type: string
+          description: The value associated with the event, providing additional context.
+        userID:
+          type: string
+          description: The ID of the user who triggered the event.
+      required:
+      - timestamp
+      - name
+      - source
+      - value
+      - userID
     ExternalMetricDefinitionContractDto:
       type: object
       properties:
@@ -1480,73 +1571,6 @@ components:
       - id
       - lineage
       - permalink
-    PaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
-    MetricEventsCriteriaDto:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - value
-          - metadata
-          - user
-          - user_custom
-          description: Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`.
-        column:
-          type: string
-          description: Optional column specifying which data attribute to filter on.
-        condition:
-          type: string
-          enum:
-          - in
-          - not_in
-          - '='
-          - '>'
-          - <
-          - '>='
-          - <=
-          - is_null
-          - non_null
-          - contains
-          - not_contains
-          - sql_filter
-          - starts_with
-          - ends_with
-          - after_exposure
-          - before_exposure
-          - is_true
-          - is_false
-          description: sql_filter, starts_with, ends_with, after_exposure, and before_exposure are only applicable in Warehouse Native
-        values:
-          type: array
-          items:
-            type: string
-          description: Optional array of values for the criterion to match against.
-        nullVacuousOverride:
-          type: boolean
-          description: If true, overrides null values in criterion evaluation.
-      required:
-      - type
-      - condition
-      description: Array of event criteria for defining filtering conditions in metrics analysis.
     PaginationResponseMetadataDto:
       type: object
       properties:
@@ -1574,30 +1598,6 @@ components:
       - pageNumber
       - nextPage
       - previousPage
-    LoggedEventDto:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          description: The timestamp when the event occurred, represented as a string.
-        name:
-          type: string
-          description: The name of the event (e.g., "add_to_cart").
-        source:
-          type: string
-          description: The source of the event, indicating where it was triggered from.
-        value:
-          type: string
-          description: The value associated with the event, providing additional context.
-        userID:
-          type: string
-          description: The ID of the user who triggered the event.
-      required:
-      - timestamp
-      - name
-      - source
-      - value
-      - userID
   responses:
     Unauthorized:
       description: Missing or invalid API key
@@ -1624,4 +1624,4 @@ externalDocs:
   url: https://docs.statsig.com/http-api/
 x-refined-from:
 - statsig-http-api-openapi.yml
-- statsig-console-api-openapi.json
+- statsig-events-api-openapi.yml

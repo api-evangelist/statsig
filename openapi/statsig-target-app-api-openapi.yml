@@ -362,29 +362,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    UpdateTargetAppDto:
-      type: object
-      properties:
-        name:
-          type: string
-          example: string
-          description: name of the target app
-        description:
-          type: string
-          example: a description
-          description: a description of the target app
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
     PaginationResponseWithMessage:
       type: object
       properties:
@@ -404,19 +381,17 @@ components:
       - message
       - data
       - pagination
-    TargetAppDto:
+    UpdateTargetAppDto:
       type: object
       properties:
-        id:
-          type: string
-          example: string
-          description: id of target app
         name:
           type: string
-          example: a tag
+          example: string
           description: name of the target app
-      required:
-      - name
+        description:
+          type: string
+          example: a description
+          description: a description of the target app
     BulkAssignConfigTargetAppDto:
       type: object
       properties:
@@ -453,33 +428,18 @@ components:
           description: Parameter Store IDs to assign to target app(s)
       required:
       - targetApps
-    PaginationResponseMetadataDto:
+    SingleDataResponse:
       type: object
       properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
+        message:
           type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
       required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
+      - message
+      - data
     TargetAppCreateDto:
       type: object
       properties:
@@ -519,6 +479,46 @@ components:
       required:
       - name
       - description
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    TargetAppDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: string
+          description: id of target app
+        name:
+          type: string
+          example: a tag
+          description: name of the target app
+      required:
+      - name
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

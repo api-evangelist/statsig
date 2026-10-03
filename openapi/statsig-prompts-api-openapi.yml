@@ -379,118 +379,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ExternalPromptDto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-        name:
-          type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_\-. ]*$
-          description: The gate display name
-        idType:
-          type: string
-        description:
-          type: string
-          maxLength: 1000
-        lastModifierID:
-          type:
-          - string
-          - 'null'
-          description: ID of the last modifier.
-        lastModifiedTime:
-          type:
-          - number
-          - 'null'
-          description: Time of the last modification.
-          format: double
-        lastModifierEmail:
-          type:
-          - string
-          - 'null'
-          description: Email of the last modifier.
-        lastModifierName:
-          type:
-          - string
-          - 'null'
-          description: Name of the last modifier.
-        creatorID:
-          type:
-          - string
-          - 'null'
-        createdTime:
-          type: number
-          description: Timestamp when the entity was created.
-          format: double
-        creatorName:
-          type:
-          - string
-          - 'null'
-          description: Name of the creator.
-        creatorEmail:
-          type:
-          - string
-          - 'null'
-        tags:
-          type: array
-          items:
-            type: string
-        targetApps:
-          type: array
-          items:
-            type: string
-          description: List of target applications associated with this configuration.
-        holdoutIDs:
-          type: array
-          items:
-            type: string
-          description: Holdouts applied to this configuration.
-        team:
-          type:
-          - string
-          - 'null'
-        teamID:
-          type:
-          - string
-          - 'null'
-        version:
-          type: number
-          description: Version number
-          format: double
-      required:
-      - id
-      - description
-      - lastModifierID
-      - lastModifiedTime
-      - lastModifierEmail
-      - lastModifierName
-      - createdTime
-      - creatorName
-    ExternalPromptVersionDto:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-      required:
-      - id
-      - name
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
     PaginationResponseWithMessage:
       type: object
       properties:
@@ -698,6 +586,28 @@ components:
           - 'null'
       required:
       - name
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    ExternalPromptVersionDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+      - id
+      - name
     PaginationResponseMetadataDto:
       type: object
       properties:
@@ -725,6 +635,96 @@ components:
       - pageNumber
       - nextPage
       - previousPage
+    ExternalPromptDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\-. ]*$
+          description: The gate display name
+        idType:
+          type: string
+        description:
+          type: string
+          maxLength: 1000
+        lastModifierID:
+          type:
+          - string
+          - 'null'
+          description: ID of the last modifier.
+        lastModifiedTime:
+          type:
+          - number
+          - 'null'
+          description: Time of the last modification.
+          format: double
+        lastModifierEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the last modifier.
+        lastModifierName:
+          type:
+          - string
+          - 'null'
+          description: Name of the last modifier.
+        creatorID:
+          type:
+          - string
+          - 'null'
+        createdTime:
+          type: number
+          description: Timestamp when the entity was created.
+          format: double
+        creatorName:
+          type:
+          - string
+          - 'null'
+          description: Name of the creator.
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+        tags:
+          type: array
+          items:
+            type: string
+        targetApps:
+          type: array
+          items:
+            type: string
+          description: List of target applications associated with this configuration.
+        holdoutIDs:
+          type: array
+          items:
+            type: string
+          description: Holdouts applied to this configuration.
+        team:
+          type:
+          - string
+          - 'null'
+        teamID:
+          type:
+          - string
+          - 'null'
+        version:
+          type: number
+          description: Version number
+          format: double
+      required:
+      - id
+      - description
+      - lastModifierID
+      - lastModifiedTime
+      - lastModifierEmail
+      - lastModifierName
+      - createdTime
+      - creatorName
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

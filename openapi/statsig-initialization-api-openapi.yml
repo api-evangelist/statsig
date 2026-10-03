@@ -61,17 +61,6 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
   schemas:
     StatsigUser:
       type: object
@@ -112,6 +101,17 @@ components:
           additionalProperties:
             type: string
           description: Custom identifier mappings for the user, such as companyID or teamID.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
   securitySchemes:
     statsigApiKey:
       type: apiKey

@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Statsig Users API
   version: '1.0'
-  description: 'Operations tagged Users across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-console-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Users across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-users-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://statsigapi.net/console/v1
   description: Statsig Console API Server
@@ -44,6 +44,8 @@ paths:
     - url: https://statsigapi.net/console/v1
       description: Statsig Console API Server
   /console/v1/users:
+    servers:
+    - url: https://statsigapi.net
     get:
       summary: List Users
       parameters:
@@ -235,9 +237,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: getConsoleV1Users
       x-operation-id-source: derived
+  /console/v1/users/{email}:
     servers:
     - url: https://statsigapi.net
-  /console/v1/users/{email}:
     get:
       summary: Get user by email
       parameters:
@@ -475,9 +477,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: postConsoleV1UsersByEmail
       x-operation-id-source: derived
+  /console/v1/users/id/{id}:
     servers:
     - url: https://statsigapi.net
-  /console/v1/users/id/{id}:
     get:
       summary: Get user by ID
       parameters:
@@ -583,9 +585,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: getConsoleV1UsersIdById
       x-operation-id-source: derived
+  /console/v1/users/invite:
     servers:
     - url: https://statsigapi.net
-  /console/v1/users/invite:
     post:
       summary: Invite users
       description: Invite a list of users with assigned roles and teams. To avoid spamming, invitation emails are not sent. Invitee will see invitation notification in-app after logging in.
@@ -657,9 +659,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: postConsoleV1UsersInvite
       x-operation-id-source: derived
+  /console/v1/users/teams:
     servers:
     - url: https://statsigapi.net
-  /console/v1/users/teams:
     get:
       summary: List Teams
       parameters:
@@ -940,9 +942,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: postConsoleV1UsersTeams
       x-operation-id-source: derived
+  /console/v1/users/teams/{id}:
     servers:
     - url: https://statsigapi.net
-  /console/v1/users/teams/{id}:
     get:
       summary: Get Team
       parameters:
@@ -1216,24 +1218,34 @@ paths:
       - STATSIG-API-KEY: []
       operationId: deleteConsoleV1UsersTeamsById
       x-operation-id-source: derived
-    servers:
-    - url: https://statsigapi.net
 components:
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
   schemas:
-    User:
-      type: object
-      description: A user record in the Statsig project.
-      properties:
-        userID:
-          type: string
-          description: The unique identifier of the user.
-        email:
-          type: string
-          format: email
-          description: The user email address.
-        properties:
-          type: object
-          description: Custom properties associated with the user.
     Pagination:
       type: object
       description: Pagination metadata for list responses.
@@ -1250,6 +1262,39 @@ components:
         hasMore:
           type: boolean
           description: Whether more pages are available.
+    User:
+      type: object
+      description: A user record in the Statsig project.
+      properties:
+        userID:
+          type: string
+          description: The unique identifier of the user.
+        email:
+          type: string
+          format: email
+          description: The user email address.
+        properties:
+          type: object
+          description: Custom properties associated with the user.
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
     TeamDto:
       type: object
       properties:
@@ -1431,26 +1476,19 @@ components:
       - defaultTargetApplications
       - members
       - admins
-    UserInvitesDto:
+    UserUpdateDto:
       type: object
       properties:
         role:
           type: string
-          description: Role assigned to the invited users. Can be 'Admin', 'Read Only', 'Member', or any custom role name.
-        emails:
-          type: array
-          items:
-            type: string
-            format: email
-          description: List of email addresses to send invitations to. Invitee Emails must have the same domain to your company email domain.
-        teams:
-          type: array
-          items:
-            type: string
-          description: Optional list of teams that the invited users will be associated with.
-      required:
-      - role
-      - emails
+          description: Update the user's role. Can be 'Admin', 'Read Only', 'Member', or any custom role name.
+        firstName:
+          type: string
+          description: Update the user's first name.
+        lastName:
+          type: string
+          description: Update the user's last name.
+      description: Schema for updating user information.
     TeamDtoWithoutMembersDto:
       type: object
       properties:
@@ -1576,144 +1614,26 @@ components:
       - changeTeamConfigs
       - reviewApproval
       - defaultTargetApplications
-    UserUpdateDto:
+    UserInvitesDto:
       type: object
       properties:
         role:
           type: string
-          description: Update the user's role. Can be 'Admin', 'Read Only', 'Member', or any custom role name.
-        firstName:
-          type: string
-          description: Update the user's first name.
-        lastName:
-          type: string
-          description: Update the user's last name.
-      description: Schema for updating user information.
-    TeamPartialUpdateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the team.
-        description:
-          type: string
-          description: Description of the team.
-        id:
-          type: string
-          description: The ID of the team.
-        members:
+          description: Role assigned to the invited users. Can be 'Admin', 'Read Only', 'Member', or any custom role name.
+        emails:
           type: array
           items:
             type: string
-          description: Array of member email addresses in the team.
-        admins:
+            format: email
+          description: List of email addresses to send invitations to. Invitee Emails must have the same domain to your company email domain.
+        teams:
           type: array
           items:
             type: string
-          description: Array of admin email addresses in the team.
-        defaultGateMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the metric.
-              type:
-                type: string
-                description: The type of the metric.
-            required:
-            - name
-            - type
-          description: Default gate metrics for the team.
-        defaultExperimentPrimaryMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the metric.
-              type:
-                type: string
-                description: The type of the metric.
-            required:
-            - name
-            - type
-          description: Default primary metrics for experiments in the team.
-        defaultExperimentSecondaryMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the metric.
-              type:
-                type: string
-                description: The type of the metric.
-            required:
-            - name
-            - type
-          description: Default secondary metrics for experiments in the team.
-        defaultHoldoutMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the metric.
-              type:
-                type: string
-                description: The type of the metric.
-            required:
-            - name
-            - type
-          description: Default holdout metrics for the team.
-        changeTeamConfigs:
-          type: string
-          enum:
-          - anyone
-          - team_only
-          description: 'Who can change team configurations: "anyone" or "team_only".'
-        reviewApproval:
-          type: string
-          enum:
-          - anyone
-          - team_only
-          - admin_only
-          description: 'Who can review and approve changes: "anyone", "team_only", or "admin_only".'
-        defaultTargetApplications:
-          type: array
-          items:
-            type: string
-          description: Default target applications for the team.
-        defaultHoldoutID:
-          type:
-          - string
-          - 'null'
-          description: Default holdout ID for the team, if applicable.
-        requireReviews:
-          type:
-          - boolean
-          - 'null'
-          description: Whether reviews are required for changes, if applicable.
-        requireGateTemplates:
-          type:
-          - boolean
-          - 'null'
-          description: Whether gate templates are required for the team, if applicable.
-        requireExperimentTemplates:
-          type:
-          - boolean
-          - 'null'
-          description: Whether experiment templates are required for the team, if applicable.
-        requireDynamicConfigTemplates:
-          type:
-          - boolean
-          - 'null'
-          description: Whether dynamic config templates are required for the team, if applicable.
+          description: Optional list of teams that the invited users will be associated with.
+      required:
+      - role
+      - emails
     TeamCreationDto:
       type: object
       properties:
@@ -1859,25 +1779,131 @@ components:
       required:
       - message
       - data
-    PaginationResponseWithMessage:
+    TeamPartialUpdateDto:
       type: object
       properties:
-        message:
+        name:
           type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
+          description: The name of the team.
+        description:
+          type: string
+          description: Description of the team.
+        id:
+          type: string
+          description: The ID of the team.
+        members:
+          type: array
+          items:
+            type: string
+          description: Array of member email addresses in the team.
+        admins:
+          type: array
+          items:
+            type: string
+          description: Array of admin email addresses in the team.
+        defaultGateMetrics:
           type: array
           items:
             type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
+            properties:
+              name:
+                type: string
+                description: The name of the metric.
+              type:
+                type: string
+                description: The type of the metric.
+            required:
+            - name
+            - type
+          description: Default gate metrics for the team.
+        defaultExperimentPrimaryMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the metric.
+              type:
+                type: string
+                description: The type of the metric.
+            required:
+            - name
+            - type
+          description: Default primary metrics for experiments in the team.
+        defaultExperimentSecondaryMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the metric.
+              type:
+                type: string
+                description: The type of the metric.
+            required:
+            - name
+            - type
+          description: Default secondary metrics for experiments in the team.
+        defaultHoldoutMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the metric.
+              type:
+                type: string
+                description: The type of the metric.
+            required:
+            - name
+            - type
+          description: Default holdout metrics for the team.
+        changeTeamConfigs:
+          type: string
+          enum:
+          - anyone
+          - team_only
+          description: 'Who can change team configurations: "anyone" or "team_only".'
+        reviewApproval:
+          type: string
+          enum:
+          - anyone
+          - team_only
+          - admin_only
+          description: 'Who can review and approve changes: "anyone", "team_only", or "admin_only".'
+        defaultTargetApplications:
+          type: array
+          items:
+            type: string
+          description: Default target applications for the team.
+        defaultHoldoutID:
+          type:
+          - string
+          - 'null'
+          description: Default holdout ID for the team, if applicable.
+        requireReviews:
+          type:
+          - boolean
+          - 'null'
+          description: Whether reviews are required for changes, if applicable.
+        requireGateTemplates:
+          type:
+          - boolean
+          - 'null'
+          description: Whether gate templates are required for the team, if applicable.
+        requireExperimentTemplates:
+          type:
+          - boolean
+          - 'null'
+          description: Whether experiment templates are required for the team, if applicable.
+        requireDynamicConfigTemplates:
+          type:
+          - boolean
+          - 'null'
+          description: Whether dynamic config templates are required for the team, if applicable.
     PaginationResponseMetadataDto:
       type: object
       properties:
@@ -1941,32 +1967,6 @@ components:
               message:
                 type: string
                 description: Error message describing the authentication failure.
-  parameters:
-    Limit:
-      name: limit
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: Maximum number of items to return per page.
-    Page:
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-      description: Page number for paginated results.
-    ApiVersion:
-      name: STATSIG-API-VERSION
-      in: header
-      required: false
-      schema:
-        type: string
-        default: '20240601'
-      description: The Console API version. Currently the only version is 20240601.
   securitySchemes:
     consoleApiKey:
       type: apiKey
@@ -1982,4 +1982,4 @@ externalDocs:
   url: https://docs.statsig.com/console-api/
 x-refined-from:
 - statsig-console-api-openapi.yml
-- statsig-console-api-openapi.json
+- statsig-users-api-openapi.yml

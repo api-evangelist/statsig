@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Statsig Layers API
   version: '1.0'
-  description: 'Operations tagged Layers across 3 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-http-api-openapi.yml, statsig-console-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Layers across 3 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-http-api-openapi.yml, statsig-layers-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://statsigapi.net/console/v1
   description: Statsig Console API Server
@@ -214,6 +214,8 @@ paths:
     - url: https://api.statsig.com/v1
       description: Statsig API Server
   /console/v1/layers:
+    servers:
+    - url: https://statsigapi.net
     get:
       summary: Get Layers
       parameters:
@@ -628,9 +630,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: postConsoleV1Layers
       x-operation-id-source: derived
+  /console/v1/layers/{id}:
     servers:
     - url: https://statsigapi.net
-  /console/v1/layers/{id}:
     get:
       summary: Get one layer
       parameters:
@@ -1189,9 +1191,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: deleteConsoleV1LayersById
       x-operation-id-source: derived
+  /console/v1/layers/{id}/experiments:
     servers:
     - url: https://statsigapi.net
-  /console/v1/layers/{id}/experiments:
     get:
       summary: 'Lineage: List Experiment related to Layer'
       parameters:
@@ -1240,9 +1242,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: getConsoleV1LayersByIdExperiments
       x-operation-id-source: derived
+  /console/v1/layers/{id}/overrides:
     servers:
     - url: https://statsigapi.net
-  /console/v1/layers/{id}/overrides:
     get:
       summary: Get Layer Overrides
       parameters:
@@ -1527,9 +1529,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: deleteConsoleV1LayersByIdOverrides
       x-operation-id-source: derived
+  /console/v1/layers/{id}/overrides/conditional/{type}/{name}:
     servers:
     - url: https://statsigapi.net
-  /console/v1/layers/{id}/overrides/conditional/{type}/{name}:
     delete:
       summary: Delete a Single Layer Override
       description: 'Removes a single gate or segment override from the layer. Idempotent: returns 200 even when no matching override exists.'
@@ -1632,9 +1634,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: deleteConsoleV1LayersByIdOverridesConditionalByTypeByName
       x-operation-id-source: derived
+  /console/v1/layers/{id}/overrides/userID/{userID}:
     servers:
     - url: https://statsigapi.net
-  /console/v1/layers/{id}/overrides/userID/{userID}:
     delete:
       summary: Delete a Single Layer User ID Override
       description: 'Removes a single user ID from the matching layer userID override bucket. Idempotent: returns 200 even when the user ID is not currently overridden. Only clears the bucket named by `experimentName`, `groupName`, `idType`, and `environment`; every other override bucket stays in place. The response body carries the full override set for the layer after the delete.'
@@ -1813,87 +1815,8 @@ paths:
       - STATSIG-API-KEY: []
       operationId: deleteConsoleV1LayersByIdOverridesUserIDByUserID
       x-operation-id-source: derived
-    servers:
-    - url: https://statsigapi.net
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message indicating the resource was not found.
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
   schemas:
-    ExperimentGroup:
-      type: object
-      description: An experiment group defining parameter values for a set of users.
-      properties:
-        name:
-          type: string
-          description: The name of the group (e.g., control, test).
-        size:
-          type: number
-          minimum: 0
-          maximum: 100
-          description: The percentage of allocated users assigned to this group.
-        parameterValues:
-          type: object
-          description: The parameter key-value pairs for this group.
-    Pagination:
-      type: object
-      description: Pagination metadata for list responses.
-      properties:
-        total:
-          type: integer
-          description: Total number of items available.
-        page:
-          type: integer
-          description: Current page number.
-        limit:
-          type: integer
-          description: Number of items per page.
-        hasMore:
-          type: boolean
-          description: Whether more pages are available.
-    LayerCreate:
-      type: object
-      description: Request body for creating a new layer.
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: The name of the layer to create.
-        description:
-          type: string
-          description: A human-readable description.
-        parameters:
-          type: object
-          description: The default parameter values for the layer.
     Layer:
       type: object
       description: A layer that enables sharing parameters across multiple experiments while maintaining mutual exclusivity.
@@ -1919,6 +1842,21 @@ components:
           type: integer
           format: int64
           description: Timestamp when the layer was created.
+    LayerCreate:
+      type: object
+      description: Request body for creating a new layer.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the layer to create.
+        description:
+          type: string
+          description: A human-readable description.
+        parameters:
+          type: object
+          description: The default parameter values for the layer.
     Experiment:
       type: object
       description: An A/B test experiment with defined groups, parameters, and analysis configuration.
@@ -1972,6 +1910,37 @@ components:
           type: integer
           format: int64
           description: Timestamp when the experiment was last modified.
+    ExperimentGroup:
+      type: object
+      description: An experiment group defining parameter values for a set of users.
+      properties:
+        name:
+          type: string
+          description: The name of the group (e.g., control, test).
+        size:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of allocated users assigned to this group.
+        parameterValues:
+          type: object
+          description: The parameter key-value pairs for this group.
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
     StatsigUser:
       type: object
       description: The user object representing the end user being evaluated. At minimum, a userID should be provided. Additional properties enable more sophisticated targeting.
@@ -2011,515 +1980,6 @@ components:
           additionalProperties:
             type: string
           description: Custom identifier mappings for the user, such as companyID or teamID.
-    LayerPartialUpdateContractDto:
-      type: object
-      properties:
-        description:
-          type: string
-          maxLength: 1000
-          description: A detailed description of the layer, explaining its purpose and functionality.
-        parameters:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of this parameter, used for identification within the layer.
-              type:
-                type: string
-                enum:
-                - string
-                - number
-                - boolean
-                - object
-                - array
-                description: 'The data type that this parameter returns. Allowed types include: string, boolean, number, object, and array.'
-              defaultValue:
-                oneOf:
-                - type: string
-                - type: number
-                - type: boolean
-                - type: object
-                  additionalProperties: {}
-                - type: array
-                  items:
-                    oneOf:
-                    - type: string
-                    - type: number
-                    - type: boolean
-                    - type: object
-                      additionalProperties: {}
-                description: The default value for this parameter, which must match the specified type.
-              description:
-                type: string
-                description: An optional helpful description of what this layer parameter does, providing context for its purpose.
-              schema:
-                type:
-                - string
-                - 'null'
-                description: Optional JSON schema for object parameters. If provided, defaultValue must satisfy the schema.
-            required:
-            - name
-            - type
-            - defaultValue
-          description: An array of parameters associated with the layer, each defining specific attributes.
-        targetApps:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-          description: List of target applications that this layer is intended for.
-    LayerCreateContractDto:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[A-Za-z0-9_ -]*$
-          description: The unique name of the layer, formatted as an ID (e.g., "A Layer" becomes "a_layer").
-        description:
-          type: string
-          maxLength: 1000
-          description: A helpful description of what this layer does, providing context for its purpose.
-        idType:
-          type: string
-          description: The type of ID used for this layer, essential for validation in services.
-        targetApps:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-          description: List of target applications that this layer is associated with.
-        team:
-          type: string
-          description: Optional identifier for the team responsible for this layer.
-      required:
-      - name
-      - idType
-    LayerFullUpdateContractDto:
-      type: object
-      properties:
-        description:
-          type: string
-          maxLength: 1000
-          description: A detailed description of the layer, explaining its purpose and functionality.
-        parameters:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of this parameter, used for identification within the layer.
-              type:
-                type: string
-                enum:
-                - string
-                - number
-                - boolean
-                - object
-                - array
-                description: 'The data type that this parameter returns. Allowed types include: string, boolean, number, object, and array.'
-              defaultValue:
-                oneOf:
-                - type: string
-                - type: number
-                - type: boolean
-                - type: object
-                  additionalProperties: {}
-                - type: array
-                  items:
-                    oneOf:
-                    - type: string
-                    - type: number
-                    - type: boolean
-                    - type: object
-                      additionalProperties: {}
-                description: The default value for this parameter, which must match the specified type.
-              description:
-                type: string
-                description: An optional helpful description of what this layer parameter does, providing context for its purpose.
-              schema:
-                type:
-                - string
-                - 'null'
-                description: Optional JSON schema for object parameters. If provided, defaultValue must satisfy the schema.
-            required:
-            - name
-            - type
-            - defaultValue
-          description: An array of parameters associated with the layer, each defining specific attributes.
-        targetApps:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-          description: List of target applications that this layer is intended for.
-      required:
-      - description
-      - parameters
-    LayerOverridesDto:
-      type: object
-      properties:
-        conditionalOverrides:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-                description: Describes whether layer override is segment or gate
-              name:
-                type: string
-                description: Name of override entity
-              experimentName:
-                type: string
-              groupName:
-                type: string
-              environment:
-                type:
-                - string
-                - 'null'
-                description: Optional environment scope (e.g. production, staging). Omit or pass null to target the all-environments bucket.
-            required:
-            - type
-            - name
-            - experimentName
-            - groupName
-        idOverrides:
-          type: array
-          items:
-            type: object
-            properties:
-              groupName:
-                type: string
-                description: Group that ID is overriden into
-              ids:
-                type: array
-                items:
-                  type: string
-                description: ID being overriden into a particular group
-              idType:
-                type:
-                - string
-                - 'null'
-              environment:
-                type:
-                - string
-                - 'null'
-              experimentName:
-                type:
-                - string
-                - 'null'
-            required:
-            - groupName
-            - ids
-      required:
-      - conditionalOverrides
-      - idOverrides
-    LayerOverridesPatchDto:
-      type: object
-      properties:
-        op:
-          type: string
-          enum:
-          - add
-          description: Add a layer override
-        conditionalOverrides:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-                description: Describes whether layer override is segment or gate
-              name:
-                type: string
-                description: Name of override entity
-              experimentName:
-                type: string
-              groupName:
-                type: string
-              environment:
-                type:
-                - string
-                - 'null'
-                description: Optional environment scope (e.g. production, staging). Omit or pass null to target the all-environments bucket.
-            required:
-            - type
-            - name
-            - experimentName
-            - groupName
-        idOverrides:
-          type: array
-          items:
-            type: object
-            properties:
-              groupName:
-                type: string
-                description: Group that ID is overriden into
-              ids:
-                type: array
-                items:
-                  type: string
-                description: ID being overriden into a particular group
-              idType:
-                type:
-                - string
-                - 'null'
-              environment:
-                type:
-                - string
-                - 'null'
-              experimentName:
-                type:
-                - string
-                - 'null'
-            required:
-            - groupName
-            - ids
-      required:
-      - op
-      - conditionalOverrides
-      - idOverrides
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
-    LayerContractDto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-        name:
-          type: string
-          description: Optional name for the configuration.
-        idType:
-          type: string
-          description: The ID type used for this layer, important for validation.
-        description:
-          type: string
-          maxLength: 1000
-          description: A detailed description of the layer, explaining its purpose and functionality.
-        lastModifierID:
-          type:
-          - string
-          - 'null'
-          description: ID of the last modifier.
-        lastModifiedTime:
-          type:
-          - number
-          - 'null'
-          description: Time of the last modification.
-          format: double
-        lastModifierEmail:
-          type:
-          - string
-          - 'null'
-          description: Email of the last modifier.
-        lastModifierName:
-          type:
-          - string
-          - 'null'
-          description: Name of the last modifier.
-        creatorID:
-          type:
-          - string
-          - 'null'
-          description: ID of the user who created the entity.
-        createdTime:
-          type: number
-          description: Timestamp when the entity was created.
-          format: double
-        creatorName:
-          type:
-          - string
-          - 'null'
-          description: Name of the creator.
-        creatorEmail:
-          type:
-          - string
-          - 'null'
-          description: Email of the creator.
-        tags:
-          type: array
-          items:
-            type: string
-          description: Optional tags for categorization.
-        targetApps:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-          description: List of target applications that this layer is intended for.
-        holdoutIDs:
-          type: array
-          items:
-            type: string
-          description: Holdouts applied to this configuration.
-        team:
-          type:
-          - string
-          - 'null'
-          description: Optional name for the responsible team.
-        teamID:
-          type:
-          - string
-          - 'null'
-          description: Optional ID of the responsible team.
-        version:
-          type: number
-          description: Version number
-          format: double
-        isImplicitLayer:
-          type: boolean
-          description: Indicates if the layer was automatically created by Statsig during experiment creation.
-        parameters:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of this parameter, used for identification within the layer.
-              type:
-                type: string
-                enum:
-                - string
-                - number
-                - boolean
-                - object
-                - array
-                description: 'The data type that this parameter returns. Allowed types include: string, boolean, number, object, and array.'
-              defaultValue:
-                oneOf:
-                - type: string
-                - type: number
-                - type: boolean
-                - type: object
-                  additionalProperties: {}
-                - type: array
-                  items:
-                    oneOf:
-                    - type: string
-                    - type: number
-                    - type: boolean
-                    - type: object
-                      additionalProperties: {}
-                description: The default value for this parameter, which must match the specified type.
-              description:
-                type: string
-                description: An optional helpful description of what this layer parameter does, providing context for its purpose.
-              schema:
-                type:
-                - string
-                - 'null'
-                description: Optional JSON schema for object parameters. If provided, defaultValue must satisfy the schema.
-            required:
-            - name
-            - type
-            - defaultValue
-          description: An array of parameters associated with the layer, each defining specific attributes.
-        targeting_gate_parameter_values:
-          type: array
-          items:
-            type: object
-            properties:
-              targetingGateName:
-                type: string
-                description: The name of the targeting gate for these shipped values.
-              parameters:
-                type: object
-                additionalProperties:
-                  oneOf:
-                  - type: string
-                  - type: number
-                  - type: boolean
-                  - type: object
-                    additionalProperties: {}
-                  - type: array
-                    items:
-                      oneOf:
-                      - type: string
-                      - type: number
-                      - type: boolean
-                      - type: object
-                        additionalProperties: {}
-                description: Layer parameter values returned when the targeting gate passes.
-            required:
-            - targetingGateName
-            - parameters
-          description: Parameter values returned when a targeting gate passes during ship-with-targeting.
-        holdout_parameter_values:
-          type: array
-          items:
-            type: object
-            properties:
-              holdoutID:
-                type: string
-                description: The ID of the holdout for these layer parameter values.
-              parameters:
-                type: object
-                additionalProperties:
-                  oneOf:
-                  - type: string
-                  - type: number
-                  - type: boolean
-                  - type: object
-                    additionalProperties: {}
-                  - type: array
-                    items:
-                      oneOf:
-                      - type: string
-                      - type: number
-                      - type: boolean
-                      - type: object
-                        additionalProperties: {}
-                description: Layer parameter values returned when the holdout gate passes.
-              excludeNewParams:
-                type: boolean
-                description: Whether newly added layer parameters should be excluded from this holdout edge.
-            required:
-            - holdoutID
-            - parameters
-            - excludeNewParams
-          description: Holdout-specific parameter values for this layer.
-        permalink:
-          type: string
-          format: uri
-          description: A permalink to this layer in the Statsig Console.
-      required:
-      - id
-      - idType
-      - description
-      - lastModifierID
-      - lastModifiedTime
-      - lastModifierEmail
-      - lastModifierName
-      - creatorID
-      - createdTime
-      - creatorName
-      - creatorEmail
-      - isImplicitLayer
-      - parameters
-      - targeting_gate_parameter_values
-      - holdout_parameter_values
-      - permalink
     PaginationResponseWithMessage:
       type: object
       properties:
@@ -3874,6 +3334,387 @@ components:
       - isStale
       - permalink
       - powerAnalyses
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    LayerPartialUpdateContractDto:
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 1000
+          description: A detailed description of the layer, explaining its purpose and functionality.
+        parameters:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this parameter, used for identification within the layer.
+              type:
+                type: string
+                enum:
+                - string
+                - number
+                - boolean
+                - object
+                - array
+                description: 'The data type that this parameter returns. Allowed types include: string, boolean, number, object, and array.'
+              defaultValue:
+                oneOf:
+                - type: string
+                - type: number
+                - type: boolean
+                - type: object
+                  additionalProperties: {}
+                - type: array
+                  items:
+                    oneOf:
+                    - type: string
+                    - type: number
+                    - type: boolean
+                    - type: object
+                      additionalProperties: {}
+                description: The default value for this parameter, which must match the specified type.
+              description:
+                type: string
+                description: An optional helpful description of what this layer parameter does, providing context for its purpose.
+              schema:
+                type:
+                - string
+                - 'null'
+                description: Optional JSON schema for object parameters. If provided, defaultValue must satisfy the schema.
+            required:
+            - name
+            - type
+            - defaultValue
+          description: An array of parameters associated with the layer, each defining specific attributes.
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+          description: List of target applications that this layer is intended for.
+    LayerContractDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          description: Optional name for the configuration.
+        idType:
+          type: string
+          description: The ID type used for this layer, important for validation.
+        description:
+          type: string
+          maxLength: 1000
+          description: A detailed description of the layer, explaining its purpose and functionality.
+        lastModifierID:
+          type:
+          - string
+          - 'null'
+          description: ID of the last modifier.
+        lastModifiedTime:
+          type:
+          - number
+          - 'null'
+          description: Time of the last modification.
+          format: double
+        lastModifierEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the last modifier.
+        lastModifierName:
+          type:
+          - string
+          - 'null'
+          description: Name of the last modifier.
+        creatorID:
+          type:
+          - string
+          - 'null'
+          description: ID of the user who created the entity.
+        createdTime:
+          type: number
+          description: Timestamp when the entity was created.
+          format: double
+        creatorName:
+          type:
+          - string
+          - 'null'
+          description: Name of the creator.
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the creator.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags for categorization.
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+          description: List of target applications that this layer is intended for.
+        holdoutIDs:
+          type: array
+          items:
+            type: string
+          description: Holdouts applied to this configuration.
+        team:
+          type:
+          - string
+          - 'null'
+          description: Optional name for the responsible team.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: Optional ID of the responsible team.
+        version:
+          type: number
+          description: Version number
+          format: double
+        isImplicitLayer:
+          type: boolean
+          description: Indicates if the layer was automatically created by Statsig during experiment creation.
+        parameters:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this parameter, used for identification within the layer.
+              type:
+                type: string
+                enum:
+                - string
+                - number
+                - boolean
+                - object
+                - array
+                description: 'The data type that this parameter returns. Allowed types include: string, boolean, number, object, and array.'
+              defaultValue:
+                oneOf:
+                - type: string
+                - type: number
+                - type: boolean
+                - type: object
+                  additionalProperties: {}
+                - type: array
+                  items:
+                    oneOf:
+                    - type: string
+                    - type: number
+                    - type: boolean
+                    - type: object
+                      additionalProperties: {}
+                description: The default value for this parameter, which must match the specified type.
+              description:
+                type: string
+                description: An optional helpful description of what this layer parameter does, providing context for its purpose.
+              schema:
+                type:
+                - string
+                - 'null'
+                description: Optional JSON schema for object parameters. If provided, defaultValue must satisfy the schema.
+            required:
+            - name
+            - type
+            - defaultValue
+          description: An array of parameters associated with the layer, each defining specific attributes.
+        targeting_gate_parameter_values:
+          type: array
+          items:
+            type: object
+            properties:
+              targetingGateName:
+                type: string
+                description: The name of the targeting gate for these shipped values.
+              parameters:
+                type: object
+                additionalProperties:
+                  oneOf:
+                  - type: string
+                  - type: number
+                  - type: boolean
+                  - type: object
+                    additionalProperties: {}
+                  - type: array
+                    items:
+                      oneOf:
+                      - type: string
+                      - type: number
+                      - type: boolean
+                      - type: object
+                        additionalProperties: {}
+                description: Layer parameter values returned when the targeting gate passes.
+            required:
+            - targetingGateName
+            - parameters
+          description: Parameter values returned when a targeting gate passes during ship-with-targeting.
+        holdout_parameter_values:
+          type: array
+          items:
+            type: object
+            properties:
+              holdoutID:
+                type: string
+                description: The ID of the holdout for these layer parameter values.
+              parameters:
+                type: object
+                additionalProperties:
+                  oneOf:
+                  - type: string
+                  - type: number
+                  - type: boolean
+                  - type: object
+                    additionalProperties: {}
+                  - type: array
+                    items:
+                      oneOf:
+                      - type: string
+                      - type: number
+                      - type: boolean
+                      - type: object
+                        additionalProperties: {}
+                description: Layer parameter values returned when the holdout gate passes.
+              excludeNewParams:
+                type: boolean
+                description: Whether newly added layer parameters should be excluded from this holdout edge.
+            required:
+            - holdoutID
+            - parameters
+            - excludeNewParams
+          description: Holdout-specific parameter values for this layer.
+        permalink:
+          type: string
+          format: uri
+          description: A permalink to this layer in the Statsig Console.
+      required:
+      - id
+      - idType
+      - description
+      - lastModifierID
+      - lastModifiedTime
+      - lastModifierEmail
+      - lastModifierName
+      - creatorID
+      - createdTime
+      - creatorName
+      - creatorEmail
+      - isImplicitLayer
+      - parameters
+      - targeting_gate_parameter_values
+      - holdout_parameter_values
+      - permalink
+    LayerCreateContractDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[A-Za-z0-9_ -]*$
+          description: The unique name of the layer, formatted as an ID (e.g., "A Layer" becomes "a_layer").
+        description:
+          type: string
+          maxLength: 1000
+          description: A helpful description of what this layer does, providing context for its purpose.
+        idType:
+          type: string
+          description: The type of ID used for this layer, essential for validation in services.
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+          description: List of target applications that this layer is associated with.
+        team:
+          type: string
+          description: Optional identifier for the team responsible for this layer.
+      required:
+      - name
+      - idType
+    LayerOverridesDto:
+      type: object
+      properties:
+        conditionalOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Describes whether layer override is segment or gate
+              name:
+                type: string
+                description: Name of override entity
+              experimentName:
+                type: string
+              groupName:
+                type: string
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Optional environment scope (e.g. production, staging). Omit or pass null to target the all-environments bucket.
+            required:
+            - type
+            - name
+            - experimentName
+            - groupName
+        idOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              groupName:
+                type: string
+                description: Group that ID is overriden into
+              ids:
+                type: array
+                items:
+                  type: string
+                description: ID being overriden into a particular group
+              idType:
+                type:
+                - string
+                - 'null'
+              environment:
+                type:
+                - string
+                - 'null'
+              experimentName:
+                type:
+                - string
+                - 'null'
+            required:
+            - groupName
+            - ids
+      required:
+      - conditionalOverrides
+      - idOverrides
     PaginationResponseMetadataDto:
       type: object
       properties:
@@ -3901,16 +3742,135 @@ components:
       - pageNumber
       - nextPage
       - previousPage
+    LayerFullUpdateContractDto:
+      type: object
+      properties:
+        description:
+          type: string
+          maxLength: 1000
+          description: A detailed description of the layer, explaining its purpose and functionality.
+        parameters:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this parameter, used for identification within the layer.
+              type:
+                type: string
+                enum:
+                - string
+                - number
+                - boolean
+                - object
+                - array
+                description: 'The data type that this parameter returns. Allowed types include: string, boolean, number, object, and array.'
+              defaultValue:
+                oneOf:
+                - type: string
+                - type: number
+                - type: boolean
+                - type: object
+                  additionalProperties: {}
+                - type: array
+                  items:
+                    oneOf:
+                    - type: string
+                    - type: number
+                    - type: boolean
+                    - type: object
+                      additionalProperties: {}
+                description: The default value for this parameter, which must match the specified type.
+              description:
+                type: string
+                description: An optional helpful description of what this layer parameter does, providing context for its purpose.
+              schema:
+                type:
+                - string
+                - 'null'
+                description: Optional JSON schema for object parameters. If provided, defaultValue must satisfy the schema.
+            required:
+            - name
+            - type
+            - defaultValue
+          description: An array of parameters associated with the layer, each defining specific attributes.
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+          description: List of target applications that this layer is intended for.
+      required:
+      - description
+      - parameters
+    LayerOverridesPatchDto:
+      type: object
+      properties:
+        op:
+          type: string
+          enum:
+          - add
+          description: Add a layer override
+        conditionalOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Describes whether layer override is segment or gate
+              name:
+                type: string
+                description: Name of override entity
+              experimentName:
+                type: string
+              groupName:
+                type: string
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Optional environment scope (e.g. production, staging). Omit or pass null to target the all-environments bucket.
+            required:
+            - type
+            - name
+            - experimentName
+            - groupName
+        idOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              groupName:
+                type: string
+                description: Group that ID is overriden into
+              ids:
+                type: array
+                items:
+                  type: string
+                description: ID being overriden into a particular group
+              idType:
+                type:
+                - string
+                - 'null'
+              environment:
+                type:
+                - string
+                - 'null'
+              experimentName:
+                type:
+                - string
+                - 'null'
+            required:
+            - groupName
+            - ids
+      required:
+      - op
+      - conditionalOverrides
+      - idOverrides
   parameters:
-    Limit:
-      name: limit
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: Maximum number of items to return per page.
     Page:
       name: page
       in: query
@@ -3927,6 +3887,46 @@ components:
         type: string
         default: '20240601'
       description: The Console API version. Currently the only version is 20240601.
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message indicating the resource was not found.
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
   securitySchemes:
     consoleApiKey:
       type: apiKey
@@ -3945,4 +3945,4 @@ components:
 x-refined-from:
 - statsig-console-api-openapi.yml
 - statsig-http-api-openapi.yml
-- statsig-console-api-openapi.json
+- statsig-layers-api-openapi.yml

@@ -639,18 +639,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
     PaginationResponseWithMessage:
       type: object
       properties:
@@ -812,6 +800,18 @@ components:
       required:
       - name
       - permissions
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
     PaginationResponseMetadataDto:
       type: object
       properties:

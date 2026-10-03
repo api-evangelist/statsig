@@ -145,6 +145,18 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
     OverridesAuditDto:
       type: object
       properties:
@@ -609,18 +621,6 @@ components:
       - autotunes
       - layers
       description: Overrides grouped by entity type. Each section only lists entities that have (matching) overrides.
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Statsig Tags API
   version: '1.0'
-  description: 'Operations tagged Tags across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-console-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Tags across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-tags-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://statsigapi.net/console/v1
   description: Statsig Console API Server
@@ -66,6 +66,8 @@ paths:
     - url: https://statsigapi.net/console/v1
       description: Statsig Console API Server
   /console/v1/tags:
+    servers:
+    - url: https://statsigapi.net
     get:
       summary: List Tags
       parameters:
@@ -183,9 +185,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: postConsoleV1Tags
       x-operation-id-source: derived
+  /console/v1/tags/{id}:
     servers:
     - url: https://statsigapi.net
-  /console/v1/tags/{id}:
     get:
       summary: Read Tag
       parameters:
@@ -321,46 +323,8 @@ paths:
       - STATSIG-API-KEY: []
       operationId: deleteConsoleV1TagsById
       x-operation-id-source: derived
-    servers:
-    - url: https://statsigapi.net
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
   schemas:
-    TagCreate:
-      type: object
-      description: Request body for creating a new tag.
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: The name of the tag to create.
-        description:
-          type: string
-          description: A human-readable description.
-        color:
-          type: string
-          description: The color for the tag.
     Tag:
       type: object
       description: A tag used for organizing and categorizing entities.
@@ -377,7 +341,41 @@ components:
         color:
           type: string
           description: The color associated with the tag for display.
-    TagUpdateDto:
+    TagCreate:
+      type: object
+      description: Request body for creating a new tag.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the tag to create.
+        description:
+          type: string
+          description: A human-readable description.
+        color:
+          type: string
+          description: The color for the tag.
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    TagCreateDto:
       type: object
       properties:
         name:
@@ -390,6 +388,25 @@ components:
         isCore:
           default: false
           type: boolean
+      required:
+      - name
+      - description
+      example:
+        name: my_tag
+        description: my tag description
+        isCore: true
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
     TagDto:
       type: object
       properties:
@@ -414,19 +431,7 @@ components:
       - name
       - description
       - isCore
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
-    TagCreateDto:
+    TagUpdateDto:
       type: object
       properties:
         name:
@@ -439,32 +444,6 @@ components:
         isCore:
           default: false
           type: boolean
-      required:
-      - name
-      - description
-      example:
-        name: my_tag
-        description: my tag description
-        isCore: true
-    PaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
     PaginationResponseMetadataDto:
       type: object
       properties:
@@ -492,6 +471,27 @@ components:
       - pageNumber
       - nextPage
       - previousPage
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
   parameters:
     ApiVersion:
       name: STATSIG-API-VERSION
@@ -516,4 +516,4 @@ externalDocs:
   url: https://docs.statsig.com/console-api/
 x-refined-from:
 - statsig-console-api-openapi.yml
-- statsig-console-api-openapi.json
+- statsig-tags-api-openapi.yml

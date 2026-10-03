@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Statsig Segments API
   version: '1.0'
-  description: 'Operations tagged Segments across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-console-api-openapi.json. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Segments across 2 of this provider''s published API definitions: statsig-console-api-openapi.yml, statsig-segments-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://statsigapi.net/console/v1
   description: Statsig Console API Server
@@ -160,6 +160,8 @@ paths:
     - url: https://statsigapi.net/console/v1
       description: Statsig Console API Server
   /console/v1/segments:
+    servers:
+    - url: https://statsigapi.net
     get:
       summary: List Segments
       parameters:
@@ -374,9 +376,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: postConsoleV1Segments
       x-operation-id-source: derived
+  /console/v1/segments/{id}:
     servers:
     - url: https://statsigapi.net
-  /console/v1/segments/{id}:
     get:
       summary: Get Segment
       parameters:
@@ -587,9 +589,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: deleteConsoleV1SegmentsById
       x-operation-id-source: derived
+  /console/v1/segments/{id}/add_ids:
     servers:
     - url: https://statsigapi.net
-  /console/v1/segments/{id}/add_ids:
     patch:
       summary: Add IDs to User Store ID List
       description: This endpoint has a limit of 1000 ids per request
@@ -667,9 +669,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: patchConsoleV1SegmentsByIdAddIds
       x-operation-id-source: derived
+  /console/v1/segments/{id}/archive:
     servers:
     - url: https://statsigapi.net
-  /console/v1/segments/{id}/archive:
     put:
       summary: Archive Segment
       parameters:
@@ -742,9 +744,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: putConsoleV1SegmentsByIdArchive
       x-operation-id-source: derived
+  /console/v1/segments/{id}/conditional:
     servers:
     - url: https://statsigapi.net
-  /console/v1/segments/{id}/conditional:
     post:
       summary: Update Segment Rules
       parameters:
@@ -844,9 +846,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: postConsoleV1SegmentsByIdConditional
       x-operation-id-source: derived
+  /console/v1/segments/{id}/id_list:
     servers:
     - url: https://statsigapi.net
-  /console/v1/segments/{id}/id_list:
     get:
       summary: Get IDs in a Segment
       description: This endpoint is rate limited to 100
@@ -1107,9 +1109,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: deleteConsoleV1SegmentsByIdIdList
       x-operation-id-source: derived
+  /console/v1/segments/{id}/id_list/reset:
     servers:
     - url: https://statsigapi.net
-  /console/v1/segments/{id}/id_list/reset:
     post:
       summary: Reset ID List Segment
       description: 'Warning: Not atomic for big ID lists (> 1000)'
@@ -1147,9 +1149,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: postConsoleV1SegmentsByIdIdListReset
       x-operation-id-source: derived
+  /console/v1/segments/{id}/idlist_metadata:
     servers:
     - url: https://statsigapi.net
-  /console/v1/segments/{id}/idlist_metadata:
     get:
       summary: Get ID List Metadata
       description: This endpoint gets the metadata of the ID List.
@@ -1186,9 +1188,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: getConsoleV1SegmentsByIdIdlistMetadata
       x-operation-id-source: derived
+  /console/v1/segments/{id}/remove_ids:
     servers:
     - url: https://statsigapi.net
-  /console/v1/segments/{id}/remove_ids:
     patch:
       summary: Remove IDs from User Store ID List
       description: This endpoint has a limit of 1000 ids per request
@@ -1266,9 +1268,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: patchConsoleV1SegmentsByIdRemoveIds
       x-operation-id-source: derived
+  /console/v1/segments/{id}/reviews/{reviewID}:
     servers:
     - url: https://statsigapi.net
-  /console/v1/segments/{id}/reviews/{reviewID}:
     delete:
       summary: Cancel Segment Review
       parameters:
@@ -1301,9 +1303,9 @@ paths:
       - STATSIG-API-KEY: []
       operationId: deleteConsoleV1SegmentsByIdReviewsByReviewID
       x-operation-id-source: derived
+  /console/v1/segments/{id}/reviews/{reviewID}/commit:
     servers:
     - url: https://statsigapi.net
-  /console/v1/segments/{id}/reviews/{reviewID}/commit:
     put:
       summary: Commit Segment Review
       parameters:
@@ -1336,10 +1338,57 @@ paths:
       - STATSIG-API-KEY: []
       operationId: putConsoleV1SegmentsByIdReviewsByReviewIDCommit
       x-operation-id-source: derived
-    servers:
-    - url: https://statsigapi.net
 components:
   schemas:
+    Condition:
+      type: object
+      description: A condition within a targeting rule that evaluates user properties against specified criteria.
+      properties:
+        type:
+          type: string
+          enum:
+          - user_id
+          - email
+          - ip_address
+          - country
+          - app_version
+          - custom_field
+          - browser_name
+          - browser_version
+          - os_name
+          - os_version
+          - passes_gate
+          - fails_gate
+          - environment
+          - passes_segment
+          - fails_segment
+          - time
+          - unit_id
+          description: The type of condition to evaluate.
+        targetValue:
+          description: The value or values to compare against.
+        operator:
+          type: string
+          enum:
+          - any
+          - none
+          - str_starts_with_any
+          - str_ends_with_any
+          - str_contains_any
+          - str_contains_none
+          - str_matches
+          - gt
+          - gte
+          - lt
+          - lte
+          - version_gt
+          - version_gte
+          - version_lt
+          - version_lte
+          - before
+          - after
+          - 'on'
+          description: The comparison operator to use.
     SegmentCreate:
       type: object
       description: Request body for creating a new user segment.
@@ -1394,71 +1443,6 @@ components:
           items:
             type: string
           description: Environments where this rule is active.
-    Pagination:
-      type: object
-      description: Pagination metadata for list responses.
-      properties:
-        total:
-          type: integer
-          description: Total number of items available.
-        page:
-          type: integer
-          description: Current page number.
-        limit:
-          type: integer
-          description: Number of items per page.
-        hasMore:
-          type: boolean
-          description: Whether more pages are available.
-    Condition:
-      type: object
-      description: A condition within a targeting rule that evaluates user properties against specified criteria.
-      properties:
-        type:
-          type: string
-          enum:
-          - user_id
-          - email
-          - ip_address
-          - country
-          - app_version
-          - custom_field
-          - browser_name
-          - browser_version
-          - os_name
-          - os_version
-          - passes_gate
-          - fails_gate
-          - environment
-          - passes_segment
-          - fails_segment
-          - time
-          - unit_id
-          description: The type of condition to evaluate.
-        targetValue:
-          description: The value or values to compare against.
-        operator:
-          type: string
-          enum:
-          - any
-          - none
-          - str_starts_with_any
-          - str_ends_with_any
-          - str_contains_any
-          - str_contains_none
-          - str_matches
-          - gt
-          - gte
-          - lt
-          - lte
-          - version_gt
-          - version_gte
-          - version_lt
-          - version_lte
-          - before
-          - after
-          - true
-          description: The comparison operator to use.
     Segment:
       type: object
       description: A user segment defining a group of users for targeting.
@@ -1489,7 +1473,54 @@ components:
           type: integer
           format: int64
           description: Timestamp when the segment was created.
-    SegmentIDListContractDto:
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    IDListMetadataDto:
+      type: object
+      properties:
+        currentVersion:
+          type: number
+          description: The current version of the ID list
+          example: 4
+          format: double
+        isUpdating:
+          type: boolean
+          description: If the ID list is currently being updated
+          example: true
+    SegmentIDListResetContractDto:
       type: object
       properties:
         ids:
@@ -1499,43 +1530,210 @@ components:
           maxItems: 100000
       required:
       - ids
-    IDListDto:
+    SegmentCreateContractDto:
       type: object
       properties:
         name:
           type: string
-          description: The name associated with the list of IDs
-          example: Example List
-        count:
-          type: number
-          description: The count of IDs in the list
-          example: 5
-          format: double
-        ids:
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\- ]*$
+          description: name of the segment
+        id:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_-]*$
+          description: optional id of the segment (defaults to name)
+        description:
+          type: string
+          maxLength: 1000
+          description: description of the segment
+        type:
+          type: string
+          enum:
+          - id_list
+          - rule_based
+          - analysis_list
+          - user_store_id_list
+          description: type of the segment
+        idType:
+          default: userID
+          type: string
+          description: type of id
+        tags:
           type: array
           items:
             type: string
-          description: The array of IDs
-          example:
-          - id1
-          - id2
-          - id3
-          - id4
-          - id5
+          description: optional tags for categorization
+        creatorID:
+          type:
+          - string
+          - 'null'
+          description: the Statsig ID of the creator of this segment
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+          description: the email of the creator of this segment
+        team:
+          type:
+          - string
+          - 'null'
+          description: optional name identifier for the responsible team (enterprise only)
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: optional identifier for the responsible team (enterprise only)
+        rules:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this rule.
+              passPercentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                multipleOf: 0.01
+                description: Of the users that meet the conditions of this rule, what percent should return true.
+              conditions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    targetValue:
+                      oneOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: array
+                        items:
+                          type: number
+                      - type: string
+                      - type: number
+                    operator:
+                      type: string
+                      enum:
+                      - any
+                      - none
+                      - any_case_sensitive
+                      - none_case_sensitive
+                      - str_contains_any
+                      - str_contains_none
+                      - gt
+                      - lt
+                      - lte
+                      - gte
+                      - version_gt
+                      - version_lt
+                      - version_gte
+                      - version_lte
+                      - version_eq
+                      - after
+                      - before
+                      - 'on'
+                      - is_null
+                      - is_not_null
+                      - str_matches
+                      - encoded_any
+                      - array_contains_any
+                      - array_contains_none
+                      - array_contains_all
+                      - not_array_contains_all
+                    field:
+                      type:
+                      - string
+                      - 'null'
+                    customID:
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      type: string
+                      enum:
+                      - app_version
+                      - browser_name
+                      - browser_version
+                      - country
+                      - custom_field
+                      - email
+                      - environment_tier
+                      - fails_segment
+                      - ip_address
+                      - os_name
+                      - os_version
+                      - passes_segment
+                      - unit_id
+                      - user_id
+                  required:
+                  - type
+              environments:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+                description: The environments this rule is enabled for.
+              id:
+                type: string
+                description: The Statsig ID of this rule.
+              baseID:
+                type: string
+                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+              returnValue:
+                type: object
+                additionalProperties: {}
+                description: The return value of the rule.
+              completedAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that have already completed.'
+              pendingAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+            required:
+            - name
+            - passPercentage
+            - conditions
+          description: Rule Object
       required:
       - name
-      - count
-      - ids
-      description: Schema for a list of IDs with a name and count
-      example:
-        name: Example List
-        count: 5
-        ids:
-        - id1
-        - id2
-        - id3
-        - id4
-        - id5
+      - type
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
     SegmentDto:
       type: object
       properties:
@@ -1767,6 +1965,80 @@ components:
       - createdTime
       - creatorName
       - creatorEmail
+    IDListDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name associated with the list of IDs
+          example: Example List
+        count:
+          type: number
+          description: The count of IDs in the list
+          example: 5
+          format: double
+        ids:
+          type: array
+          items:
+            type: string
+          description: The array of IDs
+          example:
+          - id1
+          - id2
+          - id3
+          - id4
+          - id5
+      required:
+      - name
+      - count
+      - ids
+      description: Schema for a list of IDs with a name and count
+      example:
+        name: Example List
+        count: 5
+        ids:
+        - id1
+        - id2
+        - id3
+        - id4
+        - id5
+    SegmentIDListContractDto:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+          maxItems: 100000
+      required:
+      - ids
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
     SegmentRulesDto:
       type: array
       items:
@@ -1899,278 +2171,6 @@ components:
         - name
         - passPercentage
         - conditions
-    SegmentIDListResetContractDto:
-      type: object
-      properties:
-        ids:
-          type: array
-          items:
-            type: string
-          maxItems: 100000
-      required:
-      - ids
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
-    PaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
-    IDListMetadataDto:
-      type: object
-      properties:
-        currentVersion:
-          type: number
-          description: The current version of the ID list
-          example: 4
-          format: double
-        isUpdating:
-          type: boolean
-          description: If the ID list is currently being updated
-          example: true
-    SegmentCreateContractDto:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_\- ]*$
-          description: name of the segment
-        id:
-          type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_-]*$
-          description: optional id of the segment (defaults to name)
-        description:
-          type: string
-          maxLength: 1000
-          description: description of the segment
-        type:
-          type: string
-          enum:
-          - id_list
-          - rule_based
-          - analysis_list
-          - user_store_id_list
-          description: type of the segment
-        idType:
-          default: userID
-          type: string
-          description: type of id
-        tags:
-          type: array
-          items:
-            type: string
-          description: optional tags for categorization
-        creatorID:
-          type:
-          - string
-          - 'null'
-          description: the Statsig ID of the creator of this segment
-        creatorEmail:
-          type:
-          - string
-          - 'null'
-          description: the email of the creator of this segment
-        team:
-          type:
-          - string
-          - 'null'
-          description: optional name identifier for the responsible team (enterprise only)
-        teamID:
-          type:
-          - string
-          - 'null'
-          description: optional identifier for the responsible team (enterprise only)
-        rules:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of this rule.
-              passPercentage:
-                type: number
-                minimum: 0
-                maximum: 100
-                multipleOf: 0.01
-                description: Of the users that meet the conditions of this rule, what percent should return true.
-              conditions:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    targetValue:
-                      oneOf:
-                      - type: array
-                        items:
-                          type: string
-                      - type: array
-                        items:
-                          type: number
-                      - type: string
-                      - type: number
-                    operator:
-                      type: string
-                      enum:
-                      - any
-                      - none
-                      - any_case_sensitive
-                      - none_case_sensitive
-                      - str_contains_any
-                      - str_contains_none
-                      - gt
-                      - lt
-                      - lte
-                      - gte
-                      - version_gt
-                      - version_lt
-                      - version_gte
-                      - version_lte
-                      - version_eq
-                      - after
-                      - before
-                      - 'on'
-                      - is_null
-                      - is_not_null
-                      - str_matches
-                      - encoded_any
-                      - array_contains_any
-                      - array_contains_none
-                      - array_contains_all
-                      - not_array_contains_all
-                    field:
-                      type:
-                      - string
-                      - 'null'
-                    customID:
-                      type:
-                      - string
-                      - 'null'
-                    type:
-                      type: string
-                      enum:
-                      - app_version
-                      - browser_name
-                      - browser_version
-                      - country
-                      - custom_field
-                      - email
-                      - environment_tier
-                      - fails_segment
-                      - ip_address
-                      - os_name
-                      - os_version
-                      - passes_segment
-                      - unit_id
-                      - user_id
-                  required:
-                  - type
-              environments:
-                type:
-                - array
-                - 'null'
-                items:
-                  type: string
-                description: The environments this rule is enabled for.
-              id:
-                type: string
-                description: The Statsig ID of this rule.
-              baseID:
-                type: string
-                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
-              returnValue:
-                type: object
-                additionalProperties: {}
-                description: The return value of the rule.
-              completedAutomatedRollouts:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    time:
-                      type: number
-                    passPercent:
-                      type: number
-                  required:
-                  - passPercent
-                readOnly: true
-                description: 'Read-only: Automated rollout phases that have already completed.'
-              pendingAutomatedRollouts:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    time:
-                      type: number
-                    passPercent:
-                      type: number
-                  required:
-                  - passPercent
-                readOnly: true
-                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
-            required:
-            - name
-            - passPercentage
-            - conditions
-          description: Rule Object
-      required:
-      - name
-      - type
-    PaginationResponseMetadataDto:
-      type: object
-      properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
-          type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
     SegmentIDListUserStoreContractDto:
       type: object
       properties:
@@ -2185,16 +2185,6 @@ components:
       required:
       - ids
   responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
     NotFound:
       description: Resource not found
       content:
@@ -2215,16 +2205,17 @@ components:
               message:
                 type: string
                 description: Error message describing what was wrong with the request.
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
   parameters:
-    Limit:
-      name: limit
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: Maximum number of items to return per page.
     Page:
       name: page
       in: query
@@ -2241,6 +2232,15 @@ components:
         type: string
         default: '20240601'
       description: The Console API version. Currently the only version is 20240601.
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
   securitySchemes:
     consoleApiKey:
       type: apiKey
@@ -2256,4 +2256,4 @@ externalDocs:
   url: https://docs.statsig.com/console-api/
 x-refined-from:
 - statsig-console-api-openapi.yml
-- statsig-console-api-openapi.json
+- statsig-segments-api-openapi.yml
