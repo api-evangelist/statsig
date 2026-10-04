@@ -325,6 +325,21 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    TagCreate:
+      type: object
+      description: Request body for creating a new tag.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the tag to create.
+        description:
+          type: string
+          description: A human-readable description.
+        color:
+          type: string
+          description: The color for the tag.
     Tag:
       type: object
       description: A tag used for organizing and categorizing entities.
@@ -341,21 +356,6 @@ components:
         color:
           type: string
           description: The color associated with the tag for display.
-    TagCreate:
-      type: object
-      description: Request body for creating a new tag.
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: The name of the tag to create.
-        description:
-          type: string
-          description: A human-readable description.
-        color:
-          type: string
-          description: The color for the tag.
     PaginationResponseWithMessage:
       type: object
       properties:
@@ -375,6 +375,18 @@ components:
       - message
       - data
       - pagination
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
     TagCreateDto:
       type: object
       properties:
@@ -395,18 +407,6 @@ components:
         name: my_tag
         description: my tag description
         isCore: true
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
     TagDto:
       type: object
       properties:
@@ -431,19 +431,6 @@ components:
       - name
       - description
       - isCore
-    TagUpdateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 100
-          minLength: 1
-        description:
-          type: string
-          maxLength: 1000
-        isCore:
-          default: false
-          type: boolean
     PaginationResponseMetadataDto:
       type: object
       properties:
@@ -471,17 +458,29 @@ components:
       - pageNumber
       - nextPage
       - previousPage
+    TagUpdateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 1
+        description:
+          type: string
+          maxLength: 1000
+        isCore:
+          default: false
+          type: boolean
+  parameters:
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
   responses:
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
     Unauthorized:
       description: Missing or invalid API key
       content:
@@ -492,15 +491,16 @@ components:
               message:
                 type: string
                 description: Error message describing the authentication failure.
-  parameters:
-    ApiVersion:
-      name: STATSIG-API-VERSION
-      in: header
-      required: false
-      schema:
-        type: string
-        default: '20240601'
-      description: The Console API version. Currently the only version is 20240601.
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
   securitySchemes:
     consoleApiKey:
       type: apiKey

@@ -1265,6 +1265,28 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    HoldoutCreate:
+      type: object
+      description: Request body for creating a new holdout group.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the holdout to create.
+        description:
+          type: string
+          description: A human-readable description.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of users in the holdout group.
+        gateIDs:
+          type: array
+          items:
+            type: string
+          description: The gates to include in the holdout.
     Holdout:
       type: object
       description: A holdout group that excludes users from specific features to measure long-term impact.
@@ -1291,40 +1313,131 @@ components:
         isEnabled:
           type: boolean
           description: Whether the holdout is currently active.
-    HoldoutCreate:
+    PaginationResponseWithMessage:
       type: object
-      description: Request body for creating a new holdout group.
-      required:
-      - name
       properties:
-        name:
+        message:
           type: string
-          description: The name of the holdout to create.
-        description:
-          type: string
-          description: A human-readable description.
-        passPercentage:
-          type: number
-          minimum: 0
-          maximum: 100
-          description: The percentage of users in the holdout group.
-        gateIDs:
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
           type: array
           items:
-            type: string
-          description: The gates to include in the holdout.
-    HoldoutPartialUpdateContractDto:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    SingleDataResponse:
       type: object
       properties:
-        isEnabled:
-          type: boolean
-          example: true
-          description: enable or disable the holdout
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    HoldoutDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          description: Optional name for the configuration.
+        idType:
+          type: string
+          description: type of id
         description:
           type: string
           maxLength: 1000
           example: example holdout description
           description: brief summary of what the holdout is being used for
+        lastModifierID:
+          type:
+          - string
+          - 'null'
+          description: ID of the last modifier.
+        lastModifiedTime:
+          type:
+          - number
+          - 'null'
+          description: Time of the last modification.
+          format: double
+        lastModifierEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the last modifier.
+        lastModifierName:
+          type:
+          - string
+          - 'null'
+          description: Name of the last modifier.
+        creatorID:
+          type:
+          - string
+          - 'null'
+          description: ID of the user who created the entity.
+        createdTime:
+          type: number
+          description: Timestamp when the entity was created.
+          format: double
+        creatorName:
+          type:
+          - string
+          - 'null'
+          description: Name of the creator.
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the creator.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags for categorization.
+        targetApps:
+          type: array
+          items:
+            type: string
+          description: List of target applications associated with this configuration.
+        holdoutIDs:
+          type: array
+          items:
+            type: string
+          description: Holdouts applied to this configuration.
+        team:
+          type:
+          - string
+          - 'null'
+          description: Optional name for the responsible team.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: Optional ID of the responsible team.
+        version:
+          type: number
+          description: Version number
+          format: double
+        permalink:
+          type: string
+          format: uri
+          description: A permalink to this holdout in the Statsig Console.
+        isEnabled:
+          type: boolean
+          example: true
+          description: enable or disable the holdout
         passPercentage:
           type: number
           minimum: 0
@@ -1361,8 +1474,8 @@ components:
           type:
           - string
           - 'null'
-          example: my_targeting_gate
-          description: the ID of the gate that the holdout is targeting; an empty string clears it, null leaves it unchanged
+          example: 4pjeXYDjC2WinSgOiII7wh
+          description: the internal ID of the gate that the holdout is targeting; null or empty when unset
         monitoringMetrics:
           type: array
           items:
@@ -1375,25 +1488,53 @@ components:
             required:
             - name
             - type
-    PaginationResponseWithMessage:
+      required:
+      - id
+      - idType
+      - description
+      - lastModifierID
+      - lastModifiedTime
+      - lastModifierEmail
+      - lastModifierName
+      - creatorID
+      - createdTime
+      - creatorName
+      - creatorEmail
+      - permalink
+      - isEnabled
+      - passPercentage
+      - gateIDs
+      - experimentIDs
+      - layerIDs
+      - isGlobal
+      - targetingGateID
+    HoldoutCreateContractDto:
       type: object
       properties:
-        message:
+        name:
           type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\- ]*$
+          example: team holdout
+          description: name of the holdout
+        description:
+          type: string
+          maxLength: 1000
+          example: holdout for this team
+          description: description of the holdout
+        idType:
+          type: string
+          example: userID
+          description: type of id
+        teamID:
+          type:
+          - string
+          - 'null'
+          example: 4pjeXYDjC2WinSgOiII7wh
+          description: id of the team
       required:
-      - message
-      - data
-      - pagination
+      - name
     HoldoutFullUpdateContractDto:
       type: object
       properties:
@@ -1465,6 +1606,173 @@ components:
       - layerIDs
       - isGlobal
       - targetingGateID
+    OverrideDto:
+      type: object
+      properties:
+        passingUserIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: User ID
+            example: user123
+          maxItems: 2000
+          description: List of user IDs
+          example:
+          - user123
+          - user456
+          - user789
+        failingUserIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: User ID
+            example: user123
+          maxItems: 2000
+          description: List of user IDs
+          example:
+          - user123
+          - user456
+          - user789
+        passingCustomIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: Custom ID
+            example: custom123
+          maxItems: 2000
+          description: Optional list of custom IDs
+          example:
+          - custom123
+          - custom456
+        failingCustomIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: Custom ID
+            example: custom123
+          maxItems: 2000
+          description: Optional list of custom IDs
+          example:
+          - custom123
+          - custom456
+        environmentOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Environment
+                example: staging
+              unitID:
+                type:
+                - string
+                - 'null'
+                description: Unit ID
+                example: unit123
+              passingIDs:
+                type: array
+                items:
+                  type: string
+                description: List of passing IDs
+                example:
+                - id1
+                - id2
+              failingIDs:
+                type: array
+                items:
+                  type: string
+                description: List of failing IDs
+                example:
+                - id3
+                - id4
+            required:
+            - unitID
+            - passingIDs
+            - failingIDs
+            description: Contract for environment override
+            example:
+              environment: staging
+              unitID: unit123
+              passingIDs:
+              - id1
+              - id2
+              failingIDs:
+              - id3
+              - id4
+      required:
+      - passingUserIDs
+      - failingUserIDs
+      - environmentOverrides
+      description: Contract for overrides
+    HoldoutPartialUpdateContractDto:
+      type: object
+      properties:
+        isEnabled:
+          type: boolean
+          example: true
+          description: enable or disable the holdout
+        description:
+          type: string
+          maxLength: 1000
+          example: example holdout description
+          description: brief summary of what the holdout is being used for
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 10
+          example: 5
+          description: percentage of users between 0-10% to pass through the holdout
+          format: double
+        gateIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_gate
+          description: an array of gate IDs which this holdout is applied to
+        experimentIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_experiment
+          description: an array of experiment IDs which this holdout is applied to
+        layerIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_layer
+          description: an array of layer IDs which this holdout is applied to
+        isGlobal:
+          type: boolean
+          example: false
+          description: whether the holdout is being applied to all new gates
+        targetingGateID:
+          type:
+          - string
+          - 'null'
+          example: my_targeting_gate
+          description: the ID of the gate that the holdout is targeting; an empty string clears it, null leaves it unchanged
+        monitoringMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+            required:
+            - name
+            - type
     GatePulseResultsDto:
       type: object
       properties:
@@ -1681,18 +1989,33 @@ components:
       required:
       - ds
       - monitoringMetrics
-    SingleDataResponse:
+    PaginationResponseMetadataDto:
       type: object
       properties:
-        message:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
           type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
       required:
-      - message
-      - data
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
     UpdateOverridesContractDto:
       oneOf:
       - type: object
@@ -1825,340 +2148,7 @@ components:
           failingCustomIDs:
           - custom456
       description: Contract for updating overrides
-    HoldoutDto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-        name:
-          type: string
-          description: Optional name for the configuration.
-        idType:
-          type: string
-          description: type of id
-        description:
-          type: string
-          maxLength: 1000
-          example: example holdout description
-          description: brief summary of what the holdout is being used for
-        lastModifierID:
-          type:
-          - string
-          - 'null'
-          description: ID of the last modifier.
-        lastModifiedTime:
-          type:
-          - number
-          - 'null'
-          description: Time of the last modification.
-          format: double
-        lastModifierEmail:
-          type:
-          - string
-          - 'null'
-          description: Email of the last modifier.
-        lastModifierName:
-          type:
-          - string
-          - 'null'
-          description: Name of the last modifier.
-        creatorID:
-          type:
-          - string
-          - 'null'
-          description: ID of the user who created the entity.
-        createdTime:
-          type: number
-          description: Timestamp when the entity was created.
-          format: double
-        creatorName:
-          type:
-          - string
-          - 'null'
-          description: Name of the creator.
-        creatorEmail:
-          type:
-          - string
-          - 'null'
-          description: Email of the creator.
-        tags:
-          type: array
-          items:
-            type: string
-          description: Optional tags for categorization.
-        targetApps:
-          type: array
-          items:
-            type: string
-          description: List of target applications associated with this configuration.
-        holdoutIDs:
-          type: array
-          items:
-            type: string
-          description: Holdouts applied to this configuration.
-        team:
-          type:
-          - string
-          - 'null'
-          description: Optional name for the responsible team.
-        teamID:
-          type:
-          - string
-          - 'null'
-          description: Optional ID of the responsible team.
-        version:
-          type: number
-          description: Version number
-          format: double
-        permalink:
-          type: string
-          format: uri
-          description: A permalink to this holdout in the Statsig Console.
-        isEnabled:
-          type: boolean
-          example: true
-          description: enable or disable the holdout
-        passPercentage:
-          type: number
-          minimum: 0
-          maximum: 10
-          example: 5
-          description: percentage of users between 0-10% to pass through the holdout
-          format: double
-        gateIDs:
-          type: array
-          items:
-            type: string
-          example:
-          - my_gate
-          description: an array of gate IDs which this holdout is applied to
-        experimentIDs:
-          type: array
-          items:
-            type: string
-          example:
-          - my_experiment
-          description: an array of experiment IDs which this holdout is applied to
-        layerIDs:
-          type: array
-          items:
-            type: string
-          example:
-          - my_layer
-          description: an array of layer IDs which this holdout is applied to
-        isGlobal:
-          type: boolean
-          example: false
-          description: whether the holdout is being applied to all new gates
-        targetingGateID:
-          type:
-          - string
-          - 'null'
-          example: 4pjeXYDjC2WinSgOiII7wh
-          description: the internal ID of the gate that the holdout is targeting; null or empty when unset
-        monitoringMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              type:
-                type: string
-            required:
-            - name
-            - type
-      required:
-      - id
-      - idType
-      - description
-      - lastModifierID
-      - lastModifiedTime
-      - lastModifierEmail
-      - lastModifierName
-      - creatorID
-      - createdTime
-      - creatorName
-      - creatorEmail
-      - permalink
-      - isEnabled
-      - passPercentage
-      - gateIDs
-      - experimentIDs
-      - layerIDs
-      - isGlobal
-      - targetingGateID
-    OverrideDto:
-      type: object
-      properties:
-        passingUserIDs:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            description: User ID
-            example: user123
-          maxItems: 2000
-          description: List of user IDs
-          example:
-          - user123
-          - user456
-          - user789
-        failingUserIDs:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            description: User ID
-            example: user123
-          maxItems: 2000
-          description: List of user IDs
-          example:
-          - user123
-          - user456
-          - user789
-        passingCustomIDs:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            description: Custom ID
-            example: custom123
-          maxItems: 2000
-          description: Optional list of custom IDs
-          example:
-          - custom123
-          - custom456
-        failingCustomIDs:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            description: Custom ID
-            example: custom123
-          maxItems: 2000
-          description: Optional list of custom IDs
-          example:
-          - custom123
-          - custom456
-        environmentOverrides:
-          type: array
-          items:
-            type: object
-            properties:
-              environment:
-                type:
-                - string
-                - 'null'
-                description: Environment
-                example: staging
-              unitID:
-                type:
-                - string
-                - 'null'
-                description: Unit ID
-                example: unit123
-              passingIDs:
-                type: array
-                items:
-                  type: string
-                description: List of passing IDs
-                example:
-                - id1
-                - id2
-              failingIDs:
-                type: array
-                items:
-                  type: string
-                description: List of failing IDs
-                example:
-                - id3
-                - id4
-            required:
-            - unitID
-            - passingIDs
-            - failingIDs
-            description: Contract for environment override
-            example:
-              environment: staging
-              unitID: unit123
-              passingIDs:
-              - id1
-              - id2
-              failingIDs:
-              - id3
-              - id4
-      required:
-      - passingUserIDs
-      - failingUserIDs
-      - environmentOverrides
-      description: Contract for overrides
-    PaginationResponseMetadataDto:
-      type: object
-      properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
-          type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
-    HoldoutCreateContractDto:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_\- ]*$
-          example: team holdout
-          description: name of the holdout
-        description:
-          type: string
-          maxLength: 1000
-          example: holdout for this team
-          description: description of the holdout
-        idType:
-          type: string
-          example: userID
-          description: type of id
-        teamID:
-          type:
-          - string
-          - 'null'
-          example: 4pjeXYDjC2WinSgOiII7wh
-          description: id of the team
-      required:
-      - name
   responses:
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
     Unauthorized:
       description: Missing or invalid API key
       content:
@@ -2169,6 +2159,16 @@ components:
               message:
                 type: string
                 description: Error message describing the authentication failure.
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
   parameters:
     ApiVersion:
       name: STATSIG-API-VERSION

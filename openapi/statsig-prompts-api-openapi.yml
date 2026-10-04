@@ -398,6 +398,80 @@ components:
       - message
       - data
       - pagination
+    AIConfigCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\-. ]*$
+          description: Name for the AI Config.
+          example: my_prompt
+        displayName:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\-. ]*$
+          description: Optional display name for the AI Config.
+        description:
+          type: string
+          maxLength: 1000
+          description: Description for the AI Config.
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+          description: List of target app names.
+        team:
+          type: string
+          description: Team name.
+        teamID:
+          type: string
+          description: Team ID.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags to associate with the AI Config.
+        creatorID:
+          type:
+          - string
+          - 'null'
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+      required:
+      - name
     AIConfigPartialUpdateDto:
       type: object
       properties:
@@ -418,6 +492,118 @@ components:
         teamID:
           type: string
           description: Updated team ID.
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    ExternalPromptVersionDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+      - id
+      - name
+    ExternalPromptDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\-. ]*$
+          description: The gate display name
+        idType:
+          type: string
+        description:
+          type: string
+          maxLength: 1000
+        lastModifierID:
+          type:
+          - string
+          - 'null'
+          description: ID of the last modifier.
+        lastModifiedTime:
+          type:
+          - number
+          - 'null'
+          description: Time of the last modification.
+          format: double
+        lastModifierEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the last modifier.
+        lastModifierName:
+          type:
+          - string
+          - 'null'
+          description: Name of the last modifier.
+        creatorID:
+          type:
+          - string
+          - 'null'
+        createdTime:
+          type: number
+          description: Timestamp when the entity was created.
+          format: double
+        creatorName:
+          type:
+          - string
+          - 'null'
+          description: Name of the creator.
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+        tags:
+          type: array
+          items:
+            type: string
+        targetApps:
+          type: array
+          items:
+            type: string
+          description: List of target applications associated with this configuration.
+        holdoutIDs:
+          type: array
+          items:
+            type: string
+          description: Holdouts applied to this configuration.
+        team:
+          type:
+          - string
+          - 'null'
+        teamID:
+          type:
+          - string
+          - 'null'
+        version:
+          type: number
+          description: Version number
+          format: double
+      required:
+      - id
+      - description
+      - lastModifierID
+      - lastModifiedTime
+      - lastModifierEmail
+      - lastModifierName
+      - createdTime
+      - creatorName
     AIConfigVersionCreateDto:
       type: object
       properties:
@@ -512,102 +698,6 @@ components:
           maxLength: 1000
       required:
       - name
-    AIConfigCreateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_\-. ]*$
-          description: Name for the AI Config.
-          example: my_prompt
-        displayName:
-          type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_\-. ]*$
-          description: Optional display name for the AI Config.
-        description:
-          type: string
-          maxLength: 1000
-          description: Description for the AI Config.
-        targetApps:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-          description: List of target app names.
-        team:
-          type: string
-          description: Team name.
-        teamID:
-          type: string
-          description: Team ID.
-        tags:
-          type: array
-          items:
-            type: string
-          description: Optional tags to associate with the AI Config.
-        creatorID:
-          type:
-          - string
-          - 'null'
-        owner:
-          type:
-          - object
-          - 'null'
-          properties:
-            ownerID:
-              type: string
-              description: ID of the owner
-              example: abc123
-            ownerType:
-              type: string
-              description: Type of the owner (e.g., SDK_KEY or USER)
-              example: USER
-            ownerName:
-              type: string
-              description: The name of the owner. This field is optional.
-              example: John Doe
-            ownerEmail:
-              type: string
-              description: The email of the owner. This field is optional.
-          description: Schema for owner data including ID, type, name.
-          example:
-            ownerID: user123
-            ownerType: USER
-            ownerName: John Doe
-            ownerEmail: owner123@test.com
-        creatorEmail:
-          type:
-          - string
-          - 'null'
-      required:
-      - name
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
-    ExternalPromptVersionDto:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-      required:
-      - id
-      - name
     PaginationResponseMetadataDto:
       type: object
       properties:
@@ -635,96 +725,6 @@ components:
       - pageNumber
       - nextPage
       - previousPage
-    ExternalPromptDto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-        name:
-          type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_\-. ]*$
-          description: The gate display name
-        idType:
-          type: string
-        description:
-          type: string
-          maxLength: 1000
-        lastModifierID:
-          type:
-          - string
-          - 'null'
-          description: ID of the last modifier.
-        lastModifiedTime:
-          type:
-          - number
-          - 'null'
-          description: Time of the last modification.
-          format: double
-        lastModifierEmail:
-          type:
-          - string
-          - 'null'
-          description: Email of the last modifier.
-        lastModifierName:
-          type:
-          - string
-          - 'null'
-          description: Name of the last modifier.
-        creatorID:
-          type:
-          - string
-          - 'null'
-        createdTime:
-          type: number
-          description: Timestamp when the entity was created.
-          format: double
-        creatorName:
-          type:
-          - string
-          - 'null'
-          description: Name of the creator.
-        creatorEmail:
-          type:
-          - string
-          - 'null'
-        tags:
-          type: array
-          items:
-            type: string
-        targetApps:
-          type: array
-          items:
-            type: string
-          description: List of target applications associated with this configuration.
-        holdoutIDs:
-          type: array
-          items:
-            type: string
-          description: Holdouts applied to this configuration.
-        team:
-          type:
-          - string
-          - 'null'
-        teamID:
-          type:
-          - string
-          - 'null'
-        version:
-          type: number
-          description: Version number
-          format: double
-      required:
-      - id
-      - description
-      - lastModifierID
-      - lastModifiedTime
-      - lastModifierEmail
-      - lastModifierName
-      - createdTime
-      - creatorName
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

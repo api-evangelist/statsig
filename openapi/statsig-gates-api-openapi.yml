@@ -4272,6 +4272,119 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    GateUpdate:
+      type: object
+      description: Request body for partially updating a feature gate.
+      properties:
+        description:
+          type: string
+          description: Updated description of the gate purpose.
+        isEnabled:
+          type: boolean
+          description: Whether the gate should be enabled.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Updated tags for the gate.
+        targetApps:
+          type: array
+          items:
+            type: string
+          description: Updated target applications.
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
+    Overrides:
+      type: object
+      description: User and ID overrides for forcing specific evaluation results.
+      properties:
+        userOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              userID:
+                type: string
+                description: The user ID to override.
+              value:
+                type: boolean
+                description: The override value for this user.
+          description: User-specific overrides by user ID.
+        idOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              ids:
+                type: array
+                items:
+                  type: string
+                description: The IDs to override.
+              value:
+                type: boolean
+                description: The override value for these IDs.
+          description: ID-based overrides for custom ID types.
+    Gate:
+      type: object
+      description: A feature gate configuration that controls access to features based on targeting rules and conditions.
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the gate.
+        name:
+          type: string
+          description: The name of the gate.
+        description:
+          type: string
+          description: A human-readable description of the gate purpose.
+        isEnabled:
+          type: boolean
+          description: Whether the gate is currently enabled and evaluating rules.
+        status:
+          type: string
+          enum:
+          - active
+          - disabled
+          - launched
+          - archived
+          description: The current lifecycle status of the gate.
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+          description: The targeting rules for this gate.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the gate for organization.
+        targetApps:
+          type: array
+          items:
+            type: string
+          description: Target applications this gate is scoped to.
+        createdTime:
+          type: integer
+          format: int64
+          description: Timestamp when the gate was created.
+        lastModifiedTime:
+          type: integer
+          format: int64
+          description: Timestamp when the gate was last modified.
     Condition:
       type: object
       description: A condition within a targeting rule that evaluates user properties against specified criteria.
@@ -4349,119 +4462,6 @@ components:
           items:
             type: string
           description: Environments where this rule is active.
-    Overrides:
-      type: object
-      description: User and ID overrides for forcing specific evaluation results.
-      properties:
-        userOverrides:
-          type: array
-          items:
-            type: object
-            properties:
-              userID:
-                type: string
-                description: The user ID to override.
-              value:
-                type: boolean
-                description: The override value for this user.
-          description: User-specific overrides by user ID.
-        idOverrides:
-          type: array
-          items:
-            type: object
-            properties:
-              ids:
-                type: array
-                items:
-                  type: string
-                description: The IDs to override.
-              value:
-                type: boolean
-                description: The override value for these IDs.
-          description: ID-based overrides for custom ID types.
-    GateUpdate:
-      type: object
-      description: Request body for partially updating a feature gate.
-      properties:
-        description:
-          type: string
-          description: Updated description of the gate purpose.
-        isEnabled:
-          type: boolean
-          description: Whether the gate should be enabled.
-        tags:
-          type: array
-          items:
-            type: string
-          description: Updated tags for the gate.
-        targetApps:
-          type: array
-          items:
-            type: string
-          description: Updated target applications.
-    Gate:
-      type: object
-      description: A feature gate configuration that controls access to features based on targeting rules and conditions.
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the gate.
-        name:
-          type: string
-          description: The name of the gate.
-        description:
-          type: string
-          description: A human-readable description of the gate purpose.
-        isEnabled:
-          type: boolean
-          description: Whether the gate is currently enabled and evaluating rules.
-        status:
-          type: string
-          enum:
-          - active
-          - disabled
-          - launched
-          - archived
-          description: The current lifecycle status of the gate.
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/Rule'
-          description: The targeting rules for this gate.
-        tags:
-          type: array
-          items:
-            type: string
-          description: Tags associated with the gate for organization.
-        targetApps:
-          type: array
-          items:
-            type: string
-          description: Target applications this gate is scoped to.
-        createdTime:
-          type: integer
-          format: int64
-          description: Timestamp when the gate was created.
-        lastModifiedTime:
-          type: integer
-          format: int64
-          description: Timestamp when the gate was last modified.
-    Pagination:
-      type: object
-      description: Pagination metadata for list responses.
-      properties:
-        total:
-          type: integer
-          description: Total number of items available.
-        page:
-          type: integer
-          description: Current page number.
-        limit:
-          type: integer
-          description: Number of items per page.
-        hasMore:
-          type: boolean
-          description: Whether more pages are available.
     GateCreate:
       type: object
       description: Request body for creating a new feature gate.
@@ -4492,195 +4492,7 @@ components:
           items:
             type: string
           description: Target applications to scope this gate to.
-    RuleUpdateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of this rule.
-        passPercentage:
-          type: number
-          minimum: 0
-          maximum: 100
-          multipleOf: 0.01
-          description: Of the users that meet the conditions of this rule, what percent should return true.
-          format: double
-        conditions:
-          type: array
-          items:
-            type: object
-            properties:
-              targetValue:
-                oneOf:
-                - type: array
-                  items:
-                    type: string
-                - type: array
-                  items:
-                    type: number
-                - type: string
-                - type: number
-              operator:
-                type: string
-                enum:
-                - any
-                - none
-                - any_case_sensitive
-                - none_case_sensitive
-                - str_contains_any
-                - str_contains_none
-                - gt
-                - lt
-                - lte
-                - gte
-                - version_gt
-                - version_lt
-                - version_gte
-                - version_lte
-                - version_eq
-                - after
-                - before
-                - 'on'
-                - is_null
-                - is_not_null
-                - str_matches
-                - encoded_any
-                - array_contains_any
-                - array_contains_none
-                - array_contains_all
-                - not_array_contains_all
-              field:
-                type:
-                - string
-                - 'null'
-              customID:
-                type:
-                - string
-                - 'null'
-              type:
-                type: string
-                enum:
-                - app_version
-                - browser_name
-                - browser_version
-                - country
-                - custom_field
-                - email
-                - environment_tier
-                - fails_gate
-                - fails_segment
-                - ip_address
-                - locale
-                - os_name
-                - os_version
-                - passes_gate
-                - passes_segment
-                - public
-                - time
-                - unit_id
-                - user_id
-                - user_agent
-                - url
-                - javascript
-                - device_model
-                - target_app
-                - experiment_group
-            required:
-            - type
-          description: An array of Condition objects.
-        environments:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: The environments this rule is enabled for.
-        id:
-          type: string
-          description: The Statsig ID of this rule.
-        baseID:
-          type: string
-          description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
-        returnValue:
-          type: object
-          additionalProperties: {}
-          description: The return value of the rule.
-        completedAutomatedRollouts:
-          type: array
-          items:
-            type: object
-            properties:
-              time:
-                type: number
-              passPercent:
-                type: number
-            required:
-            - passPercent
-          readOnly: true
-          description: 'Read-only: Automated rollout phases that have already completed.'
-        pendingAutomatedRollouts:
-          type: array
-          items:
-            type: object
-            properties:
-              time:
-                type: number
-              passPercent:
-                type: number
-            required:
-            - passPercent
-          readOnly: true
-          description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
-      example:
-        name: All Conditions
-        id: 38ttpCpzrQFTMKcqFKk02l:10.00:1
-        baseID: 38ttpCpzrQFTMKcqFKk02l
-        passPercentage: 10
-        conditions:
-        - type: user_id
-          targetValue:
-          - 35sClJFs8l0y5uRQhDwUDo
-          operator: any
-        environments:
-        - staging
-    GateChecksDto:
-      type: object
-      properties:
-        has_production_checks_in_last_7_days:
-          type:
-          - boolean
-          - 'null'
-      required:
-      - has_production_checks_in_last_7_days
-    PaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
-    ApproveReviewRequestDto:
-      type: object
-      properties:
-        reason:
-          type: string
-          maxLength: 2000
-          description: Optional comment recorded with the approval.
-      additionalProperties: false
-      title: ApproveReviewRequest
-    GateFullUpdateDto:
+    GatePartialUpdateDto:
       type: object
       properties:
         name:
@@ -4930,17 +4742,433 @@ components:
           required:
           - type
           description: Optional safe-change strategy for risky gate rule increases. When required by policy, clients should retry with this field set after user confirmation.
-      required:
-      - isEnabled
-      - description
-      - rules
       example:
+        description: Updated the description of the gate
+    RuleUpdateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of this rule.
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+          multipleOf: 0.01
+          description: Of the users that meet the conditions of this rule, what percent should return true.
+          format: double
+        conditions:
+          type: array
+          items:
+            type: object
+            properties:
+              targetValue:
+                oneOf:
+                - type: array
+                  items:
+                    type: string
+                - type: array
+                  items:
+                    type: number
+                - type: string
+                - type: number
+              operator:
+                type: string
+                enum:
+                - any
+                - none
+                - any_case_sensitive
+                - none_case_sensitive
+                - str_contains_any
+                - str_contains_none
+                - gt
+                - lt
+                - lte
+                - gte
+                - version_gt
+                - version_lt
+                - version_gte
+                - version_lte
+                - version_eq
+                - after
+                - before
+                - 'on'
+                - is_null
+                - is_not_null
+                - str_matches
+                - encoded_any
+                - array_contains_any
+                - array_contains_none
+                - array_contains_all
+                - not_array_contains_all
+              field:
+                type:
+                - string
+                - 'null'
+              customID:
+                type:
+                - string
+                - 'null'
+              type:
+                type: string
+                enum:
+                - app_version
+                - browser_name
+                - browser_version
+                - country
+                - custom_field
+                - email
+                - environment_tier
+                - fails_gate
+                - fails_segment
+                - ip_address
+                - locale
+                - os_name
+                - os_version
+                - passes_gate
+                - passes_segment
+                - public
+                - time
+                - unit_id
+                - user_id
+                - user_agent
+                - url
+                - javascript
+                - device_model
+                - target_app
+                - experiment_group
+            required:
+            - type
+          description: An array of Condition objects.
+        environments:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: The environments this rule is enabled for.
+        id:
+          type: string
+          description: The Statsig ID of this rule.
+        baseID:
+          type: string
+          description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+        returnValue:
+          type: object
+          additionalProperties: {}
+          description: The return value of the rule.
+        completedAutomatedRollouts:
+          type: array
+          items:
+            type: object
+            properties:
+              time:
+                type: number
+              passPercent:
+                type: number
+            required:
+            - passPercent
+          readOnly: true
+          description: 'Read-only: Automated rollout phases that have already completed.'
+        pendingAutomatedRollouts:
+          type: array
+          items:
+            type: object
+            properties:
+              time:
+                type: number
+              passPercent:
+                type: number
+            required:
+            - passPercent
+          readOnly: true
+          description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+      example:
+        name: All Conditions
+        id: 38ttpCpzrQFTMKcqFKk02l:10.00:1
+        baseID: 38ttpCpzrQFTMKcqFKk02l
+        passPercentage: 10
+        conditions:
+        - type: user_id
+          targetValue:
+          - 35sClJFs8l0y5uRQhDwUDo
+          operator: any
+        environments:
+        - staging
+    GateCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\-. ]*$
+          description: The gate display name
+        isEnabled:
+          type: boolean
+        description:
+          type: string
+          maxLength: 1000
+        rules:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this rule.
+              passPercentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                multipleOf: 0.01
+                description: Of the users that meet the conditions of this rule, what percent should return true.
+              conditions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    targetValue:
+                      oneOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: array
+                        items:
+                          type: number
+                      - type: string
+                      - type: number
+                    operator:
+                      type: string
+                      enum:
+                      - any
+                      - none
+                      - any_case_sensitive
+                      - none_case_sensitive
+                      - str_contains_any
+                      - str_contains_none
+                      - gt
+                      - lt
+                      - lte
+                      - gte
+                      - version_gt
+                      - version_lt
+                      - version_gte
+                      - version_lte
+                      - version_eq
+                      - after
+                      - before
+                      - 'on'
+                      - is_null
+                      - is_not_null
+                      - str_matches
+                      - encoded_any
+                      - array_contains_any
+                      - array_contains_none
+                      - array_contains_all
+                      - not_array_contains_all
+                    field:
+                      type:
+                      - string
+                      - 'null'
+                    customID:
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      type: string
+                      enum:
+                      - app_version
+                      - browser_name
+                      - browser_version
+                      - country
+                      - custom_field
+                      - email
+                      - environment_tier
+                      - fails_gate
+                      - fails_segment
+                      - ip_address
+                      - locale
+                      - os_name
+                      - os_version
+                      - passes_gate
+                      - passes_segment
+                      - public
+                      - time
+                      - unit_id
+                      - user_id
+                      - user_agent
+                      - url
+                      - javascript
+                      - device_model
+                      - target_app
+                      - experiment_group
+                  required:
+                  - type
+                description: An array of Condition objects.
+              environments:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+                description: The environments this rule is enabled for.
+              id:
+                type: string
+                description: The Statsig ID of this rule.
+              baseID:
+                type: string
+                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+              returnValue:
+                type: object
+                additionalProperties: {}
+                description: The return value of the rule.
+              completedAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that have already completed.'
+              pendingAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+            required:
+            - name
+            - passPercentage
+            - conditions
+        tags:
+          type: array
+          items:
+            type: string
+        type:
+          type: string
+          enum:
+          - PERMANENT
+          - TEMPORARY
+        idType:
+          type: string
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        creatorID:
+          type:
+          - string
+          - 'null'
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+        team:
+          type:
+          - string
+          - 'null'
+        teamID:
+          type:
+          - string
+          - 'null'
+        measureMetricLifts:
+          type: boolean
+        monitoringMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+            required:
+            - name
+            - type
+        reviewSettings:
+          type: object
+          properties:
+            requiredReview:
+              type: boolean
+          required:
+          - requiredReview
+          description: Whether reviews are required for this gate. If a gate has reviews required due to a project-level or team-level setting, setting this will have no effect.
+        releasePipelineID:
+          type:
+          - string
+          - 'null'
+        gradual_rollout_strategy:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - gradual
+              - bypass
+              description: Use "gradual" to apply a gradual rollout to risky gate rule increases, or "bypass" to explicitly apply the direct change.
+            phases:
+              type: array
+              items:
+                type: object
+                properties:
+                  time:
+                    type: number
+                  pass_percent:
+                    type: number
+                  isComplete:
+                    type: boolean
+                  timeString:
+                    type: string
+                  phaseDurationMs:
+                    type: number
+                    description: Used for progressive rollouts to calculate when the next phase can start
+                required:
+                - pass_percent
+                - isComplete
+              minItems: 1
+              description: Optional rollout phases in the same shape used by the product rollout editor. If omitted for "gradual", the server default schedule is used.
+          required:
+          - type
+          description: Optional safe-change strategy for risky gate rule increases. When required by policy, clients should retry with this field set after user confirmation.
+        id:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\-.]*$
+          description: The gate name ID
+        isTemplate:
+          type: boolean
+      description: Create a new gate
+      example:
+        name: a_verbose_gate
+        idType: userID
         isEnabled: false
-        description: Updated Gate Description
+        description: helpful summary of what this gate does
+        lastModifierName: CONSOLE API
+        lastModifierID: 5rfuqoxLIYTscuSaaCOlB8
+        targetApps:
+        - my_app
+        team: team
         rules:
         - name: All Conditions
           passPercentage: 10
           conditions:
+          - type: public
           - type: user_id
             targetValue:
             - '111'
@@ -4981,6 +5209,13 @@ components:
             - NZ
             - US
             operator: any
+          - type: passes_gate
+            targetValue: my_gate_2
+          - type: fails_gate
+            targetValue: my_gate_2
+          - type: time
+            targetValue: 1643070357193
+            operator: after
           - type: environment_tier
             targetValue:
             - production
@@ -4994,23 +5229,12 @@ components:
             - 1.1.1.1
             - 8.8.8.8
             operator: any
-          - type: unit_id
-            operator: any
-            targetValue:
-            - '31'
-            customID: userID
-        tags:
-        - ★ Core
-        type: TEMPORARY
-        idType: stableID
-        targetApps: []
-    ResolveGuardrailAlertRequestDto:
-      type: object
-      properties:
-        reasoning:
-          type: string
-          description: Reason for resolving the alert
-          example: Issue has been addressed
+          environment: null
+        checksPerHour: 0
+        tags: []
+        monitoringMetrics:
+        - name: dau
+          type: user
     EditReviewRequestDto:
       type: object
       properties:
@@ -5258,66 +5482,49 @@ components:
       additionalProperties: false
       title: EditReviewRequest
       description: Request body for PUT /console/v1/gates/:id/reviews/:reviewID. Supply any subset of the metadata fields and/or `change`; an empty body is rejected.
-    PulseLoadHistoryDto:
+    ResolveGuardrailAlertRequestDto:
       type: object
       properties:
-        creatorName:
+        reasoning:
           type: string
-        createdTime:
-          type: number
-          format: double
-        finishedTime:
-          type: number
-          format: double
-        finishedState:
-          type: string
-          enum:
-          - success
-          - failure
-          - partial_failure
-          - cancelled
-          - timeout
-        startDs:
-          type: string
-        endDs:
-          type: string
-        reloadType:
-          type: string
-          enum:
-          - incremental
-          - full
-          - metric
-        turboMode:
-          type: boolean
-        dagID:
-          type: string
-      required:
-      - createdTime
-      - startDs
-      - endDs
-      - reloadType
-      - turboMode
-      - dagID
-    EchidnaGateLoadPulseQueryDto:
+          description: Reason for resolving the alert
+          example: Issue has been addressed
+    UnarchiveSchemaDto:
       type: object
       properties:
-        refresh:
-          default: full
+        unarchiveReason:
           type: string
-          enum:
-          - full
-          - incremental
-          - metric
-        metricIDs:
+          description: The reason for unarchiving the gate
+          example: The gate is needed again
+    GateRulesDto:
+      type: object
+      properties:
+        rules:
+          description: Gate Rules
           type: array
           items:
-            type: string
-        ruleId:
-          type: string
-        turboMode:
-          type: boolean
+            type: object
       required:
-      - ruleId
+      - rules
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
     ExternalExperimentDto:
       type: object
       properties:
@@ -6653,1212 +6860,6 @@ components:
       - isStale
       - permalink
       - powerAnalyses
-    CreateReviewRequestDto:
-      type: object
-      properties:
-        description:
-          type: string
-          minLength: 1
-          maxLength: 2000
-          description: Human-readable description of the proposed change.
-        reviewer_ids:
-          default: []
-          type: array
-          items:
-            type: string
-          description: User IDs to request review from.
-        reviewer_group_ids:
-          default: []
-          type: array
-          items:
-            type: string
-          description: Reviewer group IDs to request review from.
-        change:
-          type: object
-          properties:
-            rules:
-              type: array
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: The name of this rule.
-                  passPercentage:
-                    type: number
-                    minimum: 0
-                    maximum: 100
-                    multipleOf: 0.01
-                    description: Of the users that meet the conditions of this rule, what percent should return true.
-                  conditions:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        targetValue:
-                          oneOf:
-                          - type: array
-                            items:
-                              type: string
-                          - type: array
-                            items:
-                              type: number
-                          - type: string
-                          - type: number
-                        operator:
-                          type: string
-                          enum:
-                          - any
-                          - none
-                          - any_case_sensitive
-                          - none_case_sensitive
-                          - str_contains_any
-                          - str_contains_none
-                          - gt
-                          - lt
-                          - lte
-                          - gte
-                          - version_gt
-                          - version_lt
-                          - version_gte
-                          - version_lte
-                          - version_eq
-                          - after
-                          - before
-                          - 'on'
-                          - is_null
-                          - is_not_null
-                          - str_matches
-                          - encoded_any
-                          - array_contains_any
-                          - array_contains_none
-                          - array_contains_all
-                          - not_array_contains_all
-                        field:
-                          type:
-                          - string
-                          - 'null'
-                        customID:
-                          type:
-                          - string
-                          - 'null'
-                        type:
-                          type: string
-                          enum:
-                          - app_version
-                          - browser_name
-                          - browser_version
-                          - country
-                          - custom_field
-                          - email
-                          - environment_tier
-                          - fails_gate
-                          - fails_segment
-                          - ip_address
-                          - locale
-                          - os_name
-                          - os_version
-                          - passes_gate
-                          - passes_segment
-                          - public
-                          - time
-                          - unit_id
-                          - user_id
-                          - user_agent
-                          - url
-                          - javascript
-                          - device_model
-                          - target_app
-                          - experiment_group
-                      required:
-                      - type
-                    description: An array of Condition objects.
-                  environments:
-                    type:
-                    - array
-                    - 'null'
-                    items:
-                      type: string
-                    description: The environments this rule is enabled for.
-                  id:
-                    type: string
-                    description: The Statsig ID of this rule.
-                  baseID:
-                    type: string
-                    description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
-                  returnValue:
-                    type: object
-                    additionalProperties: {}
-                    description: The return value of the rule.
-                  completedAutomatedRollouts:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        time:
-                          type: number
-                        passPercent:
-                          type: number
-                      required:
-                      - passPercent
-                    readOnly: true
-                    description: 'Read-only: Automated rollout phases that have already completed.'
-                  pendingAutomatedRollouts:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        time:
-                          type: number
-                        passPercent:
-                          type: number
-                      required:
-                      - passPercent
-                    readOnly: true
-                    description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
-                required:
-                - name
-                - passPercentage
-                - conditions
-              description: Proposed full rule set for the gate. Same shape as the gate update contract.
-            is_enabled:
-              type: boolean
-              description: Proposed enabled state for the gate. An explicit target, not a toggle.
-            is_archived:
-              type: boolean
-              description: Proposed archived state for the gate. `true` archives, `false` unarchives.
-            delete:
-              type: boolean
-              enum:
-              - true
-              description: Delete the gate. Set to `true`.
-            resalt:
-              type: boolean
-              enum:
-              - true
-              description: Re-randomize the gate's salt. Set to `true`.
-            disable_reviews_locally:
-              type: boolean
-              enum:
-              - true
-              description: Stop requiring review on this gate. Set to `true`.
-            team_id:
-              type: string
-              minLength: 1
-              description: Reassign the gate to this team (review type `update_team`).
-            release_pipeline_id:
-              type: string
-              minLength: 1
-              description: Set the gate's release pipeline (review type `update_release_pipeline`).
-            id_type:
-              type: string
-              minLength: 1
-              description: Change the gate's primary unit ID type (review type `edit_id_type`).
-            allow_self_approval:
-              type: boolean
-              description: Whether this gate's reviews may be self-approved (review type `update_allow_self_approval`).
-            target_app_ids:
-              type: array
-              items:
-                type: string
-              description: Replace the gate's target applications (review type `update_target_applications`).
-            owners:
-              type: array
-              items:
-                type: object
-                properties:
-                  owner_id:
-                    type: string
-                    minLength: 1
-                    description: User ID (or SDK key ID) of the owner.
-                  owner_type:
-                    type: string
-                    enum:
-                    - user
-                    - sdk_key
-                    description: Owner kind. Defaults to `user`.
-                required:
-                - owner_id
-                additionalProperties: false
-              description: Replace the gate's owners (review type `update_owners`).
-            allowed_reviewers:
-              type: object
-              properties:
-                user_ids:
-                  type: array
-                  items:
-                    type: string
-                  description: User IDs allowed to review. Replaces the existing set.
-                group_ids:
-                  type: array
-                  items:
-                    type: string
-                  description: Reviewer group IDs allowed to review. Replaces the existing set.
-              additionalProperties: false
-              description: Set who may review this gate (review type `allowed_reviewers`).
-          additionalProperties: false
-          title: ReviewChange
-          description: The proposed change. Provide exactly one of `rules`, `is_enabled`, `is_archived`, `delete`, `resalt`, `disable_reviews_locally`, `team_id`, `release_pipeline_id`, `id_type`, `allow_self_approval`, `target_app_ids`, `owners`, or `allowed_reviewers`.
-      required:
-      - description
-      - change
-      additionalProperties: false
-      title: CreateReviewRequest
-      description: Request body for POST /console/v1/gates/:id/reviews
-    EligibleReviewersDto:
-      type: object
-      properties:
-        everyone_eligible:
-          type: boolean
-        users:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              email:
-                type: string
-              name:
-                type: string
-            required:
-            - id
-            - email
-            - name
-        groups:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              name:
-                type: string
-              user_ids:
-                type: array
-                items:
-                  type: string
-            required:
-            - id
-            - name
-            - user_ids
-      required:
-      - everyone_eligible
-      - users
-      - groups
-    GatePulseResultsDto:
-      type: object
-      properties:
-        ds:
-          type: string
-        monitoringMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              metricID:
-                type: string
-              metricName:
-                type: string
-              directionality:
-                type: string
-                enum:
-                - increase
-                - decrease
-                description: Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
-                example: increase
-              error:
-                oneOf:
-                - type: string
-                  enum:
-                  - no_data
-                  - import_no_data
-                  - incompatible_types
-                  - echidna_unripe
-                  - setup_incomplete
-                  - hourly_metric_type_not_supported
-                  - control_or_test_no_units
-                  - no_subdimension_filter
-                - type: string
-                description: Machine-readable reason when pulse statistics are unavailable. Common values include no_data (insufficient data), echidna_unripe (not yet loaded), and setup_incomplete (misconfigured metric source). Additional string values may appear for cohort/bake windows or other load failures.
-                example: no_data
-              warnings:
-                type: array
-                items:
-                  type: string
-                description: Human-readable warnings about metric data quality, load state, or partial pipeline failures.
-              absoluteChange:
-                type: number
-              confidenceIntervalDelta:
-                type: number
-                description: Absolute confidence interval delta
-              confidenceInterval:
-                type: object
-                properties:
-                  lower:
-                    type: number
-                  upper:
-                    type: number
-                required:
-                - lower
-                - upper
-                additionalProperties: false
-                description: Confidence interval bounds
-                example:
-                  lower: -1.33
-                  upper: 1.33
-              percentChange:
-                type: number
-              sequentialTestingConfidenceIntervalDelta:
-                type: number
-              sequentialTestingConfidenceInterval:
-                type: object
-                properties:
-                  lower:
-                    type: number
-                  upper:
-                    type: number
-                required:
-                - lower
-                - upper
-                additionalProperties: false
-                description: Confidence interval bounds
-                example:
-                  lower: -1.33
-                  upper: 1.33
-              percentConfidenceIntervalDelta:
-                type: number
-              percentConfidenceInterval:
-                type: object
-                properties:
-                  lower:
-                    type: number
-                  upper:
-                    type: number
-                required:
-                - lower
-                - upper
-                additionalProperties: false
-                description: Confidence interval bounds
-                example:
-                  lower: -1.33
-                  upper: 1.33
-              percentSequentialTestingConfidenceIntervalDelta:
-                type: number
-              percentSequentialTestingConfidenceInterval:
-                type: object
-                properties:
-                  lower:
-                    type: number
-                  upper:
-                    type: number
-                required:
-                - lower
-                - upper
-                additionalProperties: false
-                description: Confidence interval bounds
-                example:
-                  lower: -1.33
-                  upper: 1.33
-              testMean:
-                type: number
-              controlMean:
-                type: number
-              testStd:
-                type: number
-              controlStd:
-                type: number
-              testUnits:
-                type: number
-              controlUnits:
-                type: number
-              pValue:
-                type: number
-              sequentialTestingPValue:
-                type:
-                - number
-                - 'null'
-              adjustedAlpha:
-                type: number
-              reversePower:
-                type: number
-              percentCredibleInterval:
-                type: object
-                properties:
-                  lower:
-                    type: number
-                  upper:
-                    type: number
-                required:
-                - lower
-                - upper
-                additionalProperties: false
-                description: Bayesian credible interval for the percent change. Only returned when results are computed with Bayesian analysis.
-                example:
-                  lower: -1.33
-                  upper: 1.33
-              expectedLoss:
-                type: number
-                description: Bayesian expected loss. Only returned when results are computed with Bayesian analysis.
-              chanceToBeat:
-                type: number
-                description: Bayesian probability that the test beats the control. Only returned when results are computed with Bayesian analysis.
-              sequentialTestingLikelihoodRatio:
-                type: number
-                description: SPRT likelihood ratio of the observed data under the alternative vs the null. This is the same value Pulse uses.
-              sequentialTestingLogLikelihoodRatio:
-                type: number
-                description: Natural log of the SPRT likelihood ratio Pulse uses. Compare this to `sprtLogLowerLimit` and `sprtLogUpperLimit`.
-              sprtLowerLimit:
-                type: number
-                description: Lower SPRT decision boundary on the likelihood-ratio scale. Crossing below this accepts the null.
-              sprtUpperLimit:
-                type: number
-                description: Upper SPRT decision boundary on the likelihood-ratio scale. Crossing above this accepts the alternative.
-              sprtLogLowerLimit:
-                type: number
-                description: Lower SPRT decision boundary on the log-likelihood-ratio scale. Crossing below this accepts the null.
-              sprtLogUpperLimit:
-                type: number
-                description: Upper SPRT decision boundary on the log-likelihood-ratio scale. Crossing above this accepts the alternative.
-              sprtDecision:
-                type: string
-                enum:
-                - alternative
-                - 'null'
-                - continue
-                description: SPRT decision from the log likelihood ratio. `alternative` accepts H1, `null` accepts H0, and `continue` means the ratio is still between the boundaries.
-              isSprtSignificant:
-                type: boolean
-                description: True when the SPRT decision is `alternative`, meaning the result is statistically significant.
-              sprtStatsigness:
-                type: string
-                enum:
-                - positive
-                - negative
-                - neutral
-                description: Direction of the SPRT decision relative to the metric's desired direction. `neutral` when the test has not accepted the alternative.
-              absoluteToplineImpact:
-                type: number
-              absoluteToplineImpactDelta:
-                type: number
-              relativeToplineImpact:
-                type: number
-              relativeToplineImpactDelta:
-                type: number
-              projectedAbsoluteToplineImpact:
-                type: number
-              projectedAbsoluteToplineImpactDelta:
-                type: number
-              projectedRelativeToplineImpact:
-                type: number
-              projectedRelativeToplineImpactDelta:
-                type: number
-            required:
-            - metricID
-            - metricName
-            - directionality
-            additionalProperties: false
-      required:
-      - ds
-      - monitoringMetrics
-    GateRulesDto:
-      type: object
-      properties:
-        rules:
-          description: Gate Rules
-          type: array
-          items:
-            type: object
-      required:
-      - rules
-    PaginationResponseMetadataDto:
-      type: object
-      properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
-          type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
-    RuleDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of this rule.
-        passPercentage:
-          type: number
-          minimum: 0
-          maximum: 100
-          multipleOf: 0.01
-          description: Of the users that meet the conditions of this rule, what percent should return true.
-          format: double
-        conditions:
-          type: array
-          items:
-            type: object
-            properties:
-              targetValue:
-                oneOf:
-                - type: array
-                  items:
-                    type: string
-                - type: array
-                  items:
-                    type: number
-                - type: string
-                - type: number
-              operator:
-                type: string
-                enum:
-                - any
-                - none
-                - any_case_sensitive
-                - none_case_sensitive
-                - str_contains_any
-                - str_contains_none
-                - gt
-                - lt
-                - lte
-                - gte
-                - version_gt
-                - version_lt
-                - version_gte
-                - version_lte
-                - version_eq
-                - after
-                - before
-                - 'on'
-                - is_null
-                - is_not_null
-                - str_matches
-                - encoded_any
-                - array_contains_any
-                - array_contains_none
-                - array_contains_all
-                - not_array_contains_all
-              field:
-                type:
-                - string
-                - 'null'
-              customID:
-                type:
-                - string
-                - 'null'
-              type:
-                type: string
-                enum:
-                - app_version
-                - browser_name
-                - browser_version
-                - country
-                - custom_field
-                - email
-                - environment_tier
-                - fails_gate
-                - fails_segment
-                - ip_address
-                - locale
-                - os_name
-                - os_version
-                - passes_gate
-                - passes_segment
-                - public
-                - time
-                - unit_id
-                - user_id
-                - user_agent
-                - url
-                - javascript
-                - device_model
-                - target_app
-                - experiment_group
-            required:
-            - type
-          description: An array of Condition objects.
-        environments:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: The environments this rule is enabled for.
-        id:
-          type: string
-          description: The Statsig ID of this rule.
-        baseID:
-          type: string
-          description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
-        returnValue:
-          type: object
-          additionalProperties: {}
-          description: The return value of the rule.
-        completedAutomatedRollouts:
-          type: array
-          items:
-            type: object
-            properties:
-              time:
-                type: number
-              passPercent:
-                type: number
-            required:
-            - passPercent
-          readOnly: true
-          description: 'Read-only: Automated rollout phases that have already completed.'
-        pendingAutomatedRollouts:
-          type: array
-          items:
-            type: object
-            properties:
-              time:
-                type: number
-              passPercent:
-                type: number
-            required:
-            - passPercent
-          readOnly: true
-          description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
-      required:
-      - name
-      - passPercentage
-      - conditions
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
-    DynamicConfigDto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID
-        name:
-          type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_\-. ]*$
-          description: Optional name for the configuration.
-          example: my_config
-        idType:
-          type: string
-          description: The type of ID which the dynamic config is based on.
-          example: userID
-        description:
-          type: string
-          maxLength: 1000
-          description: A brief summary of what the dynamic config is being used for
-          example: helpful summary of what this dynamic config does
-        lastModifierID:
-          type:
-          - string
-          - 'null'
-          description: ID of the last modifier.
-        lastModifiedTime:
-          type:
-          - number
-          - 'null'
-          description: Time of the last modification.
-          format: double
-        lastModifierEmail:
-          type:
-          - string
-          - 'null'
-          description: Email of the last modifier.
-        lastModifierName:
-          type:
-          - string
-          - 'null'
-          description: Name of the last modifier.
-        creatorID:
-          type:
-          - string
-          - 'null'
-        createdTime:
-          type: number
-          description: Timestamp when the entity was created.
-          format: double
-        creatorName:
-          type:
-          - string
-          - 'null'
-          description: Name of the creator.
-        creatorEmail:
-          type:
-          - string
-          - 'null'
-        tags:
-          type: array
-          items:
-            type: string
-          description: The list of tag names attached to the dynamic config
-          example:
-          - a tag
-        targetApps:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        holdoutIDs:
-          type: array
-          items:
-            type: string
-          description: Holdouts applied to this configuration.
-        team:
-          type:
-          - string
-          - 'null'
-          description: The team name associated with the dynamic config, Enterprise only.
-        teamID:
-          type:
-          - string
-          - 'null'
-          description: The team ID associated with the dynamic config, Enterprise only.
-        version:
-          type: number
-          description: Version number
-          format: double
-        isEnabled:
-          type: boolean
-          description: Is the dynamic config enabled
-          default: true
-        rules:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of this rule.
-              passPercentage:
-                type: number
-                minimum: 0
-                maximum: 100
-                multipleOf: 0.01
-                description: Of the users that meet the conditions of this rule, what percent should return true.
-              conditions:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    targetValue:
-                      oneOf:
-                      - type: array
-                        items:
-                          type: string
-                      - type: array
-                        items:
-                          type: number
-                      - type: string
-                      - type: number
-                    operator:
-                      type: string
-                      enum:
-                      - any
-                      - none
-                      - any_case_sensitive
-                      - none_case_sensitive
-                      - str_contains_any
-                      - str_contains_none
-                      - gt
-                      - lt
-                      - lte
-                      - gte
-                      - version_gt
-                      - version_lt
-                      - version_gte
-                      - version_lte
-                      - version_eq
-                      - after
-                      - before
-                      - 'on'
-                      - is_null
-                      - is_not_null
-                      - str_matches
-                      - encoded_any
-                      - array_contains_any
-                      - array_contains_none
-                      - array_contains_all
-                      - not_array_contains_all
-                    field:
-                      type:
-                      - string
-                      - 'null'
-                    customID:
-                      type:
-                      - string
-                      - 'null'
-                    type:
-                      type: string
-                      enum:
-                      - app_version
-                      - browser_name
-                      - browser_version
-                      - country
-                      - custom_field
-                      - email
-                      - environment_tier
-                      - fails_gate
-                      - fails_segment
-                      - ip_address
-                      - locale
-                      - os_name
-                      - os_version
-                      - passes_gate
-                      - passes_segment
-                      - public
-                      - time
-                      - unit_id
-                      - user_id
-                      - user_agent
-                      - url
-                      - javascript
-                      - device_model
-                      - target_app
-                      - experiment_group
-                  required:
-                  - type
-                description: An array of Condition objects.
-              environments:
-                type:
-                - array
-                - 'null'
-                items:
-                  type: string
-              id:
-                type: string
-                description: The Statsig ID of this rule.
-              baseID:
-                type: string
-                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
-              returnValue:
-                type: object
-                additionalProperties: {}
-              completedAutomatedRollouts:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    time:
-                      type: number
-                    passPercent:
-                      type: number
-                  required:
-                  - passPercent
-                readOnly: true
-                description: 'Read-only: Automated rollout phases that have already completed.'
-              pendingAutomatedRollouts:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    time:
-                      type: number
-                    passPercent:
-                      type: number
-                  required:
-                  - passPercent
-                readOnly: true
-                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
-              returnValueJson5:
-                type: string
-              variants:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    name:
-                      type: string
-                    passPercentage:
-                      type: number
-                      minimum: 0
-                      maximum: 100
-                      multipleOf: 0.01
-                    returnValue:
-                      type: object
-                      additionalProperties: {}
-                    returnValueJson5:
-                      type: string
-                  required:
-                  - name
-                  - passPercentage
-            required:
-            - name
-            - passPercentage
-            - conditions
-          description: An array of Rule objects
-        defaultValue:
-          type: object
-          additionalProperties: {}
-          description: The fallback JSON object when no rules are triggered
-        defaultValueJson5:
-          type: string
-          description: Can include comments. If provided with defaultValue, must parse to the same JSON
-        owner:
-          type:
-          - object
-          - 'null'
-          properties:
-            ownerID:
-              type: string
-              description: ID of the owner
-              example: abc123
-            ownerType:
-              type: string
-              description: Type of the owner (e.g., SDK_KEY or USER)
-              example: USER
-            ownerName:
-              type: string
-              description: The name of the owner. This field is optional.
-              example: John Doe
-            ownerEmail:
-              type: string
-              description: The email of the owner. This field is optional.
-          description: Schema for owner data including ID, type, name.
-          example:
-            ownerID: user123
-            ownerType: USER
-            ownerName: John Doe
-            ownerEmail: owner123@test.com
-        schema:
-          type:
-          - string
-          - 'null'
-          description: A schema using JSON Schema Draft 2020-12 to enforce return values of this dynamic config's rules.
-        schemaJson5:
-          type:
-          - string
-          - 'null'
-          description: '`schema` except with Json5 comments. Optional and should parse to same json as `schema`.'
-        releasePipelineID:
-          type:
-          - string
-          - 'null'
-          description: The release pipeline ID associated with the dynamic config
-        isTemplate:
-          type: boolean
-        status:
-          type: string
-          enum:
-          - Enabled
-          - Disabled
-          - Archived
-        checksPerHour:
-          type:
-          - number
-          - 'null'
-          format: double
-        permalink:
-          type: string
-          format: uri
-          description: A permalink to this dynamic config in the Statsig Console.
-        type:
-          type: string
-          enum:
-          - PERMANENT
-          - TEMPORARY
-          - STALE
-          - TEMPLATE
-          description: The lifecycle type of the config (TEMPORARY, PERMANENT, or STALE). STALE classification depends on the nightly stale detection batch job having run; a config not yet processed reads as TEMPORARY.
-        typeReason:
-          type: string
-          enum:
-          - NONE
-          - STALE_PROBABLY_DEAD_CHECK
-          - STALE_NO_RULES
-          - STALE_PROBABLY_FORGOTTEN
-          - STALE_PROBABLY_LAUNCHED
-          - STALE_PROBABLY_UNLAUNCHED
-          description: The reason for the current type classification. Depends on the nightly stale detection batch job having run.
-        isPermanent:
-          type: boolean
-          description: Whether the config has been explicitly marked as long-lived.
-      required:
-      - id
-      - description
-      - lastModifierID
-      - lastModifiedTime
-      - lastModifierEmail
-      - lastModifierName
-      - createdTime
-      - creatorName
-      - isEnabled
-      - rules
-      - permalink
-      - type
-      - typeReason
-      - isPermanent
-    UpdateOverridesContractDto:
-      oneOf:
-      - type: object
-        properties:
-          environmentOverrides:
-            type: array
-            items:
-              type: object
-              properties:
-                environment:
-                  type:
-                  - string
-                  - 'null'
-                  description: Environment
-                  example: staging
-                unitID:
-                  type:
-                  - string
-                  - 'null'
-                  description: Unit ID
-                  example: unit123
-                passingIDs:
-                  type: array
-                  items:
-                    type: string
-                  description: List of passing IDs
-                  example:
-                  - id1
-                  - id2
-                failingIDs:
-                  type: array
-                  items:
-                    type: string
-                  description: List of failing IDs
-                  example:
-                  - id3
-                  - id4
-              required:
-              - unitID
-              - passingIDs
-              - failingIDs
-              description: Contract for environment override
-              example:
-                environment: staging
-                unitID: unit123
-                passingIDs:
-                - id1
-                - id2
-                failingIDs:
-                - id3
-                - id4
-        required:
-        - environmentOverrides
-        description: Contract for updating environment overrides
-        example:
-          environmentOverrides:
-          - environment: staging
-            unitID: unit123
-            passingIDs:
-            - id1
-            - id2
-            failingIDs:
-            - id3
-            - id4
-      - type: object
-        properties:
-          passingUserIDs:
-            type: array
-            items:
-              type: string
-              minLength: 1
-              description: User ID
-              example: user123
-            maxItems: 2000
-            description: List of user IDs
-            example:
-            - user123
-            - user456
-            - user789
-          failingUserIDs:
-            type: array
-            items:
-              type: string
-              minLength: 1
-              description: User ID
-              example: user123
-            maxItems: 2000
-            description: List of user IDs
-            example:
-            - user123
-            - user456
-            - user789
-          passingCustomIDs:
-            type: array
-            items:
-              type: string
-              minLength: 1
-              description: Custom ID
-              example: custom123
-            maxItems: 2000
-            description: Optional list of custom IDs
-            example:
-            - custom123
-            - custom456
-          failingCustomIDs:
-            type: array
-            items:
-              type: string
-              minLength: 1
-              description: Custom ID
-              example: custom123
-            maxItems: 2000
-            description: Optional list of custom IDs
-            example:
-            - custom123
-            - custom456
-        required:
-        - passingUserIDs
-        - failingUserIDs
-        description: Contract for updating ID overrides
-        example:
-          passingUserIDs:
-          - user123
-          - user456
-          failingUserIDs:
-          - user789
-          - user012
-          passingCustomIDs:
-          - custom123
-          failingCustomIDs:
-          - custom456
-      description: Contract for updating overrides
-    ArchiveSchemaDto:
-      type: object
-      properties:
-        forceArchive:
-          type: boolean
-        archiveReason:
-          type: string
-          description: The reason for archiving the gate
-          example: The gate is no longer needed
     ReviewEnvelopeDto:
       type: object
       properties:
@@ -8794,14 +7795,1106 @@ components:
       - description
       - created_at
       title: Review
-    ResolveGuardrailAlertResponseDto:
+    ArchiveSchemaDto:
       type: object
       properties:
-        resolvedAt:
+        forceArchive:
+          type: boolean
+        archiveReason:
+          type: string
+          description: The reason for archiving the gate
+          example: The gate is no longer needed
+    OverrideDto:
+      type: object
+      properties:
+        passingUserIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: User ID
+            example: user123
+          maxItems: 2000
+          description: List of user IDs
+          example:
+          - user123
+          - user456
+          - user789
+        failingUserIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: User ID
+            example: user123
+          maxItems: 2000
+          description: List of user IDs
+          example:
+          - user123
+          - user456
+          - user789
+        passingCustomIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: Custom ID
+            example: custom123
+          maxItems: 2000
+          description: Optional list of custom IDs
+          example:
+          - custom123
+          - custom456
+        failingCustomIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: Custom ID
+            example: custom123
+          maxItems: 2000
+          description: Optional list of custom IDs
+          example:
+          - custom123
+          - custom456
+        environmentOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Environment
+                example: staging
+              unitID:
+                type:
+                - string
+                - 'null'
+                description: Unit ID
+                example: unit123
+              passingIDs:
+                type: array
+                items:
+                  type: string
+                description: List of passing IDs
+                example:
+                - id1
+                - id2
+              failingIDs:
+                type: array
+                items:
+                  type: string
+                description: List of failing IDs
+                example:
+                - id3
+                - id4
+            required:
+            - unitID
+            - passingIDs
+            - failingIDs
+            description: Contract for environment override
+            example:
+              environment: staging
+              unitID: unit123
+              passingIDs:
+              - id1
+              - id2
+              failingIDs:
+              - id3
+              - id4
+      required:
+      - passingUserIDs
+      - failingUserIDs
+      - environmentOverrides
+      description: Contract for overrides
+    EligibleReviewersDto:
+      type: object
+      properties:
+        everyone_eligible:
+          type: boolean
+        users:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              email:
+                type: string
+              name:
+                type: string
+            required:
+            - id
+            - email
+            - name
+        groups:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              user_ids:
+                type: array
+                items:
+                  type: string
+            required:
+            - id
+            - name
+            - user_ids
+      required:
+      - everyone_eligible
+      - users
+      - groups
+    GateChecksDto:
+      type: object
+      properties:
+        has_production_checks_in_last_7_days:
+          type:
+          - boolean
+          - 'null'
+      required:
+      - has_production_checks_in_last_7_days
+    GatePulseResultsDto:
+      type: object
+      properties:
+        ds:
+          type: string
+        monitoringMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              metricID:
+                type: string
+              metricName:
+                type: string
+              directionality:
+                type: string
+                enum:
+                - increase
+                - decrease
+                description: Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
+                example: increase
+              error:
+                oneOf:
+                - type: string
+                  enum:
+                  - no_data
+                  - import_no_data
+                  - incompatible_types
+                  - echidna_unripe
+                  - setup_incomplete
+                  - hourly_metric_type_not_supported
+                  - control_or_test_no_units
+                  - no_subdimension_filter
+                - type: string
+                description: Machine-readable reason when pulse statistics are unavailable. Common values include no_data (insufficient data), echidna_unripe (not yet loaded), and setup_incomplete (misconfigured metric source). Additional string values may appear for cohort/bake windows or other load failures.
+                example: no_data
+              warnings:
+                type: array
+                items:
+                  type: string
+                description: Human-readable warnings about metric data quality, load state, or partial pipeline failures.
+              absoluteChange:
+                type: number
+              confidenceIntervalDelta:
+                type: number
+                description: Absolute confidence interval delta
+              confidenceInterval:
+                type: object
+                properties:
+                  lower:
+                    type: number
+                  upper:
+                    type: number
+                required:
+                - lower
+                - upper
+                additionalProperties: false
+                description: Confidence interval bounds
+                example:
+                  lower: -1.33
+                  upper: 1.33
+              percentChange:
+                type: number
+              sequentialTestingConfidenceIntervalDelta:
+                type: number
+              sequentialTestingConfidenceInterval:
+                type: object
+                properties:
+                  lower:
+                    type: number
+                  upper:
+                    type: number
+                required:
+                - lower
+                - upper
+                additionalProperties: false
+                description: Confidence interval bounds
+                example:
+                  lower: -1.33
+                  upper: 1.33
+              percentConfidenceIntervalDelta:
+                type: number
+              percentConfidenceInterval:
+                type: object
+                properties:
+                  lower:
+                    type: number
+                  upper:
+                    type: number
+                required:
+                - lower
+                - upper
+                additionalProperties: false
+                description: Confidence interval bounds
+                example:
+                  lower: -1.33
+                  upper: 1.33
+              percentSequentialTestingConfidenceIntervalDelta:
+                type: number
+              percentSequentialTestingConfidenceInterval:
+                type: object
+                properties:
+                  lower:
+                    type: number
+                  upper:
+                    type: number
+                required:
+                - lower
+                - upper
+                additionalProperties: false
+                description: Confidence interval bounds
+                example:
+                  lower: -1.33
+                  upper: 1.33
+              testMean:
+                type: number
+              controlMean:
+                type: number
+              testStd:
+                type: number
+              controlStd:
+                type: number
+              testUnits:
+                type: number
+              controlUnits:
+                type: number
+              pValue:
+                type: number
+              sequentialTestingPValue:
+                type:
+                - number
+                - 'null'
+              adjustedAlpha:
+                type: number
+              reversePower:
+                type: number
+              percentCredibleInterval:
+                type: object
+                properties:
+                  lower:
+                    type: number
+                  upper:
+                    type: number
+                required:
+                - lower
+                - upper
+                additionalProperties: false
+                description: Bayesian credible interval for the percent change. Only returned when results are computed with Bayesian analysis.
+                example:
+                  lower: -1.33
+                  upper: 1.33
+              expectedLoss:
+                type: number
+                description: Bayesian expected loss. Only returned when results are computed with Bayesian analysis.
+              chanceToBeat:
+                type: number
+                description: Bayesian probability that the test beats the control. Only returned when results are computed with Bayesian analysis.
+              sequentialTestingLikelihoodRatio:
+                type: number
+                description: SPRT likelihood ratio of the observed data under the alternative vs the null. This is the same value Pulse uses.
+              sequentialTestingLogLikelihoodRatio:
+                type: number
+                description: Natural log of the SPRT likelihood ratio Pulse uses. Compare this to `sprtLogLowerLimit` and `sprtLogUpperLimit`.
+              sprtLowerLimit:
+                type: number
+                description: Lower SPRT decision boundary on the likelihood-ratio scale. Crossing below this accepts the null.
+              sprtUpperLimit:
+                type: number
+                description: Upper SPRT decision boundary on the likelihood-ratio scale. Crossing above this accepts the alternative.
+              sprtLogLowerLimit:
+                type: number
+                description: Lower SPRT decision boundary on the log-likelihood-ratio scale. Crossing below this accepts the null.
+              sprtLogUpperLimit:
+                type: number
+                description: Upper SPRT decision boundary on the log-likelihood-ratio scale. Crossing above this accepts the alternative.
+              sprtDecision:
+                type: string
+                enum:
+                - alternative
+                - 'null'
+                - continue
+                description: SPRT decision from the log likelihood ratio. `alternative` accepts H1, `null` accepts H0, and `continue` means the ratio is still between the boundaries.
+              isSprtSignificant:
+                type: boolean
+                description: True when the SPRT decision is `alternative`, meaning the result is statistically significant.
+              sprtStatsigness:
+                type: string
+                enum:
+                - positive
+                - negative
+                - neutral
+                description: Direction of the SPRT decision relative to the metric's desired direction. `neutral` when the test has not accepted the alternative.
+              absoluteToplineImpact:
+                type: number
+              absoluteToplineImpactDelta:
+                type: number
+              relativeToplineImpact:
+                type: number
+              relativeToplineImpactDelta:
+                type: number
+              projectedAbsoluteToplineImpact:
+                type: number
+              projectedAbsoluteToplineImpactDelta:
+                type: number
+              projectedRelativeToplineImpact:
+                type: number
+              projectedRelativeToplineImpactDelta:
+                type: number
+            required:
+            - metricID
+            - metricName
+            - directionality
+            additionalProperties: false
+      required:
+      - ds
+      - monitoringMetrics
+    RuleDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of this rule.
+        passPercentage:
           type: number
-          description: Timestamp when alert was resolved
-          example: 1718630400
+          minimum: 0
+          maximum: 100
+          multipleOf: 0.01
+          description: Of the users that meet the conditions of this rule, what percent should return true.
           format: double
+        conditions:
+          type: array
+          items:
+            type: object
+            properties:
+              targetValue:
+                oneOf:
+                - type: array
+                  items:
+                    type: string
+                - type: array
+                  items:
+                    type: number
+                - type: string
+                - type: number
+              operator:
+                type: string
+                enum:
+                - any
+                - none
+                - any_case_sensitive
+                - none_case_sensitive
+                - str_contains_any
+                - str_contains_none
+                - gt
+                - lt
+                - lte
+                - gte
+                - version_gt
+                - version_lt
+                - version_gte
+                - version_lte
+                - version_eq
+                - after
+                - before
+                - 'on'
+                - is_null
+                - is_not_null
+                - str_matches
+                - encoded_any
+                - array_contains_any
+                - array_contains_none
+                - array_contains_all
+                - not_array_contains_all
+              field:
+                type:
+                - string
+                - 'null'
+              customID:
+                type:
+                - string
+                - 'null'
+              type:
+                type: string
+                enum:
+                - app_version
+                - browser_name
+                - browser_version
+                - country
+                - custom_field
+                - email
+                - environment_tier
+                - fails_gate
+                - fails_segment
+                - ip_address
+                - locale
+                - os_name
+                - os_version
+                - passes_gate
+                - passes_segment
+                - public
+                - time
+                - unit_id
+                - user_id
+                - user_agent
+                - url
+                - javascript
+                - device_model
+                - target_app
+                - experiment_group
+            required:
+            - type
+          description: An array of Condition objects.
+        environments:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: The environments this rule is enabled for.
+        id:
+          type: string
+          description: The Statsig ID of this rule.
+        baseID:
+          type: string
+          description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+        returnValue:
+          type: object
+          additionalProperties: {}
+          description: The return value of the rule.
+        completedAutomatedRollouts:
+          type: array
+          items:
+            type: object
+            properties:
+              time:
+                type: number
+              passPercent:
+                type: number
+            required:
+            - passPercent
+          readOnly: true
+          description: 'Read-only: Automated rollout phases that have already completed.'
+        pendingAutomatedRollouts:
+          type: array
+          items:
+            type: object
+            properties:
+              time:
+                type: number
+              passPercent:
+                type: number
+            required:
+            - passPercent
+          readOnly: true
+          description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+      required:
+      - name
+      - passPercentage
+      - conditions
+    UpdateOverridesContractDto:
+      oneOf:
+      - type: object
+        properties:
+          environmentOverrides:
+            type: array
+            items:
+              type: object
+              properties:
+                environment:
+                  type:
+                  - string
+                  - 'null'
+                  description: Environment
+                  example: staging
+                unitID:
+                  type:
+                  - string
+                  - 'null'
+                  description: Unit ID
+                  example: unit123
+                passingIDs:
+                  type: array
+                  items:
+                    type: string
+                  description: List of passing IDs
+                  example:
+                  - id1
+                  - id2
+                failingIDs:
+                  type: array
+                  items:
+                    type: string
+                  description: List of failing IDs
+                  example:
+                  - id3
+                  - id4
+              required:
+              - unitID
+              - passingIDs
+              - failingIDs
+              description: Contract for environment override
+              example:
+                environment: staging
+                unitID: unit123
+                passingIDs:
+                - id1
+                - id2
+                failingIDs:
+                - id3
+                - id4
+        required:
+        - environmentOverrides
+        description: Contract for updating environment overrides
+        example:
+          environmentOverrides:
+          - environment: staging
+            unitID: unit123
+            passingIDs:
+            - id1
+            - id2
+            failingIDs:
+            - id3
+            - id4
+      - type: object
+        properties:
+          passingUserIDs:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              description: User ID
+              example: user123
+            maxItems: 2000
+            description: List of user IDs
+            example:
+            - user123
+            - user456
+            - user789
+          failingUserIDs:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              description: User ID
+              example: user123
+            maxItems: 2000
+            description: List of user IDs
+            example:
+            - user123
+            - user456
+            - user789
+          passingCustomIDs:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              description: Custom ID
+              example: custom123
+            maxItems: 2000
+            description: Optional list of custom IDs
+            example:
+            - custom123
+            - custom456
+          failingCustomIDs:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              description: Custom ID
+              example: custom123
+            maxItems: 2000
+            description: Optional list of custom IDs
+            example:
+            - custom123
+            - custom456
+        required:
+        - passingUserIDs
+        - failingUserIDs
+        description: Contract for updating ID overrides
+        example:
+          passingUserIDs:
+          - user123
+          - user456
+          failingUserIDs:
+          - user789
+          - user012
+          passingCustomIDs:
+          - custom123
+          failingCustomIDs:
+          - custom456
+      description: Contract for updating overrides
+    EchidnaGateLoadPulseQueryDto:
+      type: object
+      properties:
+        refresh:
+          default: full
+          type: string
+          enum:
+          - full
+          - incremental
+          - metric
+        metricIDs:
+          type: array
+          items:
+            type: string
+        ruleId:
+          type: string
+        turboMode:
+          type: boolean
+      required:
+      - ruleId
+    DynamicConfigDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\-. ]*$
+          description: Optional name for the configuration.
+          example: my_config
+        idType:
+          type: string
+          description: The type of ID which the dynamic config is based on.
+          example: userID
+        description:
+          type: string
+          maxLength: 1000
+          description: A brief summary of what the dynamic config is being used for
+          example: helpful summary of what this dynamic config does
+        lastModifierID:
+          type:
+          - string
+          - 'null'
+          description: ID of the last modifier.
+        lastModifiedTime:
+          type:
+          - number
+          - 'null'
+          description: Time of the last modification.
+          format: double
+        lastModifierEmail:
+          type:
+          - string
+          - 'null'
+          description: Email of the last modifier.
+        lastModifierName:
+          type:
+          - string
+          - 'null'
+          description: Name of the last modifier.
+        creatorID:
+          type:
+          - string
+          - 'null'
+        createdTime:
+          type: number
+          description: Timestamp when the entity was created.
+          format: double
+        creatorName:
+          type:
+          - string
+          - 'null'
+          description: Name of the creator.
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+        tags:
+          type: array
+          items:
+            type: string
+          description: The list of tag names attached to the dynamic config
+          example:
+          - a tag
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        holdoutIDs:
+          type: array
+          items:
+            type: string
+          description: Holdouts applied to this configuration.
+        team:
+          type:
+          - string
+          - 'null'
+          description: The team name associated with the dynamic config, Enterprise only.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: The team ID associated with the dynamic config, Enterprise only.
+        version:
+          type: number
+          description: Version number
+          format: double
+        isEnabled:
+          type: boolean
+          description: Is the dynamic config enabled
+          default: true
+        rules:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of this rule.
+              passPercentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                multipleOf: 0.01
+                description: Of the users that meet the conditions of this rule, what percent should return true.
+              conditions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    targetValue:
+                      oneOf:
+                      - type: array
+                        items:
+                          type: string
+                      - type: array
+                        items:
+                          type: number
+                      - type: string
+                      - type: number
+                    operator:
+                      type: string
+                      enum:
+                      - any
+                      - none
+                      - any_case_sensitive
+                      - none_case_sensitive
+                      - str_contains_any
+                      - str_contains_none
+                      - gt
+                      - lt
+                      - lte
+                      - gte
+                      - version_gt
+                      - version_lt
+                      - version_gte
+                      - version_lte
+                      - version_eq
+                      - after
+                      - before
+                      - 'on'
+                      - is_null
+                      - is_not_null
+                      - str_matches
+                      - encoded_any
+                      - array_contains_any
+                      - array_contains_none
+                      - array_contains_all
+                      - not_array_contains_all
+                    field:
+                      type:
+                      - string
+                      - 'null'
+                    customID:
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      type: string
+                      enum:
+                      - app_version
+                      - browser_name
+                      - browser_version
+                      - country
+                      - custom_field
+                      - email
+                      - environment_tier
+                      - fails_gate
+                      - fails_segment
+                      - ip_address
+                      - locale
+                      - os_name
+                      - os_version
+                      - passes_gate
+                      - passes_segment
+                      - public
+                      - time
+                      - unit_id
+                      - user_id
+                      - user_agent
+                      - url
+                      - javascript
+                      - device_model
+                      - target_app
+                      - experiment_group
+                  required:
+                  - type
+                description: An array of Condition objects.
+              environments:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+              id:
+                type: string
+                description: The Statsig ID of this rule.
+              baseID:
+                type: string
+                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+              returnValue:
+                type: object
+                additionalProperties: {}
+              completedAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that have already completed.'
+              pendingAutomatedRollouts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    time:
+                      type: number
+                    passPercent:
+                      type: number
+                  required:
+                  - passPercent
+                readOnly: true
+                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+              returnValueJson5:
+                type: string
+              variants:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    passPercentage:
+                      type: number
+                      minimum: 0
+                      maximum: 100
+                      multipleOf: 0.01
+                    returnValue:
+                      type: object
+                      additionalProperties: {}
+                    returnValueJson5:
+                      type: string
+                  required:
+                  - name
+                  - passPercentage
+            required:
+            - name
+            - passPercentage
+            - conditions
+          description: An array of Rule objects
+        defaultValue:
+          type: object
+          additionalProperties: {}
+          description: The fallback JSON object when no rules are triggered
+        defaultValueJson5:
+          type: string
+          description: Can include comments. If provided with defaultValue, must parse to the same JSON
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
+        schema:
+          type:
+          - string
+          - 'null'
+          description: A schema using JSON Schema Draft 2020-12 to enforce return values of this dynamic config's rules.
+        schemaJson5:
+          type:
+          - string
+          - 'null'
+          description: '`schema` except with Json5 comments. Optional and should parse to same json as `schema`.'
+        releasePipelineID:
+          type:
+          - string
+          - 'null'
+          description: The release pipeline ID associated with the dynamic config
+        isTemplate:
+          type: boolean
+        status:
+          type: string
+          enum:
+          - Enabled
+          - Disabled
+          - Archived
+        checksPerHour:
+          type:
+          - number
+          - 'null'
+          format: double
+        permalink:
+          type: string
+          format: uri
+          description: A permalink to this dynamic config in the Statsig Console.
+        type:
+          type: string
+          enum:
+          - PERMANENT
+          - TEMPORARY
+          - STALE
+          - TEMPLATE
+          description: The lifecycle type of the config (TEMPORARY, PERMANENT, or STALE). STALE classification depends on the nightly stale detection batch job having run; a config not yet processed reads as TEMPORARY.
+        typeReason:
+          type: string
+          enum:
+          - NONE
+          - STALE_PROBABLY_DEAD_CHECK
+          - STALE_NO_RULES
+          - STALE_PROBABLY_FORGOTTEN
+          - STALE_PROBABLY_LAUNCHED
+          - STALE_PROBABLY_UNLAUNCHED
+          description: The reason for the current type classification. Depends on the nightly stale detection batch job having run.
+        isPermanent:
+          type: boolean
+          description: Whether the config has been explicitly marked as long-lived.
+      required:
+      - id
+      - description
+      - lastModifierID
+      - lastModifiedTime
+      - lastModifierEmail
+      - lastModifierName
+      - createdTime
+      - creatorName
+      - isEnabled
+      - rules
+      - permalink
+      - type
+      - typeReason
+      - isPermanent
+    PulseLoadHistoryDto:
+      type: object
+      properties:
+        creatorName:
+          type: string
+        createdTime:
+          type: number
+          format: double
+        finishedTime:
+          type: number
+          format: double
+        finishedState:
+          type: string
+          enum:
+          - success
+          - failure
+          - partial_failure
+          - cancelled
+          - timeout
+        startDs:
+          type: string
+        endDs:
+          type: string
+        reloadType:
+          type: string
+          enum:
+          - incremental
+          - full
+          - metric
+        turboMode:
+          type: boolean
+        dagID:
+          type: string
+      required:
+      - createdTime
+      - startDs
+      - endDs
+      - reloadType
+      - turboMode
+      - dagID
+    RejectReviewRequestDto:
+      type: object
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: Required reason for rejecting the review.
+      required:
+      - reason
+      additionalProperties: false
+      title: RejectReviewRequest
+    ApproveReviewRequestDto:
+      type: object
+      properties:
+        reason:
+          type: string
+          maxLength: 2000
+          description: Optional comment recorded with the approval.
+      additionalProperties: false
+      title: ApproveReviewRequest
     ExternalGateDto:
       type: object
       properties:
@@ -9193,278 +9286,27 @@ components:
       - permalink
       - isEnabled
       - rules
-    UnarchiveSchemaDto:
+    SingleDataResponse:
       type: object
       properties:
-        unarchiveReason:
+        message:
           type: string
-          description: The reason for unarchiving the gate
-          example: The gate is needed again
-    GatePartialUpdateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_\-. ]*$
-          description: The gate display name
-        isEnabled:
-          type: boolean
-        description:
-          type: string
-          maxLength: 1000
-        rules:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of this rule.
-              passPercentage:
-                type: number
-                minimum: 0
-                maximum: 100
-                multipleOf: 0.01
-                description: Of the users that meet the conditions of this rule, what percent should return true.
-              conditions:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    targetValue:
-                      oneOf:
-                      - type: array
-                        items:
-                          type: string
-                      - type: array
-                        items:
-                          type: number
-                      - type: string
-                      - type: number
-                    operator:
-                      type: string
-                      enum:
-                      - any
-                      - none
-                      - any_case_sensitive
-                      - none_case_sensitive
-                      - str_contains_any
-                      - str_contains_none
-                      - gt
-                      - lt
-                      - lte
-                      - gte
-                      - version_gt
-                      - version_lt
-                      - version_gte
-                      - version_lte
-                      - version_eq
-                      - after
-                      - before
-                      - 'on'
-                      - is_null
-                      - is_not_null
-                      - str_matches
-                      - encoded_any
-                      - array_contains_any
-                      - array_contains_none
-                      - array_contains_all
-                      - not_array_contains_all
-                    field:
-                      type:
-                      - string
-                      - 'null'
-                    customID:
-                      type:
-                      - string
-                      - 'null'
-                    type:
-                      type: string
-                      enum:
-                      - app_version
-                      - browser_name
-                      - browser_version
-                      - country
-                      - custom_field
-                      - email
-                      - environment_tier
-                      - fails_gate
-                      - fails_segment
-                      - ip_address
-                      - locale
-                      - os_name
-                      - os_version
-                      - passes_gate
-                      - passes_segment
-                      - public
-                      - time
-                      - unit_id
-                      - user_id
-                      - user_agent
-                      - url
-                      - javascript
-                      - device_model
-                      - target_app
-                      - experiment_group
-                  required:
-                  - type
-                description: An array of Condition objects.
-              environments:
-                type:
-                - array
-                - 'null'
-                items:
-                  type: string
-                description: The environments this rule is enabled for.
-              id:
-                type: string
-                description: The Statsig ID of this rule.
-              baseID:
-                type: string
-                description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
-              returnValue:
-                type: object
-                additionalProperties: {}
-                description: The return value of the rule.
-              completedAutomatedRollouts:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    time:
-                      type: number
-                    passPercent:
-                      type: number
-                  required:
-                  - passPercent
-                readOnly: true
-                description: 'Read-only: Automated rollout phases that have already completed.'
-              pendingAutomatedRollouts:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    time:
-                      type: number
-                    passPercent:
-                      type: number
-                  required:
-                  - passPercent
-                readOnly: true
-                description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
-            required:
-            - name
-            - passPercentage
-            - conditions
-        tags:
-          type: array
-          items:
-            type: string
-        type:
-          type: string
-          enum:
-          - PERMANENT
-          - TEMPORARY
-        idType:
-          type: string
-        targetApps:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        creatorID:
-          type:
-          - string
-          - 'null'
-        creatorEmail:
-          type:
-          - string
-          - 'null'
-        team:
-          type:
-          - string
-          - 'null'
-        teamID:
-          type:
-          - string
-          - 'null'
-        measureMetricLifts:
-          type: boolean
-        monitoringMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              type:
-                type: string
-            required:
-            - name
-            - type
-        reviewSettings:
+          description: A simple string explaining the result of the operation.
+        data:
           type: object
-          properties:
-            requiredReview:
-              type: boolean
-          required:
-          - requiredReview
-          description: Whether reviews are required for this gate. If a gate has reviews required due to a project-level or team-level setting, setting this will have no effect.
-        releasePipelineID:
-          type:
-          - string
-          - 'null'
-        gradual_rollout_strategy:
-          type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - gradual
-              - bypass
-              description: Use "gradual" to apply a gradual rollout to risky gate rule increases, or "bypass" to explicitly apply the direct change.
-            phases:
-              type: array
-              items:
-                type: object
-                properties:
-                  time:
-                    type: number
-                  pass_percent:
-                    type: number
-                  isComplete:
-                    type: boolean
-                  timeString:
-                    type: string
-                  phaseDurationMs:
-                    type: number
-                    description: Used for progressive rollouts to calculate when the next phase can start
-                required:
-                - pass_percent
-                - isComplete
-              minItems: 1
-              description: Optional rollout phases in the same shape used by the product rollout editor. If omitted for "gradual", the server default schedule is used.
-          required:
-          - type
-          description: Optional safe-change strategy for risky gate rule increases. When required by policy, clients should retry with this field set after user confirmation.
-      example:
-        description: Updated the description of the gate
-    RejectReviewRequestDto:
-      type: object
-      properties:
-        reason:
-          type: string
-          minLength: 1
-          maxLength: 2000
-          description: Required reason for rejecting the review.
+          description: A single result.
       required:
-      - reason
-      additionalProperties: false
-      title: RejectReviewRequest
-    GateCreateDto:
+      - message
+      - data
+    ResolveGuardrailAlertResponseDto:
+      type: object
+      properties:
+        resolvedAt:
+          type: number
+          description: Timestamp when alert was resolved
+          example: 1718630400
+          format: double
+    GateFullUpdateDto:
       type: object
       properties:
         name:
@@ -9714,30 +9556,17 @@ components:
           required:
           - type
           description: Optional safe-change strategy for risky gate rule increases. When required by policy, clients should retry with this field set after user confirmation.
-        id:
-          type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_\-.]*$
-          description: The gate name ID
-        isTemplate:
-          type: boolean
-      description: Create a new gate
+      required:
+      - isEnabled
+      - description
+      - rules
       example:
-        name: a_verbose_gate
-        idType: userID
         isEnabled: false
-        description: helpful summary of what this gate does
-        lastModifierName: CONSOLE API
-        lastModifierID: 5rfuqoxLIYTscuSaaCOlB8
-        targetApps:
-        - my_app
-        team: team
+        description: Updated Gate Description
         rules:
         - name: All Conditions
           passPercentage: 10
           conditions:
-          - type: public
           - type: user_id
             targetValue:
             - '111'
@@ -9778,13 +9607,6 @@ components:
             - NZ
             - US
             operator: any
-          - type: passes_gate
-            targetValue: my_gate_2
-          - type: fails_gate
-            targetValue: my_gate_2
-          - type: time
-            targetValue: 1643070357193
-            operator: after
           - type: environment_tier
             targetValue:
             - production
@@ -9798,118 +9620,304 @@ components:
             - 1.1.1.1
             - 8.8.8.8
             operator: any
-          environment: null
-        checksPerHour: 0
-        tags: []
-        monitoringMetrics:
-        - name: dau
-          type: user
-    OverrideDto:
+          - type: unit_id
+            operator: any
+            targetValue:
+            - '31'
+            customID: userID
+        tags:
+        - ★ Core
+        type: TEMPORARY
+        idType: stableID
+        targetApps: []
+    PaginationResponseMetadataDto:
       type: object
       properties:
-        passingUserIDs:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            description: User ID
-            example: user123
-          maxItems: 2000
-          description: List of user IDs
-          example:
-          - user123
-          - user456
-          - user789
-        failingUserIDs:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            description: User ID
-            example: user123
-          maxItems: 2000
-          description: List of user IDs
-          example:
-          - user123
-          - user456
-          - user789
-        passingCustomIDs:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            description: Custom ID
-            example: custom123
-          maxItems: 2000
-          description: Optional list of custom IDs
-          example:
-          - custom123
-          - custom456
-        failingCustomIDs:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            description: Custom ID
-            example: custom123
-          maxItems: 2000
-          description: Optional list of custom IDs
-          example:
-          - custom123
-          - custom456
-        environmentOverrides:
-          type: array
-          items:
-            type: object
-            properties:
-              environment:
-                type:
-                - string
-                - 'null'
-                description: Environment
-                example: staging
-              unitID:
-                type:
-                - string
-                - 'null'
-                description: Unit ID
-                example: unit123
-              passingIDs:
-                type: array
-                items:
-                  type: string
-                description: List of passing IDs
-                example:
-                - id1
-                - id2
-              failingIDs:
-                type: array
-                items:
-                  type: string
-                description: List of failing IDs
-                example:
-                - id3
-                - id4
-            required:
-            - unitID
-            - passingIDs
-            - failingIDs
-            description: Contract for environment override
-            example:
-              environment: staging
-              unitID: unit123
-              passingIDs:
-              - id1
-              - id2
-              failingIDs:
-              - id3
-              - id4
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
       required:
-      - passingUserIDs
-      - failingUserIDs
-      - environmentOverrides
-      description: Contract for overrides
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    CreateReviewRequestDto:
+      type: object
+      properties:
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: Human-readable description of the proposed change.
+        reviewer_ids:
+          default: []
+          type: array
+          items:
+            type: string
+          description: User IDs to request review from.
+        reviewer_group_ids:
+          default: []
+          type: array
+          items:
+            type: string
+          description: Reviewer group IDs to request review from.
+        change:
+          type: object
+          properties:
+            rules:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: The name of this rule.
+                  passPercentage:
+                    type: number
+                    minimum: 0
+                    maximum: 100
+                    multipleOf: 0.01
+                    description: Of the users that meet the conditions of this rule, what percent should return true.
+                  conditions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        targetValue:
+                          oneOf:
+                          - type: array
+                            items:
+                              type: string
+                          - type: array
+                            items:
+                              type: number
+                          - type: string
+                          - type: number
+                        operator:
+                          type: string
+                          enum:
+                          - any
+                          - none
+                          - any_case_sensitive
+                          - none_case_sensitive
+                          - str_contains_any
+                          - str_contains_none
+                          - gt
+                          - lt
+                          - lte
+                          - gte
+                          - version_gt
+                          - version_lt
+                          - version_gte
+                          - version_lte
+                          - version_eq
+                          - after
+                          - before
+                          - 'on'
+                          - is_null
+                          - is_not_null
+                          - str_matches
+                          - encoded_any
+                          - array_contains_any
+                          - array_contains_none
+                          - array_contains_all
+                          - not_array_contains_all
+                        field:
+                          type:
+                          - string
+                          - 'null'
+                        customID:
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          type: string
+                          enum:
+                          - app_version
+                          - browser_name
+                          - browser_version
+                          - country
+                          - custom_field
+                          - email
+                          - environment_tier
+                          - fails_gate
+                          - fails_segment
+                          - ip_address
+                          - locale
+                          - os_name
+                          - os_version
+                          - passes_gate
+                          - passes_segment
+                          - public
+                          - time
+                          - unit_id
+                          - user_id
+                          - user_agent
+                          - url
+                          - javascript
+                          - device_model
+                          - target_app
+                          - experiment_group
+                      required:
+                      - type
+                    description: An array of Condition objects.
+                  environments:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                    description: The environments this rule is enabled for.
+                  id:
+                    type: string
+                    description: The Statsig ID of this rule.
+                  baseID:
+                    type: string
+                    description: The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
+                  returnValue:
+                    type: object
+                    additionalProperties: {}
+                    description: The return value of the rule.
+                  completedAutomatedRollouts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        time:
+                          type: number
+                        passPercent:
+                          type: number
+                      required:
+                      - passPercent
+                    readOnly: true
+                    description: 'Read-only: Automated rollout phases that have already completed.'
+                  pendingAutomatedRollouts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        time:
+                          type: number
+                        passPercent:
+                          type: number
+                      required:
+                      - passPercent
+                    readOnly: true
+                    description: 'Read-only: Automated rollout phases that are scheduled but not yet complete.'
+                required:
+                - name
+                - passPercentage
+                - conditions
+              description: Proposed full rule set for the gate. Same shape as the gate update contract.
+            is_enabled:
+              type: boolean
+              description: Proposed enabled state for the gate. An explicit target, not a toggle.
+            is_archived:
+              type: boolean
+              description: Proposed archived state for the gate. `true` archives, `false` unarchives.
+            delete:
+              type: boolean
+              enum:
+              - true
+              description: Delete the gate. Set to `true`.
+            resalt:
+              type: boolean
+              enum:
+              - true
+              description: Re-randomize the gate's salt. Set to `true`.
+            disable_reviews_locally:
+              type: boolean
+              enum:
+              - true
+              description: Stop requiring review on this gate. Set to `true`.
+            team_id:
+              type: string
+              minLength: 1
+              description: Reassign the gate to this team (review type `update_team`).
+            release_pipeline_id:
+              type: string
+              minLength: 1
+              description: Set the gate's release pipeline (review type `update_release_pipeline`).
+            id_type:
+              type: string
+              minLength: 1
+              description: Change the gate's primary unit ID type (review type `edit_id_type`).
+            allow_self_approval:
+              type: boolean
+              description: Whether this gate's reviews may be self-approved (review type `update_allow_self_approval`).
+            target_app_ids:
+              type: array
+              items:
+                type: string
+              description: Replace the gate's target applications (review type `update_target_applications`).
+            owners:
+              type: array
+              items:
+                type: object
+                properties:
+                  owner_id:
+                    type: string
+                    minLength: 1
+                    description: User ID (or SDK key ID) of the owner.
+                  owner_type:
+                    type: string
+                    enum:
+                    - user
+                    - sdk_key
+                    description: Owner kind. Defaults to `user`.
+                required:
+                - owner_id
+                additionalProperties: false
+              description: Replace the gate's owners (review type `update_owners`).
+            allowed_reviewers:
+              type: object
+              properties:
+                user_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: User IDs allowed to review. Replaces the existing set.
+                group_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: Reviewer group IDs allowed to review. Replaces the existing set.
+              additionalProperties: false
+              description: Set who may review this gate (review type `allowed_reviewers`).
+          additionalProperties: false
+          title: ReviewChange
+          description: The proposed change. Provide exactly one of `rules`, `is_enabled`, `is_archived`, `delete`, `resalt`, `disable_reviews_locally`, `team_id`, `release_pipeline_id`, `id_type`, `allow_self_approval`, `target_app_ids`, `owners`, or `allowed_reviewers`.
+      required:
+      - description
+      - change
+      additionalProperties: false
+      title: CreateReviewRequest
+      description: Request body for POST /console/v1/gates/:id/reviews
   parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
     Limit:
       name: limit
       in: query
@@ -9919,14 +9927,13 @@ components:
         minimum: 1
         maximum: 100
       description: Maximum number of items to return per page.
-    Page:
-      name: page
-      in: query
-      required: false
+    GateId:
+      name: id
+      in: path
+      required: true
       schema:
-        type: integer
-        minimum: 1
-      description: Page number for paginated results.
+        type: string
+      description: The name or identifier of the feature gate.
     ApiVersion:
       name: STATSIG-API-VERSION
       in: header
@@ -9935,13 +9942,6 @@ components:
         type: string
         default: '20240601'
       description: The Console API version. Currently the only version is 20240601.
-    GateId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The name or identifier of the feature gate.
   responses:
     NotFound:
       description: Resource not found
@@ -9953,16 +9953,6 @@ components:
               message:
                 type: string
                 description: Error message indicating the resource was not found.
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
     Unauthorized:
       description: Missing or invalid API key
       content:
@@ -9973,6 +9963,16 @@ components:
               message:
                 type: string
                 description: Error message describing the authentication failure.
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
   securitySchemes:
     consoleApiKey:
       type: apiKey

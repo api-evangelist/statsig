@@ -55,18 +55,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
     CompanyInfoResponseDto:
       type: object
       properties:
@@ -93,6 +81,18 @@ components:
       - isWarehouseNative
       - orgID
       - orgName
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

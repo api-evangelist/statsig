@@ -513,33 +513,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PaginationResponseMetadataDto:
-      type: object
-      properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
-          type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
     PaginationResponseWithMessage:
       type: object
       properties:
@@ -559,88 +532,6 @@ components:
       - message
       - data
       - pagination
-    DashboardWidgetResultsResponseDto:
-      type: object
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-          enum:
-          - funnel
-        funnel:
-          type: object
-          properties:
-            datasets:
-              type: array
-              items:
-                type: object
-                properties:
-                  key:
-                    type: string
-                  label:
-                    type:
-                    - string
-                    - 'null'
-                  group:
-                    type:
-                    - string
-                    - 'null'
-                  cohort:
-                    type:
-                    - string
-                    - 'null'
-                  excludes_optional_steps:
-                    type: boolean
-                  steps:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        rank:
-                          type: integer
-                          minimum: 0
-                        name:
-                          type: string
-                        count:
-                          type: number
-                        conversion_rate:
-                          type:
-                          - number
-                          - 'null'
-                        previous_step_conversion_rate:
-                          type:
-                          - number
-                          - 'null'
-                        time_to_convert:
-                          type:
-                          - number
-                          - 'null'
-                        cumulative_time_to_convert:
-                          type:
-                          - number
-                          - 'null'
-                        total_prop_sum:
-                          type:
-                          - number
-                          - 'null'
-                      required:
-                      - rank
-                      - name
-                      - count
-                      additionalProperties: false
-                required:
-                - key
-                - steps
-                additionalProperties: false
-          required:
-          - datasets
-          additionalProperties: false
-      required:
-      - id
-      - type
-      - funnel
-      additionalProperties: false
     ReplaceDashboardWidgetsDto:
       type: object
       properties:
@@ -963,6 +854,684 @@ components:
       required:
       - widgets
       additionalProperties: false
+    CreateDashboardDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 10000
+        defaults:
+          type: object
+          properties:
+            date:
+              type: object
+              properties:
+                value:
+                  type: integer
+                  format: int64
+                  exclusiveMinimum: 0
+                unit:
+                  type: string
+                  enum:
+                  - day
+                  - week
+                  - month
+              required:
+              - value
+              - unit
+            granularity:
+              type: string
+              enum:
+              - auto
+              - daily
+              - weekly
+              - monthly
+          additionalProperties: false
+        widgets:
+          type: array
+          items:
+            discriminator:
+              propertyName: type
+            oneOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - text
+                title:
+                  type: string
+                content:
+                  type: string
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - content
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - header
+                title:
+                  type: string
+                color:
+                  type: string
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - timeseries
+                title:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                query:
+                  type: object
+                  properties:
+                    source:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - event
+                        event_name:
+                          type: string
+                        filters:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              property:
+                                type: object
+                                properties:
+                                  key:
+                                    type: string
+                                  column: {}
+                                required:
+                                - key
+                                - column
+                                additionalProperties: false
+                              operator: {}
+                              values:
+                                default: []
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                            - property
+                            - operator
+                            additionalProperties: false
+                      required:
+                      - type
+                      - event_name
+                      additionalProperties: false
+                    sources:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - event
+                          event_name:
+                            type: string
+                          filters:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                property:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    column: {}
+                                  required:
+                                  - key
+                                  - column
+                                  additionalProperties: false
+                                operator: {}
+                                values:
+                                  default: []
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - property
+                              - operator
+                              additionalProperties: false
+                        required:
+                        - type
+                        - event_name
+                        additionalProperties: false
+                    aggregation:
+                      type: object
+                      properties:
+                        type: {}
+                        property:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            column: {}
+                          required:
+                          - key
+                          - column
+                          additionalProperties: false
+                      required:
+                      - type
+                      additionalProperties: false
+                    unit_type:
+                      type: string
+                    group_bys:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                          column: {}
+                        required:
+                        - key
+                        - column
+                        additionalProperties: false
+                    viz:
+                      type: object
+                      properties:
+                        chart_type: {}
+                      required:
+                      - chart_type
+                      additionalProperties: false
+                  required:
+                  - aggregation
+                  additionalProperties: false
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - query
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - funnel
+                title:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                query:
+                  type: object
+                  properties:
+                    steps:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          event_name:
+                            type: string
+                          filters:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                property:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    column: {}
+                                  required:
+                                  - key
+                                  - column
+                                  additionalProperties: false
+                                operator: {}
+                                values:
+                                  default: []
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - property
+                              - operator
+                              additionalProperties: false
+                        required:
+                        - event_name
+                        additionalProperties: false
+                      minItems: 2
+                    unit_type:
+                      type: string
+                    conversion_window:
+                      type: object
+                      properties:
+                        value:
+                          type: integer
+                          exclusiveMinimum: 0
+                        unit:
+                          type: string
+                          enum:
+                          - second
+                          - minute
+                          - hour
+                          - day
+                      required:
+                      - value
+                      - unit
+                      additionalProperties: false
+                    chart_type:
+                      type: string
+                      enum:
+                      - conversion-rate
+                      - conversions
+                  required:
+                  - steps
+                  additionalProperties: false
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - query
+              additionalProperties: false
+      required:
+      - name
+    DashboardAddWidgetsResponseDto:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+      required:
+      - ids
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    DashboardCreateResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        dashboard_url:
+          type: string
+      required:
+      - id
+      - dashboard_url
+    AddDashboardWidgetsDto:
+      type: object
+      properties:
+        widgets:
+          type: array
+          items:
+            discriminator:
+              propertyName: type
+            oneOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - text
+                title:
+                  type: string
+                content:
+                  type: string
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - content
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - header
+                title:
+                  type: string
+                color:
+                  type: string
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - timeseries
+                title:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                query:
+                  type: object
+                  properties:
+                    source:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - event
+                        event_name:
+                          type: string
+                        filters:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              property:
+                                type: object
+                                properties:
+                                  key:
+                                    type: string
+                                  column: {}
+                                required:
+                                - key
+                                - column
+                                additionalProperties: false
+                              operator: {}
+                              values:
+                                default: []
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                            - property
+                            - operator
+                            additionalProperties: false
+                      required:
+                      - type
+                      - event_name
+                      additionalProperties: false
+                    sources:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - event
+                          event_name:
+                            type: string
+                          filters:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                property:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    column: {}
+                                  required:
+                                  - key
+                                  - column
+                                  additionalProperties: false
+                                operator: {}
+                                values:
+                                  default: []
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - property
+                              - operator
+                              additionalProperties: false
+                        required:
+                        - type
+                        - event_name
+                        additionalProperties: false
+                    aggregation:
+                      type: object
+                      properties:
+                        type: {}
+                        property:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            column: {}
+                          required:
+                          - key
+                          - column
+                          additionalProperties: false
+                      required:
+                      - type
+                      additionalProperties: false
+                    unit_type:
+                      type: string
+                    group_bys:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                          column: {}
+                        required:
+                        - key
+                        - column
+                        additionalProperties: false
+                    viz:
+                      type: object
+                      properties:
+                        chart_type: {}
+                      required:
+                      - chart_type
+                      additionalProperties: false
+                  required:
+                  - aggregation
+                  additionalProperties: false
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - query
+              additionalProperties: false
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                  - funnel
+                title:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                query:
+                  type: object
+                  properties:
+                    steps:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          event_name:
+                            type: string
+                          filters:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                property:
+                                  type: object
+                                  properties:
+                                    key:
+                                      type: string
+                                    column: {}
+                                  required:
+                                  - key
+                                  - column
+                                  additionalProperties: false
+                                operator: {}
+                                values:
+                                  default: []
+                                  type: array
+                                  items:
+                                    type: string
+                              required:
+                              - property
+                              - operator
+                              additionalProperties: false
+                        required:
+                        - event_name
+                        additionalProperties: false
+                      minItems: 2
+                    unit_type:
+                      type: string
+                    conversion_window:
+                      type: object
+                      properties:
+                        value:
+                          type: integer
+                          exclusiveMinimum: 0
+                        unit:
+                          type: string
+                          enum:
+                          - second
+                          - minute
+                          - hour
+                          - day
+                      required:
+                      - value
+                      - unit
+                      additionalProperties: false
+                    chart_type:
+                      type: string
+                      enum:
+                      - conversion-rate
+                      - conversions
+                  required:
+                  - steps
+                  additionalProperties: false
+                width:
+                  type: integer
+                  maximum: 12
+                  exclusiveMinimum: 0
+                height:
+                  type: integer
+                  exclusiveMinimum: 0
+              required:
+              - type
+              - title
+              - query
+              additionalProperties: false
+          minItems: 1
+        defaults:
+          type: object
+          properties:
+            date:
+              type: object
+              properties:
+                value:
+                  type: integer
+                  format: int64
+                  exclusiveMinimum: 0
+                unit:
+                  type: string
+                  enum:
+                  - day
+                  - week
+                  - month
+              required:
+              - value
+              - unit
+            granularity:
+              type: string
+              enum:
+              - auto
+              - daily
+              - weekly
+              - monthly
+          additionalProperties: false
+        max_cols:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      required:
+      - widgets
+      additionalProperties: false
     DashboardReplaceWidgetsResponseDto:
       type: object
       properties:
@@ -972,6 +1541,88 @@ components:
             type: string
       required:
       - ids
+    DashboardWidgetResultsResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+          - funnel
+        funnel:
+          type: object
+          properties:
+            datasets:
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  label:
+                    type:
+                    - string
+                    - 'null'
+                  group:
+                    type:
+                    - string
+                    - 'null'
+                  cohort:
+                    type:
+                    - string
+                    - 'null'
+                  excludes_optional_steps:
+                    type: boolean
+                  steps:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        rank:
+                          type: integer
+                          minimum: 0
+                        name:
+                          type: string
+                        count:
+                          type: number
+                        conversion_rate:
+                          type:
+                          - number
+                          - 'null'
+                        previous_step_conversion_rate:
+                          type:
+                          - number
+                          - 'null'
+                        time_to_convert:
+                          type:
+                          - number
+                          - 'null'
+                        cumulative_time_to_convert:
+                          type:
+                          - number
+                          - 'null'
+                        total_prop_sum:
+                          type:
+                          - number
+                          - 'null'
+                      required:
+                      - rank
+                      - name
+                      - count
+                      additionalProperties: false
+                required:
+                - key
+                - steps
+                additionalProperties: false
+          required:
+          - datasets
+          additionalProperties: false
+      required:
+      - id
+      - type
+      - funnel
+      additionalProperties: false
     DashboardReadResponseDto:
       type: object
       properties:
@@ -1364,684 +2015,33 @@ components:
       required:
       - name
       - id
-    CreateDashboardDto:
+    PaginationResponseMetadataDto:
       type: object
       properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 200
-        description:
-          type: string
-          maxLength: 10000
-        defaults:
-          type: object
-          properties:
-            date:
-              type: object
-              properties:
-                value:
-                  type: integer
-                  format: int64
-                  exclusiveMinimum: 0
-                unit:
-                  type: string
-                  enum:
-                  - day
-                  - week
-                  - month
-              required:
-              - value
-              - unit
-            granularity:
-              type: string
-              enum:
-              - auto
-              - daily
-              - weekly
-              - monthly
-          additionalProperties: false
-        widgets:
-          type: array
-          items:
-            discriminator:
-              propertyName: type
-            oneOf:
-            - type: object
-              properties:
-                type:
-                  type: string
-                  enum:
-                  - text
-                title:
-                  type: string
-                content:
-                  type: string
-                width:
-                  type: integer
-                  maximum: 12
-                  exclusiveMinimum: 0
-                height:
-                  type: integer
-                  exclusiveMinimum: 0
-              required:
-              - type
-              - title
-              - content
-              additionalProperties: false
-            - type: object
-              properties:
-                type:
-                  type: string
-                  enum:
-                  - header
-                title:
-                  type: string
-                color:
-                  type: string
-                width:
-                  type: integer
-                  maximum: 12
-                  exclusiveMinimum: 0
-                height:
-                  type: integer
-                  exclusiveMinimum: 0
-              required:
-              - type
-              - title
-              additionalProperties: false
-            - type: object
-              properties:
-                type:
-                  type: string
-                  enum:
-                  - timeseries
-                title:
-                  type: string
-                description:
-                  type: string
-                color:
-                  type: string
-                query:
-                  type: object
-                  properties:
-                    source:
-                      type: object
-                      properties:
-                        type:
-                          type: string
-                          enum:
-                          - event
-                        event_name:
-                          type: string
-                        filters:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              property:
-                                type: object
-                                properties:
-                                  key:
-                                    type: string
-                                  column: {}
-                                required:
-                                - key
-                                - column
-                                additionalProperties: false
-                              operator: {}
-                              values:
-                                default: []
-                                type: array
-                                items:
-                                  type: string
-                            required:
-                            - property
-                            - operator
-                            additionalProperties: false
-                      required:
-                      - type
-                      - event_name
-                      additionalProperties: false
-                    sources:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          type:
-                            type: string
-                            enum:
-                            - event
-                          event_name:
-                            type: string
-                          filters:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                property:
-                                  type: object
-                                  properties:
-                                    key:
-                                      type: string
-                                    column: {}
-                                  required:
-                                  - key
-                                  - column
-                                  additionalProperties: false
-                                operator: {}
-                                values:
-                                  default: []
-                                  type: array
-                                  items:
-                                    type: string
-                              required:
-                              - property
-                              - operator
-                              additionalProperties: false
-                        required:
-                        - type
-                        - event_name
-                        additionalProperties: false
-                    aggregation:
-                      type: object
-                      properties:
-                        type: {}
-                        property:
-                          type: object
-                          properties:
-                            key:
-                              type: string
-                            column: {}
-                          required:
-                          - key
-                          - column
-                          additionalProperties: false
-                      required:
-                      - type
-                      additionalProperties: false
-                    unit_type:
-                      type: string
-                    group_bys:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          key:
-                            type: string
-                          column: {}
-                        required:
-                        - key
-                        - column
-                        additionalProperties: false
-                    viz:
-                      type: object
-                      properties:
-                        chart_type: {}
-                      required:
-                      - chart_type
-                      additionalProperties: false
-                  required:
-                  - aggregation
-                  additionalProperties: false
-                width:
-                  type: integer
-                  maximum: 12
-                  exclusiveMinimum: 0
-                height:
-                  type: integer
-                  exclusiveMinimum: 0
-              required:
-              - type
-              - title
-              - query
-              additionalProperties: false
-            - type: object
-              properties:
-                type:
-                  type: string
-                  enum:
-                  - funnel
-                title:
-                  type: string
-                description:
-                  type: string
-                color:
-                  type: string
-                query:
-                  type: object
-                  properties:
-                    steps:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          event_name:
-                            type: string
-                          filters:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                property:
-                                  type: object
-                                  properties:
-                                    key:
-                                      type: string
-                                    column: {}
-                                  required:
-                                  - key
-                                  - column
-                                  additionalProperties: false
-                                operator: {}
-                                values:
-                                  default: []
-                                  type: array
-                                  items:
-                                    type: string
-                              required:
-                              - property
-                              - operator
-                              additionalProperties: false
-                        required:
-                        - event_name
-                        additionalProperties: false
-                      minItems: 2
-                    unit_type:
-                      type: string
-                    conversion_window:
-                      type: object
-                      properties:
-                        value:
-                          type: integer
-                          exclusiveMinimum: 0
-                        unit:
-                          type: string
-                          enum:
-                          - second
-                          - minute
-                          - hour
-                          - day
-                      required:
-                      - value
-                      - unit
-                      additionalProperties: false
-                    chart_type:
-                      type: string
-                      enum:
-                      - conversion-rate
-                      - conversions
-                  required:
-                  - steps
-                  additionalProperties: false
-                width:
-                  type: integer
-                  maximum: 12
-                  exclusiveMinimum: 0
-                height:
-                  type: integer
-                  exclusiveMinimum: 0
-              required:
-              - type
-              - title
-              - query
-              additionalProperties: false
-      required:
-      - name
-    DashboardAddWidgetsResponseDto:
-      type: object
-      properties:
-        ids:
-          type: array
-          items:
-            type: string
-      required:
-      - ids
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
-    AddDashboardWidgetsDto:
-      type: object
-      properties:
-        widgets:
-          type: array
-          items:
-            discriminator:
-              propertyName: type
-            oneOf:
-            - type: object
-              properties:
-                type:
-                  type: string
-                  enum:
-                  - text
-                title:
-                  type: string
-                content:
-                  type: string
-                width:
-                  type: integer
-                  maximum: 12
-                  exclusiveMinimum: 0
-                height:
-                  type: integer
-                  exclusiveMinimum: 0
-              required:
-              - type
-              - title
-              - content
-              additionalProperties: false
-            - type: object
-              properties:
-                type:
-                  type: string
-                  enum:
-                  - header
-                title:
-                  type: string
-                color:
-                  type: string
-                width:
-                  type: integer
-                  maximum: 12
-                  exclusiveMinimum: 0
-                height:
-                  type: integer
-                  exclusiveMinimum: 0
-              required:
-              - type
-              - title
-              additionalProperties: false
-            - type: object
-              properties:
-                type:
-                  type: string
-                  enum:
-                  - timeseries
-                title:
-                  type: string
-                description:
-                  type: string
-                color:
-                  type: string
-                query:
-                  type: object
-                  properties:
-                    source:
-                      type: object
-                      properties:
-                        type:
-                          type: string
-                          enum:
-                          - event
-                        event_name:
-                          type: string
-                        filters:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              property:
-                                type: object
-                                properties:
-                                  key:
-                                    type: string
-                                  column: {}
-                                required:
-                                - key
-                                - column
-                                additionalProperties: false
-                              operator: {}
-                              values:
-                                default: []
-                                type: array
-                                items:
-                                  type: string
-                            required:
-                            - property
-                            - operator
-                            additionalProperties: false
-                      required:
-                      - type
-                      - event_name
-                      additionalProperties: false
-                    sources:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          type:
-                            type: string
-                            enum:
-                            - event
-                          event_name:
-                            type: string
-                          filters:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                property:
-                                  type: object
-                                  properties:
-                                    key:
-                                      type: string
-                                    column: {}
-                                  required:
-                                  - key
-                                  - column
-                                  additionalProperties: false
-                                operator: {}
-                                values:
-                                  default: []
-                                  type: array
-                                  items:
-                                    type: string
-                              required:
-                              - property
-                              - operator
-                              additionalProperties: false
-                        required:
-                        - type
-                        - event_name
-                        additionalProperties: false
-                    aggregation:
-                      type: object
-                      properties:
-                        type: {}
-                        property:
-                          type: object
-                          properties:
-                            key:
-                              type: string
-                            column: {}
-                          required:
-                          - key
-                          - column
-                          additionalProperties: false
-                      required:
-                      - type
-                      additionalProperties: false
-                    unit_type:
-                      type: string
-                    group_bys:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          key:
-                            type: string
-                          column: {}
-                        required:
-                        - key
-                        - column
-                        additionalProperties: false
-                    viz:
-                      type: object
-                      properties:
-                        chart_type: {}
-                      required:
-                      - chart_type
-                      additionalProperties: false
-                  required:
-                  - aggregation
-                  additionalProperties: false
-                width:
-                  type: integer
-                  maximum: 12
-                  exclusiveMinimum: 0
-                height:
-                  type: integer
-                  exclusiveMinimum: 0
-              required:
-              - type
-              - title
-              - query
-              additionalProperties: false
-            - type: object
-              properties:
-                type:
-                  type: string
-                  enum:
-                  - funnel
-                title:
-                  type: string
-                description:
-                  type: string
-                color:
-                  type: string
-                query:
-                  type: object
-                  properties:
-                    steps:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          event_name:
-                            type: string
-                          filters:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                property:
-                                  type: object
-                                  properties:
-                                    key:
-                                      type: string
-                                    column: {}
-                                  required:
-                                  - key
-                                  - column
-                                  additionalProperties: false
-                                operator: {}
-                                values:
-                                  default: []
-                                  type: array
-                                  items:
-                                    type: string
-                              required:
-                              - property
-                              - operator
-                              additionalProperties: false
-                        required:
-                        - event_name
-                        additionalProperties: false
-                      minItems: 2
-                    unit_type:
-                      type: string
-                    conversion_window:
-                      type: object
-                      properties:
-                        value:
-                          type: integer
-                          exclusiveMinimum: 0
-                        unit:
-                          type: string
-                          enum:
-                          - second
-                          - minute
-                          - hour
-                          - day
-                      required:
-                      - value
-                      - unit
-                      additionalProperties: false
-                    chart_type:
-                      type: string
-                      enum:
-                      - conversion-rate
-                      - conversions
-                  required:
-                  - steps
-                  additionalProperties: false
-                width:
-                  type: integer
-                  maximum: 12
-                  exclusiveMinimum: 0
-                height:
-                  type: integer
-                  exclusiveMinimum: 0
-              required:
-              - type
-              - title
-              - query
-              additionalProperties: false
-          minItems: 1
-        defaults:
-          type: object
-          properties:
-            date:
-              type: object
-              properties:
-                value:
-                  type: integer
-                  format: int64
-                  exclusiveMinimum: 0
-                unit:
-                  type: string
-                  enum:
-                  - day
-                  - week
-                  - month
-              required:
-              - value
-              - unit
-            granularity:
-              type: string
-              enum:
-              - auto
-              - daily
-              - weekly
-              - monthly
-          additionalProperties: false
-        max_cols:
-          type: integer
-          format: int64
-          exclusiveMinimum: 0
-      required:
-      - widgets
-      additionalProperties: false
-    DashboardCreateResponseDto:
-      type: object
-      properties:
-        id:
-          type: string
-        dashboard_url:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
           type: string
       required:
-      - id
-      - dashboard_url
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
     DashboardListItemResponseDto:
       type: object
       properties:

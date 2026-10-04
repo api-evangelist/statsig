@@ -381,65 +381,6 @@ components:
       - message
       - data
       - pagination
-    UpdateTargetAppDto:
-      type: object
-      properties:
-        name:
-          type: string
-          example: string
-          description: name of the target app
-        description:
-          type: string
-          example: a description
-          description: a description of the target app
-    BulkAssignConfigTargetAppDto:
-      type: object
-      properties:
-        targetApps:
-          type: array
-          items:
-            type: string
-          minItems: 1
-          description: target app ids
-        gates:
-          type: array
-          items:
-            type: string
-          description: Gate IDs to assign to target app(s)
-        dynamicConfigs:
-          type: array
-          items:
-            type: string
-          description: Dynamic Config IDs to assign to target app(s)
-        experiments:
-          type: array
-          items:
-            type: string
-          description: Experiment IDs to assign to target app(s)
-        layers:
-          type: array
-          items:
-            type: string
-          description: Layer IDs to assign to target app(s)
-        parameterStores:
-          type: array
-          items:
-            type: string
-          description: Parameter Store IDs to assign to target app(s)
-      required:
-      - targetApps
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
     TargetAppCreateDto:
       type: object
       properties:
@@ -479,6 +420,42 @@ components:
       required:
       - name
       - description
+    TargetAppDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: string
+          description: id of target app
+        name:
+          type: string
+          example: a tag
+          description: name of the target app
+      required:
+      - name
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    UpdateTargetAppDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: string
+          description: name of the target app
+        description:
+          type: string
+          example: a description
+          description: a description of the target app
     PaginationResponseMetadataDto:
       type: object
       properties:
@@ -506,19 +483,42 @@ components:
       - pageNumber
       - nextPage
       - previousPage
-    TargetAppDto:
+    BulkAssignConfigTargetAppDto:
       type: object
       properties:
-        id:
-          type: string
-          example: string
-          description: id of target app
-        name:
-          type: string
-          example: a tag
-          description: name of the target app
+        targetApps:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          description: target app ids
+        gates:
+          type: array
+          items:
+            type: string
+          description: Gate IDs to assign to target app(s)
+        dynamicConfigs:
+          type: array
+          items:
+            type: string
+          description: Dynamic Config IDs to assign to target app(s)
+        experiments:
+          type: array
+          items:
+            type: string
+          description: Experiment IDs to assign to target app(s)
+        layers:
+          type: array
+          items:
+            type: string
+          description: Layer IDs to assign to target app(s)
+        parameterStores:
+          type: array
+          items:
+            type: string
+          description: Parameter Store IDs to assign to target app(s)
       required:
-      - name
+      - targetApps
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

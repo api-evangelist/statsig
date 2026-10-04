@@ -6455,41 +6455,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ExperimentUpdate:
-      type: object
-      description: Request body for partially updating an experiment.
-      properties:
-        description:
-          type: string
-          description: Updated description.
-        hypothesis:
-          type: string
-          description: Updated hypothesis.
-        allocation:
-          type: number
-          minimum: 0
-          maximum: 100
-          description: Updated allocation percentage.
-        tags:
-          type: array
-          items:
-            type: string
-          description: Updated tags.
-    ExperimentGroup:
-      type: object
-      description: An experiment group defining parameter values for a set of users.
-      properties:
-        name:
-          type: string
-          description: The name of the group (e.g., control, test).
-        size:
-          type: number
-          minimum: 0
-          maximum: 100
-          description: The percentage of allocated users assigned to this group.
-        parameterValues:
-          type: object
-          description: The parameter key-value pairs for this group.
     Experiment:
       type: object
       description: An A/B test experiment with defined groups, parameters, and analysis configuration.
@@ -6579,6 +6544,26 @@ components:
           items:
             type: string
           description: Tags to associate with the experiment.
+    ExperimentUpdate:
+      type: object
+      description: Request body for partially updating an experiment.
+      properties:
+        description:
+          type: string
+          description: Updated description.
+        hypothesis:
+          type: string
+          description: Updated hypothesis.
+        allocation:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Updated allocation percentage.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Updated tags.
     Pagination:
       type: object
       description: Pagination metadata for list responses.
@@ -6595,6 +6580,21 @@ components:
         hasMore:
           type: boolean
           description: Whether more pages are available.
+    ExperimentGroup:
+      type: object
+      description: An experiment group defining parameter values for a set of users.
+      properties:
+        name:
+          type: string
+          description: The name of the group (e.g., control, test).
+        size:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: The percentage of allocated users assigned to this group.
+        parameterValues:
+          type: object
+          description: The parameter key-value pairs for this group.
     StatsigUser:
       type: object
       description: The user object representing the end user being evaluated. At minimum, a userID should be provided. Additional properties enable more sophisticated targeting.
@@ -6634,25 +6634,6 @@ components:
           additionalProperties:
             type: string
           description: Custom identifier mappings for the user, such as companyID or teamID.
-    PaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
     ExperimentFullUpdateDto:
       type: object
       properties:
@@ -7295,537 +7276,64 @@ components:
       - bonferroniCorrection
       - defaultConfidenceInterval
       - status
-    ExperimentSummaryChartsDto:
+    EntityPropertySourceCreationDto:
       type: object
       properties:
-        experimentID:
+        name:
           type: string
-        sections:
+          description: Unique identifier for the entity property source.
+        description:
+          type: string
+          description: Optional detailed context for the entity property source.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags for categorization.
+        sql:
+          type: string
+          description: SQL query defining the data source.
+        timestampColumn:
+          type: string
+          description: Optional column name for timestamp.
+        timestampAsDay:
+          type: boolean
+          description: Indicates if the timestamp is treated as a day.
+        idTypeMapping:
           type: array
           items:
             type: object
             properties:
-              sectionLabel:
+              statsigUnitID:
                 type: string
-              charts:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    chartSource:
-                      type: string
-                      enum:
-                      - experiment
-                      - custom_query
-                      - scheduled_custom_query
-                      - unsupported
-                    message:
-                      type: string
-                    control:
-                      type: string
-                    test:
-                      type: string
-                    display:
-                      type: string
-                      enum:
-                      - cumulative
-                      - daily
-                      - dx
-                      - bar
-                      - table
-                    cuped:
-                      type: boolean
-                    sequentialTesting:
-                      type: boolean
-                    metrics:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          metricID:
-                            type: string
-                          metricName:
-                            type: string
-                          directionality:
-                            type: string
-                            enum:
-                            - increase
-                            - decrease
-                            description: Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
-                            example: increase
-                          error:
-                            oneOf:
-                            - type: string
-                              enum:
-                              - no_data
-                              - import_no_data
-                              - incompatible_types
-                              - echidna_unripe
-                              - setup_incomplete
-                              - hourly_metric_type_not_supported
-                              - control_or_test_no_units
-                              - no_subdimension_filter
-                            - type: string
-                            description: Machine-readable reason when pulse statistics are unavailable. Common values include no_data (insufficient data), echidna_unripe (not yet loaded), and setup_incomplete (misconfigured metric source). Additional string values may appear for cohort/bake windows or other load failures.
-                            example: no_data
-                          warnings:
-                            type: array
-                            items:
-                              type: string
-                            description: Human-readable warnings about metric data quality, load state, or partial pipeline failures.
-                          absoluteChange:
-                            type: number
-                          confidenceIntervalDelta:
-                            type: number
-                            description: Absolute confidence interval delta
-                          confidenceInterval:
-                            type: object
-                            properties:
-                              lower:
-                                type: number
-                              upper:
-                                type: number
-                            required:
-                            - lower
-                            - upper
-                            additionalProperties: false
-                            description: Confidence interval bounds
-                            example:
-                              lower: -1.33
-                              upper: 1.33
-                          percentChange:
-                            type: number
-                          sequentialTestingConfidenceIntervalDelta:
-                            type: number
-                          sequentialTestingConfidenceInterval:
-                            type: object
-                            properties:
-                              lower:
-                                type: number
-                              upper:
-                                type: number
-                            required:
-                            - lower
-                            - upper
-                            additionalProperties: false
-                            description: Confidence interval bounds
-                            example:
-                              lower: -1.33
-                              upper: 1.33
-                          percentConfidenceIntervalDelta:
-                            type: number
-                          percentConfidenceInterval:
-                            type: object
-                            properties:
-                              lower:
-                                type: number
-                              upper:
-                                type: number
-                            required:
-                            - lower
-                            - upper
-                            additionalProperties: false
-                            description: Confidence interval bounds
-                            example:
-                              lower: -1.33
-                              upper: 1.33
-                          percentSequentialTestingConfidenceIntervalDelta:
-                            type: number
-                          percentSequentialTestingConfidenceInterval:
-                            type: object
-                            properties:
-                              lower:
-                                type: number
-                              upper:
-                                type: number
-                            required:
-                            - lower
-                            - upper
-                            additionalProperties: false
-                            description: Confidence interval bounds
-                            example:
-                              lower: -1.33
-                              upper: 1.33
-                          testMean:
-                            type: number
-                          controlMean:
-                            type: number
-                          testStd:
-                            type: number
-                          controlStd:
-                            type: number
-                          testUnits:
-                            type: number
-                          controlUnits:
-                            type: number
-                          pValue:
-                            type: number
-                          sequentialTestingPValue:
-                            type:
-                            - number
-                            - 'null'
-                          adjustedAlpha:
-                            type: number
-                          reversePower:
-                            type: number
-                          percentCredibleInterval:
-                            type: object
-                            properties:
-                              lower:
-                                type: number
-                              upper:
-                                type: number
-                            required:
-                            - lower
-                            - upper
-                            additionalProperties: false
-                            description: Bayesian credible interval for the percent change. Only returned when results are computed with Bayesian analysis.
-                            example:
-                              lower: -1.33
-                              upper: 1.33
-                          expectedLoss:
-                            type: number
-                            description: Bayesian expected loss. Only returned when results are computed with Bayesian analysis.
-                          chanceToBeat:
-                            type: number
-                            description: Bayesian probability that the test beats the control. Only returned when results are computed with Bayesian analysis.
-                          sequentialTestingLikelihoodRatio:
-                            type: number
-                            description: SPRT likelihood ratio of the observed data under the alternative vs the null. This is the same value Pulse uses.
-                          sequentialTestingLogLikelihoodRatio:
-                            type: number
-                            description: Natural log of the SPRT likelihood ratio Pulse uses. Compare this to `sprtLogLowerLimit` and `sprtLogUpperLimit`.
-                          sprtLowerLimit:
-                            type: number
-                            description: Lower SPRT decision boundary on the likelihood-ratio scale. Crossing below this accepts the null.
-                          sprtUpperLimit:
-                            type: number
-                            description: Upper SPRT decision boundary on the likelihood-ratio scale. Crossing above this accepts the alternative.
-                          sprtLogLowerLimit:
-                            type: number
-                            description: Lower SPRT decision boundary on the log-likelihood-ratio scale. Crossing below this accepts the null.
-                          sprtLogUpperLimit:
-                            type: number
-                            description: Upper SPRT decision boundary on the log-likelihood-ratio scale. Crossing above this accepts the alternative.
-                          sprtDecision:
-                            type: string
-                            enum:
-                            - alternative
-                            - 'null'
-                            - continue
-                            description: SPRT decision from the log likelihood ratio. `alternative` accepts H1, `null` accepts H0, and `continue` means the ratio is still between the boundaries.
-                          isSprtSignificant:
-                            type: boolean
-                            description: True when the SPRT decision is `alternative`, meaning the result is statistically significant.
-                          sprtStatsigness:
-                            type: string
-                            enum:
-                            - positive
-                            - negative
-                            - neutral
-                            description: Direction of the SPRT decision relative to the metric's desired direction. `neutral` when the test has not accepted the alternative.
-                          absoluteToplineImpact:
-                            type: number
-                          absoluteToplineImpactDelta:
-                            type: number
-                          relativeToplineImpact:
-                            type: number
-                          relativeToplineImpactDelta:
-                            type: number
-                          projectedAbsoluteToplineImpact:
-                            type: number
-                          projectedAbsoluteToplineImpactDelta:
-                            type: number
-                          projectedRelativeToplineImpact:
-                            type: number
-                          projectedRelativeToplineImpactDelta:
-                            type: number
-                          dimensionBreakdown:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                metricID:
-                                  type: string
-                                metricName:
-                                  type: string
-                                directionality:
-                                  type: string
-                                  enum:
-                                  - increase
-                                  - decrease
-                                  description: Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
-                                  example: increase
-                                error:
-                                  oneOf:
-                                  - type: string
-                                    enum:
-                                    - no_data
-                                    - import_no_data
-                                    - incompatible_types
-                                    - echidna_unripe
-                                    - setup_incomplete
-                                    - hourly_metric_type_not_supported
-                                    - control_or_test_no_units
-                                    - no_subdimension_filter
-                                  - type: string
-                                  description: Machine-readable reason when pulse statistics are unavailable. Common values include no_data (insufficient data), echidna_unripe (not yet loaded), and setup_incomplete (misconfigured metric source). Additional string values may appear for cohort/bake windows or other load failures.
-                                  example: no_data
-                                warnings:
-                                  type: array
-                                  items:
-                                    type: string
-                                  description: Human-readable warnings about metric data quality, load state, or partial pipeline failures.
-                                absoluteChange:
-                                  type: number
-                                confidenceIntervalDelta:
-                                  type: number
-                                  description: Absolute confidence interval delta
-                                confidenceInterval:
-                                  type: object
-                                  properties:
-                                    lower:
-                                      type: number
-                                    upper:
-                                      type: number
-                                  required:
-                                  - lower
-                                  - upper
-                                  additionalProperties: false
-                                  description: Confidence interval bounds
-                                  example:
-                                    lower: -1.33
-                                    upper: 1.33
-                                percentChange:
-                                  type: number
-                                sequentialTestingConfidenceIntervalDelta:
-                                  type: number
-                                sequentialTestingConfidenceInterval:
-                                  type: object
-                                  properties:
-                                    lower:
-                                      type: number
-                                    upper:
-                                      type: number
-                                  required:
-                                  - lower
-                                  - upper
-                                  additionalProperties: false
-                                  description: Confidence interval bounds
-                                  example:
-                                    lower: -1.33
-                                    upper: 1.33
-                                percentConfidenceIntervalDelta:
-                                  type: number
-                                percentConfidenceInterval:
-                                  type: object
-                                  properties:
-                                    lower:
-                                      type: number
-                                    upper:
-                                      type: number
-                                  required:
-                                  - lower
-                                  - upper
-                                  additionalProperties: false
-                                  description: Confidence interval bounds
-                                  example:
-                                    lower: -1.33
-                                    upper: 1.33
-                                percentSequentialTestingConfidenceIntervalDelta:
-                                  type: number
-                                percentSequentialTestingConfidenceInterval:
-                                  type: object
-                                  properties:
-                                    lower:
-                                      type: number
-                                    upper:
-                                      type: number
-                                  required:
-                                  - lower
-                                  - upper
-                                  additionalProperties: false
-                                  description: Confidence interval bounds
-                                  example:
-                                    lower: -1.33
-                                    upper: 1.33
-                                testMean:
-                                  type: number
-                                controlMean:
-                                  type: number
-                                testStd:
-                                  type: number
-                                controlStd:
-                                  type: number
-                                testUnits:
-                                  type: number
-                                controlUnits:
-                                  type: number
-                                pValue:
-                                  type: number
-                                sequentialTestingPValue:
-                                  type:
-                                  - number
-                                  - 'null'
-                                adjustedAlpha:
-                                  type: number
-                                reversePower:
-                                  type: number
-                                percentCredibleInterval:
-                                  type: object
-                                  properties:
-                                    lower:
-                                      type: number
-                                    upper:
-                                      type: number
-                                  required:
-                                  - lower
-                                  - upper
-                                  additionalProperties: false
-                                  description: Bayesian credible interval for the percent change. Only returned when results are computed with Bayesian analysis.
-                                  example:
-                                    lower: -1.33
-                                    upper: 1.33
-                                expectedLoss:
-                                  type: number
-                                  description: Bayesian expected loss. Only returned when results are computed with Bayesian analysis.
-                                chanceToBeat:
-                                  type: number
-                                  description: Bayesian probability that the test beats the control. Only returned when results are computed with Bayesian analysis.
-                                sequentialTestingLikelihoodRatio:
-                                  type: number
-                                  description: SPRT likelihood ratio of the observed data under the alternative vs the null. This is the same value Pulse uses.
-                                sequentialTestingLogLikelihoodRatio:
-                                  type: number
-                                  description: Natural log of the SPRT likelihood ratio Pulse uses. Compare this to `sprtLogLowerLimit` and `sprtLogUpperLimit`.
-                                sprtLowerLimit:
-                                  type: number
-                                  description: Lower SPRT decision boundary on the likelihood-ratio scale. Crossing below this accepts the null.
-                                sprtUpperLimit:
-                                  type: number
-                                  description: Upper SPRT decision boundary on the likelihood-ratio scale. Crossing above this accepts the alternative.
-                                sprtLogLowerLimit:
-                                  type: number
-                                  description: Lower SPRT decision boundary on the log-likelihood-ratio scale. Crossing below this accepts the null.
-                                sprtLogUpperLimit:
-                                  type: number
-                                  description: Upper SPRT decision boundary on the log-likelihood-ratio scale. Crossing above this accepts the alternative.
-                                sprtDecision:
-                                  type: string
-                                  enum:
-                                  - alternative
-                                  - 'null'
-                                  - continue
-                                  description: SPRT decision from the log likelihood ratio. `alternative` accepts H1, `null` accepts H0, and `continue` means the ratio is still between the boundaries.
-                                isSprtSignificant:
-                                  type: boolean
-                                  description: True when the SPRT decision is `alternative`, meaning the result is statistically significant.
-                                sprtStatsigness:
-                                  type: string
-                                  enum:
-                                  - positive
-                                  - negative
-                                  - neutral
-                                  description: Direction of the SPRT decision relative to the metric's desired direction. `neutral` when the test has not accepted the alternative.
-                                absoluteToplineImpact:
-                                  type: number
-                                absoluteToplineImpactDelta:
-                                  type: number
-                                relativeToplineImpact:
-                                  type: number
-                                relativeToplineImpactDelta:
-                                  type: number
-                                projectedAbsoluteToplineImpact:
-                                  type: number
-                                projectedAbsoluteToplineImpactDelta:
-                                  type: number
-                                projectedRelativeToplineImpact:
-                                  type: number
-                                projectedRelativeToplineImpactDelta:
-                                  type: number
-                                dimensionKey:
-                                  type: string
-                                dimensionType:
-                                  type: string
-                                dimensionValue:
-                                  type: string
-                              required:
-                              - metricID
-                              - metricName
-                              - directionality
-                              - dimensionKey
-                              - dimensionValue
-                              additionalProperties: false
-                        required:
-                        - metricID
-                        - metricName
-                        - directionality
-                        additionalProperties: false
-                  required:
-                  - chartSource
-                  additionalProperties: false
+                description: ID for the Statsig unit.
+              column:
+                type: string
+                description: Column name linked to the ID.
             required:
-            - sectionLabel
-            - charts
-            additionalProperties: false
-      required:
-      - experimentID
-      - sections
-      additionalProperties: false
-    DimensionalExposureResponseDto:
-      type: object
-      properties:
-        ds:
+            - statsigUnitID
+            - column
+          description: Mappings of Statsig units to their columns.
+        isReadOnly:
+          type: boolean
+          description: Specifies if the source can only be edited via the Console API.
+        team:
           type:
           - string
           - 'null'
-          description: Date in YYYY-MM-DD format
-        dimensions:
-          type: array
-          items:
-            type: object
-            properties:
-              dimension_type:
-                type: string
-              dimension_values:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    dimension_value:
-                      type: string
-                    srm_pvalue:
-                      type:
-                      - number
-                      - 'null'
-                    unit_count:
-                      type: number
-                    severity:
-                      type: string
-                      enum:
-                      - pass
-                      - warning
-                      - failure
-                  required:
-                  - dimension_value
-                  - srm_pvalue
-                  - unit_count
-                  - severity
-            required:
-            - dimension_type
-            - dimension_values
+          description: Optional field indicating the team name responsible for the entity property source, aiding in accountability and management.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: Optional field indicating the team ID responsible for the entity property source, aiding in accountability and management.
+        dryRun:
+          type: boolean
+          description: Skips persisting the entity property source (used to validate that inputs are correct)
       required:
-      - ds
-      - dimensions
-    ApproveReviewRequestDto:
-      type: object
-      properties:
-        reason:
-          type: string
-          maxLength: 2000
-          description: Optional comment recorded with the approval.
-      additionalProperties: false
-      title: ApproveReviewRequest
+      - name
+      - sql
+      - idTypeMapping
     ExperimentReviewEnvelopeDto:
       type: object
       properties:
@@ -7967,6 +7475,22 @@ components:
       - description
       - created_at
       title: ExperimentReview
+    EchidnaLoadPulseQueryDto:
+      type: object
+      properties:
+        refresh:
+          default: full
+          type: string
+          enum:
+          - full
+          - incremental
+          - metric
+        metricIDs:
+          type: array
+          items:
+            type: string
+        turboMode:
+          type: boolean
     ExperimentChecksDiagnosticsDto:
       type: object
       properties:
@@ -8028,254 +7552,26 @@ components:
           type: string
           description: Reason for resolving the alert
           example: Issue has been addressed
-    EntityPropertySourcePartialUpdateDto:
+    PaginationResponseWithMessage:
       type: object
       properties:
-        name:
+        message:
           type: string
-          description: Unique identifier for the entity property source.
-        description:
-          type: string
-          description: Detailed context and purpose of the entity property source.
-        tags:
-          type: array
-          items:
-            type: string
-          description: Tags for categorization and search.
-        sql:
-          readOnly: true
-          type: string
-          description: SQL query defining the data source
-        timestampColumn:
-          type: string
-          description: Optional column name for timestamp.
-        timestampAsDay:
-          type: boolean
-          description: Indicates if the timestamp is treated as a day.
-        idTypeMapping:
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
           type: array
           items:
             type: object
-            properties:
-              statsigUnitID:
-                type: string
-                description: ID for the Statsig unit.
-              column:
-                type: string
-                description: Column name linked to the ID.
-            required:
-            - statsigUnitID
-            - column
-          description: Mappings of Statsig units to their columns.
-        isReadOnly:
-          type: boolean
-          description: Specifies if the source can only be edited via the Console API.
-        team:
-          type:
-          - string
-          - 'null'
-          description: Optional field indicating the team name responsible for the entity property source, aiding in accountability and management.
-        teamID:
-          type:
-          - string
-          - 'null'
-          description: Optional field indicating the team ID responsible for the entity property source, aiding in accountability and management.
-        dryRun:
-          type: boolean
-          description: Skips persisting the entity property source (used to validate that inputs are correct)
-    EditExperimentReviewRequestDto:
-      type: object
-      properties:
-        description:
-          type: string
-          minLength: 1
-          maxLength: 2000
-          description: New description. Omit to keep the current value.
-        reviewer_ids:
-          type: array
-          items:
-            type: string
-          description: Replacement reviewer user IDs. Omit to keep the current set.
-        reviewer_group_ids:
-          type: array
-          items:
-            type: string
-          description: Replacement reviewer group IDs. Omit to keep the current set.
-      additionalProperties: false
-      title: EditExperimentReviewRequest
-      description: Request body for PUT /console/v1/experiments/:id/reviews/:reviewID
-    EntityPropertySourceCreationDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Unique identifier for the entity property source.
-        description:
-          type: string
-          description: Optional detailed context for the entity property source.
-        tags:
-          type: array
-          items:
-            type: string
-          description: Optional tags for categorization.
-        sql:
-          type: string
-          description: SQL query defining the data source.
-        timestampColumn:
-          type: string
-          description: Optional column name for timestamp.
-        timestampAsDay:
-          type: boolean
-          description: Indicates if the timestamp is treated as a day.
-        idTypeMapping:
-          type: array
-          items:
-            type: object
-            properties:
-              statsigUnitID:
-                type: string
-                description: ID for the Statsig unit.
-              column:
-                type: string
-                description: Column name linked to the ID.
-            required:
-            - statsigUnitID
-            - column
-          description: Mappings of Statsig units to their columns.
-        isReadOnly:
-          type: boolean
-          description: Specifies if the source can only be edited via the Console API.
-        team:
-          type:
-          - string
-          - 'null'
-          description: Optional field indicating the team name responsible for the entity property source, aiding in accountability and management.
-        teamID:
-          type:
-          - string
-          - 'null'
-          description: Optional field indicating the team ID responsible for the entity property source, aiding in accountability and management.
-        dryRun:
-          type: boolean
-          description: Skips persisting the entity property source (used to validate that inputs are correct)
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
       required:
-      - name
-      - sql
-      - idTypeMapping
-    ExperimentOverridesDto:
-      type: object
-      properties:
-        overrides:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-                enum:
-                - gate
-                - segment
-              id:
-                type: string
-                description: The id of the segment or gate
-              groupID:
-                type: string
-                description: The experiment group which user will be forced into
-              environment:
-                type:
-                - string
-                - 'null'
-                description: Optional environment designation (e.g., production, staging) for the experiment.
-            required:
-            - type
-            - id
-            - groupID
-          maxItems: 1000
-          description: Array of experiment overrides, each specifying type, ID, and group ID.
-        userIDOverrides:
-          type: array
-          items:
-            type: object
-            properties:
-              groupID:
-                type: string
-                description: The experiment group the user will be forced into.
-              ids:
-                type: array
-                items:
-                  type: string
-                maxItems: 1000
-                description: Array of user IDs to be assigned to the specified experiment group.
-              environment:
-                type:
-                - string
-                - 'null'
-                description: Optional environment designation (e.g., production, staging) for the experiment.
-              unitType:
-                type:
-                - string
-                - 'null'
-                description: Optional type of unit for the experiment, defining the scope of the override.
-            required:
-            - groupID
-            - ids
-          description: Array of user ID overrides, specifying which users to force into experiment groups.
-      required:
-      - overrides
-      - userIDOverrides
-    PulseLoadHistoryDto:
-      type: object
-      properties:
-        creatorName:
-          type: string
-        createdTime:
-          type: number
-          format: double
-        finishedTime:
-          type: number
-          format: double
-        finishedState:
-          type: string
-          enum:
-          - success
-          - failure
-          - partial_failure
-          - cancelled
-          - timeout
-        startDs:
-          type: string
-        endDs:
-          type: string
-        reloadType:
-          type: string
-          enum:
-          - incremental
-          - full
-          - metric
-        turboMode:
-          type: boolean
-        dagID:
-          type: string
-      required:
-      - createdTime
-      - startDs
-      - endDs
-      - reloadType
-      - turboMode
-      - dagID
-    ExperimentContextResponseDto:
-      type: object
-      properties:
-        experimentID:
-          type: string
-          description: The experiment ID
-        context:
-          type: string
-          description: AI-ready experiment context
-      required:
-      - experimentID
-      - context
-    AssignmentSourceCreationDto:
+      - message
+      - data
+      - pagination
+    AssignmentSourcePartialUpdateDto:
       type: object
       properties:
         name:
@@ -8283,7 +7579,7 @@ components:
           description: Unique identifier for the assignment source.
         description:
           type: string
-          description: Optional detailed context for the assignment source.
+          description: Detailed context and purpose of the assignment source.
         isVerified:
           type: boolean
           description: Marks the assignment source as verified for internal trustworthiness.
@@ -8291,8 +7587,9 @@ components:
           type: array
           items:
             type: string
-          description: Optional tags for categorization.
+          description: Tags for categorization and search.
         sql:
+          readOnly: true
           type: string
           description: SQL query defining the data source for assignments.
         timestampColumn:
@@ -8372,29 +7669,21 @@ components:
         dryRun:
           type: boolean
           description: Skips persisting the assignment source (used to validate that inputs are correct)
-      required:
-      - name
-      - sql
-      - timestampColumn
-      - experimentIDColumn
-      - groupIDColumn
-      - idTypeMapping
-    EchidnaLoadPulseQueryDto:
+    ExperimentStartDto:
       type: object
       properties:
-        refresh:
-          default: full
+        analysisStartTime:
           type: string
-          enum:
-          - full
-          - incremental
-          - metric
-        metricIDs:
-          type: array
-          items:
-            type: string
+          description: For Warehouse Native analysis-only experiments; start time of experiment analysis.
+          example: '2024-10-01'
+        analysisEndTime:
+          type: string
+          description: For Warehouse Native analysis-only experiments; end time of experiment analysis.
+          example: '2024-10-30'
         turboMode:
           type: boolean
+          description: For Warehouse Native analysis-only experiments; whether to run the initial analysis in turbo mode
+          example: false
     ExternalExperimentDto:
       type: object
       properties:
@@ -9730,164 +9019,6 @@ components:
       - isStale
       - permalink
       - powerAnalyses
-    PulseLoadHistoryDetailsDto:
-      type: object
-      properties:
-        dagID:
-          type: string
-        jobs:
-          type: array
-          items:
-            type: object
-            properties:
-              jobType:
-                type: string
-                description: The Echidna job type.
-              jobIDs:
-                type: array
-                items:
-                  type: string
-                description: Warehouse execution IDs for this job.
-              startTime:
-                type:
-                - number
-                - 'null'
-                description: Unix timestamp in milliseconds when this job started.
-              endTime:
-                type:
-                - number
-                - 'null'
-                description: Unix timestamp in milliseconds when this job ended, when available.
-              sql:
-                type:
-                - string
-                - 'null'
-                description: The SQL executed for this job.
-              metricSourceName:
-                type:
-                - string
-                - 'null'
-                description: Present for user-metrics style jobs and names the metric source used by the job.
-              rollup:
-                type:
-                - string
-                - 'null'
-                enum:
-                - 7
-                - 14
-                - 28
-                - cumulative
-                - dx
-                - daily
-                - pre_exposure
-                description: Present for pulse-style jobs and indicates the rollup used for the calculation.
-            required:
-            - jobType
-            - jobIDs
-            - startTime
-            - endTime
-            - sql
-      required:
-      - dagID
-      - jobs
-    EligibleReviewersDto:
-      type: object
-      properties:
-        everyone_eligible:
-          type: boolean
-        users:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              email:
-                type: string
-              name:
-                type: string
-            required:
-            - id
-            - email
-            - name
-        groups:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              name:
-                type: string
-              user_ids:
-                type: array
-                items:
-                  type: string
-            required:
-            - id
-            - name
-            - user_ids
-      required:
-      - everyone_eligible
-      - users
-      - groups
-    EntityPropertySourceQueryUpdateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Optional new name for the entity property source.
-        description:
-          type: string
-          description: Optional updated context for the entity property source.
-        tags:
-          type: array
-          items:
-            type: string
-          description: Optional updated tags for categorization.
-        sql:
-          type: string
-          description: SQL query defining the data source.
-        timestampColumn:
-          type: string
-          description: Optional column name for timestamp.
-        timestampAsDay:
-          type: boolean
-          description: Indicates if the timestamp is treated as a day.
-        idTypeMapping:
-          type: array
-          items:
-            type: object
-            properties:
-              statsigUnitID:
-                type: string
-                description: ID for the Statsig unit.
-              column:
-                type: string
-                description: Column name linked to the ID.
-            required:
-            - statsigUnitID
-            - column
-          description: Mappings of Statsig units to their columns.
-        isReadOnly:
-          type: boolean
-          description: Specifies if the source can only be edited via the Console API.
-        team:
-          type:
-          - string
-          - 'null'
-          description: Optional field indicating the team name responsible for the entity property source, aiding in accountability and management.
-        teamID:
-          type:
-          - string
-          - 'null'
-          description: Optional field indicating the team ID responsible for the entity property source, aiding in accountability and management.
-        dryRun:
-          type: boolean
-          description: Skips persisting the entity property source (used to validate that inputs are correct)
-      required:
-      - sql
-      - idTypeMapping
     AssignmentSourceContractDto:
       type: object
       properties:
@@ -9991,691 +9122,7 @@ components:
       - experimentIDColumn
       - groupIDColumn
       - idTypeMapping
-    ExperimentCreateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_\- ]*$
-          description: The experiment display name
-        description:
-          type: string
-          maxLength: 1000
-          description: A description of the new experiment
-        idType:
-          type: string
-          description: The idType the experiment will be performed on
-        secondaryIDType:
-          type:
-          - string
-          - 'null'
-          description: The secondary ID type for the experiment used in WHN for ID resolution
-        identifierMappingMode:
-          type: string
-          enum:
-          - strictOneToOne
-          - firstTouchOneToMany
-          - lastTouchOneToMany
-          description: The identifier mapping mode for the experiment used in WHN for ID resolution
-        identityResolutionSource:
-          type:
-          - string
-          - 'null'
-          description: The identity resolution entity property source for the experiment used in WHN for ID resolution
-        hypothesis:
-          type: string
-          description: A statement that will be tested by this experiment
-        links:
-          type: array
-          items:
-            type: object
-            properties:
-              url:
-                type: string
-                format: uri
-                description: The URL of the link
-              title:
-                type: string
-                description: The title of the link
-            required:
-            - url
-          description: Links to relevant documentation or resources
-        externalEvents:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              timestamp:
-                type: number
-            required:
-            - name
-            - timestamp
-        groups:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              id:
-                type:
-                - string
-                - 'null'
-              size:
-                type: number
-                minimum: 0
-                maximum: 100
-              parameterValues:
-                type: object
-                additionalProperties: {}
-                description: A map of parameter name to the value this group serves. Sidecar (Visual Editor) experiments also return `sidecarURLFilters`, `sidecarDisableAutoRun`, `sidecarPrerunScript`, and `sidecarExperimentName` here, copied from the experiment itself on read. Sending them here does nothing; set them as experiment fields instead.
-              disabled:
-                type: boolean
-              description:
-                type: string
-              foreignGroupID:
-                type: string
-              highlighted:
-                type: boolean
-                description: Marks this experiment group as highlighted in analysis views. Highlighted groups are prioritized (shown first) and can be used to filter.
-            required:
-            - name
-            - size
-            - parameterValues
-          description: The test groups for your experiment
-        controlGroupID:
-          type: string
-          description: Optional control group ID
-        allocation:
-          type: number
-          minimum: 0
-          maximum: 100
-          description: Percent of layer allocated to this experiment
-          format: double
-        userBuckets:
-          type: array
-          items:
-            type: number
-            minimum: 0
-            exclusiveMaximum: 1000
-        primaryMetricTags:
-          type: array
-          items:
-            type: string
-          description: Primary metric tags for the experiment
-        secondaryMetricTags:
-          type: array
-          items:
-            type: string
-          description: Secondary metric tags for the experiment
-        primaryMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The metric name.
-              type:
-                type: string
-                description: The metric type.
-              direction:
-                type: string
-                enum:
-                - increase
-                - decrease
-                description: The expected direction for one-sided testing (a feature to only measure metric movements in a single direction)
-              hypothesizedValue:
-                type: number
-                description: The comparison value for the one-sample testing (a feature to use a fixed baseline as the control value)
-            required:
-            - name
-            - type
-          description: Main metrics needed to evaluate your hypothesis
-        secondaryMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The metric name.
-              type:
-                type: string
-                description: The metric type.
-              direction:
-                type: string
-                enum:
-                - increase
-                - decrease
-                description: The expected direction for one-sided testing (a feature to only measure metric movements in a single direction)
-              hypothesizedValue:
-                type: number
-                description: The comparison value for the one-sample testing (a feature to use a fixed baseline as the control value)
-            required:
-            - name
-            - type
-          description: Additional metrics to monitor that might impact the analysis or final decision of the experiment
-        otherMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The metric name.
-              type:
-                type: string
-                description: The metric type.
-              direction:
-                type: string
-                enum:
-                - increase
-                - decrease
-                description: The expected direction for one-sided testing (a feature to only measure metric movements in a single direction)
-              hypothesizedValue:
-                type: number
-                description: The comparison value for the one-sample testing (a feature to use a fixed baseline as the control value)
-            required:
-            - name
-            - type
-          description: Additional metrics you want to investigate or learn from. The usual corrections applied to Primary and Secondary metrics are not applied to these.
-        targetApps:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-          description: Target apps assigned to this experiment
-        tags:
-          type: array
-          items:
-            type: string
-          description: Tags associated with the experiment
-        duration:
-          type: integer
-          description: How long the experiment is expected to last in days
-          format: int64
-          exclusiveMinimum: 1
-        targetExposures:
-          type: integer
-          description: Target exposures for the experiment
-          format: int64
-          exclusiveMinimum: 1
-        targetingGateID:
-          type:
-          - string
-          - 'null'
-          description: Restrict your experiment to users passing the selected feature gate
-        sequentialTesting:
-          type: boolean
-          description: Apply sequential testing?
-        bonferroniCorrection:
-          type: boolean
-          description: Is Bonferroni correction applied per variant?
-        bonferroniCorrectionPerMetric:
-          type: boolean
-          description: Is Bonferroni correction applied per metric?
-        benjaminiHochbergPerVariant:
-          type: boolean
-          description: Is Benjamini-Hochberg procedure applied per variant?
-        benjaminiHochbergPerMetric:
-          type: boolean
-          description: Is Benjamini-Hochberg procedure applied per metric?
-        benjaminiPrimaryMetricsOnly:
-          type: boolean
-          description: Is Benjamini-Hochberg procedure applied for primary metrics only?
-        defaultConfidenceInterval:
-          type: string
-          enum:
-          - '80'
-          - '90'
-          - '95'
-          - '98'
-          - '99'
-          description: Default error margin used for results
-        defaultRollupWindow:
-          type: integer
-          description: Default rollup window in days for experiment results. Use -1 for cumulative. Only -1, 1, and 7 allowed for cloud experiments.
-          format: int64
-        defaultChanceToBeatThreshold:
-          type: number
-          description: Default chance-to-beat threshold used for Bayesian results.
-          format: double
-        bayesianPriors:
-          type: array
-          items:
-            type: object
-            properties:
-              metric:
-                type: object
-                properties:
-                  name:
-                    type: string
-                  type:
-                    type: string
-                required:
-                - name
-                - type
-              priorMean:
-                type: number
-              priorStdDev:
-                type: number
-                exclusiveMinimum: 0
-            required:
-            - metric
-            - priorMean
-            - priorStdDev
-          description: Bayesian prior settings by metric.
-        manualQualityScores:
-          type: array
-          items:
-            type: object
-            properties:
-              criteriaName:
-                oneOf:
-                - type: string
-                  enum:
-                  - HYPOTHESIS_LENGTH
-                  - BALANCED_EXPOSURE
-                  - PRIMARY_METRICS_LENGTH
-                  - SECONDARY_METRICS_LENGTH
-                  - COMPARISON_CORRECTION
-                  - GUARDRAIL_METRIC_TAGS
-                  - SUFFICIENT_SAMPLE
-                  - POWER_ANALYSIS
-                  - SEQUENTIAL_TESTING
-                - type: string
-              status:
-                type: string
-                enum:
-                - PASSED
-                - FAILED
-                - WARNING
-              criteriaDescription:
-                type: string
-              score:
-                type: number
-              weight:
-                type: number
-            required:
-            - criteriaName
-            - status
-            - criteriaDescription
-            - score
-            - weight
-          description: 'Up to 10 manually set quality scores for an experiment. The scores and weights will be added to the existing weights and scores, and then weights will be renormalized to 100. This can be set via the Statsig Console API. If targeting a default check, the weight of the check will be updated, but not the status or description. A default score can be removed by setting the weight to 0. The default score identifiers are one of: HYPOTHESIS_LENGTH, BALANCED_EXPOSURE, PRIMARY_METRICS_LENGTH, COMPARISON_CORRECTION, GUARDRAIL_METRIC_TAGS, SUFFICIENT_SAMPLE, POWER_ANALYSIS, SEQUENTIAL_TESTING'
-        status:
-          type: string
-          enum:
-          - active
-          - setup
-          - decision_made
-          - abandoned
-          - archived
-          - experiment_stopped
-          - assignment_stopped
-          description: The current status of the experiment
-        launchedGroupID:
-          type:
-          - string
-          - 'null'
-          description: ID of the launched group, null otherwise
-        assignmentSourceName:
-          type: string
-          description: Source name of the assignment
-        assignmentSourceExperimentName:
-          type: string
-          description: Name of the source experiment for assignment
-        creatorID:
-          type:
-          - string
-          - 'null'
-          description: The Statsig ID of the creator of this experiment
-        creatorEmail:
-          type:
-          - string
-          - 'null'
-          description: The email of the creator of this experiment
-        isAnalysisOnly:
-          type:
-          - boolean
-          - 'null'
-          description: For Warehouse Native
-        team:
-          type:
-          - string
-          - 'null'
-          description: The team name associated with the experiment, Enterprise only.
-        teamID:
-          type:
-          - string
-          - 'null'
-          description: The team ID associated with the experiment, Enterprise only.
-        allocationDuration:
-          type:
-          - integer
-          - 'null'
-          description: Warehouse Native Only - Allocation duration in days
-          format: int64
-          exclusiveMinimum: 1
-        cohortedAnalysisDuration:
-          type: integer
-          description: Warehouse Native Only - Cohorted analysis duration in days
-          format: int64
-          exclusiveMinimum: 1
-        cohortedMetricsMatureAfterEnd:
-          type: boolean
-          description: Warehouse Native Only - Allow cohort metrics to mature after experiment end
-        cohortWaitUntilEndToInclude:
-          type: boolean
-          description: Warehouse Native Only - Whether to filter to units whose experiment cohort analysis duration is complete, if cohortedAnalysisDuration exists
-        fixedAnalysisDuration:
-          type: integer
-          description: Fixed analysis duration in days
-          format: int64
-          exclusiveMinimum: 1
-        scheduledReloadHour:
-          type:
-          - integer
-          - 'null'
-          minimum: 0
-          maximum: 23
-          description: Warehouse Native only - UTC hour at which to run scheduled pulse loads
-          format: int64
-        scheduledReloadType:
-          type: string
-          enum:
-          - full
-          - incremental
-          description: Warehouse Native only - reload type for scheduled reloads
-        scheduledReloadDays:
-          type:
-          - array
-          - 'null'
-          items:
-            type: integer
-            minimum: 0
-            maximum: 6
-          description: Warehouse Native only - days on which to run scheduled reloads from 0 to 6, 0 meaning Sunday. Null to run reloads on all days.
-        turboMode:
-          type: boolean
-          description: Warehouse Native only - whether to run scheduled reloads with Turbo mode.
-        autoLoadToplineImpact:
-          type: boolean
-          description: Warehouse Native only - whether to automatically run topline and projected launch impact calculations when reloading experiments.
-        analysisEndTime:
-          type: string
-          description: Warehouse Native only - end time for analysis only experiments
-        assignmentSourceFilters:
-          type: array
-          items:
-            type: object
-            properties:
-              column:
-                type: string
-                description: Column to filter on.
-              condition:
-                type: string
-                enum:
-                - in
-                - not_in
-                - '='
-                - '>'
-                - <
-                - '>='
-                - <=
-                - is_null
-                - non_null
-                - contains
-                - not_contains
-                - sql_filter
-                - starts_with
-                - ends_with
-                - after_exposure
-                - before_exposure
-                - is_true
-                - is_false
-              values:
-                type: array
-                items:
-                  type: string
-                description: Optional array of values for the criterion to match against.
-            required:
-            - condition
-          description: Array of criteria for filtering assignment sources.
-        analyticsType:
-          type: string
-          enum:
-          - frequentist
-          - bayesian
-          - sprt
-          description: The mode of analysis for the experiment, e.g frequentist, bayesian, sprt
-        defaultSPRTPowerParam:
-          type: number
-          description: SPRT power parameter percentage used as the default for experiment analysis.
-          format: double
-        defaultSPRTMDE:
-          type: number
-          description: Default MDE value for every metric if one isn't provided. Only used in manual mode.
-          format: double
-        sprtBaselineMode:
-          type: string
-          enum:
-          - manual
-          - in_experiment_control
-          description: In manual mode, mde/mean/stdDev must be provided for every metric in the experiment. In in_experiment_control, only the mde is needed for every metric, or the defaultSPRTMDE field must be passed.
-        sprtMDESettings:
-          type: array
-          items:
-            type: object
-            properties:
-              metricKey:
-                type: string
-              groupSettings:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    groupKey:
-                      type: string
-                    mde:
-                      type: number
-                    mean:
-                      type: number
-                    stdDev:
-                      type: number
-                  required:
-                  - groupKey
-                  - mde
-            required:
-            - metricKey
-            - groupSettings
-          description: The SPRT values for use in the experiment.
-        isSidecar:
-          type: boolean
-          description: Whether this is a Statsig Sidecar experiment. `sidecarEditorURL`, `sidecarURLFilters`, `sidecarDisableAutoRun`, and `sidecarPrerunScript` are saved only when this is `true`.
-        sidecarEditorURL:
-          type: string
-          description: 'Sidecar (Visual Editor) only: the URL of the page being modified. The Visual Editor cannot open without it, and it must be an `http` or `https` URL.'
-        sidecarURLFilters:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-                enum:
-                - contains
-                - equals
-                - regex
-                - path
-              value:
-                type: string
-            required:
-            - type
-            - value
-          description: 'Sidecar (Visual Editor) only: filters on the current URL used to determine whether the experiment should be applied. Each entry looks like `{ "type": "contains", "value": "/pricing" }`, where `type` is `contains`, `equals`, `regex`, or `path`. Put `type` inside each filter object, not alongside the array.'
-        sidecarDisableAutoRun:
-          type: boolean
-          description: 'Sidecar (Visual Editor) only: whether to disable auto-running the experiment on page load. By default the experiment auto runs.'
-        sidecarPrerunScript:
-          type:
-          - string
-          - 'null'
-          description: 'Sidecar (Visual Editor) only: a script to run before the experiment starts. Send `null` to clear it.'
-        decisionReason:
-          type: string
-          description: Experiment notes reported after experiment completes
-        preComputedUserDimensions:
-          type: array
-          items:
-            type: object
-            properties:
-              propertySource:
-                type: string
-              name:
-                type: string
-            required:
-            - name
-          description: User dimensions that will be computed for every metric in WHN
-        cureCovariates:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              type:
-                type: string
-            required:
-            - name
-            - type
-          description: CURE Covariates to use in this experiment
-        stratifiedSampling:
-          type:
-          - object
-          - 'null'
-          properties:
-            status:
-              type: string
-              enum:
-              - pending
-              - success
-              - error
-            metric:
-              type: object
-              properties:
-                name:
-                  type: string
-                type:
-                  type: string
-                startDate:
-                  type: string
-                endDate:
-                  type: string
-              required:
-              - name
-              - startDate
-              - endDate
-            entityPropertySource:
-              type: object
-              properties:
-                propertySourceName:
-                  type: string
-                column:
-                  type: string
-              required:
-              - propertySourceName
-              - column
-            csv:
-              type: object
-              properties:
-                original:
-                  type: string
-                identifier:
-                  type: string
-              required:
-              - original
-              - identifier
-            useStratifiedSalt:
-              type: boolean
-              description: Whether successful stratified sampling is currently used for experiment assignment.
-            useUnits:
-              type: boolean
-              description: Whether stratified sampling was configured to use allocated units directly.
-            deltaReduction:
-              type: number
-              description: Observed reduction in delta after running stratified sampling.
-              format: double
-            spreadReduction:
-              type: number
-              description: Observed reduction in spread after running stratified sampling.
-              format: double
-          required:
-          - status
-          description: The stratified sampling settings for the experiment
-        enabledNonProdEnvironments:
-          type: array
-          items:
-            type: string
-        id:
-          type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_-]*$
-          description: The experiment name ID
-        layerID:
-          type: string
-          description: Which layer to place the experiment into.
-        isTemplate:
-          type: boolean
-          description: Whether this experiment is a template that other experiments can be created from. Settable at creation only.
-      required:
-      - name
-      description: Create Experiment
-      example:
-        name: Test Experiment
-        description: Description test
-    PaginationResponseMetadataDto:
-      type: object
-      properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
-          type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
-    ExperimentDeferDecisionDto:
-      type: object
-      properties:
-        stopReason:
-          type: string
-          description: Optional reason for concluding the experiment and deferring the shipping decision
-          example: We want more time before choosing a winner
-    EntityPropertySourceDto:
+    EntityPropertySourcePartialUpdateDto:
       type: object
       properties:
         name:
@@ -10690,8 +9137,9 @@ components:
             type: string
           description: Tags for categorization and search.
         sql:
+          readOnly: true
           type: string
-          description: SQL query defining the data source.
+          description: SQL query defining the data source
         timestampColumn:
           type: string
           description: Optional column name for timestamp.
@@ -10716,32 +9164,6 @@ components:
         isReadOnly:
           type: boolean
           description: Specifies if the source can only be edited via the Console API.
-        owner:
-          type:
-          - object
-          - 'null'
-          properties:
-            ownerID:
-              type: string
-              description: ID of the owner
-              example: abc123
-            ownerType:
-              type: string
-              description: Type of the owner (e.g., SDK_KEY or USER)
-              example: USER
-            ownerName:
-              type: string
-              description: The name of the owner. This field is optional.
-              example: John Doe
-            ownerEmail:
-              type: string
-              description: The email of the owner. This field is optional.
-          description: Schema for owner data including ID, type, name.
-          example:
-            ownerID: user123
-            ownerType: USER
-            ownerName: John Doe
-            ownerEmail: owner123@test.com
         team:
           type:
           - string
@@ -10752,12 +9174,910 @@ components:
           - string
           - 'null'
           description: Optional field indicating the team ID responsible for the entity property source, aiding in accountability and management.
+        dryRun:
+          type: boolean
+          description: Skips persisting the entity property source (used to validate that inputs are correct)
+    ExperimentPulseMetricResultDto:
+      type: object
+      properties:
+        ds:
+          type: string
+        dimensionResults:
+          type: array
+          items:
+            type: object
+            properties:
+              dimension:
+                type: string
+              dimension_value:
+                type: string
+              metric:
+                type:
+                - object
+                - 'null'
+                properties:
+                  metricID:
+                    type: string
+                  metricName:
+                    type: string
+                  directionality:
+                    type: string
+                    enum:
+                    - increase
+                    - decrease
+                    description: Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
+                    example: increase
+                  error:
+                    oneOf:
+                    - type: string
+                      enum:
+                      - no_data
+                      - import_no_data
+                      - incompatible_types
+                      - echidna_unripe
+                      - setup_incomplete
+                      - hourly_metric_type_not_supported
+                      - control_or_test_no_units
+                      - no_subdimension_filter
+                    - type: string
+                    description: Machine-readable reason when pulse statistics are unavailable. Common values include no_data (insufficient data), echidna_unripe (not yet loaded), and setup_incomplete (misconfigured metric source). Additional string values may appear for cohort/bake windows or other load failures.
+                    example: no_data
+                  warnings:
+                    type: array
+                    items:
+                      type: string
+                    description: Human-readable warnings about metric data quality, load state, or partial pipeline failures.
+                  absoluteChange:
+                    type: number
+                  confidenceIntervalDelta:
+                    type: number
+                    description: Absolute confidence interval delta
+                  confidenceInterval:
+                    type: object
+                    properties:
+                      lower:
+                        type: number
+                      upper:
+                        type: number
+                    required:
+                    - lower
+                    - upper
+                    additionalProperties: false
+                    description: Confidence interval bounds
+                    example:
+                      lower: -1.33
+                      upper: 1.33
+                  percentChange:
+                    type: number
+                  sequentialTestingConfidenceIntervalDelta:
+                    type: number
+                  sequentialTestingConfidenceInterval:
+                    type: object
+                    properties:
+                      lower:
+                        type: number
+                      upper:
+                        type: number
+                    required:
+                    - lower
+                    - upper
+                    additionalProperties: false
+                    description: Confidence interval bounds
+                    example:
+                      lower: -1.33
+                      upper: 1.33
+                  percentConfidenceIntervalDelta:
+                    type: number
+                  percentConfidenceInterval:
+                    type: object
+                    properties:
+                      lower:
+                        type: number
+                      upper:
+                        type: number
+                    required:
+                    - lower
+                    - upper
+                    additionalProperties: false
+                    description: Confidence interval bounds
+                    example:
+                      lower: -1.33
+                      upper: 1.33
+                  percentSequentialTestingConfidenceIntervalDelta:
+                    type: number
+                  percentSequentialTestingConfidenceInterval:
+                    type: object
+                    properties:
+                      lower:
+                        type: number
+                      upper:
+                        type: number
+                    required:
+                    - lower
+                    - upper
+                    additionalProperties: false
+                    description: Confidence interval bounds
+                    example:
+                      lower: -1.33
+                      upper: 1.33
+                  testMean:
+                    type: number
+                  controlMean:
+                    type: number
+                  testStd:
+                    type: number
+                  controlStd:
+                    type: number
+                  testUnits:
+                    type: number
+                  controlUnits:
+                    type: number
+                  pValue:
+                    type: number
+                  sequentialTestingPValue:
+                    type:
+                    - number
+                    - 'null'
+                  adjustedAlpha:
+                    type: number
+                  reversePower:
+                    type: number
+                  percentCredibleInterval:
+                    type: object
+                    properties:
+                      lower:
+                        type: number
+                      upper:
+                        type: number
+                    required:
+                    - lower
+                    - upper
+                    additionalProperties: false
+                    description: Bayesian credible interval for the percent change. Only returned when results are computed with Bayesian analysis.
+                    example:
+                      lower: -1.33
+                      upper: 1.33
+                  expectedLoss:
+                    type: number
+                    description: Bayesian expected loss. Only returned when results are computed with Bayesian analysis.
+                  chanceToBeat:
+                    type: number
+                    description: Bayesian probability that the test beats the control. Only returned when results are computed with Bayesian analysis.
+                  sequentialTestingLikelihoodRatio:
+                    type: number
+                    description: SPRT likelihood ratio of the observed data under the alternative vs the null. This is the same value Pulse uses.
+                  sequentialTestingLogLikelihoodRatio:
+                    type: number
+                    description: Natural log of the SPRT likelihood ratio Pulse uses. Compare this to `sprtLogLowerLimit` and `sprtLogUpperLimit`.
+                  sprtLowerLimit:
+                    type: number
+                    description: Lower SPRT decision boundary on the likelihood-ratio scale. Crossing below this accepts the null.
+                  sprtUpperLimit:
+                    type: number
+                    description: Upper SPRT decision boundary on the likelihood-ratio scale. Crossing above this accepts the alternative.
+                  sprtLogLowerLimit:
+                    type: number
+                    description: Lower SPRT decision boundary on the log-likelihood-ratio scale. Crossing below this accepts the null.
+                  sprtLogUpperLimit:
+                    type: number
+                    description: Upper SPRT decision boundary on the log-likelihood-ratio scale. Crossing above this accepts the alternative.
+                  sprtDecision:
+                    type: string
+                    enum:
+                    - alternative
+                    - 'null'
+                    - continue
+                    description: SPRT decision from the log likelihood ratio. `alternative` accepts H1, `null` accepts H0, and `continue` means the ratio is still between the boundaries.
+                  isSprtSignificant:
+                    type: boolean
+                    description: True when the SPRT decision is `alternative`, meaning the result is statistically significant.
+                  sprtStatsigness:
+                    type: string
+                    enum:
+                    - positive
+                    - negative
+                    - neutral
+                    description: Direction of the SPRT decision relative to the metric's desired direction. `neutral` when the test has not accepted the alternative.
+                  absoluteToplineImpact:
+                    type: number
+                  absoluteToplineImpactDelta:
+                    type: number
+                  relativeToplineImpact:
+                    type: number
+                  relativeToplineImpactDelta:
+                    type: number
+                  projectedAbsoluteToplineImpact:
+                    type: number
+                  projectedAbsoluteToplineImpactDelta:
+                    type: number
+                  projectedRelativeToplineImpact:
+                    type: number
+                  projectedRelativeToplineImpactDelta:
+                    type: number
+                required:
+                - metricID
+                - metricName
+                - directionality
+                additionalProperties: false
+            required:
+            - dimension
+            - dimension_value
+            - metric
       required:
-      - name
-      - description
-      - tags
-      - sql
-      - idTypeMapping
+      - ds
+      - dimensionResults
+    EligibleReviewersDto:
+      type: object
+      properties:
+        everyone_eligible:
+          type: boolean
+        users:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              email:
+                type: string
+              name:
+                type: string
+            required:
+            - id
+            - email
+            - name
+        groups:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              user_ids:
+                type: array
+                items:
+                  type: string
+            required:
+            - id
+            - name
+            - user_ids
+      required:
+      - everyone_eligible
+      - users
+      - groups
+    ExperimentSummaryChartsDto:
+      type: object
+      properties:
+        experimentID:
+          type: string
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              sectionLabel:
+                type: string
+              charts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    chartSource:
+                      type: string
+                      enum:
+                      - experiment
+                      - custom_query
+                      - scheduled_custom_query
+                      - unsupported
+                    message:
+                      type: string
+                    control:
+                      type: string
+                    test:
+                      type: string
+                    display:
+                      type: string
+                      enum:
+                      - cumulative
+                      - daily
+                      - dx
+                      - bar
+                      - table
+                    cuped:
+                      type: boolean
+                    sequentialTesting:
+                      type: boolean
+                    metrics:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          metricID:
+                            type: string
+                          metricName:
+                            type: string
+                          directionality:
+                            type: string
+                            enum:
+                            - increase
+                            - decrease
+                            description: Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
+                            example: increase
+                          error:
+                            oneOf:
+                            - type: string
+                              enum:
+                              - no_data
+                              - import_no_data
+                              - incompatible_types
+                              - echidna_unripe
+                              - setup_incomplete
+                              - hourly_metric_type_not_supported
+                              - control_or_test_no_units
+                              - no_subdimension_filter
+                            - type: string
+                            description: Machine-readable reason when pulse statistics are unavailable. Common values include no_data (insufficient data), echidna_unripe (not yet loaded), and setup_incomplete (misconfigured metric source). Additional string values may appear for cohort/bake windows or other load failures.
+                            example: no_data
+                          warnings:
+                            type: array
+                            items:
+                              type: string
+                            description: Human-readable warnings about metric data quality, load state, or partial pipeline failures.
+                          absoluteChange:
+                            type: number
+                          confidenceIntervalDelta:
+                            type: number
+                            description: Absolute confidence interval delta
+                          confidenceInterval:
+                            type: object
+                            properties:
+                              lower:
+                                type: number
+                              upper:
+                                type: number
+                            required:
+                            - lower
+                            - upper
+                            additionalProperties: false
+                            description: Confidence interval bounds
+                            example:
+                              lower: -1.33
+                              upper: 1.33
+                          percentChange:
+                            type: number
+                          sequentialTestingConfidenceIntervalDelta:
+                            type: number
+                          sequentialTestingConfidenceInterval:
+                            type: object
+                            properties:
+                              lower:
+                                type: number
+                              upper:
+                                type: number
+                            required:
+                            - lower
+                            - upper
+                            additionalProperties: false
+                            description: Confidence interval bounds
+                            example:
+                              lower: -1.33
+                              upper: 1.33
+                          percentConfidenceIntervalDelta:
+                            type: number
+                          percentConfidenceInterval:
+                            type: object
+                            properties:
+                              lower:
+                                type: number
+                              upper:
+                                type: number
+                            required:
+                            - lower
+                            - upper
+                            additionalProperties: false
+                            description: Confidence interval bounds
+                            example:
+                              lower: -1.33
+                              upper: 1.33
+                          percentSequentialTestingConfidenceIntervalDelta:
+                            type: number
+                          percentSequentialTestingConfidenceInterval:
+                            type: object
+                            properties:
+                              lower:
+                                type: number
+                              upper:
+                                type: number
+                            required:
+                            - lower
+                            - upper
+                            additionalProperties: false
+                            description: Confidence interval bounds
+                            example:
+                              lower: -1.33
+                              upper: 1.33
+                          testMean:
+                            type: number
+                          controlMean:
+                            type: number
+                          testStd:
+                            type: number
+                          controlStd:
+                            type: number
+                          testUnits:
+                            type: number
+                          controlUnits:
+                            type: number
+                          pValue:
+                            type: number
+                          sequentialTestingPValue:
+                            type:
+                            - number
+                            - 'null'
+                          adjustedAlpha:
+                            type: number
+                          reversePower:
+                            type: number
+                          percentCredibleInterval:
+                            type: object
+                            properties:
+                              lower:
+                                type: number
+                              upper:
+                                type: number
+                            required:
+                            - lower
+                            - upper
+                            additionalProperties: false
+                            description: Bayesian credible interval for the percent change. Only returned when results are computed with Bayesian analysis.
+                            example:
+                              lower: -1.33
+                              upper: 1.33
+                          expectedLoss:
+                            type: number
+                            description: Bayesian expected loss. Only returned when results are computed with Bayesian analysis.
+                          chanceToBeat:
+                            type: number
+                            description: Bayesian probability that the test beats the control. Only returned when results are computed with Bayesian analysis.
+                          sequentialTestingLikelihoodRatio:
+                            type: number
+                            description: SPRT likelihood ratio of the observed data under the alternative vs the null. This is the same value Pulse uses.
+                          sequentialTestingLogLikelihoodRatio:
+                            type: number
+                            description: Natural log of the SPRT likelihood ratio Pulse uses. Compare this to `sprtLogLowerLimit` and `sprtLogUpperLimit`.
+                          sprtLowerLimit:
+                            type: number
+                            description: Lower SPRT decision boundary on the likelihood-ratio scale. Crossing below this accepts the null.
+                          sprtUpperLimit:
+                            type: number
+                            description: Upper SPRT decision boundary on the likelihood-ratio scale. Crossing above this accepts the alternative.
+                          sprtLogLowerLimit:
+                            type: number
+                            description: Lower SPRT decision boundary on the log-likelihood-ratio scale. Crossing below this accepts the null.
+                          sprtLogUpperLimit:
+                            type: number
+                            description: Upper SPRT decision boundary on the log-likelihood-ratio scale. Crossing above this accepts the alternative.
+                          sprtDecision:
+                            type: string
+                            enum:
+                            - alternative
+                            - 'null'
+                            - continue
+                            description: SPRT decision from the log likelihood ratio. `alternative` accepts H1, `null` accepts H0, and `continue` means the ratio is still between the boundaries.
+                          isSprtSignificant:
+                            type: boolean
+                            description: True when the SPRT decision is `alternative`, meaning the result is statistically significant.
+                          sprtStatsigness:
+                            type: string
+                            enum:
+                            - positive
+                            - negative
+                            - neutral
+                            description: Direction of the SPRT decision relative to the metric's desired direction. `neutral` when the test has not accepted the alternative.
+                          absoluteToplineImpact:
+                            type: number
+                          absoluteToplineImpactDelta:
+                            type: number
+                          relativeToplineImpact:
+                            type: number
+                          relativeToplineImpactDelta:
+                            type: number
+                          projectedAbsoluteToplineImpact:
+                            type: number
+                          projectedAbsoluteToplineImpactDelta:
+                            type: number
+                          projectedRelativeToplineImpact:
+                            type: number
+                          projectedRelativeToplineImpactDelta:
+                            type: number
+                          dimensionBreakdown:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                metricID:
+                                  type: string
+                                metricName:
+                                  type: string
+                                directionality:
+                                  type: string
+                                  enum:
+                                  - increase
+                                  - decrease
+                                  description: Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
+                                  example: increase
+                                error:
+                                  oneOf:
+                                  - type: string
+                                    enum:
+                                    - no_data
+                                    - import_no_data
+                                    - incompatible_types
+                                    - echidna_unripe
+                                    - setup_incomplete
+                                    - hourly_metric_type_not_supported
+                                    - control_or_test_no_units
+                                    - no_subdimension_filter
+                                  - type: string
+                                  description: Machine-readable reason when pulse statistics are unavailable. Common values include no_data (insufficient data), echidna_unripe (not yet loaded), and setup_incomplete (misconfigured metric source). Additional string values may appear for cohort/bake windows or other load failures.
+                                  example: no_data
+                                warnings:
+                                  type: array
+                                  items:
+                                    type: string
+                                  description: Human-readable warnings about metric data quality, load state, or partial pipeline failures.
+                                absoluteChange:
+                                  type: number
+                                confidenceIntervalDelta:
+                                  type: number
+                                  description: Absolute confidence interval delta
+                                confidenceInterval:
+                                  type: object
+                                  properties:
+                                    lower:
+                                      type: number
+                                    upper:
+                                      type: number
+                                  required:
+                                  - lower
+                                  - upper
+                                  additionalProperties: false
+                                  description: Confidence interval bounds
+                                  example:
+                                    lower: -1.33
+                                    upper: 1.33
+                                percentChange:
+                                  type: number
+                                sequentialTestingConfidenceIntervalDelta:
+                                  type: number
+                                sequentialTestingConfidenceInterval:
+                                  type: object
+                                  properties:
+                                    lower:
+                                      type: number
+                                    upper:
+                                      type: number
+                                  required:
+                                  - lower
+                                  - upper
+                                  additionalProperties: false
+                                  description: Confidence interval bounds
+                                  example:
+                                    lower: -1.33
+                                    upper: 1.33
+                                percentConfidenceIntervalDelta:
+                                  type: number
+                                percentConfidenceInterval:
+                                  type: object
+                                  properties:
+                                    lower:
+                                      type: number
+                                    upper:
+                                      type: number
+                                  required:
+                                  - lower
+                                  - upper
+                                  additionalProperties: false
+                                  description: Confidence interval bounds
+                                  example:
+                                    lower: -1.33
+                                    upper: 1.33
+                                percentSequentialTestingConfidenceIntervalDelta:
+                                  type: number
+                                percentSequentialTestingConfidenceInterval:
+                                  type: object
+                                  properties:
+                                    lower:
+                                      type: number
+                                    upper:
+                                      type: number
+                                  required:
+                                  - lower
+                                  - upper
+                                  additionalProperties: false
+                                  description: Confidence interval bounds
+                                  example:
+                                    lower: -1.33
+                                    upper: 1.33
+                                testMean:
+                                  type: number
+                                controlMean:
+                                  type: number
+                                testStd:
+                                  type: number
+                                controlStd:
+                                  type: number
+                                testUnits:
+                                  type: number
+                                controlUnits:
+                                  type: number
+                                pValue:
+                                  type: number
+                                sequentialTestingPValue:
+                                  type:
+                                  - number
+                                  - 'null'
+                                adjustedAlpha:
+                                  type: number
+                                reversePower:
+                                  type: number
+                                percentCredibleInterval:
+                                  type: object
+                                  properties:
+                                    lower:
+                                      type: number
+                                    upper:
+                                      type: number
+                                  required:
+                                  - lower
+                                  - upper
+                                  additionalProperties: false
+                                  description: Bayesian credible interval for the percent change. Only returned when results are computed with Bayesian analysis.
+                                  example:
+                                    lower: -1.33
+                                    upper: 1.33
+                                expectedLoss:
+                                  type: number
+                                  description: Bayesian expected loss. Only returned when results are computed with Bayesian analysis.
+                                chanceToBeat:
+                                  type: number
+                                  description: Bayesian probability that the test beats the control. Only returned when results are computed with Bayesian analysis.
+                                sequentialTestingLikelihoodRatio:
+                                  type: number
+                                  description: SPRT likelihood ratio of the observed data under the alternative vs the null. This is the same value Pulse uses.
+                                sequentialTestingLogLikelihoodRatio:
+                                  type: number
+                                  description: Natural log of the SPRT likelihood ratio Pulse uses. Compare this to `sprtLogLowerLimit` and `sprtLogUpperLimit`.
+                                sprtLowerLimit:
+                                  type: number
+                                  description: Lower SPRT decision boundary on the likelihood-ratio scale. Crossing below this accepts the null.
+                                sprtUpperLimit:
+                                  type: number
+                                  description: Upper SPRT decision boundary on the likelihood-ratio scale. Crossing above this accepts the alternative.
+                                sprtLogLowerLimit:
+                                  type: number
+                                  description: Lower SPRT decision boundary on the log-likelihood-ratio scale. Crossing below this accepts the null.
+                                sprtLogUpperLimit:
+                                  type: number
+                                  description: Upper SPRT decision boundary on the log-likelihood-ratio scale. Crossing above this accepts the alternative.
+                                sprtDecision:
+                                  type: string
+                                  enum:
+                                  - alternative
+                                  - 'null'
+                                  - continue
+                                  description: SPRT decision from the log likelihood ratio. `alternative` accepts H1, `null` accepts H0, and `continue` means the ratio is still between the boundaries.
+                                isSprtSignificant:
+                                  type: boolean
+                                  description: True when the SPRT decision is `alternative`, meaning the result is statistically significant.
+                                sprtStatsigness:
+                                  type: string
+                                  enum:
+                                  - positive
+                                  - negative
+                                  - neutral
+                                  description: Direction of the SPRT decision relative to the metric's desired direction. `neutral` when the test has not accepted the alternative.
+                                absoluteToplineImpact:
+                                  type: number
+                                absoluteToplineImpactDelta:
+                                  type: number
+                                relativeToplineImpact:
+                                  type: number
+                                relativeToplineImpactDelta:
+                                  type: number
+                                projectedAbsoluteToplineImpact:
+                                  type: number
+                                projectedAbsoluteToplineImpactDelta:
+                                  type: number
+                                projectedRelativeToplineImpact:
+                                  type: number
+                                projectedRelativeToplineImpactDelta:
+                                  type: number
+                                dimensionKey:
+                                  type: string
+                                dimensionType:
+                                  type: string
+                                dimensionValue:
+                                  type: string
+                              required:
+                              - metricID
+                              - metricName
+                              - directionality
+                              - dimensionKey
+                              - dimensionValue
+                              additionalProperties: false
+                        required:
+                        - metricID
+                        - metricName
+                        - directionality
+                        additionalProperties: false
+                  required:
+                  - chartSource
+                  additionalProperties: false
+            required:
+            - sectionLabel
+            - charts
+            additionalProperties: false
+      required:
+      - experimentID
+      - sections
+      additionalProperties: false
+    ExperimentAlertsResponseDto:
+      type: object
+      properties:
+        alerts:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              status:
+                type: string
+                enum:
+                - OK
+                - Alert
+                - Warn
+                - Snoozed
+                description: Current status of the alert for this experiment
+                example: Alert
+              timestamp:
+                type: number
+                description: Timestamp of the latest alert event for this experiment
+                example: 1718630400
+              comment:
+                type:
+                - string
+                - 'null'
+                description: Comment associated with the latest alert event
+                example: Threshold breached on win rate
+              source:
+                type:
+                - string
+                - 'null'
+                description: Source identifier associated with the latest alert event
+              arms:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    groupID:
+                      type: string
+                      description: Experiment group id for this arm-specific alert status
+                    groupName:
+                      type:
+                      - string
+                      - 'null'
+                      description: Experiment group name for this arm-specific alert status
+                    status:
+                      type: string
+                      enum:
+                      - OK
+                      - Alert
+                      - Warn
+                      - Snoozed
+                      description: Current status of the alert for this experiment arm
+                      example: Alert
+                    timestamp:
+                      type: number
+                      description: Timestamp of the latest alert datum used to compute this arm status
+                      example: 1718630400
+                    percentChange:
+                      type: number
+                      description: Latest percent change recorded for this arm in guardrail alert event data
+                      example: 0.42
+                    lowerCI:
+                      type:
+                      - number
+                      - 'null'
+                      description: Latest lower confidence interval bound for percent change when available
+                      example: 0.2
+                    upperCI:
+                      type:
+                      - number
+                      - 'null'
+                      description: Latest upper confidence interval bound for percent change when available
+                      example: 0.6
+                    alertThreshold:
+                      type: number
+                      description: Alert threshold snapshot stored on the latest datum
+                      example: 0.3
+                    warningThreshold:
+                      type: number
+                      description: Warning threshold snapshot stored on the latest datum
+                      example: 0.2
+                  required:
+                  - groupID
+                  - groupName
+                  - status
+                description: Per-arm alert status for each non-control group in the experiment
+            required:
+            - status
+            - arms
+          description: Alert status keyed by encoded metric id
+      required:
+      - alerts
+    ExperimentOverridesDto:
+      type: object
+      properties:
+        overrides:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - gate
+                - segment
+              id:
+                type: string
+                description: The id of the segment or gate
+              groupID:
+                type: string
+                description: The experiment group which user will be forced into
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Optional environment designation (e.g., production, staging) for the experiment.
+            required:
+            - type
+            - id
+            - groupID
+          maxItems: 1000
+          description: Array of experiment overrides, each specifying type, ID, and group ID.
+        userIDOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              groupID:
+                type: string
+                description: The experiment group the user will be forced into.
+              ids:
+                type: array
+                items:
+                  type: string
+                maxItems: 1000
+                description: Array of user IDs to be assigned to the specified experiment group.
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Optional environment designation (e.g., production, staging) for the experiment.
+              unitType:
+                type:
+                - string
+                - 'null'
+                description: Optional type of unit for the experiment, defining the scope of the override.
+            required:
+            - groupID
+            - ids
+          description: Array of user ID overrides, specifying which users to force into experiment groups.
+      required:
+      - overrides
+      - userIDOverrides
     CreateExperimentReviewRequestDto:
       type: object
       properties:
@@ -11617,18 +10937,110 @@ components:
       additionalProperties: false
       title: CreateExperimentReviewRequest
       description: Request body for POST /console/v1/experiments/:id/reviews
-    AssignmentSourceQueryUpdateDto:
+    ExperimentStatusUpdateDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the group to launch
+          example: groupid123
+        decisionReason:
+          type: string
+          description: The reason for making the decision to update the experiment status
+          example: Your reason for stopping early
+        removeTargeting:
+          default: false
+          type: boolean
+          description: Indicates whether to remove targeting from the experiment
+          example: false
+        holdout:
+          type: integer
+          minimum: 0
+          maximum: 50
+          description: 'Integer percentage of users to hold back when shipping with holdback. Must be an integer between 0 and 50 (inclusive): the launched group size is computed as 100 - holdout * 2, so values above 50 would produce a negative-sized launched group. When set, the experiment remains live with a holdback group so long-term impact can be measured before making a final decision. Requires the ship_experiment_with_holdout gate to be enabled for the project.'
+          example: 10
+          format: int64
+      required:
+      - id
+      - decisionReason
+      description: Schema for updating the status of an experiment
+      example:
+        id: experiment123
+        decisionReason: Your reason for stopping early
+        removeTargeting: false
+    DimensionalExposureResponseDto:
+      type: object
+      properties:
+        ds:
+          type:
+          - string
+          - 'null'
+          description: Date in YYYY-MM-DD format
+        dimensions:
+          type: array
+          items:
+            type: object
+            properties:
+              dimension_type:
+                type: string
+              dimension_values:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    dimension_value:
+                      type: string
+                    srm_pvalue:
+                      type:
+                      - number
+                      - 'null'
+                    unit_count:
+                      type: number
+                    severity:
+                      type: string
+                      enum:
+                      - pass
+                      - warning
+                      - failure
+                  required:
+                  - dimension_value
+                  - srm_pvalue
+                  - unit_count
+                  - severity
+            required:
+            - dimension_type
+            - dimension_values
+      required:
+      - ds
+      - dimensions
+    ExperimentDeferDecisionDto:
+      type: object
+      properties:
+        stopReason:
+          type: string
+          description: Optional reason for concluding the experiment and deferring the shipping decision
+          example: We want more time before choosing a winner
+    RejectReviewRequestDto:
+      type: object
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: Required reason for rejecting the review.
+      required:
+      - reason
+      additionalProperties: false
+      title: RejectReviewRequest
+    EntityPropertySourceQueryUpdateDto:
       type: object
       properties:
         name:
           type: string
-          description: Optional new name for the assignment source.
+          description: Optional new name for the entity property source.
         description:
           type: string
-          description: Optional updated context for the assignment source.
-        isVerified:
-          type: boolean
-          description: Marks the assignment source as verified for internal trustworthiness.
+          description: Optional updated context for the entity property source.
         tags:
           type: array
           items:
@@ -11636,19 +11048,13 @@ components:
           description: Optional updated tags for categorization.
         sql:
           type: string
-          description: SQL query defining the data source for assignments.
+          description: SQL query defining the data source.
         timestampColumn:
           type: string
-          description: Column name representing the timestamp of assignments.
-        experimentIDColumn:
-          type: string
-          description: Column name for the experiment ID associated with the assignments.
-        groupIDColumn:
-          type: string
-          description: Column name for the group ID linked to the assignments.
-        groupNameColumn:
-          type: string
-          description: Optional column name for the group name linked to the assignments.
+          description: Optional column name for timestamp.
+        timestampAsDay:
+          type: boolean
+          description: Indicates if the timestamp is treated as a day.
         idTypeMapping:
           type: array
           items:
@@ -11659,102 +11065,39 @@ components:
                 description: ID for the Statsig unit.
               column:
                 type: string
-                description: Column name associated with the ID type mapping.
+                description: Column name linked to the ID.
             required:
             - statsigUnitID
             - column
-          description: Mappings of Statsig units to their respective columns.
+          description: Mappings of Statsig units to their columns.
         isReadOnly:
           type: boolean
           description: Specifies if the source can only be edited via the Console API.
-        owner:
-          type:
-          - object
-          - 'null'
-          properties:
-            ownerID:
-              type: string
-              description: ID of the owner
-              example: abc123
-            ownerType:
-              type: string
-              description: Type of the owner (e.g., SDK_KEY or USER)
-              example: USER
-            ownerName:
-              type: string
-              description: The name of the owner. This field is optional.
-              example: John Doe
-            ownerEmail:
-              type: string
-              description: The email of the owner. This field is optional.
-          description: Schema for owner data including ID, type, name.
-          example:
-            ownerID: user123
-            ownerType: USER
-            ownerName: John Doe
-            ownerEmail: owner123@test.com
         team:
           type:
           - string
           - 'null'
-          description: Optional field indicating the team name responsible for the assignment source, aiding in accountability and management.
+          description: Optional field indicating the team name responsible for the entity property source, aiding in accountability and management.
         teamID:
           type:
           - string
           - 'null'
-          description: Optional field indicating the team ID responsible for the assignment source, aiding in accountability and management.
-        scheduledReloadHour:
-          type:
-          - integer
-          - 'null'
-          minimum: 0
-          maximum: 23
-          description: Optional field indicating what UTC hour to run a scheduled scan for the assignment source.
-          format: int64
+          description: Optional field indicating the team ID responsible for the entity property source, aiding in accountability and management.
         dryRun:
           type: boolean
-          description: Skips persisting the assignment source (used to validate that inputs are correct)
+          description: Skips persisting the entity property source (used to validate that inputs are correct)
       required:
       - sql
-      - timestampColumn
-      - experimentIDColumn
-      - groupIDColumn
       - idTypeMapping
-    ExperimentArchiveDto:
+    ScheduleExperimentStartParamDto:
       type: object
       properties:
-        archiveReason:
-          type: string
-          description: The reason for archiving the experiment
-          example: The experiment is no longer needed
-      description: Schema for archiving an experiment
-      example:
-        archiveReason: The experiment is no longer needed
-    CumulativeExposureResponseDto:
-      type: array
-      items:
-        type: object
-        properties:
-          groupID:
-            type: string
-          groupName:
-            type: string
-          results:
-            type: array
-            items:
-              type: object
-              properties:
-                date:
-                  type: string
-                exposures:
-                  type: number
-              required:
-              - date
-              - exposures
-        required:
-        - groupID
-        - groupName
-        - results
+        scheduledTime:
+          type: number
+          description: Unix timestamp (in milliseconds) to schedule the experiment to start
+          format: double
+      required:
+      - scheduledTime
     ExperimentPulseResultsDto:
       type: object
       properties:
@@ -12388,6 +11731,64 @@ components:
       - ds
       - primaryMetrics
       - secondaryMetrics
+    PulseLoadHistoryDto:
+      type: object
+      properties:
+        creatorName:
+          type: string
+        createdTime:
+          type: number
+          format: double
+        finishedTime:
+          type: number
+          format: double
+        finishedState:
+          type: string
+          enum:
+          - success
+          - failure
+          - partial_failure
+          - cancelled
+          - timeout
+        startDs:
+          type: string
+        endDs:
+          type: string
+        reloadType:
+          type: string
+          enum:
+          - incremental
+          - full
+          - metric
+        turboMode:
+          type: boolean
+        dagID:
+          type: string
+      required:
+      - createdTime
+      - startDs
+      - endDs
+      - reloadType
+      - turboMode
+      - dagID
+    ApproveReviewRequestDto:
+      type: object
+      properties:
+        reason:
+          type: string
+          maxLength: 2000
+          description: Optional comment recorded with the approval.
+      additionalProperties: false
+      title: ApproveReviewRequest
+    EnableDisableGroupsDto:
+      type: object
+      properties:
+        group_names:
+          type: array
+          items:
+            type: string
+      required:
+      - group_names
     ExperimentPartialUpdateDto:
       type: object
       properties:
@@ -13020,58 +12421,121 @@ components:
           type: array
           items:
             type: string
-    ExperimentStatusUpdateDto:
+    PulseLoadHistoryDetailsDto:
       type: object
       properties:
-        id:
+        dagID:
           type: string
-          description: The ID of the group to launch
-          example: groupid123
-        decisionReason:
-          type: string
-          description: The reason for making the decision to update the experiment status
-          example: Your reason for stopping early
-        removeTargeting:
-          default: false
-          type: boolean
-          description: Indicates whether to remove targeting from the experiment
-          example: false
-        holdout:
-          type: integer
-          minimum: 0
-          maximum: 50
-          description: 'Integer percentage of users to hold back when shipping with holdback. Must be an integer between 0 and 50 (inclusive): the launched group size is computed as 100 - holdout * 2, so values above 50 would produce a negative-sized launched group. When set, the experiment remains live with a holdback group so long-term impact can be measured before making a final decision. Requires the ship_experiment_with_holdout gate to be enabled for the project.'
-          example: 10
-          format: int64
+        jobs:
+          type: array
+          items:
+            type: object
+            properties:
+              jobType:
+                type: string
+                description: The Echidna job type.
+              jobIDs:
+                type: array
+                items:
+                  type: string
+                description: Warehouse execution IDs for this job.
+              startTime:
+                type:
+                - number
+                - 'null'
+                description: Unix timestamp in milliseconds when this job started.
+              endTime:
+                type:
+                - number
+                - 'null'
+                description: Unix timestamp in milliseconds when this job ended, when available.
+              sql:
+                type:
+                - string
+                - 'null'
+                description: The SQL executed for this job.
+              metricSourceName:
+                type:
+                - string
+                - 'null'
+                description: Present for user-metrics style jobs and names the metric source used by the job.
+              rollup:
+                type:
+                - string
+                - 'null'
+                enum:
+                - 7
+                - 14
+                - 28
+                - cumulative
+                - dx
+                - daily
+                - pre_exposure
+                description: Present for pulse-style jobs and indicates the rollup used for the calculation.
+            required:
+            - jobType
+            - jobIDs
+            - startTime
+            - endTime
+            - sql
       required:
-      - id
-      - decisionReason
-      description: Schema for updating the status of an experiment
-      example:
-        id: experiment123
-        decisionReason: Your reason for stopping early
-        removeTargeting: false
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
-    AssignmentSourcePartialUpdateDto:
+      - dagID
+      - jobs
+    CumulativeExposureResponseDto:
+      type: array
+      items:
+        type: object
+        properties:
+          groupID:
+            type: string
+          groupName:
+            type: string
+          results:
+            type: array
+            items:
+              type: object
+              properties:
+                date:
+                  type: string
+                exposures:
+                  type: number
+              required:
+              - date
+              - exposures
+        required:
+        - groupID
+        - groupName
+        - results
+    ExperimentNameContractDto:
       type: object
       properties:
         name:
           type: string
-          description: Unique identifier for the assignment source.
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\- ]*$
+          description: The experiment display name
+      required:
+      - name
+    ExperimentArchiveDto:
+      type: object
+      properties:
+        archiveReason:
+          type: string
+          description: The reason for archiving the experiment
+          example: The experiment is no longer needed
+      description: Schema for archiving an experiment
+      example:
+        archiveReason: The experiment is no longer needed
+    AssignmentSourceQueryUpdateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Optional new name for the assignment source.
         description:
           type: string
-          description: Detailed context and purpose of the assignment source.
+          description: Optional updated context for the assignment source.
         isVerified:
           type: boolean
           description: Marks the assignment source as verified for internal trustworthiness.
@@ -13079,9 +12543,8 @@ components:
           type: array
           items:
             type: string
-          description: Tags for categorization and search.
+          description: Optional updated tags for categorization.
         sql:
-          readOnly: true
           type: string
           description: SQL query defining the data source for assignments.
         timestampColumn:
@@ -13161,116 +12624,757 @@ components:
         dryRun:
           type: boolean
           description: Skips persisting the assignment source (used to validate that inputs are correct)
-    ExperimentAlertsResponseDto:
+      required:
+      - sql
+      - timestampColumn
+      - experimentIDColumn
+      - groupIDColumn
+      - idTypeMapping
+    ExperimentCreateDto:
       type: object
       properties:
-        alerts:
-          type: object
-          additionalProperties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\- ]*$
+          description: The experiment display name
+        description:
+          type: string
+          maxLength: 1000
+          description: A description of the new experiment
+        idType:
+          type: string
+          description: The idType the experiment will be performed on
+        secondaryIDType:
+          type:
+          - string
+          - 'null'
+          description: The secondary ID type for the experiment used in WHN for ID resolution
+        identifierMappingMode:
+          type: string
+          enum:
+          - strictOneToOne
+          - firstTouchOneToMany
+          - lastTouchOneToMany
+          description: The identifier mapping mode for the experiment used in WHN for ID resolution
+        identityResolutionSource:
+          type:
+          - string
+          - 'null'
+          description: The identity resolution entity property source for the experiment used in WHN for ID resolution
+        hypothesis:
+          type: string
+          description: A statement that will be tested by this experiment
+        links:
+          type: array
+          items:
             type: object
             properties:
+              url:
+                type: string
+                format: uri
+                description: The URL of the link
+              title:
+                type: string
+                description: The title of the link
+            required:
+            - url
+          description: Links to relevant documentation or resources
+        externalEvents:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              timestamp:
+                type: number
+            required:
+            - name
+            - timestamp
+        groups:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              id:
+                type:
+                - string
+                - 'null'
+              size:
+                type: number
+                minimum: 0
+                maximum: 100
+              parameterValues:
+                type: object
+                additionalProperties: {}
+                description: A map of parameter name to the value this group serves. Sidecar (Visual Editor) experiments also return `sidecarURLFilters`, `sidecarDisableAutoRun`, `sidecarPrerunScript`, and `sidecarExperimentName` here, copied from the experiment itself on read. Sending them here does nothing; set them as experiment fields instead.
+              disabled:
+                type: boolean
+              description:
+                type: string
+              foreignGroupID:
+                type: string
+              highlighted:
+                type: boolean
+                description: Marks this experiment group as highlighted in analysis views. Highlighted groups are prioritized (shown first) and can be used to filter.
+            required:
+            - name
+            - size
+            - parameterValues
+          description: The test groups for your experiment
+        controlGroupID:
+          type: string
+          description: Optional control group ID
+        allocation:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Percent of layer allocated to this experiment
+          format: double
+        userBuckets:
+          type: array
+          items:
+            type: number
+            minimum: 0
+            exclusiveMaximum: 1000
+        primaryMetricTags:
+          type: array
+          items:
+            type: string
+          description: Primary metric tags for the experiment
+        secondaryMetricTags:
+          type: array
+          items:
+            type: string
+          description: Secondary metric tags for the experiment
+        primaryMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The metric name.
+              type:
+                type: string
+                description: The metric type.
+              direction:
+                type: string
+                enum:
+                - increase
+                - decrease
+                description: The expected direction for one-sided testing (a feature to only measure metric movements in a single direction)
+              hypothesizedValue:
+                type: number
+                description: The comparison value for the one-sample testing (a feature to use a fixed baseline as the control value)
+            required:
+            - name
+            - type
+          description: Main metrics needed to evaluate your hypothesis
+        secondaryMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The metric name.
+              type:
+                type: string
+                description: The metric type.
+              direction:
+                type: string
+                enum:
+                - increase
+                - decrease
+                description: The expected direction for one-sided testing (a feature to only measure metric movements in a single direction)
+              hypothesizedValue:
+                type: number
+                description: The comparison value for the one-sample testing (a feature to use a fixed baseline as the control value)
+            required:
+            - name
+            - type
+          description: Additional metrics to monitor that might impact the analysis or final decision of the experiment
+        otherMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The metric name.
+              type:
+                type: string
+                description: The metric type.
+              direction:
+                type: string
+                enum:
+                - increase
+                - decrease
+                description: The expected direction for one-sided testing (a feature to only measure metric movements in a single direction)
+              hypothesizedValue:
+                type: number
+                description: The comparison value for the one-sample testing (a feature to use a fixed baseline as the control value)
+            required:
+            - name
+            - type
+          description: Additional metrics you want to investigate or learn from. The usual corrections applied to Primary and Secondary metrics are not applied to these.
+        targetApps:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+          description: Target apps assigned to this experiment
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the experiment
+        duration:
+          type: integer
+          description: How long the experiment is expected to last in days
+          format: int64
+          exclusiveMinimum: 1
+        targetExposures:
+          type: integer
+          description: Target exposures for the experiment
+          format: int64
+          exclusiveMinimum: 1
+        targetingGateID:
+          type:
+          - string
+          - 'null'
+          description: Restrict your experiment to users passing the selected feature gate
+        sequentialTesting:
+          type: boolean
+          description: Apply sequential testing?
+        bonferroniCorrection:
+          type: boolean
+          description: Is Bonferroni correction applied per variant?
+        bonferroniCorrectionPerMetric:
+          type: boolean
+          description: Is Bonferroni correction applied per metric?
+        benjaminiHochbergPerVariant:
+          type: boolean
+          description: Is Benjamini-Hochberg procedure applied per variant?
+        benjaminiHochbergPerMetric:
+          type: boolean
+          description: Is Benjamini-Hochberg procedure applied per metric?
+        benjaminiPrimaryMetricsOnly:
+          type: boolean
+          description: Is Benjamini-Hochberg procedure applied for primary metrics only?
+        defaultConfidenceInterval:
+          type: string
+          enum:
+          - '80'
+          - '90'
+          - '95'
+          - '98'
+          - '99'
+          description: Default error margin used for results
+        defaultRollupWindow:
+          type: integer
+          description: Default rollup window in days for experiment results. Use -1 for cumulative. Only -1, 1, and 7 allowed for cloud experiments.
+          format: int64
+        defaultChanceToBeatThreshold:
+          type: number
+          description: Default chance-to-beat threshold used for Bayesian results.
+          format: double
+        bayesianPriors:
+          type: array
+          items:
+            type: object
+            properties:
+              metric:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  type:
+                    type: string
+                required:
+                - name
+                - type
+              priorMean:
+                type: number
+              priorStdDev:
+                type: number
+                exclusiveMinimum: 0
+            required:
+            - metric
+            - priorMean
+            - priorStdDev
+          description: Bayesian prior settings by metric.
+        manualQualityScores:
+          type: array
+          items:
+            type: object
+            properties:
+              criteriaName:
+                oneOf:
+                - type: string
+                  enum:
+                  - HYPOTHESIS_LENGTH
+                  - BALANCED_EXPOSURE
+                  - PRIMARY_METRICS_LENGTH
+                  - SECONDARY_METRICS_LENGTH
+                  - COMPARISON_CORRECTION
+                  - GUARDRAIL_METRIC_TAGS
+                  - SUFFICIENT_SAMPLE
+                  - POWER_ANALYSIS
+                  - SEQUENTIAL_TESTING
+                - type: string
               status:
                 type: string
                 enum:
-                - OK
-                - Alert
-                - Warn
-                - Snoozed
-                description: Current status of the alert for this experiment
-                example: Alert
-              timestamp:
+                - PASSED
+                - FAILED
+                - WARNING
+              criteriaDescription:
+                type: string
+              score:
                 type: number
-                description: Timestamp of the latest alert event for this experiment
-                example: 1718630400
-              comment:
-                type:
-                - string
-                - 'null'
-                description: Comment associated with the latest alert event
-                example: Threshold breached on win rate
-              source:
-                type:
-                - string
-                - 'null'
-                description: Source identifier associated with the latest alert event
-              arms:
+              weight:
+                type: number
+            required:
+            - criteriaName
+            - status
+            - criteriaDescription
+            - score
+            - weight
+          description: 'Up to 10 manually set quality scores for an experiment. The scores and weights will be added to the existing weights and scores, and then weights will be renormalized to 100. This can be set via the Statsig Console API. If targeting a default check, the weight of the check will be updated, but not the status or description. A default score can be removed by setting the weight to 0. The default score identifiers are one of: HYPOTHESIS_LENGTH, BALANCED_EXPOSURE, PRIMARY_METRICS_LENGTH, COMPARISON_CORRECTION, GUARDRAIL_METRIC_TAGS, SUFFICIENT_SAMPLE, POWER_ANALYSIS, SEQUENTIAL_TESTING'
+        status:
+          type: string
+          enum:
+          - active
+          - setup
+          - decision_made
+          - abandoned
+          - archived
+          - experiment_stopped
+          - assignment_stopped
+          description: The current status of the experiment
+        launchedGroupID:
+          type:
+          - string
+          - 'null'
+          description: ID of the launched group, null otherwise
+        assignmentSourceName:
+          type: string
+          description: Source name of the assignment
+        assignmentSourceExperimentName:
+          type: string
+          description: Name of the source experiment for assignment
+        creatorID:
+          type:
+          - string
+          - 'null'
+          description: The Statsig ID of the creator of this experiment
+        creatorEmail:
+          type:
+          - string
+          - 'null'
+          description: The email of the creator of this experiment
+        isAnalysisOnly:
+          type:
+          - boolean
+          - 'null'
+          description: For Warehouse Native
+        team:
+          type:
+          - string
+          - 'null'
+          description: The team name associated with the experiment, Enterprise only.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: The team ID associated with the experiment, Enterprise only.
+        allocationDuration:
+          type:
+          - integer
+          - 'null'
+          description: Warehouse Native Only - Allocation duration in days
+          format: int64
+          exclusiveMinimum: 1
+        cohortedAnalysisDuration:
+          type: integer
+          description: Warehouse Native Only - Cohorted analysis duration in days
+          format: int64
+          exclusiveMinimum: 1
+        cohortedMetricsMatureAfterEnd:
+          type: boolean
+          description: Warehouse Native Only - Allow cohort metrics to mature after experiment end
+        cohortWaitUntilEndToInclude:
+          type: boolean
+          description: Warehouse Native Only - Whether to filter to units whose experiment cohort analysis duration is complete, if cohortedAnalysisDuration exists
+        fixedAnalysisDuration:
+          type: integer
+          description: Fixed analysis duration in days
+          format: int64
+          exclusiveMinimum: 1
+        scheduledReloadHour:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          maximum: 23
+          description: Warehouse Native only - UTC hour at which to run scheduled pulse loads
+          format: int64
+        scheduledReloadType:
+          type: string
+          enum:
+          - full
+          - incremental
+          description: Warehouse Native only - reload type for scheduled reloads
+        scheduledReloadDays:
+          type:
+          - array
+          - 'null'
+          items:
+            type: integer
+            minimum: 0
+            maximum: 6
+          description: Warehouse Native only - days on which to run scheduled reloads from 0 to 6, 0 meaning Sunday. Null to run reloads on all days.
+        turboMode:
+          type: boolean
+          description: Warehouse Native only - whether to run scheduled reloads with Turbo mode.
+        autoLoadToplineImpact:
+          type: boolean
+          description: Warehouse Native only - whether to automatically run topline and projected launch impact calculations when reloading experiments.
+        analysisEndTime:
+          type: string
+          description: Warehouse Native only - end time for analysis only experiments
+        assignmentSourceFilters:
+          type: array
+          items:
+            type: object
+            properties:
+              column:
+                type: string
+                description: Column to filter on.
+              condition:
+                type: string
+                enum:
+                - in
+                - not_in
+                - '='
+                - '>'
+                - <
+                - '>='
+                - <=
+                - is_null
+                - non_null
+                - contains
+                - not_contains
+                - sql_filter
+                - starts_with
+                - ends_with
+                - after_exposure
+                - before_exposure
+                - is_true
+                - is_false
+              values:
+                type: array
+                items:
+                  type: string
+                description: Optional array of values for the criterion to match against.
+            required:
+            - condition
+          description: Array of criteria for filtering assignment sources.
+        analyticsType:
+          type: string
+          enum:
+          - frequentist
+          - bayesian
+          - sprt
+          description: The mode of analysis for the experiment, e.g frequentist, bayesian, sprt
+        defaultSPRTPowerParam:
+          type: number
+          description: SPRT power parameter percentage used as the default for experiment analysis.
+          format: double
+        defaultSPRTMDE:
+          type: number
+          description: Default MDE value for every metric if one isn't provided. Only used in manual mode.
+          format: double
+        sprtBaselineMode:
+          type: string
+          enum:
+          - manual
+          - in_experiment_control
+          description: In manual mode, mde/mean/stdDev must be provided for every metric in the experiment. In in_experiment_control, only the mde is needed for every metric, or the defaultSPRTMDE field must be passed.
+        sprtMDESettings:
+          type: array
+          items:
+            type: object
+            properties:
+              metricKey:
+                type: string
+              groupSettings:
                 type: array
                 items:
                   type: object
                   properties:
-                    groupID:
+                    groupKey:
                       type: string
-                      description: Experiment group id for this arm-specific alert status
-                    groupName:
-                      type:
-                      - string
-                      - 'null'
-                      description: Experiment group name for this arm-specific alert status
-                    status:
-                      type: string
-                      enum:
-                      - OK
-                      - Alert
-                      - Warn
-                      - Snoozed
-                      description: Current status of the alert for this experiment arm
-                      example: Alert
-                    timestamp:
+                    mde:
                       type: number
-                      description: Timestamp of the latest alert datum used to compute this arm status
-                      example: 1718630400
-                    percentChange:
+                    mean:
                       type: number
-                      description: Latest percent change recorded for this arm in guardrail alert event data
-                      example: 0.42
-                    lowerCI:
-                      type:
-                      - number
-                      - 'null'
-                      description: Latest lower confidence interval bound for percent change when available
-                      example: 0.2
-                    upperCI:
-                      type:
-                      - number
-                      - 'null'
-                      description: Latest upper confidence interval bound for percent change when available
-                      example: 0.6
-                    alertThreshold:
+                    stdDev:
                       type: number
-                      description: Alert threshold snapshot stored on the latest datum
-                      example: 0.3
-                    warningThreshold:
-                      type: number
-                      description: Warning threshold snapshot stored on the latest datum
-                      example: 0.2
                   required:
-                  - groupID
-                  - groupName
-                  - status
-                description: Per-arm alert status for each non-control group in the experiment
+                  - groupKey
+                  - mde
             required:
-            - status
-            - arms
-          description: Alert status keyed by encoded metric id
-      required:
-      - alerts
-    ResolveGuardrailAlertResponseDto:
-      type: object
-      properties:
-        resolvedAt:
-          type: number
-          description: Timestamp when alert was resolved
-          example: 1718630400
-          format: double
-    EnableDisableGroupsDto:
-      type: object
-      properties:
-        group_names:
+            - metricKey
+            - groupSettings
+          description: The SPRT values for use in the experiment.
+        isSidecar:
+          type: boolean
+          description: Whether this is a Statsig Sidecar experiment. `sidecarEditorURL`, `sidecarURLFilters`, `sidecarDisableAutoRun`, and `sidecarPrerunScript` are saved only when this is `true`.
+        sidecarEditorURL:
+          type: string
+          description: 'Sidecar (Visual Editor) only: the URL of the page being modified. The Visual Editor cannot open without it, and it must be an `http` or `https` URL.'
+        sidecarURLFilters:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - contains
+                - equals
+                - regex
+                - path
+              value:
+                type: string
+            required:
+            - type
+            - value
+          description: 'Sidecar (Visual Editor) only: filters on the current URL used to determine whether the experiment should be applied. Each entry looks like `{ "type": "contains", "value": "/pricing" }`, where `type` is `contains`, `equals`, `regex`, or `path`. Put `type` inside each filter object, not alongside the array.'
+        sidecarDisableAutoRun:
+          type: boolean
+          description: 'Sidecar (Visual Editor) only: whether to disable auto-running the experiment on page load. By default the experiment auto runs.'
+        sidecarPrerunScript:
+          type:
+          - string
+          - 'null'
+          description: 'Sidecar (Visual Editor) only: a script to run before the experiment starts. Send `null` to clear it.'
+        decisionReason:
+          type: string
+          description: Experiment notes reported after experiment completes
+        preComputedUserDimensions:
+          type: array
+          items:
+            type: object
+            properties:
+              propertySource:
+                type: string
+              name:
+                type: string
+            required:
+            - name
+          description: User dimensions that will be computed for every metric in WHN
+        cureCovariates:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+            required:
+            - name
+            - type
+          description: CURE Covariates to use in this experiment
+        stratifiedSampling:
+          type:
+          - object
+          - 'null'
+          properties:
+            status:
+              type: string
+              enum:
+              - pending
+              - success
+              - error
+            metric:
+              type: object
+              properties:
+                name:
+                  type: string
+                type:
+                  type: string
+                startDate:
+                  type: string
+                endDate:
+                  type: string
+              required:
+              - name
+              - startDate
+              - endDate
+            entityPropertySource:
+              type: object
+              properties:
+                propertySourceName:
+                  type: string
+                column:
+                  type: string
+              required:
+              - propertySourceName
+              - column
+            csv:
+              type: object
+              properties:
+                original:
+                  type: string
+                identifier:
+                  type: string
+              required:
+              - original
+              - identifier
+            useStratifiedSalt:
+              type: boolean
+              description: Whether successful stratified sampling is currently used for experiment assignment.
+            useUnits:
+              type: boolean
+              description: Whether stratified sampling was configured to use allocated units directly.
+            deltaReduction:
+              type: number
+              description: Observed reduction in delta after running stratified sampling.
+              format: double
+            spreadReduction:
+              type: number
+              description: Observed reduction in spread after running stratified sampling.
+              format: double
+          required:
+          - status
+          description: The stratified sampling settings for the experiment
+        enabledNonProdEnvironments:
           type: array
           items:
             type: string
+        id:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_-]*$
+          description: The experiment name ID
+        layerID:
+          type: string
+          description: Which layer to place the experiment into.
+        isTemplate:
+          type: boolean
+          description: Whether this experiment is a template that other experiments can be created from. Settable at creation only.
       required:
-      - group_names
+      - name
+      description: Create Experiment
+      example:
+        name: Test Experiment
+        description: Description test
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    EntityPropertySourceDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Unique identifier for the entity property source.
+        description:
+          type: string
+          description: Detailed context and purpose of the entity property source.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags for categorization and search.
+        sql:
+          type: string
+          description: SQL query defining the data source.
+        timestampColumn:
+          type: string
+          description: Optional column name for timestamp.
+        timestampAsDay:
+          type: boolean
+          description: Indicates if the timestamp is treated as a day.
+        idTypeMapping:
+          type: array
+          items:
+            type: object
+            properties:
+              statsigUnitID:
+                type: string
+                description: ID for the Statsig unit.
+              column:
+                type: string
+                description: Column name linked to the ID.
+            required:
+            - statsigUnitID
+            - column
+          description: Mappings of Statsig units to their columns.
+        isReadOnly:
+          type: boolean
+          description: Specifies if the source can only be edited via the Console API.
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
+        team:
+          type:
+          - string
+          - 'null'
+          description: Optional field indicating the team name responsible for the entity property source, aiding in accountability and management.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: Optional field indicating the team ID responsible for the entity property source, aiding in accountability and management.
+      required:
+      - name
+      - description
+      - tags
+      - sql
+      - idTypeMapping
     ExperimentAbandonDto:
       type: object
       properties:
@@ -13280,330 +13384,179 @@ components:
           example: Your reason for stopping early
       required:
       - decisionReason
-    RejectReviewRequestDto:
-      type: object
-      properties:
-        reason:
-          type: string
-          minLength: 1
-          maxLength: 2000
-          description: Required reason for rejecting the review.
-      required:
-      - reason
-      additionalProperties: false
-      title: RejectReviewRequest
-    ExperimentNameContractDto:
+    AssignmentSourceCreationDto:
       type: object
       properties:
         name:
           type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_\- ]*$
-          description: The experiment display name
-      required:
-      - name
-    ScheduleExperimentStartParamDto:
-      type: object
-      properties:
-        scheduledTime:
-          type: number
-          description: Unix timestamp (in milliseconds) to schedule the experiment to start
-          format: double
-      required:
-      - scheduledTime
-    ExperimentStartDto:
-      type: object
-      properties:
-        analysisStartTime:
+          description: Unique identifier for the assignment source.
+        description:
           type: string
-          description: For Warehouse Native analysis-only experiments; start time of experiment analysis.
-          example: '2024-10-01'
-        analysisEndTime:
-          type: string
-          description: For Warehouse Native analysis-only experiments; end time of experiment analysis.
-          example: '2024-10-30'
-        turboMode:
+          description: Optional detailed context for the assignment source.
+        isVerified:
           type: boolean
-          description: For Warehouse Native analysis-only experiments; whether to run the initial analysis in turbo mode
-          example: false
-    ExperimentPulseMetricResultDto:
-      type: object
-      properties:
-        ds:
+          description: Marks the assignment source as verified for internal trustworthiness.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags for categorization.
+        sql:
           type: string
-        dimensionResults:
+          description: SQL query defining the data source for assignments.
+        timestampColumn:
+          type: string
+          description: Column name representing the timestamp of assignments.
+        experimentIDColumn:
+          type: string
+          description: Column name for the experiment ID associated with the assignments.
+        groupIDColumn:
+          type: string
+          description: Column name for the group ID linked to the assignments.
+        groupNameColumn:
+          type: string
+          description: Optional column name for the group name linked to the assignments.
+        idTypeMapping:
           type: array
           items:
             type: object
             properties:
-              dimension:
+              statsigUnitID:
                 type: string
-              dimension_value:
+                description: ID for the Statsig unit.
+              column:
                 type: string
-              metric:
-                type:
-                - object
-                - 'null'
-                properties:
-                  metricID:
-                    type: string
-                  metricName:
-                    type: string
-                  directionality:
-                    type: string
-                    enum:
-                    - increase
-                    - decrease
-                    description: Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
-                    example: increase
-                  error:
-                    oneOf:
-                    - type: string
-                      enum:
-                      - no_data
-                      - import_no_data
-                      - incompatible_types
-                      - echidna_unripe
-                      - setup_incomplete
-                      - hourly_metric_type_not_supported
-                      - control_or_test_no_units
-                      - no_subdimension_filter
-                    - type: string
-                    description: Machine-readable reason when pulse statistics are unavailable. Common values include no_data (insufficient data), echidna_unripe (not yet loaded), and setup_incomplete (misconfigured metric source). Additional string values may appear for cohort/bake windows or other load failures.
-                    example: no_data
-                  warnings:
-                    type: array
-                    items:
-                      type: string
-                    description: Human-readable warnings about metric data quality, load state, or partial pipeline failures.
-                  absoluteChange:
-                    type: number
-                  confidenceIntervalDelta:
-                    type: number
-                    description: Absolute confidence interval delta
-                  confidenceInterval:
-                    type: object
-                    properties:
-                      lower:
-                        type: number
-                      upper:
-                        type: number
-                    required:
-                    - lower
-                    - upper
-                    additionalProperties: false
-                    description: Confidence interval bounds
-                    example:
-                      lower: -1.33
-                      upper: 1.33
-                  percentChange:
-                    type: number
-                  sequentialTestingConfidenceIntervalDelta:
-                    type: number
-                  sequentialTestingConfidenceInterval:
-                    type: object
-                    properties:
-                      lower:
-                        type: number
-                      upper:
-                        type: number
-                    required:
-                    - lower
-                    - upper
-                    additionalProperties: false
-                    description: Confidence interval bounds
-                    example:
-                      lower: -1.33
-                      upper: 1.33
-                  percentConfidenceIntervalDelta:
-                    type: number
-                  percentConfidenceInterval:
-                    type: object
-                    properties:
-                      lower:
-                        type: number
-                      upper:
-                        type: number
-                    required:
-                    - lower
-                    - upper
-                    additionalProperties: false
-                    description: Confidence interval bounds
-                    example:
-                      lower: -1.33
-                      upper: 1.33
-                  percentSequentialTestingConfidenceIntervalDelta:
-                    type: number
-                  percentSequentialTestingConfidenceInterval:
-                    type: object
-                    properties:
-                      lower:
-                        type: number
-                      upper:
-                        type: number
-                    required:
-                    - lower
-                    - upper
-                    additionalProperties: false
-                    description: Confidence interval bounds
-                    example:
-                      lower: -1.33
-                      upper: 1.33
-                  testMean:
-                    type: number
-                  controlMean:
-                    type: number
-                  testStd:
-                    type: number
-                  controlStd:
-                    type: number
-                  testUnits:
-                    type: number
-                  controlUnits:
-                    type: number
-                  pValue:
-                    type: number
-                  sequentialTestingPValue:
-                    type:
-                    - number
-                    - 'null'
-                  adjustedAlpha:
-                    type: number
-                  reversePower:
-                    type: number
-                  percentCredibleInterval:
-                    type: object
-                    properties:
-                      lower:
-                        type: number
-                      upper:
-                        type: number
-                    required:
-                    - lower
-                    - upper
-                    additionalProperties: false
-                    description: Bayesian credible interval for the percent change. Only returned when results are computed with Bayesian analysis.
-                    example:
-                      lower: -1.33
-                      upper: 1.33
-                  expectedLoss:
-                    type: number
-                    description: Bayesian expected loss. Only returned when results are computed with Bayesian analysis.
-                  chanceToBeat:
-                    type: number
-                    description: Bayesian probability that the test beats the control. Only returned when results are computed with Bayesian analysis.
-                  sequentialTestingLikelihoodRatio:
-                    type: number
-                    description: SPRT likelihood ratio of the observed data under the alternative vs the null. This is the same value Pulse uses.
-                  sequentialTestingLogLikelihoodRatio:
-                    type: number
-                    description: Natural log of the SPRT likelihood ratio Pulse uses. Compare this to `sprtLogLowerLimit` and `sprtLogUpperLimit`.
-                  sprtLowerLimit:
-                    type: number
-                    description: Lower SPRT decision boundary on the likelihood-ratio scale. Crossing below this accepts the null.
-                  sprtUpperLimit:
-                    type: number
-                    description: Upper SPRT decision boundary on the likelihood-ratio scale. Crossing above this accepts the alternative.
-                  sprtLogLowerLimit:
-                    type: number
-                    description: Lower SPRT decision boundary on the log-likelihood-ratio scale. Crossing below this accepts the null.
-                  sprtLogUpperLimit:
-                    type: number
-                    description: Upper SPRT decision boundary on the log-likelihood-ratio scale. Crossing above this accepts the alternative.
-                  sprtDecision:
-                    type: string
-                    enum:
-                    - alternative
-                    - 'null'
-                    - continue
-                    description: SPRT decision from the log likelihood ratio. `alternative` accepts H1, `null` accepts H0, and `continue` means the ratio is still between the boundaries.
-                  isSprtSignificant:
-                    type: boolean
-                    description: True when the SPRT decision is `alternative`, meaning the result is statistically significant.
-                  sprtStatsigness:
-                    type: string
-                    enum:
-                    - positive
-                    - negative
-                    - neutral
-                    description: Direction of the SPRT decision relative to the metric's desired direction. `neutral` when the test has not accepted the alternative.
-                  absoluteToplineImpact:
-                    type: number
-                  absoluteToplineImpactDelta:
-                    type: number
-                  relativeToplineImpact:
-                    type: number
-                  relativeToplineImpactDelta:
-                    type: number
-                  projectedAbsoluteToplineImpact:
-                    type: number
-                  projectedAbsoluteToplineImpactDelta:
-                    type: number
-                  projectedRelativeToplineImpact:
-                    type: number
-                  projectedRelativeToplineImpactDelta:
-                    type: number
-                required:
-                - metricID
-                - metricName
-                - directionality
-                additionalProperties: false
+                description: Column name associated with the ID type mapping.
             required:
-            - dimension
-            - dimension_value
-            - metric
+            - statsigUnitID
+            - column
+          description: Mappings of Statsig units to their respective columns.
+        isReadOnly:
+          type: boolean
+          description: Specifies if the source can only be edited via the Console API.
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
+        team:
+          type:
+          - string
+          - 'null'
+          description: Optional field indicating the team name responsible for the assignment source, aiding in accountability and management.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: Optional field indicating the team ID responsible for the assignment source, aiding in accountability and management.
+        scheduledReloadHour:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          maximum: 23
+          description: Optional field indicating what UTC hour to run a scheduled scan for the assignment source.
+          format: int64
+        dryRun:
+          type: boolean
+          description: Skips persisting the assignment source (used to validate that inputs are correct)
       required:
-      - ds
-      - dimensionResults
-  responses:
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message indicating the resource was not found.
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
+      - name
+      - sql
+      - timestampColumn
+      - experimentIDColumn
+      - groupIDColumn
+      - idTypeMapping
+    EditExperimentReviewRequestDto:
+      type: object
+      properties:
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: New description. Omit to keep the current value.
+        reviewer_ids:
+          type: array
+          items:
+            type: string
+          description: Replacement reviewer user IDs. Omit to keep the current set.
+        reviewer_group_ids:
+          type: array
+          items:
+            type: string
+          description: Replacement reviewer group IDs. Omit to keep the current set.
+      additionalProperties: false
+      title: EditExperimentReviewRequest
+      description: Request body for PUT /console/v1/experiments/:id/reviews/:reviewID
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    ResolveGuardrailAlertResponseDto:
+      type: object
+      properties:
+        resolvedAt:
+          type: number
+          description: Timestamp when alert was resolved
+          example: 1718630400
+          format: double
+    ExperimentContextResponseDto:
+      type: object
+      properties:
+        experimentID:
+          type: string
+          description: The experiment ID
+        context:
+          type: string
+          description: AI-ready experiment context
+      required:
+      - experimentID
+      - context
   parameters:
-    Page:
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-      description: Page number for paginated results.
-    ApiVersion:
-      name: STATSIG-API-VERSION
-      in: header
-      required: false
-      schema:
-        type: string
-        default: '20240601'
-      description: The Console API version. Currently the only version is 20240601.
     Limit:
       name: limit
       in: query
@@ -13620,6 +13573,53 @@ components:
       schema:
         type: string
       description: The name or identifier of the experiment.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message indicating the resource was not found.
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
   securitySchemes:
     consoleApiKey:
       type: apiKey

@@ -389,14 +389,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    UnitIdTypeUpdateContractDto:
-      type: object
-      properties:
-        description:
-          type: string
-          description: The description of the unit id type.
-      required:
-      - description
     PaginationResponseWithMessage:
       type: object
       properties:
@@ -428,6 +420,14 @@ components:
       required:
       - message
       - data
+    UnitIdTypeUpdateContractDto:
+      type: object
+      properties:
+        description:
+          type: string
+          description: The description of the unit id type.
+      required:
+      - description
     UnitIdTypeContractDto:
       type: object
       properties:

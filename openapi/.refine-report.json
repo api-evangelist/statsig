@@ -78,9 +78,7 @@
     "statsig-usage-api-openapi.yml",
     "statsig-warehouse-connections-api-openapi.yml"
   ],
-  "archived": [
-    "deleted 1 superseded output(s) from the previous generation"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [
     "statsig-alerts-api-openapi.yml: previously refined output kept for 9 operation(s) no archived document covers (e.g. /console/v1/alerts get, /console/v1/alerts post, /console/v1/alerts/{id} delete); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
@@ -94,7 +92,7 @@
     "statsig-environments-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /console/v1/environments get, /console/v1/environments post); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
     "statsig-events-api-openapi.yml: previously refined output kept for 3 operation(s) no archived document covers (e.g. /console/v1/events get, /console/v1/events/{eventName} get, /console/v1/events/{eventName}/metrics get); its other 1 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
     "statsig-experiments-api-openapi.yml: previously refined output kept for 58 operation(s) no archived document covers (e.g. /console/v1/experiments get, /console/v1/experiments post, /console/v1/experiments/assignment_source/{name} delete); its other 8 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
-    "statsig-experiments-warehouse-native-api-openapi.yml: previously refined output kept for 5 operation(s) no archived document covers (e.g. /console/v1/experiments/qualifying_events get, /console/v1/experiments/qualifying_events post, /console/v1/experiments/qualifying_events/{name} delete); its other 15 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "statsig-experiments-warehouse-native-api-openapi.yml: previously refined output kept for 5 operation(s) no archived document covers (e.g. /console/v1/experiments/qualifying_events get, /console/v1/experiments/qualifying_events post, /console/v1/experiments/qualifying_events/{name} delete); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
     "statsig-gates-api-openapi.yml: previously refined output kept for 39 operation(s) no archived document covers (e.g. /console/v1/gates get, /console/v1/gates post, /console/v1/gates/{id} delete); its other 17 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
     "statsig-holdouts-api-openapi.yml: previously refined output kept for 11 operation(s) no archived document covers (e.g. /console/v1/holdouts get, /console/v1/holdouts post, /console/v1/holdouts/{id} delete); its other 2 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
     "statsig-ingestions-api-openapi.yml: previously refined output kept for 13 operation(s) no archived document covers (e.g. /console/v1/ingestion delete, /console/v1/ingestion get, /console/v1/ingestion patch); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
@@ -139,8 +137,7 @@
     "tag 'Tags' spans 2 source specs (statsig-console-api-openapi.yml, statsig-tags-api-openapi.yml): per-path servers applied",
     "tag 'Users' spans 2 source specs (statsig-console-api-openapi.yml, statsig-users-api-openapi.yml): per-path servers applied",
     "tag 'Events' spans 2 source specs (statsig-http-api-openapi.yml, statsig-events-api-openapi.yml): per-path servers applied",
-    "superseded outputs removed: statsig-metrics-warehouse-native-api-openapi.yml",
-    "apis.yml register: written (+0 apis, 38 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "_original/statsig-server-sdk-api-openapi.yml: archived document superseded by a larger archived document",
@@ -148,7 +145,6 @@
     "statsig-configuration-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "statsig-feature-gates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "statsig-initialization-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "statsig-metrics-warehouse-native-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "statsig-target-apps-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]
 }

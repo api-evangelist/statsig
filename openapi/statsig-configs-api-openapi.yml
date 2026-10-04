@@ -141,18 +141,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
     ExposureCountDto:
       type: object
       properties:
@@ -211,6 +199,18 @@ components:
       - gates
       - experiments
       - dynamicConfigs
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

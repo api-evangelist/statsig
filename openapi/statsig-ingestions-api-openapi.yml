@@ -2108,6 +2108,616 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    IngestionStatusDto:
+      type: object
+      properties:
+        ds:
+          type: string
+          format: date-time
+        ingestion_dataset:
+          type:
+          - string
+          - 'null'
+        ingestion_source:
+          type:
+          - string
+          - 'null'
+        source_name:
+          type:
+          - string
+          - 'null'
+        message:
+          type:
+          - string
+          - 'null'
+        error_message:
+          type: string
+        status:
+          type:
+          - string
+          - 'null'
+        rowCount:
+          type: number
+          format: double
+        metricCount:
+          type: number
+          format: double
+        timestamp:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - ingestion_dataset
+      - ingestion_source
+      - source_name
+      - message
+      - status
+      - timestamp
+    IngestionBackfillContractDto:
+      type: object
+      properties:
+        datestamp_start:
+          type: string
+          description: Expected valid date in the form of YYYY-MM-DD
+          example: '2024-01-01'
+        datestamp_end:
+          type: string
+          description: Expected valid date in the form of YYYY-MM-DD
+          example: '2024-01-01'
+        type:
+          type: string
+          enum:
+          - redshift
+          - bigquery-v2
+          - snowflake-v2
+          - databricks
+          - azure-synapse
+          - s3
+          - athena
+          - adls
+        source:
+          oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+        dataset:
+          type: string
+          enum:
+          - Events
+          - Metrics
+          - entity_properties
+          - export_exposures
+          - export_events
+      required:
+      - datestamp_start
+      - datestamp_end
+      - type
+      - dataset
+    IngestionScheduleUpdateContractDto:
+      type: object
+      properties:
+        dataset:
+          type: string
+          enum:
+          - Events
+          - Metrics
+          - entity_properties
+          - export_exposures
+          - export_events
+        scheduled_hour_pst:
+          default: 10
+          type: number
+          minimum: 0
+          maximum: 23
+          format: double
+      required:
+      - dataset
+    IngestionBackfillDataDto:
+      type: object
+      properties:
+        runID:
+          type: string
+      required:
+      - runID
+    IngestionEventCountResponseDto:
+      oneOf:
+      - type: array
+        items:
+          type: object
+          properties:
+            date:
+              type: string
+            event:
+              type: string
+            count:
+              type: number
+            last_updated_time:
+              type: string
+              format: date-time
+          required:
+          - date
+          - event
+          - count
+          - last_updated_time
+      - type: array
+        items:
+          type: object
+          properties:
+            date:
+              type: string
+            events:
+              type: array
+              items:
+                type: object
+                properties:
+                  event:
+                    type: string
+                  count:
+                    type: number
+                  last_updated_time:
+                    type: string
+                    format: date-time
+                required:
+                - event
+                - count
+                - last_updated_time
+          required:
+          - date
+          - events
+    IngestionEventDeltaResponseDto:
+      oneOf:
+      - type: array
+        items:
+          type: object
+          properties:
+            date:
+              type: string
+            source:
+              type: string
+            event:
+              type: string
+            internal_count:
+              type: number
+            external_count:
+              type: number
+            has_diff:
+              type: boolean
+            threshold:
+              type: number
+            last_updated_time:
+              type: string
+              format: date-time
+          required:
+          - date
+          - source
+          - event
+          - internal_count
+          - external_count
+          - has_diff
+          - threshold
+          - last_updated_time
+      - type: array
+        items:
+          type: object
+          properties:
+            date:
+              type: string
+            events:
+              type: array
+              items:
+                type: object
+                properties:
+                  source:
+                    type: string
+                  event:
+                    type: string
+                  internal_count:
+                    type: number
+                  external_count:
+                    type: number
+                  has_diff:
+                    type: boolean
+                  threshold:
+                    type: number
+                  last_updated_time:
+                    type: string
+                    format: date-time
+                required:
+                - source
+                - event
+                - internal_count
+                - external_count
+                - has_diff
+                - threshold
+                - last_updated_time
+          required:
+          - date
+          - events
+    IngestionRunDataContractDto:
+      type: object
+      properties:
+        runID:
+          type: string
+        latestStatus:
+          type: string
+        lastUpdatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        trigger:
+          type: string
+        sources:
+          type: array
+          items:
+            type: string
+        dateStamps:
+          type: array
+          items:
+            type: string
+        runHistory:
+          type: array
+          items:
+            type: object
+            properties:
+              statusTimestamp:
+                type: string
+                format: date-time
+              status:
+                type: string
+            required:
+            - statusTimestamp
+            - status
+        granularHistory:
+          type: array
+          items:
+            type: object
+            properties:
+              source:
+                type: string
+              latestSourceStatus:
+                type: string
+              statusByDate:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    dateStamp:
+                      type: string
+                    statuses:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          statusTimestamp:
+                            type: string
+                            format: date-time
+                          status:
+                            type: string
+                        required:
+                        - statusTimestamp
+                        - status
+                  required:
+                  - dateStamp
+                  - statuses
+            required:
+            - source
+            - latestSourceStatus
+            - statusByDate
+      required:
+      - runID
+      - latestStatus
+      - lastUpdatedAt
+      - createdAt
+      - trigger
+      - sources
+      - dateStamps
+      - runHistory
+      - granularHistory
+    IngestionCreateDatabricksConnectionContractDto:
+      type: object
+      properties:
+        token:
+          type: string
+        host:
+          type: string
+        path:
+          type: string
+        deltaSharingCredentials:
+          type: string
+        verified:
+          type: boolean
+      required:
+      - token
+      - host
+      - path
+    IngestionDto:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        enabled:
+          type: boolean
+        data:
+          type: object
+      required:
+      - id
+      - type
+      - enabled
+      - data
+    IngestionScheduleDto:
+      type: object
+      properties:
+        dataset:
+          type: string
+        scheduled_hour_pst:
+          type: number
+          format: double
+      required:
+      - dataset
+      - scheduled_hour_pst
+    IngestionUpdateContractDto:
+      oneOf:
+      - type: object
+        properties:
+          dataset:
+            type: string
+            enum:
+            - Metrics
+          column_mapping:
+            type: object
+            properties:
+              unit_id:
+                type: string
+                description: The unique user identifier this metric is for. This might not necessarily be a user_id - it could be a custom_id of some kind. Make sure this is in the same format as your logged unit_ids.
+              id_type:
+                type: string
+                description: The id_type the unit_id represents. Must be valid id_type. Default Statsig types are user_id/stable_id, but you may have generated custom id_types. Make sure this matches (case sensitive) a customID in your project, or you won’t get experiment results.
+              dateid:
+                type: string
+                description: Date of the daily metric, ISO formatted (ex. 2021-02-17). We’ll load custom metrics to whatever date you use here.
+              metric_name:
+                type: string
+                description: String format. Not null. Length < 128 characters.
+              metric_value:
+                default: 'null'
+                type: string
+                description: Numeric value for the metric. This OR both of numerator and denominator need to be provided.
+              numerator:
+                default: 'null'
+                type: string
+                description: Required for ratio metrics. If present along with a denominator in any record, the metric will be treated as ratio and only calculated for users with non-null denominators
+              denominator:
+                default: 'null'
+                type: string
+                description: Required for ratio metrics. If present along with a numerator in any record, the metric will be treated as ratio and only calculated for users with non-null numerators.
+            required:
+            - unit_id
+            - id_type
+            - dateid
+            - metric_name
+          type:
+            type: string
+            enum:
+            - redshift
+            - bigquery-v2
+            - snowflake-v2
+            - databricks
+            - azure-synapse
+            - s3
+            - athena
+            - adls
+          source_name:
+            type: string
+          query:
+            type: string
+          share:
+            type: string
+          schema:
+            type: string
+          table:
+            type: string
+          enabled:
+            type: boolean
+        required:
+        - dataset
+        - type
+      - type: object
+        properties:
+          dataset:
+            type: string
+            enum:
+            - Events
+          column_mapping:
+            type: object
+            properties:
+              unit_id:
+                type: string
+                description: The unique user identifier this event is for. This might not necessarily be a single column for userID - it could be spread across multiple columns for deviceID etc.
+              event_name:
+                type: string
+                description: Name of the event. String under 128 characters, using ‘_’ for spaces.
+              timestamp:
+                type: string
+                description: Unix timestamp in seconds of the event (ex. 1613584800)
+              ids:
+                default: {}
+                type: object
+                additionalProperties:
+                  type: string
+              metadata:
+                default: {}
+                type: object
+                additionalProperties:
+                  type: string
+              metadata_object:
+                default: 'null'
+                type: string
+              event_value:
+                default: ''
+                type: string
+            required:
+            - event_name
+            - timestamp
+            - ids
+          type:
+            type: string
+            enum:
+            - redshift
+            - bigquery-v2
+            - snowflake-v2
+            - databricks
+            - azure-synapse
+            - s3
+            - athena
+            - adls
+          source_name:
+            type: string
+          query:
+            type: string
+          share:
+            type: string
+          schema:
+            type: string
+          table:
+            type: string
+          enabled:
+            type: boolean
+        required:
+        - dataset
+        - type
+      - type: object
+        properties:
+          dataset:
+            type: string
+            enum:
+            - Exposures
+            - export_exposures
+          column_mapping:
+            type: object
+            properties:
+              experiment:
+                type: string
+                description: Unique identifier for the experiment.
+              group_id:
+                type: string
+                description: Unique identifier for the experiment groups.
+              unit_id:
+                type: string
+                description: The unique user identifier this exposure is for. This might not necessarily be a single column for userID - it could be spread across multiple columns for deviceID etc.
+              timestamp:
+                type: string
+                description: Unix timestamp in seconds of the event (ex. 1613584800)
+              ids:
+                default: {}
+                type: object
+                additionalProperties:
+                  type: string
+              metadata:
+                default: {}
+                type: object
+                additionalProperties:
+                  type: string
+              metadata_object:
+                default: 'null'
+                type: string
+              event_value:
+                default: ''
+                type: string
+            required:
+            - experiment
+            - group_id
+            - timestamp
+            - ids
+          type:
+            type: string
+            enum:
+            - redshift
+            - bigquery-v2
+            - snowflake-v2
+            - databricks
+            - azure-synapse
+            - s3
+            - athena
+            - adls
+          source_name:
+            type: string
+          query:
+            type: string
+          share:
+            type: string
+          schema:
+            type: string
+          table:
+            type: string
+          enabled:
+            type: boolean
+        required:
+        - dataset
+        - type
     IngestionSourceCreateContractDto:
       oneOf:
       - type: object
@@ -2322,616 +2932,6 @@ components:
         - dataset
         - type
         - source_name
-    PaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
-    IngestionCreateDatabricksConnectionContractDto:
-      type: object
-      properties:
-        token:
-          type: string
-        host:
-          type: string
-        path:
-          type: string
-        deltaSharingCredentials:
-          type: string
-        verified:
-          type: boolean
-      required:
-      - token
-      - host
-      - path
-    IngestionBackfillDataDto:
-      type: object
-      properties:
-        runID:
-          type: string
-      required:
-      - runID
-    IngestionUpdateContractDto:
-      oneOf:
-      - type: object
-        properties:
-          dataset:
-            type: string
-            enum:
-            - Metrics
-          column_mapping:
-            type: object
-            properties:
-              unit_id:
-                type: string
-                description: The unique user identifier this metric is for. This might not necessarily be a user_id - it could be a custom_id of some kind. Make sure this is in the same format as your logged unit_ids.
-              id_type:
-                type: string
-                description: The id_type the unit_id represents. Must be valid id_type. Default Statsig types are user_id/stable_id, but you may have generated custom id_types. Make sure this matches (case sensitive) a customID in your project, or you won’t get experiment results.
-              dateid:
-                type: string
-                description: Date of the daily metric, ISO formatted (ex. 2021-02-17). We’ll load custom metrics to whatever date you use here.
-              metric_name:
-                type: string
-                description: String format. Not null. Length < 128 characters.
-              metric_value:
-                default: 'null'
-                type: string
-                description: Numeric value for the metric. This OR both of numerator and denominator need to be provided.
-              numerator:
-                default: 'null'
-                type: string
-                description: Required for ratio metrics. If present along with a denominator in any record, the metric will be treated as ratio and only calculated for users with non-null denominators
-              denominator:
-                default: 'null'
-                type: string
-                description: Required for ratio metrics. If present along with a numerator in any record, the metric will be treated as ratio and only calculated for users with non-null numerators.
-            required:
-            - unit_id
-            - id_type
-            - dateid
-            - metric_name
-          type:
-            type: string
-            enum:
-            - redshift
-            - bigquery-v2
-            - snowflake-v2
-            - databricks
-            - azure-synapse
-            - s3
-            - athena
-            - adls
-          source_name:
-            type: string
-          query:
-            type: string
-          share:
-            type: string
-          schema:
-            type: string
-          table:
-            type: string
-          enabled:
-            type: boolean
-        required:
-        - dataset
-        - type
-      - type: object
-        properties:
-          dataset:
-            type: string
-            enum:
-            - Events
-          column_mapping:
-            type: object
-            properties:
-              unit_id:
-                type: string
-                description: The unique user identifier this event is for. This might not necessarily be a single column for userID - it could be spread across multiple columns for deviceID etc.
-              event_name:
-                type: string
-                description: Name of the event. String under 128 characters, using ‘_’ for spaces.
-              timestamp:
-                type: string
-                description: Unix timestamp in seconds of the event (ex. 1613584800)
-              ids:
-                default: {}
-                type: object
-                additionalProperties:
-                  type: string
-              metadata:
-                default: {}
-                type: object
-                additionalProperties:
-                  type: string
-              metadata_object:
-                default: 'null'
-                type: string
-              event_value:
-                default: ''
-                type: string
-            required:
-            - event_name
-            - timestamp
-            - ids
-          type:
-            type: string
-            enum:
-            - redshift
-            - bigquery-v2
-            - snowflake-v2
-            - databricks
-            - azure-synapse
-            - s3
-            - athena
-            - adls
-          source_name:
-            type: string
-          query:
-            type: string
-          share:
-            type: string
-          schema:
-            type: string
-          table:
-            type: string
-          enabled:
-            type: boolean
-        required:
-        - dataset
-        - type
-      - type: object
-        properties:
-          dataset:
-            type: string
-            enum:
-            - Exposures
-            - export_exposures
-          column_mapping:
-            type: object
-            properties:
-              experiment:
-                type: string
-                description: Unique identifier for the experiment.
-              group_id:
-                type: string
-                description: Unique identifier for the experiment groups.
-              unit_id:
-                type: string
-                description: The unique user identifier this exposure is for. This might not necessarily be a single column for userID - it could be spread across multiple columns for deviceID etc.
-              timestamp:
-                type: string
-                description: Unix timestamp in seconds of the event (ex. 1613584800)
-              ids:
-                default: {}
-                type: object
-                additionalProperties:
-                  type: string
-              metadata:
-                default: {}
-                type: object
-                additionalProperties:
-                  type: string
-              metadata_object:
-                default: 'null'
-                type: string
-              event_value:
-                default: ''
-                type: string
-            required:
-            - experiment
-            - group_id
-            - timestamp
-            - ids
-          type:
-            type: string
-            enum:
-            - redshift
-            - bigquery-v2
-            - snowflake-v2
-            - databricks
-            - azure-synapse
-            - s3
-            - athena
-            - adls
-          source_name:
-            type: string
-          query:
-            type: string
-          share:
-            type: string
-          schema:
-            type: string
-          table:
-            type: string
-          enabled:
-            type: boolean
-        required:
-        - dataset
-        - type
-    IngestionScheduleUpdateContractDto:
-      type: object
-      properties:
-        dataset:
-          type: string
-          enum:
-          - Events
-          - Metrics
-          - entity_properties
-          - export_exposures
-          - export_events
-        scheduled_hour_pst:
-          default: 10
-          type: number
-          minimum: 0
-          maximum: 23
-          format: double
-      required:
-      - dataset
-    IngestionStatusDto:
-      type: object
-      properties:
-        ds:
-          type: string
-          format: date-time
-        ingestion_dataset:
-          type:
-          - string
-          - 'null'
-        ingestion_source:
-          type:
-          - string
-          - 'null'
-        source_name:
-          type:
-          - string
-          - 'null'
-        message:
-          type:
-          - string
-          - 'null'
-        error_message:
-          type: string
-        status:
-          type:
-          - string
-          - 'null'
-        rowCount:
-          type: number
-          format: double
-        metricCount:
-          type: number
-          format: double
-        timestamp:
-          type:
-          - string
-          - 'null'
-          format: date-time
-      required:
-      - ingestion_dataset
-      - ingestion_source
-      - source_name
-      - message
-      - status
-      - timestamp
-    IngestionBackfillContractDto:
-      type: object
-      properties:
-        datestamp_start:
-          type: string
-          description: Expected valid date in the form of YYYY-MM-DD
-          example: '2024-01-01'
-        datestamp_end:
-          type: string
-          description: Expected valid date in the form of YYYY-MM-DD
-          example: '2024-01-01'
-        type:
-          type: string
-          enum:
-          - redshift
-          - bigquery-v2
-          - snowflake-v2
-          - databricks
-          - azure-synapse
-          - s3
-          - athena
-          - adls
-        source:
-          oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-        dataset:
-          type: string
-          enum:
-          - Events
-          - Metrics
-          - entity_properties
-          - export_exposures
-          - export_events
-      required:
-      - datestamp_start
-      - datestamp_end
-      - type
-      - dataset
-    IngestionDto:
-      type: object
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-        enabled:
-          type: boolean
-        data:
-          type: object
-      required:
-      - id
-      - type
-      - enabled
-      - data
-    IngestionScheduleDto:
-      type: object
-      properties:
-        dataset:
-          type: string
-        scheduled_hour_pst:
-          type: number
-          format: double
-      required:
-      - dataset
-      - scheduled_hour_pst
-    IngestionEventDeltaResponseDto:
-      oneOf:
-      - type: array
-        items:
-          type: object
-          properties:
-            date:
-              type: string
-            source:
-              type: string
-            event:
-              type: string
-            internal_count:
-              type: number
-            external_count:
-              type: number
-            has_diff:
-              type: boolean
-            threshold:
-              type: number
-            last_updated_time:
-              type: string
-              format: date-time
-          required:
-          - date
-          - source
-          - event
-          - internal_count
-          - external_count
-          - has_diff
-          - threshold
-          - last_updated_time
-      - type: array
-        items:
-          type: object
-          properties:
-            date:
-              type: string
-            events:
-              type: array
-              items:
-                type: object
-                properties:
-                  source:
-                    type: string
-                  event:
-                    type: string
-                  internal_count:
-                    type: number
-                  external_count:
-                    type: number
-                  has_diff:
-                    type: boolean
-                  threshold:
-                    type: number
-                  last_updated_time:
-                    type: string
-                    format: date-time
-                required:
-                - source
-                - event
-                - internal_count
-                - external_count
-                - has_diff
-                - threshold
-                - last_updated_time
-          required:
-          - date
-          - events
-    IngestionRunDataContractDto:
-      type: object
-      properties:
-        runID:
-          type: string
-        latestStatus:
-          type: string
-        lastUpdatedAt:
-          type: string
-          format: date-time
-        createdAt:
-          type: string
-          format: date-time
-        trigger:
-          type: string
-        sources:
-          type: array
-          items:
-            type: string
-        dateStamps:
-          type: array
-          items:
-            type: string
-        runHistory:
-          type: array
-          items:
-            type: object
-            properties:
-              statusTimestamp:
-                type: string
-                format: date-time
-              status:
-                type: string
-            required:
-            - statusTimestamp
-            - status
-        granularHistory:
-          type: array
-          items:
-            type: object
-            properties:
-              source:
-                type: string
-              latestSourceStatus:
-                type: string
-              statusByDate:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    dateStamp:
-                      type: string
-                    statuses:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          statusTimestamp:
-                            type: string
-                            format: date-time
-                          status:
-                            type: string
-                        required:
-                        - statusTimestamp
-                        - status
-                  required:
-                  - dateStamp
-                  - statuses
-            required:
-            - source
-            - latestSourceStatus
-            - statusByDate
-      required:
-      - runID
-      - latestStatus
-      - lastUpdatedAt
-      - createdAt
-      - trigger
-      - sources
-      - dateStamps
-      - runHistory
-      - granularHistory
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
-    IngestionEventCountResponseDto:
-      oneOf:
-      - type: array
-        items:
-          type: object
-          properties:
-            date:
-              type: string
-            event:
-              type: string
-            count:
-              type: number
-            last_updated_time:
-              type: string
-              format: date-time
-          required:
-          - date
-          - event
-          - count
-          - last_updated_time
-      - type: array
-        items:
-          type: object
-          properties:
-            date:
-              type: string
-            events:
-              type: array
-              items:
-                type: object
-                properties:
-                  event:
-                    type: string
-                  count:
-                    type: number
-                  last_updated_time:
-                    type: string
-                    format: date-time
-                required:
-                - event
-                - count
-                - last_updated_time
-          required:
-          - date
-          - events
-    PaginationResponseMetadataDto:
-      type: object
-      properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
-          type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

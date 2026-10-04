@@ -615,6 +615,34 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    SettingsTeamsContractDto:
+      type: object
+      properties:
+        require_teams_on_configs:
+          type: boolean
+          description: Whether a team is required on each new config.
+      required:
+      - require_teams_on_configs
+    SettingsRolesContractDto:
+      type: object
+      properties:
+        default_project_role:
+          type: string
+          description: The name of the default project role. This is the role that will be initially assigned to new users joining the project.
+      required:
+      - default_project_role
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
     SettingsProjectContractDto:
       type: object
       properties:
@@ -656,34 +684,6 @@ components:
       - is_config_review_required
       - is_metric_review_required
       - is_metric_review_required_on_verified_only
-    SettingsRolesContractDto:
-      type: object
-      properties:
-        default_project_role:
-          type: string
-          description: The name of the default project role. This is the role that will be initially assigned to new users joining the project.
-      required:
-      - default_project_role
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
-    SettingsTeamsContractDto:
-      type: object
-      properties:
-        require_teams_on_configs:
-          type: boolean
-          description: Whether a team is required on each new config.
-      required:
-      - require_teams_on_configs
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

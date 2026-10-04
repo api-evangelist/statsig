@@ -669,9 +669,36 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    AlertUnmuteDto:
+    PaginationResponseWithMessage:
       type: object
       properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    AlertMuteDto:
+      type: object
+      properties:
+        indefinite:
+          type: boolean
+          description: Mute the alert indefinitely until manually unmuted
+        durationSeconds:
+          type: integer
+          description: Mute duration in whole seconds
+          format: int64
+          exclusiveMinimum: 0
         groupBys:
           type: array
           items:
@@ -686,7 +713,7 @@ components:
             required:
             - key
             - value
-          description: Unmute only alert evaluations matching these group-by values. Omit to unmute the entire alert.
+          description: Mute only alert evaluations matching these group-by values. Omit to mute the entire alert.
         currentSchedule:
           type:
           - object
@@ -719,26 +746,121 @@ components:
           - start
           - end
           - groupBys
-          description: Existing mute schedule to clear. Omit to clear a mute that matches groupBys; use GET /alerts/:id activeMuteSchedules to discover values.
-    PaginationResponseWithMessage:
+          description: Existing mute schedule to replace. Omit to update a mute that matches groupBys; use GET /alerts/:id activeMuteSchedules to discover values.
+    AlertCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 4
+          maxLength: 100
+          description: Name of the alert (4-100 characters)
+        message:
+          type: string
+          description: Alert message shown when the alert fires
+        teamID:
+          type: string
+          description: ID of the team that owns this alert
+        formula:
+          type: string
+          description: Formula expression combining the alert metrics
+        definitionMetricsJson:
+          type: array
+          items:
+            type: string
+          description: JSON-encoded metric definitions evaluated by the alert. Each entry is a stringified ToplineAlertMExDefinitionOrUnresolved.
+        groupBys:
+          type: array
+          items:
+            type: object
+            properties:
+              column:
+                type: string
+                description: Property column to group by
+              key:
+                type: string
+                description: Property key to group by
+            required:
+            - column
+            - key
+          description: Properties to group the alert metrics by
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: ID of the tag
+              name:
+                type: string
+                description: Name of the tag
+            required:
+            - id
+            - name
+          description: Tags to attach to the alert on creation
+      required:
+      - name
+    SingleDataResponse:
       type: object
       properties:
         message:
           type: string
           description: A simple string explaining the result of the operation.
         data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+          type: object
+          description: A single result.
       required:
       - message
       - data
-      - pagination
+    AlertEventSchemaDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the alert event
+        eventType:
+          type: string
+          enum:
+          - raise
+          - warn
+          - resolve
+          - no-data
+          description: Type of alert event
+        title:
+          type: string
+          description: Title of the alert event
+        message:
+          type: string
+          description: Message for the alert event
+        reason:
+          type: string
+          description: Reason the event was created
+        createdTime:
+          type: number
+          description: Timestamp in milliseconds when the event was created
+          format: double
+        evaluationWindowStartTimestamp:
+          type: number
+          description: Timestamp in milliseconds for the start of the evaluated alert window
+          format: double
+        evaluationWindowEndTimestamp:
+          type: number
+          description: Timestamp in milliseconds for the end of the evaluated alert window
+          format: double
+        multiAlertGroupBys:
+          type: object
+          additionalProperties:
+            type: string
+          description: Group-by values associated with this event
+      required:
+      - id
+      - eventType
+      - title
+      - message
+      - reason
+      - createdTime
+      - multiAlertGroupBys
     AlertUpdateDto:
       type: object
       properties:
@@ -889,72 +1011,240 @@ components:
             - type
             - id
           description: Replace typed subscribersV2 targets (Slack/PagerDuty). When omitted, existing typed subscribers are preserved. Pass an empty array to clear. Does not modify the legacy member-subscriber edge.
-    AlertCreateDto:
+    AlertUnmuteDto:
       type: object
       properties:
-        name:
-          type: string
-          minLength: 4
-          maxLength: 100
-          description: Name of the alert (4-100 characters)
-        message:
-          type: string
-          description: Alert message shown when the alert fires
-        teamID:
-          type: string
-          description: ID of the team that owns this alert
-        formula:
-          type: string
-          description: Formula expression combining the alert metrics
-        definitionMetricsJson:
-          type: array
-          items:
-            type: string
-          description: JSON-encoded metric definitions evaluated by the alert. Each entry is a stringified ToplineAlertMExDefinitionOrUnresolved.
         groupBys:
           type: array
           items:
             type: object
             properties:
-              column:
-                type: string
-                description: Property column to group by
               key:
                 type: string
-                description: Property key to group by
+                description: Group-by property key
+              value:
+                type: string
+                description: Group-by value to mute
             required:
-            - column
             - key
-          description: Properties to group the alert metrics by
+            - value
+          description: Unmute only alert evaluations matching these group-by values. Omit to unmute the entire alert.
+        currentSchedule:
+          type:
+          - object
+          - 'null'
+          properties:
+            start:
+              type: number
+              description: Start timestamp in seconds for the schedule being replaced (matches GraphQL mute schedule format)
+              format: double
+            end:
+              type: number
+              description: End timestamp in seconds for the schedule being replaced (0 means indefinite)
+              format: double
+            groupBys:
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    description: Group-by property key
+                  value:
+                    type: string
+                    description: Group-by value to mute
+                required:
+                - key
+                - value
+              description: Group-by values for the schedule being replaced (required to update a grouped mute)
+          required:
+          - start
+          - end
+          - groupBys
+          description: Existing mute schedule to clear. Omit to clear a mute that matches groupBys; use GET /alerts/:id activeMuteSchedules to discover values.
+    AlertSchemaDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the alert
+        name:
+          type: string
+          description: Name of the alert
+        alertType:
+          type: string
+          enum:
+          - threshold
+          - change
+          - pct_change
+          description: Type of alert
+        metrics:
+          type: object
+          properties: {}
+          description: List of metrics associated with this alert
+        metricGroupBys:
+          type: object
+          properties: {}
+          description: Metric groupbys
+        formula:
+          type: string
+          description: Formula for the alert
+        message:
+          type: string
+          description: Alert message
+        creatorID:
+          type: string
+        companyID:
+          type: string
+        priority:
+          type: string
+          enum:
+          - P0
+          - P1
+          - P2
+          - P3
+          - P4
+          - P5
+          description: Priority of this alert
+        alertThreshold:
+          type: number
+          format: double
+        warningThreshold:
+          type: number
+          format: double
+        windowMs:
+          type: number
+          description: How far back and how frequently a metric should be checked, in milliseconds
+          format: double
+        evaluationDelayMs:
+          type:
+          - number
+          - 'null'
+          description: Delay before evaluating metrics, in milliseconds. Use 0 or null to clear.
+          format: double
+        condition:
+          type: string
+          enum:
+          - greater
+          - greater_or_equal
+          - less
+          - less_or_equal
+          - equal
+          - not_equal
+          description: Condition under which a metric change triggers an alert in milliseconds
+        renotificationConditions:
+          type: array
+          items:
+            type: string
+            enum:
+            - raise
+            - warn
+            - no-data
+          description: Condition under which a re-notification is sent
+        renotificationWindowMs:
+          type: number
+          description: How long to wait before re-notifying in milliseconds
+          format: double
+        renotificationMessage:
+          type: string
+          description: Re-notification message
+        team:
+          type:
+          - string
+          - 'null'
+          description: Team associated with this alert
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
         tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with this alert
+        subscribers:
           type: array
           items:
             type: object
             properties:
+              type:
+                type: string
+                enum:
+                - user
+                - slackChannel
+                - pagerDutyOncall
+                - pagerDutyService
+                description: Typed integration subscriber kind (entity subscribersV2). pagerDutyService ids come from the company PagerDuty integration. pagerDutyOncall is legacy/inert. type=user here is a typed row only — it is not the legacy member email/Slack-DM subscriber edge.
               id:
                 type: string
-                description: ID of the tag
-              name:
-                type: string
-                description: Name of the tag
+                description: Subscriber id (user id, Slack channel id, or PagerDuty service id). For pagerDutyService this is the integration services[].id, not a routing key.
             required:
+            - type
             - id
-            - name
-          description: Tags to attach to the alert on creation
+          description: 'Typed notification targets (subscribersV2): Slack channels and PagerDuty services used by direct alerty paging. Distinct from the legacy console member-subscriber edge (email/Slack DM), which CAPI does not expose.'
       required:
+      - id
       - name
-    SingleDataResponse:
+      - alertType
+      - metrics
+      - metricGroupBys
+      - message
+      - companyID
+      - priority
+      - alertThreshold
+      - windowMs
+      - condition
+      - tags
+      - subscribers
+    PaginationResponseMetadataDto:
       type: object
       properties:
-        message:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
           type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
       required:
-      - message
-      - data
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
     AlertDetailsSchemaDto:
       type: object
       properties:
@@ -1161,296 +1451,6 @@ components:
       - status
       - lastTriggeredTime
       - activeMuteSchedules
-    AlertSchemaDto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID of the alert
-        name:
-          type: string
-          description: Name of the alert
-        alertType:
-          type: string
-          enum:
-          - threshold
-          - change
-          - pct_change
-          description: Type of alert
-        metrics:
-          type: object
-          properties: {}
-          description: List of metrics associated with this alert
-        metricGroupBys:
-          type: object
-          properties: {}
-          description: Metric groupbys
-        formula:
-          type: string
-          description: Formula for the alert
-        message:
-          type: string
-          description: Alert message
-        creatorID:
-          type: string
-        companyID:
-          type: string
-        priority:
-          type: string
-          enum:
-          - P0
-          - P1
-          - P2
-          - P3
-          - P4
-          - P5
-          description: Priority of this alert
-        alertThreshold:
-          type: number
-          format: double
-        warningThreshold:
-          type: number
-          format: double
-        windowMs:
-          type: number
-          description: How far back and how frequently a metric should be checked, in milliseconds
-          format: double
-        evaluationDelayMs:
-          type:
-          - number
-          - 'null'
-          description: Delay before evaluating metrics, in milliseconds. Use 0 or null to clear.
-          format: double
-        condition:
-          type: string
-          enum:
-          - greater
-          - greater_or_equal
-          - less
-          - less_or_equal
-          - equal
-          - not_equal
-          description: Condition under which a metric change triggers an alert in milliseconds
-        renotificationConditions:
-          type: array
-          items:
-            type: string
-            enum:
-            - raise
-            - warn
-            - no-data
-          description: Condition under which a re-notification is sent
-        renotificationWindowMs:
-          type: number
-          description: How long to wait before re-notifying in milliseconds
-          format: double
-        renotificationMessage:
-          type: string
-          description: Re-notification message
-        team:
-          type:
-          - string
-          - 'null'
-          description: Team associated with this alert
-        owner:
-          type:
-          - object
-          - 'null'
-          properties:
-            ownerID:
-              type: string
-              description: ID of the owner
-              example: abc123
-            ownerType:
-              type: string
-              description: Type of the owner (e.g., SDK_KEY or USER)
-              example: USER
-            ownerName:
-              type: string
-              description: The name of the owner. This field is optional.
-              example: John Doe
-            ownerEmail:
-              type: string
-              description: The email of the owner. This field is optional.
-          description: Schema for owner data including ID, type, name.
-          example:
-            ownerID: user123
-            ownerType: USER
-            ownerName: John Doe
-            ownerEmail: owner123@test.com
-        tags:
-          type: array
-          items:
-            type: string
-          description: Tags associated with this alert
-        subscribers:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-                enum:
-                - user
-                - slackChannel
-                - pagerDutyOncall
-                - pagerDutyService
-                description: Typed integration subscriber kind (entity subscribersV2). pagerDutyService ids come from the company PagerDuty integration. pagerDutyOncall is legacy/inert. type=user here is a typed row only — it is not the legacy member email/Slack-DM subscriber edge.
-              id:
-                type: string
-                description: Subscriber id (user id, Slack channel id, or PagerDuty service id). For pagerDutyService this is the integration services[].id, not a routing key.
-            required:
-            - type
-            - id
-          description: 'Typed notification targets (subscribersV2): Slack channels and PagerDuty services used by direct alerty paging. Distinct from the legacy console member-subscriber edge (email/Slack DM), which CAPI does not expose.'
-      required:
-      - id
-      - name
-      - alertType
-      - metrics
-      - metricGroupBys
-      - message
-      - companyID
-      - priority
-      - alertThreshold
-      - windowMs
-      - condition
-      - tags
-      - subscribers
-    AlertMuteDto:
-      type: object
-      properties:
-        indefinite:
-          type: boolean
-          description: Mute the alert indefinitely until manually unmuted
-        durationSeconds:
-          type: integer
-          description: Mute duration in whole seconds
-          format: int64
-          exclusiveMinimum: 0
-        groupBys:
-          type: array
-          items:
-            type: object
-            properties:
-              key:
-                type: string
-                description: Group-by property key
-              value:
-                type: string
-                description: Group-by value to mute
-            required:
-            - key
-            - value
-          description: Mute only alert evaluations matching these group-by values. Omit to mute the entire alert.
-        currentSchedule:
-          type:
-          - object
-          - 'null'
-          properties:
-            start:
-              type: number
-              description: Start timestamp in seconds for the schedule being replaced (matches GraphQL mute schedule format)
-              format: double
-            end:
-              type: number
-              description: End timestamp in seconds for the schedule being replaced (0 means indefinite)
-              format: double
-            groupBys:
-              type: array
-              items:
-                type: object
-                properties:
-                  key:
-                    type: string
-                    description: Group-by property key
-                  value:
-                    type: string
-                    description: Group-by value to mute
-                required:
-                - key
-                - value
-              description: Group-by values for the schedule being replaced (required to update a grouped mute)
-          required:
-          - start
-          - end
-          - groupBys
-          description: Existing mute schedule to replace. Omit to update a mute that matches groupBys; use GET /alerts/:id activeMuteSchedules to discover values.
-    AlertEventSchemaDto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID of the alert event
-        eventType:
-          type: string
-          enum:
-          - raise
-          - warn
-          - resolve
-          - no-data
-          description: Type of alert event
-        title:
-          type: string
-          description: Title of the alert event
-        message:
-          type: string
-          description: Message for the alert event
-        reason:
-          type: string
-          description: Reason the event was created
-        createdTime:
-          type: number
-          description: Timestamp in milliseconds when the event was created
-          format: double
-        evaluationWindowStartTimestamp:
-          type: number
-          description: Timestamp in milliseconds for the start of the evaluated alert window
-          format: double
-        evaluationWindowEndTimestamp:
-          type: number
-          description: Timestamp in milliseconds for the end of the evaluated alert window
-          format: double
-        multiAlertGroupBys:
-          type: object
-          additionalProperties:
-            type: string
-          description: Group-by values associated with this event
-      required:
-      - id
-      - eventType
-      - title
-      - message
-      - reason
-      - createdTime
-      - multiAlertGroupBys
-    PaginationResponseMetadataDto:
-      type: object
-      properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
-          type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

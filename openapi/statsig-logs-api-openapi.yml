@@ -137,6 +137,37 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    CursorPaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned for this page.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Opaque cursor pagination metadata.
+          allOf:
+          - $ref: '#/components/schemas/CursorPaginationMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    CursorPaginationMetadataDto:
+      type: object
+      properties:
+        next_cursor:
+          type:
+          - string
+          - 'null'
+        has_more:
+          type: boolean
+      required:
+      - next_cursor
+      - has_more
     LogEntryDto:
       type: object
       properties:
@@ -188,37 +219,6 @@ components:
       - value
       - sdk_type
       - sdk_version
-    CursorPaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned for this page.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Opaque cursor pagination metadata.
-          allOf:
-          - $ref: '#/components/schemas/CursorPaginationMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
-    CursorPaginationMetadataDto:
-      type: object
-      properties:
-        next_cursor:
-          type:
-          - string
-          - 'null'
-        has_more:
-          type: boolean
-      required:
-      - next_cursor
-      - has_more
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

@@ -228,18 +228,39 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    SingleDataResponse:
+    EnvironmentsUpdateContractDto:
       type: object
       properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
+        environments:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the environment.
+              id:
+                type: string
+                description: A unique identifier for the environment. If not provided, the associated environment will be treated as a newly created environment.
+              isProduction:
+                type: boolean
+                description: Whether the environment is production.
+              requiresReview:
+                type: boolean
+                description: Whether the environment requires review.
+              requiredReviewGroupID:
+                type: string
+                description: The ID of the review group that the environment requires review from.
+              requiresReleasePipeline:
+                type: boolean
+                description: Whether the environment requires a release pipeline.
+            required:
+            - name
+            - isProduction
+            - requiresReview
+            - requiresReleasePipeline
       required:
-      - message
-      - data
+      - environments
     EnvironmentsContractDto:
       type: object
       properties:
@@ -274,39 +295,18 @@ components:
             - requiresReleasePipeline
       required:
       - environments
-    EnvironmentsUpdateContractDto:
+    SingleDataResponse:
       type: object
       properties:
-        environments:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the environment.
-              id:
-                type: string
-                description: A unique identifier for the environment. If not provided, the associated environment will be treated as a newly created environment.
-              isProduction:
-                type: boolean
-                description: Whether the environment is production.
-              requiresReview:
-                type: boolean
-                description: Whether the environment requires review.
-              requiredReviewGroupID:
-                type: string
-                description: The ID of the review group that the environment requires review from.
-              requiresReleasePipeline:
-                type: boolean
-                description: Whether the environment requires a release pipeline.
-            required:
-            - name
-            - isProduction
-            - requiresReview
-            - requiresReleasePipeline
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
       required:
-      - environments
+      - message
+      - data
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

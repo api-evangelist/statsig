@@ -766,6 +766,17 @@ paths:
       operationId: getConsoleV1EventsByEventNameMetrics
       x-operation-id-source: derived
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
   schemas:
     StatsigUser:
       type: object
@@ -832,54 +843,6 @@ components:
           type: object
           additionalProperties: true
           description: Optional metadata key-value pairs associated with the event.
-    MetricEventsCriteriaDto:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - value
-          - metadata
-          - user
-          - user_custom
-          description: Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`.
-        column:
-          type: string
-          description: Optional column specifying which data attribute to filter on.
-        condition:
-          type: string
-          enum:
-          - in
-          - not_in
-          - '='
-          - '>'
-          - <
-          - '>='
-          - <=
-          - is_null
-          - non_null
-          - contains
-          - not_contains
-          - sql_filter
-          - starts_with
-          - ends_with
-          - after_exposure
-          - before_exposure
-          - is_true
-          - is_false
-          description: sql_filter, starts_with, ends_with, after_exposure, and before_exposure are only applicable in Warehouse Native
-        values:
-          type: array
-          items:
-            type: string
-          description: Optional array of values for the criterion to match against.
-        nullVacuousOverride:
-          type: boolean
-          description: If true, overrides null values in criterion evaluation.
-      required:
-      - type
-      - condition
-      description: Array of event criteria for defining filtering conditions in metrics analysis.
     PaginationResponseWithMessage:
       type: object
       properties:
@@ -899,6 +862,33 @@ components:
       - message
       - data
       - pagination
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
     LoggedEventDto:
       type: object
       properties:
@@ -1571,44 +1561,54 @@ components:
       - id
       - lineage
       - permalink
-    PaginationResponseMetadataDto:
+    MetricEventsCriteriaDto:
       type: object
       properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
+        type:
           type: string
+          enum:
+          - value
+          - metadata
+          - user
+          - user_custom
+          description: Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`.
+        column:
+          type: string
+          description: Optional column specifying which data attribute to filter on.
+        condition:
+          type: string
+          enum:
+          - in
+          - not_in
+          - '='
+          - '>'
+          - <
+          - '>='
+          - <=
+          - is_null
+          - non_null
+          - contains
+          - not_contains
+          - sql_filter
+          - starts_with
+          - ends_with
+          - after_exposure
+          - before_exposure
+          - is_true
+          - is_false
+          description: sql_filter, starts_with, ends_with, after_exposure, and before_exposure are only applicable in Warehouse Native
+        values:
+          type: array
+          items:
+            type: string
+          description: Optional array of values for the criterion to match against.
+        nullVacuousOverride:
+          type: boolean
+          description: If true, overrides null values in criterion evaluation.
       required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
+      - type
+      - condition
+      description: Array of event criteria for defining filtering conditions in metrics analysis.
   securitySchemes:
     statsigApiKey:
       type: apiKey
