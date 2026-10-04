@@ -473,6 +473,8 @@ apis:
   humanURL: https://docs.statsig.com/http-api/
   baseURL: https://events.statsigapi.net
   tags:
+  - Environment
+  tags_raw:
   - Environments
   properties:
   - type: OpenAPI
@@ -789,6 +791,9 @@ apis:
   - type: Conventions
     url: conventions/statsig-conventions.yml
 common:
+  - type: CapabilityMap
+    url: capabilities/statsig-capability-edges.yml
+    name: Statsig Business Capability Map
   - type: Overlay
     url: overlays/statsig-console-api-overlay.yaml
   - type: Website
