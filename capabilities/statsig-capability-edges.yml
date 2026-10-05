@@ -1,0 +1,111 @@
+slug: statsig
+provider: Statsig
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 9
+edges:
+- tag: Gates
+  spec_file: statsig-gates-api-openapi.yml
+  capability_id: BC-4210.50
+  capability_id_l1: BC-4210
+  capability_name: Feature Flag Management
+  confidence: 0.95
+  evidence: POST /gates "Create a gate"; PUT /gates/{id}/enable "Enable a gate"; PUT /gates/{id}/launch
+    "Launch a gate"; POST /gates/{id}/rules "Add a gate rule"
+  reason: Full lifecycle and targeting-rule management of feature gates — the canonical feature flag management
+    surface.
+- tag: Feature Gates
+  spec_file: statsig-feature-gates-api-openapi.yml
+  capability_id: BC-4210.50
+  capability_id_l1: BC-4210
+  capability_name: Feature Flag Management
+  confidence: 0.9
+  evidence: POST /check_gate "Check a feature gate"; "allows developers to evaluate feature gates, dynamic
+    configs, and experiments for users"
+  reason: Runtime evaluation of feature flags (gates) for users is exactly feature flag runtime control
+    used to decouple deploy from release.
+- tag: Experiments
+  spec_file: statsig-experiments-api-openapi.yml
+  capability_id: BC-4280.50
+  capability_id_l1: BC-4280
+  capability_name: A/B Test Execution
+  confidence: 0.85
+  evidence: '"POST /experiments  Create an experiment", "PUT /experiments/{id}/start  Start an experiment",
+    "PUT /experiments/{id}/reset  Reset an experiment", ExperimentGroup / ExperimentOverridesDto'
+  reason: Configuration, targeting (groups, overrides) and lifecycle control of running A/B experiments
+    is A/B test execution; review-request schemas also touch experimentation programme governance, so
+    not maximal confidence.
+- tag: Autotunes
+  spec_file: statsig-autotunes-api-openapi.yml
+  capability_id: BC-4280.50
+  capability_id_l1: BC-4280
+  capability_name: A/B Test Execution
+  confidence: 0.8
+  evidence: '"PUT /console/v1/autotunes/{id}/make_decision  Finish Experiment Early"; schemas AutotuneExperimentDto,
+    ExperimentStatusUpdateDto, ScheduleExperimentStartParamDto'
+  reason: Autotunes are Statsig's multi-armed-bandit experiments; the operations create, configure, override,
+    schedule and conclude running experiments, which is execution/monitoring of live tests. Some ambiguity
+    between experiment programme governance (review request schemas) and test execution, hence 0.8.
+- tag: Events
+  spec_file: statsig-events-api-openapi.yml
+  capability_id: BC-4280.10
+  capability_id_l1: BC-4280
+  capability_name: Product Telemetry Instrumentation
+  confidence: 0.8
+  evidence: '"POST /log_event  Log custom events" with StatsigEvent and StatsigUser; "Get metrics using
+    event name"'
+  reason: Ingestion of custom product usage events from client/server runtimes plus listing of event definitions
+    is product telemetry instrumentation. Slight overlap with usage analytics for the metrics read, hence
+    0.8.
+- tag: Release Pipelines
+  spec_file: statsig-release-pipelines-api-openapi.yml
+  capability_id: BC-4210.40
+  capability_id_l1: BC-4210
+  capability_name: Deployment Orchestration
+  confidence: 0.8
+  evidence: PUT /console/v1/release_pipeline_triggers/{id}/rollout  'Fully Roll Out Pipeline Trigger';
+    'Approve Pipeline Trigger Phase'; 'Pause Pipeline Trigger'; 'Skip to Pipeline Trigger Phase'
+  reason: Phase-gated, approvable, pausable progressive rollout of releases with controlled blast radius
+    — deployment orchestration within software release management. Some ambiguity vs. feature flag management
+    since Statsig pipelines drive flag rollouts.
+- tag: Dynamic Configs
+  spec_file: statsig-dynamic-configs-api-openapi.yml
+  capability_id: BC-4210
+  capability_id_l1: BC-4210
+  capability_name: Software Release & Deployment Management
+  confidence: 0.75
+  evidence: '"POST /dynamic_configs  Create a dynamic config", "GET /dynamic_configs/{id}/rules  Get dynamic
+    config rules", "POST /get_config  Get a dynamic config or experiment"'
+  reason: Dynamic configs are remotely managed, rule-targeted runtime configuration values delivered to
+    product code — squarely release/runtime control, but genuinely split between Feature Flag Management
+    and Configuration & Secrets Management, so only the L1 is asserted.
+- tag: Experiments (Warehouse Native)
+  spec_file: statsig-experiments-warehouse-native-api-openapi.yml
+  capability_id: BC-4280
+  capability_id_l1: BC-4280
+  capability_name: Product Telemetry & Experimentation Management
+  confidence: 0.7
+  evidence: GET /console/v1/experiments/qualifying_events — "List qualifying event"; POST "Create Qualifying
+    Event"
+  reason: Operations define qualifying events under the experiments resource of an experimentation platform,
+    i.e. configuration feeding experiment analysis. Clearly within Product Telemetry & Experimentation
+    Management, but the evidence straddles telemetry definition and experiment execution so no L2 is asserted.
+- tag: Metrics
+  spec_file: statsig-metrics-api-openapi.yml
+  capability_id: BC-4280.30
+  capability_id_l1: BC-4280
+  capability_name: Product Usage Analytics
+  confidence: 0.7
+  evidence: 'GET /console/v1/metrics "Read Single Metric Value"; GET /console/v1/metrics/{id}/experiments
+    "Lineage: List experiments related to Metric"'
+  reason: Definition and retrieval of product metrics used to analyse feature impact, with lineage to
+    experiments — product usage analytics on this experimentation platform.
