@@ -12,6 +12,12 @@ artifacts:
   authentication/statsig-authentication.yml:
     method: derived
     evidence: declared in the artifact
+  changelog/statsig-changelog.yml:
+    method: searched
+    evidence: declared in the artifact
+  cli/statsig-cli.yml:
+    method: searched
+    evidence: declared in the artifact
   collections/statsig-audit-logs-api.opencollection.json:
     method: derived
     evidence: openapi/statsig-audit-logs-api
@@ -37,11 +43,11 @@ artifacts:
     method: derived
     evidence: openapi/statsig-configuration-api
   collections/statsig-console-api.opencollection.json:
-    method: unknown
-    evidence: no authorship recorded
+    method: derived
+    evidence: openapi/statsig-console-api
   collections/statsig-console-api.postman_collection.json:
-    method: unknown
-    evidence: no authorship recorded
+    method: derived
+    evidence: openapi/statsig-console-api
   collections/statsig-dynamic-configs-api.opencollection.json:
     method: derived
     evidence: openapi/statsig-dynamic-configs-api
@@ -144,6 +150,18 @@ artifacts:
   collections/statsig-webhooks-api.postman_collection.json:
     method: unknown
     evidence: no authorship recorded
+  conformance/statsig-conformance.yml:
+    method: searched
+    evidence: declared in the artifact
+  conventions/statsig-conventions.yml:
+    method: searched
+    evidence: declared in the artifact
+  data-model/statsig-data-model.yml:
+    method: derived
+    evidence: declared in the artifact
+  errors/statsig-problem-types.yml:
+    method: derived
+    evidence: declared in the artifact
   examples/statsig-check-gate-example.json:
     method: unknown
     evidence: no authorship recorded
@@ -162,6 +180,24 @@ artifacts:
   finops/statsig-finops.yml:
     method: generated
     evidence: declared in the artifact
+  front-door-ai/2026-09-17.yml:
+    method: unknown
+    evidence: no authorship recorded
+  grpc/_index.yml:
+    method: searched
+    evidence: declared in the artifact
+  grpc/statsig-config-specs.proto:
+    method: unknown
+    evidence: no authorship recorded
+  grpc/statsig-data-adapter.proto:
+    method: unknown
+    evidence: no authorship recorded
+  grpc/statsig-forward-proxy.proto:
+    method: unknown
+    evidence: no authorship recorded
+  grpc/statsig-grpc-health.proto:
+    method: unknown
+    evidence: no authorship recorded
   json-ld/statsig-context.jsonld:
     method: unknown
     evidence: no authorship recorded
@@ -183,55 +219,7 @@ artifacts:
   json-structure/statsig-feature-gate-structure.json:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-05T072335.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-06T210741.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-07T135032.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-10T093022.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-10T111628.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-11T211707.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-12T193225.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-17T064519.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-19T080027.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-19T082702.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-19T114122.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-20T165047.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-20T191845.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-20T205517.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-21T110057.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-24T064859.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-24T171257.yml:
+  kin/checks-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-08-25T125852.yml:
@@ -318,21 +306,154 @@ artifacts:
   kin/score-2026-09-05T072335.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-05T144739.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-05T195450.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-05T211839.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-06T011047.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-06T211804.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-06T224210.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-07T200636.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-07T213054.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-08T214843.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-08T232836.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-10T204815.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-10T222408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-12T062655.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-12T080032.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-12T204651.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-12T221936.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-13T214537.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-14T064754.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-14T210656.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-14T225847.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-15T211329.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-15T230249.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-16T210549.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-16T225339.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-17T211151.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-17T233623.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-18T205255.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-18T231945.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-19T165737.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-19T193153.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-20T205903.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-20T232958.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-21T211425.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-21T233935.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-22T213221.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-23T000603.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-24T064009.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-24T090406.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-24T161608.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  lifecycle/statsig-lifecycle.yml:
+    method: searched
+    evidence: declared in the artifact
   llms/statsig-llms.txt:
     method: searched
     evidence: 'derive-llms-provenance.py: harvested'
+  mcp/statsig-docs-mcp-tools.json:
+    method: unknown
+    evidence: no authorship recorded
+  mcp/statsig-mcp.yml:
+    method: searched
+    evidence: declared in the artifact
+  mcp/statsig-tool-crosswalk.yml:
+    method: derived
+    evidence: declared in the artifact
   openapi/_original/statsig-client-sdk-api-openapi.yml:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/statsig-console-api-openapi.yml:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/statsig-http-api-openapi.yml:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/_original/statsig-server-sdk-api-openapi.yml:
     method: harvested
-    evidence: fetched from the provider as-is; byte-identical to the source
+    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
+      to the provider's source is unverified
   openapi/statsig-audit-logs-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
@@ -342,6 +463,9 @@ artifacts:
   openapi/statsig-configuration-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/statsig-console-api-openapi.json:
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-dynamic-configs-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
@@ -384,11 +508,17 @@ artifacts:
   openapi/statsig-users-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  plans/statsig-plans-pricing.yml:
+  overlays/statsig-console-api-overlay.yaml:
     method: generated
     evidence: declared in the artifact
+  packages/statsig-packages.yml:
+    method: searched
+    evidence: declared in the artifact
+  plans/statsig-plans-pricing.yml:
+    method: searched
+    evidence: declared in the artifact
   rate-limits/statsig-rate-limits.yml:
-    method: generated
+    method: searched
     evidence: declared in the artifact
   rules/statsig-asyncapi-spectral-rules.yml:
     method: generated
@@ -405,6 +535,30 @@ artifacts:
   security/statsig-trust-center.yml:
     method: searched
     evidence: declared in the artifact
+  security/statsig-vulnerability-disclosure.yml:
+    method: searched
+    evidence: declared in the artifact
+  skills/_index.yml:
+    method: searched
+    evidence: declared in the artifact
   vocabulary/statsig-vocabulary.yml:
+    method: unknown
+    evidence: no authorship recorded
+  well-known/statsig-oauth-authorization-server.json:
+    method: unknown
+    evidence: no authorship recorded
+  well-known/statsig-oauth-protected-resource-v1-mcp.json:
+    method: unknown
+    evidence: no authorship recorded
+  well-known/statsig-oauth-protected-resource.json:
+    method: unknown
+    evidence: no authorship recorded
+  well-known/statsig-statsigapi-oauth-authorization-server.json:
+    method: unknown
+    evidence: no authorship recorded
+  well-known/statsig-statsigapi-oauth-protected-resource.json:
+    method: unknown
+    evidence: no authorship recorded
+  well-known/statsig-well-known.yml:
     method: unknown
     evidence: no authorship recorded
