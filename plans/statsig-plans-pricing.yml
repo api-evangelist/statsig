@@ -171,3 +171,45 @@ plans:
       - name: Volume Discounts
       - name: Custom Billing Terms
 maintainers: []
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - metered
+  - subscription
+  units:
+  - message
+  - period
+  - request
+  plans:
+  - name: Developer
+    access: freemium
+    model: free
+    model_how: derived
+    units:
+    - message
+    - other
+    - request
+    periods:
+    - month
+  - name: Pro
+    access: other
+    model: subscription
+    model_how: stated
+    units:
+    - message
+    - other
+    - period
+    - request
+    periods:
+    - month
+  - name: Enterprise
+    access: enterprise
+    model: metered
+    model_how: derived
+    units:
+    - message
+    - other
+    periods:
+    - month
