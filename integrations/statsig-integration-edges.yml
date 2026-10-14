@@ -2,6 +2,10 @@ generated: '2026-10-13'
 method: searched
 checked:
 - https://azuremarketplace.microsoft.com/
+- https://docs.mparticle.com/integrations/statsig/event/
+- https://fivetran.com/docs/activations/destinations/available-destinations/statsig
+- https://hightouch.com/docs/destinations/statsig
+- https://www.twilio.com/docs/segment/connections/destinations/catalog/statsig
 marketplace_apps: []
 edges:
 - partner_name: Microsoft Azure Marketplace
@@ -19,3 +23,110 @@ edges:
   seller_name: Statsig, Inc
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
+- partner_name: Twilio Segment
+  partner: segment
+  partner_match: aggregator
+  marketplace: coverage
+  channel: partner-built
+  direction: partner-built
+  type: coverage
+  relationship: connector-coverage
+  evidence: https://www.twilio.com/docs/segment/connections/destinations/catalog/statsig
+  coverage_role:
+  - destination
+  - source
+  cdp_signals:
+    destination:
+      catalog_entries:
+      - statsig
+      status: PUBLIC
+      partner_owned: true
+      connection_modes:
+      - cloud:mobile
+      - cloud:server
+      - cloud:web
+      accepted_methods:
+      - Alias
+      - Group
+      - Identify
+      - Page
+      - Track
+    source:
+      catalog_entries:
+      - statsig
+  detected_by: sweep-cdp.py
+  first_seen: '2026-10-14'
+- partner_name: mParticle
+  partner: mparticle
+  partner_match: aggregator
+  marketplace: coverage
+  channel: partner-built
+  direction: partner-built
+  type: coverage
+  relationship: connector-coverage
+  evidence: https://docs.mparticle.com/integrations/statsig/event/
+  coverage_role:
+  - destination
+  - source
+  cdp_signals:
+    destination:
+      catalog_entries:
+      - statsig
+      integration_types:
+      - event
+    source:
+      catalog_entries:
+      - statsig
+      integration_types:
+      - feed
+  detected_by: sweep-cdp.py
+  first_seen: '2026-10-14'
+- partner_name: Hightouch
+  partner: hightouch
+  partner_match: aggregator
+  marketplace: coverage
+  channel: partner-built
+  direction: partner-built
+  type: coverage
+  relationship: connector-coverage
+  evidence: https://hightouch.com/docs/destinations/statsig
+  coverage_role:
+  - destination
+  cdp_signals:
+    destination:
+      catalog_entries:
+      - statsig
+      status: released
+      sync_types:
+      - Events
+      - Segments
+      sync_modes:
+      - add
+      - insert
+      - remove
+  detected_by: sweep-cdp.py
+  first_seen: '2026-10-14'
+- partner_name: Census
+  partner: getcensus
+  partner_match: aggregator
+  marketplace: coverage
+  channel: partner-built
+  direction: partner-built
+  type: coverage
+  relationship: connector-coverage
+  evidence: https://fivetran.com/docs/activations/destinations/available-destinations/statsig
+  coverage_role:
+  - destination
+  cdp_signals:
+    destination:
+      catalog_entries:
+      - statsig
+      sync_behaviours:
+      - create only
+  detected_by: sweep-cdp.py
+  first_seen: '2026-10-14'
+source:
+- https://docs.mparticle.com/integrations/statsig/event/
+- https://fivetran.com/docs/activations/destinations/available-destinations/statsig
+- https://hightouch.com/docs/destinations/statsig
+- https://www.twilio.com/docs/segment/connections/destinations/catalog/statsig
