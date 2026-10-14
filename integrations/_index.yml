@@ -15,16 +15,40 @@
   relationship: distribution-channel
   status: not-a-workflow
   arazzo: null
+- slug: statsig-github-marketplace-actions
+  label: GitHub Marketplace (actions)
+  partner: github-actions
+  partner_name: GitHub Marketplace (actions)
+  type: marketplace
+  marketplace: github-actions
+  channel: partner-built
+  evidence: https://github.com/marketplace/actions/statsig-github-sdk
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: statsig-atlassian-marketplace
+  label: Atlassian Marketplace
+  partner: atlassian
+  partner_name: Atlassian Marketplace
+  type: marketplace
+  marketplace: atlassian
+  channel: partner-built
+  evidence: https://marketplace.atlassian.com/vendors/1220346/statsig
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
 - slug: statsig-twilio-segment
   label: Twilio Segment
   partner: segment
   partner_name: Twilio Segment
-  type: coverage
-  marketplace: coverage
+  type: marketplace
+  marketplace: segment-partner-destinations
   channel: partner-built
   evidence: https://www.twilio.com/docs/segment/connections/destinations/catalog/statsig
   source: edge
-  relationship: connector-coverage
+  relationship: platform-app
   status: not-a-workflow
   arazzo: null
 - slug: statsig-mparticle
@@ -63,26 +87,28 @@
   relationship: connector-coverage
   status: not-a-workflow
   arazzo: null
-- slug: statsig-github-marketplace-actions
-  label: GitHub Marketplace (actions)
-  partner: github-actions
-  partner_name: GitHub Marketplace (actions)
+- slug: statsig-datadog-own
+  label: Datadog (own)
+  partner: datadog
+  partner_name: Datadog (own)
+  category: Configuration & Deployment
   type: marketplace
-  marketplace: github-actions
+  marketplace: own
   channel: partner-built
-  evidence: https://github.com/marketplace/actions/statsig-github-sdk
+  evidence: https://github.com/DataDog/integrations-extras/tree/master/statsig
   source: edge
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
-- slug: statsig-atlassian-marketplace
-  label: Atlassian Marketplace
-  partner: atlassian
-  partner_name: Atlassian Marketplace
+- slug: statsig-okta-own
+  label: Okta (own)
+  partner: okta
+  partner_name: Okta (own)
+  category: Single Sign-On
   type: marketplace
-  marketplace: atlassian
+  marketplace: own
   channel: partner-built
-  evidence: https://marketplace.atlassian.com/vendors/1220346/statsig
+  evidence: https://www.okta.com/integrations/statsig/
   source: edge
   relationship: platform-app
   status: not-a-workflow

@@ -1,6 +1,7 @@
 generated: '2026-10-13'
 method: searched
 checked:
+- datadog/integrations/datadog-integration-edges.yml
 - https://azuremarketplace.microsoft.com/
 - https://docs.mparticle.com/integrations/statsig/event/
 - https://fivetran.com/docs/activations/destinations/available-destinations/statsig
@@ -8,6 +9,7 @@ checked:
 - https://hightouch.com/docs/destinations/statsig
 - https://marketplace.atlassian.com/
 - https://www.twilio.com/docs/segment/connections/destinations/catalog/statsig
+- okta/integrations/okta-integration-edges.yml
 marketplace_apps: []
 edges:
 - partner_name: Microsoft Azure Marketplace
@@ -25,14 +27,49 @@ edges:
   seller_name: Statsig, Inc
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
+- partner_name: GitHub Marketplace (actions)
+  partner: github-actions
+  partner_match: aggregator
+  type: marketplace
+  marketplace: github-actions
+  channel: partner-built
+  relationship: platform-app
+  direction: third-party
+  evidence: https://github.com/marketplace/actions/statsig-github-sdk
+  listing_count: 3
+  apps:
+  - Statsig Github SDK
+  - kubectl via eksctl
+  - Statsig Github Code References
+  publisher_name: Statsig
+  badges:
+  - Verified creator
+  detected_by: sweep-devtools.py
+  detected: '2026-10-14'
+- partner_name: Atlassian Marketplace
+  partner: atlassian
+  partner_match: aggregator
+  type: marketplace
+  marketplace: atlassian
+  channel: partner-built
+  relationship: platform-app
+  direction: third-party
+  evidence: https://marketplace.atlassian.com/vendors/1220346/statsig
+  listing_count: 2
+  apps:
+  - Statsig for Jira
+  - Statsig Progressive Delivery
+  publisher_name: Statsig
+  detected_by: sweep-devtools.py
+  detected: '2026-10-14'
 - partner_name: Twilio Segment
   partner: segment
   partner_match: aggregator
-  marketplace: coverage
+  marketplace: segment-partner-destinations
   channel: partner-built
-  direction: partner-built
-  type: coverage
-  relationship: connector-coverage
+  direction: third-party
+  type: marketplace
+  relationship: platform-app
   evidence: https://www.twilio.com/docs/segment/connections/destinations/catalog/statsig
   coverage_role:
   - destination
@@ -127,41 +164,45 @@ edges:
       - create only
   detected_by: sweep-cdp.py
   first_seen: '2026-10-14'
-- partner_name: GitHub Marketplace (actions)
-  partner: github-actions
-  partner_match: aggregator
+- partner_name: Datadog (own)
+  partner: datadog
+  partner_match: mirror
+  mirror_match: domain
   type: marketplace
-  marketplace: github-actions
-  channel: partner-built
   relationship: platform-app
   direction: third-party
-  evidence: https://github.com/marketplace/actions/statsig-github-sdk
-  listing_count: 3
+  channel: partner-built
+  marketplace: own
+  evidence: https://github.com/DataDog/integrations-extras/tree/master/statsig
+  mirror_of: datadog/integrations/datadog-integration-edges.yml
   apps:
-  - Statsig Github SDK
-  - kubectl via eksctl
-  - Statsig Github Code References
-  publisher_name: Statsig
-  badges:
-  - Verified creator
-  detected_by: sweep-devtools.py
-  detected: '2026-10-14'
-- partner_name: Atlassian Marketplace
-  partner: atlassian
-  partner_match: aggregator
-  type: marketplace
-  marketplace: atlassian
-  channel: partner-built
-  relationship: platform-app
-  direction: third-party
-  evidence: https://marketplace.atlassian.com/vendors/1220346/statsig
+  - Statsig
+  - Statsig - RUM
   listing_count: 2
-  apps:
-  - Statsig for Jira
-  - Statsig Progressive Delivery
-  publisher_name: Statsig
-  detected_by: sweep-devtools.py
   detected: '2026-10-14'
+  detected_by: mirror-platform-listings.py
+  category: Configuration & Deployment
+- partner_name: Okta (own)
+  partner: okta
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.okta.com/integrations/statsig/
+  mirror_of: okta/integrations/okta-integration-edges.yml
+  apps:
+  - Statsig
+  listing_count: 1
+  detected: '2026-10-14'
+  detected_by: mirror-platform-listings.py
+  category: Single Sign-On
+  badges:
+  - OKTA_VERIFIED
+  features:
+  - OIDC
 source:
 - https://docs.mparticle.com/integrations/statsig/event/
 - https://fivetran.com/docs/activations/destinations/available-destinations/statsig
