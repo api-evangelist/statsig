@@ -4,7 +4,9 @@ checked:
 - https://azuremarketplace.microsoft.com/
 - https://docs.mparticle.com/integrations/statsig/event/
 - https://fivetran.com/docs/activations/destinations/available-destinations/statsig
+- https://github.com/marketplace?type=actions
 - https://hightouch.com/docs/destinations/statsig
+- https://marketplace.atlassian.com/
 - https://www.twilio.com/docs/segment/connections/destinations/catalog/statsig
 marketplace_apps: []
 edges:
@@ -125,6 +127,41 @@ edges:
       - create only
   detected_by: sweep-cdp.py
   first_seen: '2026-10-14'
+- partner_name: GitHub Marketplace (actions)
+  partner: github-actions
+  partner_match: aggregator
+  type: marketplace
+  marketplace: github-actions
+  channel: partner-built
+  relationship: platform-app
+  direction: third-party
+  evidence: https://github.com/marketplace/actions/statsig-github-sdk
+  listing_count: 3
+  apps:
+  - Statsig Github SDK
+  - kubectl via eksctl
+  - Statsig Github Code References
+  publisher_name: Statsig
+  badges:
+  - Verified creator
+  detected_by: sweep-devtools.py
+  detected: '2026-10-14'
+- partner_name: Atlassian Marketplace
+  partner: atlassian
+  partner_match: aggregator
+  type: marketplace
+  marketplace: atlassian
+  channel: partner-built
+  relationship: platform-app
+  direction: third-party
+  evidence: https://marketplace.atlassian.com/vendors/1220346/statsig
+  listing_count: 2
+  apps:
+  - Statsig for Jira
+  - Statsig Progressive Delivery
+  publisher_name: Statsig
+  detected_by: sweep-devtools.py
+  detected: '2026-10-14'
 source:
 - https://docs.mparticle.com/integrations/statsig/event/
 - https://fivetran.com/docs/activations/destinations/available-destinations/statsig
