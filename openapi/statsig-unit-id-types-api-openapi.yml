@@ -389,6 +389,26 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    UnitIdTypeUpdateContractDto:
+      type: object
+      properties:
+        description:
+          type: string
+          description: The description of the unit id type.
+      required:
+      - description
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
     PaginationResponseWithMessage:
       type: object
       properties:
@@ -408,26 +428,6 @@ components:
       - message
       - data
       - pagination
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
-    UnitIdTypeUpdateContractDto:
-      type: object
-      properties:
-        description:
-          type: string
-          description: The description of the unit id type.
-      required:
-      - description
     UnitIdTypeContractDto:
       type: object
       properties:

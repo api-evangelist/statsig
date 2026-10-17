@@ -70,15 +70,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ChangeValidationUpdateMessageDto:
-      type: object
-      properties:
-        reviewID:
-          type: string
-        message:
-          type: string
-      required:
-      - reviewID
     ChangeValidationDto:
       type: object
       properties:
@@ -107,6 +98,15 @@ components:
       required:
       - reviewID
       - validated
+    ChangeValidationUpdateMessageDto:
+      type: object
+      properties:
+        reviewID:
+          type: string
+        message:
+          type: string
+      required:
+      - reviewID
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

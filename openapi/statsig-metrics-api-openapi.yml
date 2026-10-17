@@ -2963,33 +2963,44 @@ paths:
       operationId: getConsoleV1MetricsValues
       x-operation-id-source: derived
 components:
-  parameters:
-    Limit:
-      name: limit
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: Maximum number of items to return per page.
-    ApiVersion:
-      name: STATSIG-API-VERSION
-      in: header
-      required: false
-      schema:
-        type: string
-        default: '20240601'
-      description: The Console API version. Currently the only version is 20240601.
-    Page:
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-      description: Page number for paginated results.
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message indicating the resource was not found.
   schemas:
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses.
+      properties:
+        total:
+          type: integer
+          description: Total number of items available.
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+        hasMore:
+          type: boolean
+          description: Whether more pages are available.
     Metric:
       type: object
       description: A metric definition used in experiment analysis.
@@ -3014,489 +3025,81 @@ components:
           items:
             type: string
           description: Tags associated with the metric.
-    Pagination:
-      type: object
-      description: Pagination metadata for list responses.
-      properties:
-        total:
-          type: integer
-          description: Total number of items available.
-        page:
-          type: integer
-          description: Current page number.
-        limit:
-          type: integer
-          description: Number of items per page.
-        hasMore:
-          type: boolean
-          description: Whether more pages are available.
-    PaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
-    MetricValuesDto:
-      type: object
-      properties:
-        value:
-          type: number
-          description: Metric value for the given unit_type
-          format: double
-        unit_type:
-          type: string
-          description: 'Unit of the metric: stableID, userID, and other custom ids'
-        row_count:
-          type: number
-          description: Row count for imported metric, optional
-          format: double
-        numerator:
-          type: number
-          description: Numerator of a ratio metric, optional
-          format: double
-        denominator:
-          type: number
-          description: Denominator of a ratio metric, optional
-          format: double
-      required:
-      - value
-      - unit_type
-    MetricsUpdateContractDto:
+    MetricSourceCreationContractDto:
       type: object
       properties:
         name:
           type: string
-          description: The name of the metric, serving as its primary identifier.
-          example: metricName
+          description: The name of the source, serving as its primary identifier.
         description:
           type: string
-          description: A detailed description of the metric, providing insights into its purpose and application.
+          description: An optional description for the source, providing context and details about its purpose and usage.
         tags:
           type: array
           items:
             type: string
-          description: An array of tags associated with the metric, used for categorization and easier retrieval.
-        isVerified:
+          description: Optional array of tags to categorize the source, facilitating easier organization and retrieval.
+        sql:
+          type: string
+          description: The SQL query or statement used to extract data from the source.
+        timestampColumn:
+          type: string
+          description: The name of the column containing timestamp data for the source.
+        timestampAsDay:
           type: boolean
-          description: Flag to mark the metric as verified, ensuring it is deemed trustworthy within the organization.
-        isReadOnly:
-          type: boolean
-          description: Specifies if the metric definition can only be edited via the Console API, enhancing control over modifications.
-        isPermanent:
-          type: boolean
-          description: Determines if the metric is permanent, preventing it from being deleted or modified inadvertently.
-        warehouseNative:
-          type: object
-          properties:
-            aggregation:
-              type: string
-              enum:
-              - count
-              - sum
-              - mean
-              - daily_participation
-              - ratio
-              - funnel
-              - count_distinct
-              - percentile
-              - first_value
-              - latest_value
-              - retention
-              - max
-              - min
-              - composite
-              - ''
-              description: 'Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile┃first_value┃latest_value┃retention┃max┃min┃composite'
-            metricSourceName:
-              type: string
-              description: 'Deprecated: use `metricSources` instead. If provided, this will overwrite all metric sources. For Count, Sum, Mean, User Count aggregation types: the name of metric source'
-            criteria:
-              type: array
-              items:
-                description: Array of event criteria for defining filtering conditions in metrics analysis.
-                $ref: '#/components/schemas/MetricEventsCriteriaDto'
-              description: 'Deprecated: use `metricSources` instead. If provided with `metricSourceName`, this will overwrite all metric sources. Filtering criteria for the metric source'
-            metricSources:
-              type: array
-              items:
-                type: object
-                properties:
-                  metricSourceName:
-                    type: string
-                  criteria:
-                    type: array
-                    items:
-                      description: Array of event criteria for defining filtering conditions in metrics analysis.
-                      $ref: '#/components/schemas/MetricEventsCriteriaDto'
-                    description: Filtering criteria for the metric source
-                  valueColumn:
-                    type: string
-                required:
-                - metricSourceName
-                - criteria
-              description: List of metric sources for this metric.
-            waitForCohortWindow:
-              type: boolean
-            denominatorCriteria:
-              type: array
-              items:
-                description: Array of event criteria for defining filtering conditions in metrics analysis.
-                $ref: '#/components/schemas/MetricEventsCriteriaDto'
-              description: Filtering criteria for the denominator metric source for a ratio, or the start event for a retention metric if useSecondaryRetentionEvent is set
-            denominatorAggregation:
-              type: string
-              enum:
-              - count
-              - sum
-              - mean
-              - daily_participation
-              - ratio
-              - funnel
-              - count_distinct
-              - percentile
-              - first_value
-              - latest_value
-              - retention
-              - max
-              - min
-              - composite
-              - ''
-              description: 'Aggregation for the ratio denominator. Allowed: `count`┃`sum`┃`daily_participation`┃`count_distinct`┃`first_value`┃`latest_value`┃`max`┃`min`.'
-            denominatorCustomRollupEnd:
-              type: number
-              description: Custom end window for ratio denominator unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "denominatorCustomRollupMeasureInMinutes" flag.
-              format: double
-            denominatorCustomRollupStart:
-              type: number
-              description: Custom start window for ratio denominator unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "denominatorCustomRollupMeasureInMinutes" flag.
-              format: double
-            denominatorMetricSourceName:
-              type: string
-              description: Name of the metric source for the denominator of a ratio, or the start event for a retention metric if useSecondaryRetentionEvent is set
-            denominatorRollupTimeWindow:
-              type: string
-              description: 'Rollup-mode for ratio denominator unit count metrics. Allowed values: "daily" for daily participation rate, "max" for one-time event, "custom" for a custom attribution window'
-            denominatorValueColumn:
-              type: string
-              description: Column name for the denominator’s value.
-            funnelCalculationWindow:
-              type: integer
-              minimum: 0
-              description: Duration for counting funnel events in days.
-              format: int64
-            funnelCountDistinct:
-              type: string
-              enum:
-              - sessions
-              - users
-              description: 'Allowed: users┃sessions for distinct count method in funnel events.'
-            funnelEvents:
-              type: array
-              items:
-                type: object
-                properties:
-                  criteria:
-                    type: array
-                    items:
-                      description: Array of event criteria for defining filtering conditions in metrics analysis.
-                      $ref: '#/components/schemas/MetricEventsCriteriaDto'
-                    description: Optional array of criteria to filter the funnel events, defined by various types and conditions.
-                  metricSourceName:
-                    type: string
-                    description: Optional name of the metric source associated with the funnel event.
-                  name:
-                    type:
-                    - string
-                    - 'null'
-                    description: Optional step name for the funnel event, can be null if not specified.
-                  sessionIdentifierField:
-                    type:
-                    - string
-                    - 'null'
-                    description: Name of column which being used as session identifier. Funnel event with the same metric source
-              description: List of funnel events with associated criteria and identifiers.
-            funnelStartCriteria:
-              type: string
-              enum:
-              - start_event
-              - exposure
-              description: 'Allowed: start_event┃exposure to determine funnel start criteria.'
-            metricDimensionColumns:
-              type: array
-              items:
-                type: string
-              description: Specify metadata columns for breaking down metric analysis.
-            metricDimensionLimits:
-              type: array
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: Name of the metadata dimension to apply a breakdown limit.
-                  limit:
-                    type: integer
-                    minimum: 0
-                    maximum: 100
-                    description: Maximum number of values to retain for this dimension (0-100).
-                    example: 10
-                required:
-                - name
-                - limit
-              description: Per-dimension breakdown limits; values beyond the limit are grouped into OTHER.
-            metricBakeDays:
-              type: integer
-              minimum: 0
-              description: Number of days for metric baking; specify duration for analysis.
-              format: int64
-            loadingWindow:
-              type: integer
-              minimum: 0
-              description: Lookback window in days for loading metric data. Defaults to 90 days.
-              example: 90
-              format: int64
-            numeratorAggregation:
-              type: string
-              enum:
-              - count
-              - sum
-              - mean
-              - daily_participation
-              - ratio
-              - funnel
-              - count_distinct
-              - percentile
-              - first_value
-              - latest_value
-              - retention
-              - max
-              - min
-              - composite
-              - ''
-              description: 'Aggregation for the ratio numerator. Allowed: `count`┃`sum`┃`daily_participation`┃`count_distinct`┃`first_value`┃`latest_value`┃`max`┃`min`.'
-            valueColumn:
-              type: string
-              description: 'Deprecated: use `metricSources` instead. If provided with `metricSourceName`, this will overwrite all metric sources. Column name representing the metric’s value.'
-            valueThreshold:
-              type: number
-              description: Threshold value for filtering metrics.
-              format: double
-            allowNullRatioDenominator:
-              type: boolean
-              description: Include units which do not have a denominator. Only applicable to ratios.
-            funnelStrictOrdering:
-              type: boolean
-            funnelUseExposureAsFirstEvent:
-              type: boolean
-            funnelTimestampAllowanceMs:
-              type: number
-              format: double
-            funnelTimeToConvert:
-              type: boolean
-            winsorizationHigh:
-              type: number
-              maximum: 1
-              minimum: 0
-              description: High threshold for winsorization; must be between 0 and 1.
-              format: double
-            winsorizationLow:
-              type: number
-              maximum: 1
-              minimum: 0
-              description: Low threshold for winsorization; must be between 0 and 1.
-              format: double
-            winsorizationHighDenominator:
-              type: number
-              maximum: 1
-              minimum: 0
-              format: double
-            winsorizationLowDenominator:
-              type: number
-              maximum: 1
-              minimum: 0
-              format: double
-            cupedAttributionWindow:
-              type:
-              - integer
-              - 'null'
-              minimum: 0
-              description: Attribution window for CUPED adjustments in days.
-              format: int64
-            rollupTimeWindow:
-              type: string
-              description: 'Rollup-mode for unit count metrics. Allowed values: "daily" for daily participation rate, "max" for one-time event, "custom" for a custom attribution window'
-            customRollUpStart:
-              type: integer
-              minimum: 0
-              description: Custom start window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
-              format: int64
-            customRollUpEnd:
-              type: integer
-              minimum: 0
-              description: Custom end window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
-              format: int64
-            onlyIncludeUsersWithConversionEvent:
-              type: boolean
-              description: Flag to include only users with a conversion event in the metric.
-            denominatorCustomRollupMeasureInMinutes:
-              type: boolean
-              description: Flag to measure the denominator custom rollup window in minutes instead of days.
-            customRollupMeasureInMinutes:
-              type: boolean
-              description: Flag to measure the custom rollup window in minutes instead of days.
-            percentile:
-              type: number
-              maximum: 0.999
-              minimum: 0.001
-              description: Percentile value for statistical calculations.
-              format: double
-            useLogTransform:
-              type: boolean
-              description: Use log transform for the metric.
-            useSecondaryRetentionEvent:
-              type: boolean
-              description: Use a different start and completion event for retention calculations.
-            retentionEnd:
-              type: integer
-              description: Retention end in days.
-              format: int64
-              exclusiveMinimum: 0
-            retentionLength:
-              type: integer
-              description: Retention lookback window in days.
-              format: int64
-              exclusiveMinimum: 0
-            logTransformBase:
-              type:
-              - number
-              - 'null'
-              description: Log transform base to be used for the metric.
-              format: double
-              exclusiveMinimum: 0
-            cap:
-              type: number
-              description: Maximum cap for metric values.
-              format: double
-            surrogateMetricMSE:
-              type:
-              - number
-              - 'null'
-              description: Mean Squared Error for surrogate metric.
-              format: double
-            components:
-              type: array
-              items:
-                type: object
-                properties:
-                  operator:
-                    type: string
-                    enum:
-                    - +
-                    - '-'
-                    description: Operator for this component
-                  aggregation:
-                    type: string
-                    enum:
-                    - count
-                    - sum
-                    - mean
-                    - daily_participation
-                    - ratio
-                    - funnel
-                    - count_distinct
-                    - percentile
-                    - first_value
-                    - latest_value
-                    - retention
-                    - max
-                    - min
-                    - composite
-                    - ''
-                    description: Aggregation type for this component
-                  metricSourceName:
-                    type: string
-                    description: Metric source name for this component
-                  name:
-                    type:
-                    - string
-                    - 'null'
-                    description: Optional name for this component
-                  criteria:
-                    type: array
-                    items:
-                      description: Array of event criteria for defining filtering conditions in metrics analysis.
-                      $ref: '#/components/schemas/MetricEventsCriteriaDto'
-                    description: Optional filtering criteria for this component
-                  valueColumn:
-                    type: string
-                    description: Value column for this component
-                required:
-                - operator
-              description: Components for composite metrics, defining each component of the formula
-          description: Optional configuration for metrics utilizing Warehouse Native features, defining specific behaviors and criteria.
-        unitTypes:
+          description: Indicates whether the timestamp should be treated as a day-level granularity.
+        idTypeMapping:
           type: array
           items:
-            type: string
-          description: Array of unit types that the metric can utilize, such as stableID, userID, or other custom identifiers.
-        percentile:
-          type: number
-          minimum: 0.001
-          maximum: 0.999
-          description: Updated percentile value for percentile metrics.
-          example: 0.95
-          format: double
-        scheduledReloadHour:
-          type:
-          - integer
-          - 'null'
-          minimum: 0
-          maximum: 23
-          description: Warehouse Native only - UTC hour at which to run scheduled metric reloads.
-          format: int64
-        scheduledReloadDays:
-          type:
-          - array
-          - 'null'
-          items:
-            type: integer
-            minimum: 0
-            maximum: 6
-          description: Warehouse Native only - days on which to run scheduled metric reloads from 0 to 6, 0 meaning Sunday. Null to run reloads on all days.
-        team:
-          type:
-          - string
-          - 'null'
-          description: Optional field indicating the team name responsible for the metric, aiding in accountability and management.
-        teamID:
-          type:
-          - string
-          - 'null'
-          description: Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
-        directionality:
-          default: increase
+            type: object
+            properties:
+              statsigUnitID:
+                type: string
+                description: The identifier mapping for Statsig units.
+              column:
+                type: string
+                description: The corresponding column name in the source that relates to the Statsig unit ID.
+            required:
+            - statsigUnitID
+            - column
+          description: Array defining the mapping between Statsig unit IDs and their respective source columns.
+        sourceType:
           type: string
           enum:
-          - increase
-          - decrease
-          description: Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
-          example: increase
-        dryRun:
+          - table
+          - query
+          description: The type of source, indicating whether it is a database table or a custom query.
+        tableName:
+          type: string
+          description: The name of the database table if the source type is "table".
+        datePartitionColumn:
+          type: string
+          description: The name of the date partition column if the source type is "table". Can be undefined.
+        customFieldMapping:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                description: The identifier for the custom field mapping.
+              formula:
+                type: string
+                description: The formula or expression used to compute the custom field value.
+            required:
+            - key
+            - formula
+          description: Optional array defining mappings for custom fields using specific formulas.
+        isReadOnly:
           type: boolean
-          description: Skips persisting updates to the metric (used to validate that inputs are correct)
+          description: Specifies if the source can only be edited via the Console API.
+        isVerified:
+          type: boolean
+          description: Marks the metric source as verified, indicating trustworthiness within the organization.
+          example: false
+        disableCURE:
+          type: boolean
+          description: Disable CURE for all metrics built from this metric source
         owner:
           type:
           - object
@@ -3523,6 +3126,37 @@ components:
             ownerType: USER
             ownerName: John Doe
             ownerEmail: owner123@test.com
+        team:
+          type:
+          - string
+          - 'null'
+          description: Optional field indicating the team name responsible for the metric source, aiding in accountability and management.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: Optional field indicating the team ID responsible for the metric source, aiding in accountability and management.
+        dryRun:
+          type: boolean
+          description: Skips persisting the source (used to validate that inputs are correct)
+        skip_validation:
+          type: boolean
+          description: Skips running SQL validation for the source. Requires all_columns and column_types when true. Availability is gated.
+        all_columns:
+          type: array
+          items:
+            type: string
+          description: Column names to persist when skip_validation is true. Optional otherwise.
+        column_types:
+          type: array
+          items:
+            type: string
+          description: Column types aligned with all_columns when skip_validation is true. Optional otherwise.
+      required:
+      - name
+      - sql
+      - timestampColumn
+      - idTypeMapping
     ExternalExperimentDto:
       type: object
       properties:
@@ -4858,45 +4492,6 @@ components:
       - isStale
       - permalink
       - powerAnalyses
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
-    PaginationResponseMetadataDto:
-      type: object
-      properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
-          type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
     MetricValueDto:
       type: object
       properties:
@@ -4926,151 +4521,33 @@ components:
       - metricName
       - metricType
       - displayName
-    MetricSourceContractDto:
+    SingleDataResponse:
       type: object
       properties:
-        name:
+        message:
           type: string
-          description: The name of the source, serving as its primary identifier.
-        description:
-          type: string
-          description: A detailed description of the source, providing context and usage information.
-        tags:
-          type: array
-          items:
-            type: string
-          description: Optional tags for categorizing the source and improving searchability.
-        sql:
-          type: string
-          description: The SQL query or statement used to extract data from the source.
-        timestampColumn:
-          type: string
-          description: The name of the column containing timestamp data for the source.
-        timestampAsDay:
-          type: boolean
-          description: Indicates whether the timestamp should be treated as a day-level granularity.
-        idTypeMapping:
-          type: array
-          items:
-            type: object
-            properties:
-              statsigUnitID:
-                type: string
-                description: The identifier mapping for Statsig units.
-              column:
-                type: string
-                description: The corresponding column name in the source that relates to the Statsig unit ID.
-            required:
-            - statsigUnitID
-            - column
-          description: Array defining the mapping between Statsig unit IDs and their respective source columns.
-        sourceType:
-          type: string
-          enum:
-          - table
-          - query
-          description: The type of source, indicating whether it is a database table or a custom query.
-        tableName:
-          type: string
-          description: The name of the database table if the source type is "table".
-        datePartitionColumn:
-          type: string
-          description: The name of the date partition column if the source type is "table". Can be undefined.
-        customFieldMapping:
-          type: array
-          items:
-            type: object
-            properties:
-              key:
-                type: string
-                description: The identifier for the custom field mapping.
-              formula:
-                type: string
-                description: The formula or expression used to compute the custom field value.
-            required:
-            - key
-            - formula
-          description: Optional array defining mappings for custom fields using specific formulas.
-        isReadOnly:
-          type: boolean
-          description: Specifies if the source can only be edited via the Console API.
-        isVerified:
-          type: boolean
-          description: Marks the metric source as verified, indicating trustworthiness within the organization.
-          example: false
-        disableCURE:
-          type: boolean
-          description: Disable CURE for all metrics built from this metric source
-        owner:
-          type:
-          - object
-          - 'null'
-          properties:
-            ownerID:
-              type: string
-              description: ID of the owner
-              example: abc123
-            ownerType:
-              type: string
-              description: Type of the owner (e.g., SDK_KEY or USER)
-              example: USER
-            ownerName:
-              type: string
-              description: The name of the owner. This field is optional.
-              example: John Doe
-            ownerEmail:
-              type: string
-              description: The email of the owner. This field is optional.
-          description: Schema for owner data including ID, type, name.
-          example:
-            ownerID: user123
-            ownerType: USER
-            ownerName: John Doe
-            ownerEmail: owner123@test.com
-        team:
-          type:
-          - string
-          - 'null'
-          description: Optional field indicating the team name responsible for the metric source, aiding in accountability and management.
-        teamID:
-          type:
-          - string
-          - 'null'
-          description: Optional field indicating the team ID responsible for the metric source, aiding in accountability and management.
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
       required:
-      - name
-      - description
-      - sql
-      - timestampColumn
-      - idTypeMapping
-    MetricSQLDto:
-      type: array
-      items:
-        type: object
-        properties:
-          idType:
-            type: string
-            description: The ID type the SQL is being generated for
-          sql:
-            type: string
-            description: The SQL query for the metric
-        required:
-        - idType
-        - sql
-    MetricSourceCreationContractDto:
+      - message
+      - data
+    MetricSourceUpdateContractDto:
       type: object
       properties:
         name:
+          readOnly: true
           type: string
-          description: The name of the source, serving as its primary identifier.
+          description: The name of the source cannot be changed in this update, ensuring the identity remains consistent.
         description:
           type: string
-          description: An optional description for the source, providing context and details about its purpose and usage.
+          description: An optional updated description for the source, providing additional context or changes.
         tags:
           type: array
           items:
             type: string
-          description: Optional array of tags to categorize the source, facilitating easier organization and retrieval.
+          description: Optional array of tags for categorizing the source, allowing for updates to its categorization.
         sql:
           type: string
           description: The SQL query or statement used to extract data from the source.
@@ -5170,7 +4647,7 @@ components:
           description: Optional field indicating the team ID responsible for the metric source, aiding in accountability and management.
         dryRun:
           type: boolean
-          description: Skips persisting the source (used to validate that inputs are correct)
+          description: Skips persisting updates to the source (used to validate that inputs are correct)
         skip_validation:
           type: boolean
           description: Skips running SQL validation for the source. Requires all_columns and column_types when true. Availability is gated.
@@ -5185,538 +4662,9 @@ components:
             type: string
           description: Column types aligned with all_columns when skip_validation is true. Optional otherwise.
       required:
-      - name
       - sql
       - timestampColumn
       - idTypeMapping
-    MetricCreationContractDto:
-      type: object
-      properties:
-        name:
-          type: string
-          maxLength: 200
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_.\-()/ %:]*$
-          description: The name of the new metric, which identifies it within the system.
-          example: metricName
-        type:
-          type: string
-          enum:
-          - ratio
-          - mean
-          - event_count_custom
-          - event_user
-          - funnel
-          - composite
-          - composite_sum
-          - sum
-          - user_warehouse
-          - percentile
-          - latest_value
-          example: sum
-        isVerified:
-          type: boolean
-          description: Marks the metric as verified for internal trustworthiness.
-          example: false
-        isReadOnly:
-          type: boolean
-          description: Set to true to make the metric definition editable only from the Console API.
-          example: false
-        unitTypes:
-          type: array
-          items:
-            type: string
-          description: Array of unit types associated with the metric, such as stableID or userID.
-          example:
-          - stableID
-          - userID
-        metricEvents:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the metric event.
-              type:
-                type:
-                - string
-                - 'null'
-                enum:
-                - count
-                - count_distinct
-                - value
-                - metadata
-                description: 'Aggregation type for the metric event. Allowed values: count, count_distinct, value, metadata. For ratio metrics, only count and count_distinct are valid. Do not confuse with criteria[].type, which is a filter condition type.'
-              metadataKey:
-                type: string
-                description: The key for associated metadata, if applicable.
-              criteria:
-                type: array
-                items:
-                  description: Array of event criteria for defining filtering conditions in metrics analysis.
-                  $ref: '#/components/schemas/MetricEventsCriteriaDto'
-                description: Filtering criteria for the metric event, including conditions and values to refine the event data.
-            required:
-            - name
-          description: An array of event definitions used to compute the metric. For ratio metrics, each event must use count or count_distinct aggregation.
-          example:
-          - name: event1
-            type: value
-        metricComponentMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              type:
-                type: string
-            required:
-            - name
-            - type
-          description: List of input metrics used to calculate the new metric for composite types.
-          example: []
-        description:
-          type: string
-          maxLength: 1000
-          description: A description of the new metric, providing context and purpose.
-        directionality:
-          default: increase
-          type: string
-          enum:
-          - increase
-          - decrease
-          description: Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
-          example: increase
-        tags:
-          oneOf:
-          - type: array
-            items:
-              type: string
-          - type: string
-          description: Tags associated with the metric for categorization and searchability.
-          example:
-          - tag1
-          - tag2
-        isPermanent:
-          type: boolean
-          description: Indicates whether the metric is permanent and should not be deleted.
-          example: false
-        rollupTimeWindow:
-          type: string
-          description: Time window for the metric rollup. Specify "custom" for a customized time window.
-          example: custom
-        customRollUpStart:
-          type: number
-          description: Custom time window start date in days since exposure.
-          example: 1
-          format: double
-        customRollUpEnd:
-          type: number
-          description: Custom time window end date in days since exposure.
-          example: 1
-          format: double
-        percentile:
-          type: number
-          minimum: 0.001
-          maximum: 0.999
-          description: Percentile value for percentile metrics.
-          example: 0.95
-          format: double
-        funnelEventList:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the funnel event used in the metric.
-                example: event1
-              type:
-                type: string
-                enum:
-                - event_dau
-                - event_user
-                - event_count
-                - event_count_custom
-                description: The type of funnel event, specifying how the event is tracked.
-                example: event_dau
-            required:
-            - name
-            - type
-          description: List of events used to create funnel metrics.
-        funnelCountDistinct:
-          type: string
-          enum:
-          - events
-          - users
-          description: Specifies whether to count events or distinct users for the funnel metric.
-        warehouseNative:
-          type: object
-          properties:
-            aggregation:
-              type: string
-              enum:
-              - count
-              - sum
-              - mean
-              - daily_participation
-              - ratio
-              - funnel
-              - count_distinct
-              - percentile
-              - first_value
-              - latest_value
-              - retention
-              - max
-              - min
-              - composite
-              - ''
-              description: 'Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile┃first_value┃latest_value┃retention┃max┃min┃composite'
-            metricSourceName:
-              type: string
-              description: 'Deprecated: use `metricSources` instead. If provided, this will overwrite all metric sources. For Count, Sum, Mean, User Count aggregation types: the name of metric source'
-            criteria:
-              type: array
-              items:
-                description: Array of event criteria for defining filtering conditions in metrics analysis.
-                $ref: '#/components/schemas/MetricEventsCriteriaDto'
-              description: 'Deprecated: use `metricSources` instead. If provided with `metricSourceName`, this will overwrite all metric sources. Filtering criteria for the metric source'
-            metricSources:
-              type: array
-              items:
-                type: object
-                properties:
-                  metricSourceName:
-                    type: string
-                  criteria:
-                    type: array
-                    items:
-                      description: Array of event criteria for defining filtering conditions in metrics analysis.
-                      $ref: '#/components/schemas/MetricEventsCriteriaDto'
-                    description: Filtering criteria for the metric source
-                  valueColumn:
-                    type: string
-                required:
-                - metricSourceName
-                - criteria
-              description: List of metric sources for this metric.
-            waitForCohortWindow:
-              type: boolean
-            denominatorCriteria:
-              type: array
-              items:
-                description: Array of event criteria for defining filtering conditions in metrics analysis.
-                $ref: '#/components/schemas/MetricEventsCriteriaDto'
-              description: Filtering criteria for the denominator metric source for a ratio, or the start event for a retention metric if useSecondaryRetentionEvent is set
-            denominatorAggregation:
-              type: string
-              enum:
-              - count
-              - sum
-              - mean
-              - daily_participation
-              - ratio
-              - funnel
-              - count_distinct
-              - percentile
-              - first_value
-              - latest_value
-              - retention
-              - max
-              - min
-              - composite
-              - ''
-              description: 'Aggregation for the ratio denominator. Allowed: `count`┃`sum`┃`daily_participation`┃`count_distinct`┃`first_value`┃`latest_value`┃`max`┃`min`.'
-            denominatorCustomRollupEnd:
-              type: number
-              description: Custom end window for ratio denominator unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "denominatorCustomRollupMeasureInMinutes" flag.
-              format: double
-            denominatorCustomRollupStart:
-              type: number
-              description: Custom start window for ratio denominator unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "denominatorCustomRollupMeasureInMinutes" flag.
-              format: double
-            denominatorMetricSourceName:
-              type: string
-              description: Name of the metric source for the denominator of a ratio, or the start event for a retention metric if useSecondaryRetentionEvent is set
-            denominatorRollupTimeWindow:
-              type: string
-              description: 'Rollup-mode for ratio denominator unit count metrics. Allowed values: "daily" for daily participation rate, "max" for one-time event, "custom" for a custom attribution window'
-            denominatorValueColumn:
-              type: string
-              description: Column name for the denominator’s value.
-            funnelCalculationWindow:
-              type: integer
-              minimum: 0
-              description: Duration for counting funnel events in days.
-              format: int64
-            funnelCountDistinct:
-              type: string
-              enum:
-              - sessions
-              - users
-              description: 'Allowed: users┃sessions for distinct count method in funnel events.'
-            funnelEvents:
-              type: array
-              items:
-                type: object
-                properties:
-                  criteria:
-                    type: array
-                    items:
-                      description: Array of event criteria for defining filtering conditions in metrics analysis.
-                      $ref: '#/components/schemas/MetricEventsCriteriaDto'
-                    description: Optional array of criteria to filter the funnel events, defined by various types and conditions.
-                  metricSourceName:
-                    type: string
-                    description: Optional name of the metric source associated with the funnel event.
-                  name:
-                    type:
-                    - string
-                    - 'null'
-                    description: Optional step name for the funnel event, can be null if not specified.
-                  sessionIdentifierField:
-                    type:
-                    - string
-                    - 'null'
-                    description: Name of column which being used as session identifier. Funnel event with the same metric source
-              description: List of funnel events with associated criteria and identifiers.
-            funnelStartCriteria:
-              type: string
-              enum:
-              - start_event
-              - exposure
-              description: 'Allowed: start_event┃exposure to determine funnel start criteria.'
-            metricDimensionColumns:
-              type: array
-              items:
-                type: string
-              description: Specify metadata columns for breaking down metric analysis.
-            metricDimensionLimits:
-              type: array
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: Name of the metadata dimension to apply a breakdown limit.
-                  limit:
-                    type: integer
-                    minimum: 0
-                    maximum: 100
-                    description: Maximum number of values to retain for this dimension (0-100).
-                    example: 10
-                required:
-                - name
-                - limit
-              description: Per-dimension breakdown limits; values beyond the limit are grouped into OTHER.
-            metricBakeDays:
-              type: integer
-              minimum: 0
-              description: Number of days for metric baking; specify duration for analysis.
-              format: int64
-            loadingWindow:
-              type: integer
-              minimum: 0
-              description: Lookback window in days for loading metric data. Defaults to 90 days.
-              example: 90
-              format: int64
-            numeratorAggregation:
-              type: string
-              enum:
-              - count
-              - sum
-              - mean
-              - daily_participation
-              - ratio
-              - funnel
-              - count_distinct
-              - percentile
-              - first_value
-              - latest_value
-              - retention
-              - max
-              - min
-              - composite
-              - ''
-              description: 'Aggregation for the ratio numerator. Allowed: `count`┃`sum`┃`daily_participation`┃`count_distinct`┃`first_value`┃`latest_value`┃`max`┃`min`.'
-            valueColumn:
-              type: string
-              description: 'Deprecated: use `metricSources` instead. If provided with `metricSourceName`, this will overwrite all metric sources. Column name representing the metric’s value.'
-            valueThreshold:
-              type: number
-              description: Threshold value for filtering metrics.
-              format: double
-            allowNullRatioDenominator:
-              type: boolean
-              description: Include units which do not have a denominator. Only applicable to ratios.
-            funnelStrictOrdering:
-              type: boolean
-            funnelUseExposureAsFirstEvent:
-              type: boolean
-            funnelTimestampAllowanceMs:
-              type: number
-              format: double
-            funnelTimeToConvert:
-              type: boolean
-            winsorizationHigh:
-              type: number
-              maximum: 1
-              minimum: 0
-              description: High threshold for winsorization; must be between 0 and 1.
-              format: double
-            winsorizationLow:
-              type: number
-              maximum: 1
-              minimum: 0
-              description: Low threshold for winsorization; must be between 0 and 1.
-              format: double
-            winsorizationHighDenominator:
-              type: number
-              maximum: 1
-              minimum: 0
-              format: double
-            winsorizationLowDenominator:
-              type: number
-              maximum: 1
-              minimum: 0
-              format: double
-            cupedAttributionWindow:
-              type:
-              - integer
-              - 'null'
-              minimum: 0
-              description: Attribution window for CUPED adjustments in days.
-              format: int64
-            rollupTimeWindow:
-              type: string
-              description: 'Rollup-mode for unit count metrics. Allowed values: "daily" for daily participation rate, "max" for one-time event, "custom" for a custom attribution window'
-            customRollUpStart:
-              type: integer
-              minimum: 0
-              description: Custom start window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
-              format: int64
-            customRollUpEnd:
-              type: integer
-              minimum: 0
-              description: Custom end window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
-              format: int64
-            onlyIncludeUsersWithConversionEvent:
-              type: boolean
-              description: Flag to include only users with a conversion event in the metric.
-            denominatorCustomRollupMeasureInMinutes:
-              type: boolean
-              description: Flag to measure the denominator custom rollup window in minutes instead of days.
-            customRollupMeasureInMinutes:
-              type: boolean
-              description: Flag to measure the custom rollup window in minutes instead of days.
-            percentile:
-              type: number
-              maximum: 0.999
-              minimum: 0.001
-              description: Percentile value for statistical calculations.
-              format: double
-            useLogTransform:
-              type: boolean
-              description: Use log transform for the metric.
-            useSecondaryRetentionEvent:
-              type: boolean
-              description: Use a different start and completion event for retention calculations.
-            retentionEnd:
-              type: integer
-              description: Retention end in days.
-              format: int64
-              exclusiveMinimum: 0
-            retentionLength:
-              type: integer
-              description: Retention lookback window in days.
-              format: int64
-              exclusiveMinimum: 0
-            logTransformBase:
-              type:
-              - number
-              - 'null'
-              description: Log transform base to be used for the metric.
-              format: double
-              exclusiveMinimum: 0
-            cap:
-              type: number
-              description: Maximum cap for metric values.
-              format: double
-            surrogateMetricMSE:
-              type:
-              - number
-              - 'null'
-              description: Mean Squared Error for surrogate metric.
-              format: double
-            components:
-              type: array
-              items:
-                type: object
-                properties:
-                  operator:
-                    type: string
-                    enum:
-                    - +
-                    - '-'
-                    description: Operator for this component
-                  aggregation:
-                    type: string
-                    enum:
-                    - count
-                    - sum
-                    - mean
-                    - daily_participation
-                    - ratio
-                    - funnel
-                    - count_distinct
-                    - percentile
-                    - first_value
-                    - latest_value
-                    - retention
-                    - max
-                    - min
-                    - composite
-                    - ''
-                    description: Aggregation type for this component
-                  metricSourceName:
-                    type: string
-                    description: Metric source name for this component
-                  name:
-                    type:
-                    - string
-                    - 'null'
-                    description: Optional name for this component
-                  criteria:
-                    type: array
-                    items:
-                      description: Array of event criteria for defining filtering conditions in metrics analysis.
-                      $ref: '#/components/schemas/MetricEventsCriteriaDto'
-                    description: Optional filtering criteria for this component
-                  valueColumn:
-                    type: string
-                    description: Value column for this component
-                required:
-                - operator
-              description: Components for composite metrics, defining each component of the formula
-          description: Defines warehouse native metrics for advanced configurations.
-        team:
-          type:
-          - string
-          - 'null'
-          description: The team associated with the metric, applicable for enterprise environments.
-        teamID:
-          type:
-          - string
-          - 'null'
-          description: The team ID associated with the metric, applicable for enterprise environments.
-        dryRun:
-          type: boolean
-          description: Skips persisting the metric (used to validate that inputs are correct)
-      required:
-      - name
-      - type
     ExternalMetricDefinitionContractDto:
       type: object
       properties:
@@ -6365,6 +5313,20 @@ components:
       - id
       - lineage
       - permalink
+    MetricSQLDto:
+      type: array
+      items:
+        type: object
+        properties:
+          idType:
+            type: string
+            description: The ID type the SQL is being generated for
+          sql:
+            type: string
+            description: The SQL query for the metric
+        required:
+        - idType
+        - sql
     MetricEventsCriteriaDto:
       type: object
       properties:
@@ -6413,21 +5375,1068 @@ components:
       - type
       - condition
       description: Array of event criteria for defining filtering conditions in metrics analysis.
-    MetricSourceUpdateContractDto:
+    MetricCreationContractDto:
       type: object
       properties:
         name:
-          readOnly: true
           type: string
-          description: The name of the source cannot be changed in this update, ensuring the identity remains consistent.
+          maxLength: 200
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_.\-()/ %:]*$
+          description: The name of the new metric, which identifies it within the system.
+          example: metricName
+        type:
+          type: string
+          enum:
+          - ratio
+          - mean
+          - event_count_custom
+          - event_user
+          - funnel
+          - composite
+          - composite_sum
+          - sum
+          - user_warehouse
+          - percentile
+          - latest_value
+          example: sum
+        isVerified:
+          type: boolean
+          description: Marks the metric as verified for internal trustworthiness.
+          example: false
+        isReadOnly:
+          type: boolean
+          description: Set to true to make the metric definition editable only from the Console API.
+          example: false
+        unitTypes:
+          type: array
+          items:
+            type: string
+          description: Array of unit types associated with the metric, such as stableID or userID.
+          example:
+          - stableID
+          - userID
+        metricEvents:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the metric event.
+              type:
+                type:
+                - string
+                - 'null'
+                enum:
+                - count
+                - count_distinct
+                - value
+                - metadata
+                description: 'Aggregation type for the metric event. Allowed values: count, count_distinct, value, metadata. For ratio metrics, only count and count_distinct are valid. Do not confuse with criteria[].type, which is a filter condition type.'
+              metadataKey:
+                type: string
+                description: The key for associated metadata, if applicable.
+              criteria:
+                type: array
+                items:
+                  description: Array of event criteria for defining filtering conditions in metrics analysis.
+                  $ref: '#/components/schemas/MetricEventsCriteriaDto'
+                description: Filtering criteria for the metric event, including conditions and values to refine the event data.
+            required:
+            - name
+          description: An array of event definitions used to compute the metric. For ratio metrics, each event must use count or count_distinct aggregation.
+          example:
+          - name: event1
+            type: value
+        metricComponentMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+            required:
+            - name
+            - type
+          description: List of input metrics used to calculate the new metric for composite types.
+          example: []
         description:
           type: string
-          description: An optional updated description for the source, providing additional context or changes.
+          maxLength: 1000
+          description: A description of the new metric, providing context and purpose.
+        directionality:
+          default: increase
+          type: string
+          enum:
+          - increase
+          - decrease
+          description: Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
+          example: increase
+        tags:
+          oneOf:
+          - type: array
+            items:
+              type: string
+          - type: string
+          description: Tags associated with the metric for categorization and searchability.
+          example:
+          - tag1
+          - tag2
+        isPermanent:
+          type: boolean
+          description: Indicates whether the metric is permanent and should not be deleted.
+          example: false
+        rollupTimeWindow:
+          type: string
+          description: Time window for the metric rollup. Specify "custom" for a customized time window.
+          example: custom
+        customRollUpStart:
+          type: number
+          description: Custom time window start date in days since exposure.
+          example: 1
+          format: double
+        customRollUpEnd:
+          type: number
+          description: Custom time window end date in days since exposure.
+          example: 1
+          format: double
+        percentile:
+          type: number
+          minimum: 0.001
+          maximum: 0.999
+          description: Percentile value for percentile metrics.
+          example: 0.95
+          format: double
+        funnelEventList:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the funnel event used in the metric.
+                example: event1
+              type:
+                type: string
+                enum:
+                - event_dau
+                - event_user
+                - event_count
+                - event_count_custom
+                description: The type of funnel event, specifying how the event is tracked.
+                example: event_dau
+            required:
+            - name
+            - type
+          description: List of events used to create funnel metrics.
+        funnelCountDistinct:
+          type: string
+          enum:
+          - events
+          - users
+          description: Specifies whether to count events or distinct users for the funnel metric.
+        warehouseNative:
+          type: object
+          properties:
+            aggregation:
+              type: string
+              enum:
+              - count
+              - sum
+              - mean
+              - daily_participation
+              - ratio
+              - funnel
+              - count_distinct
+              - percentile
+              - first_value
+              - latest_value
+              - retention
+              - max
+              - min
+              - composite
+              - ''
+              description: 'Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile┃first_value┃latest_value┃retention┃max┃min┃composite'
+            metricSourceName:
+              type: string
+              description: 'Deprecated: use `metricSources` instead. If provided, this will overwrite all metric sources. For Count, Sum, Mean, User Count aggregation types: the name of metric source'
+            criteria:
+              type: array
+              items:
+                description: Array of event criteria for defining filtering conditions in metrics analysis.
+                $ref: '#/components/schemas/MetricEventsCriteriaDto'
+              description: 'Deprecated: use `metricSources` instead. If provided with `metricSourceName`, this will overwrite all metric sources. Filtering criteria for the metric source'
+            metricSources:
+              type: array
+              items:
+                type: object
+                properties:
+                  metricSourceName:
+                    type: string
+                  criteria:
+                    type: array
+                    items:
+                      description: Array of event criteria for defining filtering conditions in metrics analysis.
+                      $ref: '#/components/schemas/MetricEventsCriteriaDto'
+                    description: Filtering criteria for the metric source
+                  valueColumn:
+                    type: string
+                required:
+                - metricSourceName
+                - criteria
+              description: List of metric sources for this metric.
+            waitForCohortWindow:
+              type: boolean
+            denominatorCriteria:
+              type: array
+              items:
+                description: Array of event criteria for defining filtering conditions in metrics analysis.
+                $ref: '#/components/schemas/MetricEventsCriteriaDto'
+              description: Filtering criteria for the denominator metric source for a ratio, or the start event for a retention metric if useSecondaryRetentionEvent is set
+            denominatorAggregation:
+              type: string
+              enum:
+              - count
+              - sum
+              - mean
+              - daily_participation
+              - ratio
+              - funnel
+              - count_distinct
+              - percentile
+              - first_value
+              - latest_value
+              - retention
+              - max
+              - min
+              - composite
+              - ''
+              description: 'Aggregation for the ratio denominator. Allowed: `count`┃`sum`┃`daily_participation`┃`count_distinct`┃`first_value`┃`latest_value`┃`max`┃`min`.'
+            denominatorCustomRollupEnd:
+              type: number
+              description: Custom end window for ratio denominator unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "denominatorCustomRollupMeasureInMinutes" flag.
+              format: double
+            denominatorCustomRollupStart:
+              type: number
+              description: Custom start window for ratio denominator unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "denominatorCustomRollupMeasureInMinutes" flag.
+              format: double
+            denominatorMetricSourceName:
+              type: string
+              description: Name of the metric source for the denominator of a ratio, or the start event for a retention metric if useSecondaryRetentionEvent is set
+            denominatorRollupTimeWindow:
+              type: string
+              description: 'Rollup-mode for ratio denominator unit count metrics. Allowed values: "daily" for daily participation rate, "max" for one-time event, "custom" for a custom attribution window'
+            denominatorValueColumn:
+              type: string
+              description: Column name for the denominator’s value.
+            funnelCalculationWindow:
+              type: integer
+              minimum: 0
+              description: Duration for counting funnel events in days.
+              format: int64
+            funnelCountDistinct:
+              type: string
+              enum:
+              - sessions
+              - users
+              description: 'Allowed: users┃sessions for distinct count method in funnel events.'
+            funnelEvents:
+              type: array
+              items:
+                type: object
+                properties:
+                  criteria:
+                    type: array
+                    items:
+                      description: Array of event criteria for defining filtering conditions in metrics analysis.
+                      $ref: '#/components/schemas/MetricEventsCriteriaDto'
+                    description: Optional array of criteria to filter the funnel events, defined by various types and conditions.
+                  metricSourceName:
+                    type: string
+                    description: Optional name of the metric source associated with the funnel event.
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                    description: Optional step name for the funnel event, can be null if not specified.
+                  sessionIdentifierField:
+                    type:
+                    - string
+                    - 'null'
+                    description: Name of column which being used as session identifier. Funnel event with the same metric source
+              description: List of funnel events with associated criteria and identifiers.
+            funnelStartCriteria:
+              type: string
+              enum:
+              - start_event
+              - exposure
+              description: 'Allowed: start_event┃exposure to determine funnel start criteria.'
+            metricDimensionColumns:
+              type: array
+              items:
+                type: string
+              description: Specify metadata columns for breaking down metric analysis.
+            metricDimensionLimits:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the metadata dimension to apply a breakdown limit.
+                  limit:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                    description: Maximum number of values to retain for this dimension (0-100).
+                    example: 10
+                required:
+                - name
+                - limit
+              description: Per-dimension breakdown limits; values beyond the limit are grouped into OTHER.
+            metricBakeDays:
+              type: integer
+              minimum: 0
+              description: Number of days for metric baking; specify duration for analysis.
+              format: int64
+            loadingWindow:
+              type: integer
+              minimum: 0
+              description: Lookback window in days for loading metric data. Defaults to 90 days.
+              example: 90
+              format: int64
+            numeratorAggregation:
+              type: string
+              enum:
+              - count
+              - sum
+              - mean
+              - daily_participation
+              - ratio
+              - funnel
+              - count_distinct
+              - percentile
+              - first_value
+              - latest_value
+              - retention
+              - max
+              - min
+              - composite
+              - ''
+              description: 'Aggregation for the ratio numerator. Allowed: `count`┃`sum`┃`daily_participation`┃`count_distinct`┃`first_value`┃`latest_value`┃`max`┃`min`.'
+            valueColumn:
+              type: string
+              description: 'Deprecated: use `metricSources` instead. If provided with `metricSourceName`, this will overwrite all metric sources. Column name representing the metric’s value.'
+            valueThreshold:
+              type: number
+              description: Threshold value for filtering metrics.
+              format: double
+            allowNullRatioDenominator:
+              type: boolean
+              description: Include units which do not have a denominator. Only applicable to ratios.
+            funnelStrictOrdering:
+              type: boolean
+            funnelUseExposureAsFirstEvent:
+              type: boolean
+            funnelTimestampAllowanceMs:
+              type: number
+              format: double
+            funnelTimeToConvert:
+              type: boolean
+            winsorizationHigh:
+              type: number
+              maximum: 1
+              minimum: 0
+              description: High threshold for winsorization; must be between 0 and 1.
+              format: double
+            winsorizationLow:
+              type: number
+              maximum: 1
+              minimum: 0
+              description: Low threshold for winsorization; must be between 0 and 1.
+              format: double
+            winsorizationHighDenominator:
+              type: number
+              maximum: 1
+              minimum: 0
+              format: double
+            winsorizationLowDenominator:
+              type: number
+              maximum: 1
+              minimum: 0
+              format: double
+            cupedAttributionWindow:
+              type:
+              - integer
+              - 'null'
+              minimum: 0
+              description: Attribution window for CUPED adjustments in days.
+              format: int64
+            rollupTimeWindow:
+              type: string
+              description: 'Rollup-mode for unit count metrics. Allowed values: "daily" for daily participation rate, "max" for one-time event, "custom" for a custom attribution window'
+            customRollUpStart:
+              type: integer
+              minimum: 0
+              description: Custom start window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
+              format: int64
+            customRollUpEnd:
+              type: integer
+              minimum: 0
+              description: Custom end window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
+              format: int64
+            onlyIncludeUsersWithConversionEvent:
+              type: boolean
+              description: Flag to include only users with a conversion event in the metric.
+            denominatorCustomRollupMeasureInMinutes:
+              type: boolean
+              description: Flag to measure the denominator custom rollup window in minutes instead of days.
+            customRollupMeasureInMinutes:
+              type: boolean
+              description: Flag to measure the custom rollup window in minutes instead of days.
+            percentile:
+              type: number
+              maximum: 0.999
+              minimum: 0.001
+              description: Percentile value for statistical calculations.
+              format: double
+            useLogTransform:
+              type: boolean
+              description: Use log transform for the metric.
+            useSecondaryRetentionEvent:
+              type: boolean
+              description: Use a different start and completion event for retention calculations.
+            retentionEnd:
+              type: integer
+              description: Retention end in days.
+              format: int64
+              exclusiveMinimum: 0
+            retentionLength:
+              type: integer
+              description: Retention lookback window in days.
+              format: int64
+              exclusiveMinimum: 0
+            logTransformBase:
+              type:
+              - number
+              - 'null'
+              description: Log transform base to be used for the metric.
+              format: double
+              exclusiveMinimum: 0
+            cap:
+              type: number
+              description: Maximum cap for metric values.
+              format: double
+            surrogateMetricMSE:
+              type:
+              - number
+              - 'null'
+              description: Mean Squared Error for surrogate metric.
+              format: double
+            components:
+              type: array
+              items:
+                type: object
+                properties:
+                  operator:
+                    type: string
+                    enum:
+                    - +
+                    - '-'
+                    description: Operator for this component
+                  aggregation:
+                    type: string
+                    enum:
+                    - count
+                    - sum
+                    - mean
+                    - daily_participation
+                    - ratio
+                    - funnel
+                    - count_distinct
+                    - percentile
+                    - first_value
+                    - latest_value
+                    - retention
+                    - max
+                    - min
+                    - composite
+                    - ''
+                    description: Aggregation type for this component
+                  metricSourceName:
+                    type: string
+                    description: Metric source name for this component
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                    description: Optional name for this component
+                  criteria:
+                    type: array
+                    items:
+                      description: Array of event criteria for defining filtering conditions in metrics analysis.
+                      $ref: '#/components/schemas/MetricEventsCriteriaDto'
+                    description: Optional filtering criteria for this component
+                  valueColumn:
+                    type: string
+                    description: Value column for this component
+                required:
+                - operator
+              description: Components for composite metrics, defining each component of the formula
+          description: Defines warehouse native metrics for advanced configurations.
+        team:
+          type:
+          - string
+          - 'null'
+          description: The team associated with the metric, applicable for enterprise environments.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: The team ID associated with the metric, applicable for enterprise environments.
+        dryRun:
+          type: boolean
+          description: Skips persisting the metric (used to validate that inputs are correct)
+      required:
+      - name
+      - type
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    MetricValuesDto:
+      type: object
+      properties:
+        value:
+          type: number
+          description: Metric value for the given unit_type
+          format: double
+        unit_type:
+          type: string
+          description: 'Unit of the metric: stableID, userID, and other custom ids'
+        row_count:
+          type: number
+          description: Row count for imported metric, optional
+          format: double
+        numerator:
+          type: number
+          description: Numerator of a ratio metric, optional
+          format: double
+        denominator:
+          type: number
+          description: Denominator of a ratio metric, optional
+          format: double
+      required:
+      - value
+      - unit_type
+    MetricsUpdateContractDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the metric, serving as its primary identifier.
+          example: metricName
+        description:
+          type: string
+          description: A detailed description of the metric, providing insights into its purpose and application.
         tags:
           type: array
           items:
             type: string
-          description: Optional array of tags for categorizing the source, allowing for updates to its categorization.
+          description: An array of tags associated with the metric, used for categorization and easier retrieval.
+        isVerified:
+          type: boolean
+          description: Flag to mark the metric as verified, ensuring it is deemed trustworthy within the organization.
+        isReadOnly:
+          type: boolean
+          description: Specifies if the metric definition can only be edited via the Console API, enhancing control over modifications.
+        isPermanent:
+          type: boolean
+          description: Determines if the metric is permanent, preventing it from being deleted or modified inadvertently.
+        warehouseNative:
+          type: object
+          properties:
+            aggregation:
+              type: string
+              enum:
+              - count
+              - sum
+              - mean
+              - daily_participation
+              - ratio
+              - funnel
+              - count_distinct
+              - percentile
+              - first_value
+              - latest_value
+              - retention
+              - max
+              - min
+              - composite
+              - ''
+              description: 'Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile┃first_value┃latest_value┃retention┃max┃min┃composite'
+            metricSourceName:
+              type: string
+              description: 'Deprecated: use `metricSources` instead. If provided, this will overwrite all metric sources. For Count, Sum, Mean, User Count aggregation types: the name of metric source'
+            criteria:
+              type: array
+              items:
+                description: Array of event criteria for defining filtering conditions in metrics analysis.
+                $ref: '#/components/schemas/MetricEventsCriteriaDto'
+              description: 'Deprecated: use `metricSources` instead. If provided with `metricSourceName`, this will overwrite all metric sources. Filtering criteria for the metric source'
+            metricSources:
+              type: array
+              items:
+                type: object
+                properties:
+                  metricSourceName:
+                    type: string
+                  criteria:
+                    type: array
+                    items:
+                      description: Array of event criteria for defining filtering conditions in metrics analysis.
+                      $ref: '#/components/schemas/MetricEventsCriteriaDto'
+                    description: Filtering criteria for the metric source
+                  valueColumn:
+                    type: string
+                required:
+                - metricSourceName
+                - criteria
+              description: List of metric sources for this metric.
+            waitForCohortWindow:
+              type: boolean
+            denominatorCriteria:
+              type: array
+              items:
+                description: Array of event criteria for defining filtering conditions in metrics analysis.
+                $ref: '#/components/schemas/MetricEventsCriteriaDto'
+              description: Filtering criteria for the denominator metric source for a ratio, or the start event for a retention metric if useSecondaryRetentionEvent is set
+            denominatorAggregation:
+              type: string
+              enum:
+              - count
+              - sum
+              - mean
+              - daily_participation
+              - ratio
+              - funnel
+              - count_distinct
+              - percentile
+              - first_value
+              - latest_value
+              - retention
+              - max
+              - min
+              - composite
+              - ''
+              description: 'Aggregation for the ratio denominator. Allowed: `count`┃`sum`┃`daily_participation`┃`count_distinct`┃`first_value`┃`latest_value`┃`max`┃`min`.'
+            denominatorCustomRollupEnd:
+              type: number
+              description: Custom end window for ratio denominator unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "denominatorCustomRollupMeasureInMinutes" flag.
+              format: double
+            denominatorCustomRollupStart:
+              type: number
+              description: Custom start window for ratio denominator unit count metrics with "custom" rollup time window. Measured in days or minutes depending on the "denominatorCustomRollupMeasureInMinutes" flag.
+              format: double
+            denominatorMetricSourceName:
+              type: string
+              description: Name of the metric source for the denominator of a ratio, or the start event for a retention metric if useSecondaryRetentionEvent is set
+            denominatorRollupTimeWindow:
+              type: string
+              description: 'Rollup-mode for ratio denominator unit count metrics. Allowed values: "daily" for daily participation rate, "max" for one-time event, "custom" for a custom attribution window'
+            denominatorValueColumn:
+              type: string
+              description: Column name for the denominator’s value.
+            funnelCalculationWindow:
+              type: integer
+              minimum: 0
+              description: Duration for counting funnel events in days.
+              format: int64
+            funnelCountDistinct:
+              type: string
+              enum:
+              - sessions
+              - users
+              description: 'Allowed: users┃sessions for distinct count method in funnel events.'
+            funnelEvents:
+              type: array
+              items:
+                type: object
+                properties:
+                  criteria:
+                    type: array
+                    items:
+                      description: Array of event criteria for defining filtering conditions in metrics analysis.
+                      $ref: '#/components/schemas/MetricEventsCriteriaDto'
+                    description: Optional array of criteria to filter the funnel events, defined by various types and conditions.
+                  metricSourceName:
+                    type: string
+                    description: Optional name of the metric source associated with the funnel event.
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                    description: Optional step name for the funnel event, can be null if not specified.
+                  sessionIdentifierField:
+                    type:
+                    - string
+                    - 'null'
+                    description: Name of column which being used as session identifier. Funnel event with the same metric source
+              description: List of funnel events with associated criteria and identifiers.
+            funnelStartCriteria:
+              type: string
+              enum:
+              - start_event
+              - exposure
+              description: 'Allowed: start_event┃exposure to determine funnel start criteria.'
+            metricDimensionColumns:
+              type: array
+              items:
+                type: string
+              description: Specify metadata columns for breaking down metric analysis.
+            metricDimensionLimits:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the metadata dimension to apply a breakdown limit.
+                  limit:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                    description: Maximum number of values to retain for this dimension (0-100).
+                    example: 10
+                required:
+                - name
+                - limit
+              description: Per-dimension breakdown limits; values beyond the limit are grouped into OTHER.
+            metricBakeDays:
+              type: integer
+              minimum: 0
+              description: Number of days for metric baking; specify duration for analysis.
+              format: int64
+            loadingWindow:
+              type: integer
+              minimum: 0
+              description: Lookback window in days for loading metric data. Defaults to 90 days.
+              example: 90
+              format: int64
+            numeratorAggregation:
+              type: string
+              enum:
+              - count
+              - sum
+              - mean
+              - daily_participation
+              - ratio
+              - funnel
+              - count_distinct
+              - percentile
+              - first_value
+              - latest_value
+              - retention
+              - max
+              - min
+              - composite
+              - ''
+              description: 'Aggregation for the ratio numerator. Allowed: `count`┃`sum`┃`daily_participation`┃`count_distinct`┃`first_value`┃`latest_value`┃`max`┃`min`.'
+            valueColumn:
+              type: string
+              description: 'Deprecated: use `metricSources` instead. If provided with `metricSourceName`, this will overwrite all metric sources. Column name representing the metric’s value.'
+            valueThreshold:
+              type: number
+              description: Threshold value for filtering metrics.
+              format: double
+            allowNullRatioDenominator:
+              type: boolean
+              description: Include units which do not have a denominator. Only applicable to ratios.
+            funnelStrictOrdering:
+              type: boolean
+            funnelUseExposureAsFirstEvent:
+              type: boolean
+            funnelTimestampAllowanceMs:
+              type: number
+              format: double
+            funnelTimeToConvert:
+              type: boolean
+            winsorizationHigh:
+              type: number
+              maximum: 1
+              minimum: 0
+              description: High threshold for winsorization; must be between 0 and 1.
+              format: double
+            winsorizationLow:
+              type: number
+              maximum: 1
+              minimum: 0
+              description: Low threshold for winsorization; must be between 0 and 1.
+              format: double
+            winsorizationHighDenominator:
+              type: number
+              maximum: 1
+              minimum: 0
+              format: double
+            winsorizationLowDenominator:
+              type: number
+              maximum: 1
+              minimum: 0
+              format: double
+            cupedAttributionWindow:
+              type:
+              - integer
+              - 'null'
+              minimum: 0
+              description: Attribution window for CUPED adjustments in days.
+              format: int64
+            rollupTimeWindow:
+              type: string
+              description: 'Rollup-mode for unit count metrics. Allowed values: "daily" for daily participation rate, "max" for one-time event, "custom" for a custom attribution window'
+            customRollUpStart:
+              type: integer
+              minimum: 0
+              description: Custom start window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
+              format: int64
+            customRollUpEnd:
+              type: integer
+              minimum: 0
+              description: Custom end window for unit count metrics with "custom" rollup time window, or for other metrics with the "Use Cohort Window in Experiments" option on enabled. Measured in days or minutes depending on the "customRollupMeasureInMinutes" flag.
+              format: int64
+            onlyIncludeUsersWithConversionEvent:
+              type: boolean
+              description: Flag to include only users with a conversion event in the metric.
+            denominatorCustomRollupMeasureInMinutes:
+              type: boolean
+              description: Flag to measure the denominator custom rollup window in minutes instead of days.
+            customRollupMeasureInMinutes:
+              type: boolean
+              description: Flag to measure the custom rollup window in minutes instead of days.
+            percentile:
+              type: number
+              maximum: 0.999
+              minimum: 0.001
+              description: Percentile value for statistical calculations.
+              format: double
+            useLogTransform:
+              type: boolean
+              description: Use log transform for the metric.
+            useSecondaryRetentionEvent:
+              type: boolean
+              description: Use a different start and completion event for retention calculations.
+            retentionEnd:
+              type: integer
+              description: Retention end in days.
+              format: int64
+              exclusiveMinimum: 0
+            retentionLength:
+              type: integer
+              description: Retention lookback window in days.
+              format: int64
+              exclusiveMinimum: 0
+            logTransformBase:
+              type:
+              - number
+              - 'null'
+              description: Log transform base to be used for the metric.
+              format: double
+              exclusiveMinimum: 0
+            cap:
+              type: number
+              description: Maximum cap for metric values.
+              format: double
+            surrogateMetricMSE:
+              type:
+              - number
+              - 'null'
+              description: Mean Squared Error for surrogate metric.
+              format: double
+            components:
+              type: array
+              items:
+                type: object
+                properties:
+                  operator:
+                    type: string
+                    enum:
+                    - +
+                    - '-'
+                    description: Operator for this component
+                  aggregation:
+                    type: string
+                    enum:
+                    - count
+                    - sum
+                    - mean
+                    - daily_participation
+                    - ratio
+                    - funnel
+                    - count_distinct
+                    - percentile
+                    - first_value
+                    - latest_value
+                    - retention
+                    - max
+                    - min
+                    - composite
+                    - ''
+                    description: Aggregation type for this component
+                  metricSourceName:
+                    type: string
+                    description: Metric source name for this component
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                    description: Optional name for this component
+                  criteria:
+                    type: array
+                    items:
+                      description: Array of event criteria for defining filtering conditions in metrics analysis.
+                      $ref: '#/components/schemas/MetricEventsCriteriaDto'
+                    description: Optional filtering criteria for this component
+                  valueColumn:
+                    type: string
+                    description: Value column for this component
+                required:
+                - operator
+              description: Components for composite metrics, defining each component of the formula
+          description: Optional configuration for metrics utilizing Warehouse Native features, defining specific behaviors and criteria.
+        unitTypes:
+          type: array
+          items:
+            type: string
+          description: Array of unit types that the metric can utilize, such as stableID, userID, or other custom identifiers.
+        percentile:
+          type: number
+          minimum: 0.001
+          maximum: 0.999
+          description: Updated percentile value for percentile metrics.
+          example: 0.95
+          format: double
+        scheduledReloadHour:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          maximum: 23
+          description: Warehouse Native only - UTC hour at which to run scheduled metric reloads.
+          format: int64
+        scheduledReloadDays:
+          type:
+          - array
+          - 'null'
+          items:
+            type: integer
+            minimum: 0
+            maximum: 6
+          description: Warehouse Native only - days on which to run scheduled metric reloads from 0 to 6, 0 meaning Sunday. Null to run reloads on all days.
+        team:
+          type:
+          - string
+          - 'null'
+          description: Optional field indicating the team name responsible for the metric, aiding in accountability and management.
+        teamID:
+          type:
+          - string
+          - 'null'
+          description: Optional field indicating the team ID responsible for the metric, aiding in accountability and management.
+        directionality:
+          default: increase
+          type: string
+          enum:
+          - increase
+          - decrease
+          description: Indicates the desired change direction for the metric. Use "increase" for positive changes and "decrease" for negative changes.
+          example: increase
+        dryRun:
+          type: boolean
+          description: Skips persisting updates to the metric (used to validate that inputs are correct)
+        owner:
+          type:
+          - object
+          - 'null'
+          properties:
+            ownerID:
+              type: string
+              description: ID of the owner
+              example: abc123
+            ownerType:
+              type: string
+              description: Type of the owner (e.g., SDK_KEY or USER)
+              example: USER
+            ownerName:
+              type: string
+              description: The name of the owner. This field is optional.
+              example: John Doe
+            ownerEmail:
+              type: string
+              description: The email of the owner. This field is optional.
+          description: Schema for owner data including ID, type, name.
+          example:
+            ownerID: user123
+            ownerType: USER
+            ownerName: John Doe
+            ownerEmail: owner123@test.com
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    MetricSourceContractDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the source, serving as its primary identifier.
+        description:
+          type: string
+          description: A detailed description of the source, providing context and usage information.
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags for categorizing the source and improving searchability.
         sql:
           type: string
           description: The SQL query or statement used to extract data from the source.
@@ -6525,47 +6534,38 @@ components:
           - string
           - 'null'
           description: Optional field indicating the team ID responsible for the metric source, aiding in accountability and management.
-        dryRun:
-          type: boolean
-          description: Skips persisting updates to the source (used to validate that inputs are correct)
-        skip_validation:
-          type: boolean
-          description: Skips running SQL validation for the source. Requires all_columns and column_types when true. Availability is gated.
-        all_columns:
-          type: array
-          items:
-            type: string
-          description: Column names to persist when skip_validation is true. Optional otherwise.
-        column_types:
-          type: array
-          items:
-            type: string
-          description: Column types aligned with all_columns when skip_validation is true. Optional otherwise.
       required:
+      - name
+      - description
       - sql
       - timestampColumn
       - idTypeMapping
-  responses:
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message indicating the resource was not found.
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
   securitySchemes:
     consoleApiKey:
       type: apiKey

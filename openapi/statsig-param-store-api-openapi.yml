@@ -390,25 +390,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
     ParamStoreUpdateDto:
       type: object
       properties:
@@ -764,62 +745,6 @@ components:
       required:
       - message
       - data
-    PaginationResponseMetadataDto:
-      type: object
-      properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
-          type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
-    ParamStoreCreateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Param Store Name
-        description:
-          type: string
-          description: Param Store Description
-        displayName:
-          type: string
-          description: Param Store Display Name
-        targetAppIDs:
-          type: array
-          items:
-            type: string
-          description: Target App IDs
-        tags:
-          type: array
-          items:
-            type: string
-          description: Tags
-        team:
-          type: string
-          description: Team
-      required:
-      - name
-      - description
-      - displayName
     ParamStoreDto:
       type: object
       properties:
@@ -1199,6 +1124,81 @@ components:
       - creatorID
       - lastModifierID
       - parameters
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    ParamStoreCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Param Store Name
+        description:
+          type: string
+          description: Param Store Description
+        displayName:
+          type: string
+          description: Param Store Display Name
+        targetAppIDs:
+          type: array
+          items:
+            type: string
+          description: Target App IDs
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags
+        team:
+          type: string
+          description: Team
+      required:
+      - name
+      - description
+      - displayName
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

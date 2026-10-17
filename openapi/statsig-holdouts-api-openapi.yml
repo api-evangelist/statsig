@@ -1264,6 +1264,27 @@ paths:
       operationId: getConsoleV1HoldoutsByIdPulseResults
       x-operation-id-source: derived
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing the authentication failure.
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
   schemas:
     HoldoutCreate:
       type: object
@@ -1313,37 +1334,6 @@ components:
         isEnabled:
           type: boolean
           description: Whether the holdout is currently active.
-    PaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
     HoldoutDto:
       type: object
       properties:
@@ -1508,33 +1498,18 @@ components:
       - layerIDs
       - isGlobal
       - targetingGateID
-    HoldoutCreateContractDto:
+    SingleDataResponse:
       type: object
       properties:
-        name:
+        message:
           type: string
-          maxLength: 100
-          minLength: 3
-          pattern: ^[a-zA-Z0-9_\- ]*$
-          example: team holdout
-          description: name of the holdout
-        description:
-          type: string
-          maxLength: 1000
-          example: holdout for this team
-          description: description of the holdout
-        idType:
-          type: string
-          example: userID
-          description: type of id
-        teamID:
-          type:
-          - string
-          - 'null'
-          example: 4pjeXYDjC2WinSgOiII7wh
-          description: id of the team
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
       required:
-      - name
+      - message
+      - data
     HoldoutFullUpdateContractDto:
       type: object
       properties:
@@ -1606,173 +1581,211 @@ components:
       - layerIDs
       - isGlobal
       - targetingGateID
-    OverrideDto:
+    PaginationResponseMetadataDto:
       type: object
       properties:
-        passingUserIDs:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            description: User ID
-            example: user123
-          maxItems: 2000
-          description: List of user IDs
-          example:
-          - user123
-          - user456
-          - user789
-        failingUserIDs:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            description: User ID
-            example: user123
-          maxItems: 2000
-          description: List of user IDs
-          example:
-          - user123
-          - user456
-          - user789
-        passingCustomIDs:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            description: Custom ID
-            example: custom123
-          maxItems: 2000
-          description: Optional list of custom IDs
-          example:
-          - custom123
-          - custom456
-        failingCustomIDs:
-          type: array
-          items:
-            type: string
-            minLength: 1
-            description: Custom ID
-            example: custom123
-          maxItems: 2000
-          description: Optional list of custom IDs
-          example:
-          - custom123
-          - custom456
-        environmentOverrides:
-          type: array
-          items:
-            type: object
-            properties:
-              environment:
-                type:
-                - string
-                - 'null'
-                description: Environment
-                example: staging
-              unitID:
-                type:
-                - string
-                - 'null'
-                description: Unit ID
-                example: unit123
-              passingIDs:
-                type: array
-                items:
-                  type: string
-                description: List of passing IDs
-                example:
-                - id1
-                - id2
-              failingIDs:
-                type: array
-                items:
-                  type: string
-                description: List of failing IDs
-                example:
-                - id3
-                - id4
-            required:
-            - unitID
-            - passingIDs
-            - failingIDs
-            description: Contract for environment override
-            example:
-              environment: staging
-              unitID: unit123
-              passingIDs:
-              - id1
-              - id2
-              failingIDs:
-              - id3
-              - id4
-      required:
-      - passingUserIDs
-      - failingUserIDs
-      - environmentOverrides
-      description: Contract for overrides
-    HoldoutPartialUpdateContractDto:
-      type: object
-      properties:
-        isEnabled:
-          type: boolean
-          example: true
-          description: enable or disable the holdout
-        description:
-          type: string
-          maxLength: 1000
-          example: example holdout description
-          description: brief summary of what the holdout is being used for
-        passPercentage:
+        itemsPerPage:
           type: number
-          minimum: 0
-          maximum: 10
-          example: 5
-          description: percentage of users between 0-10% to pass through the holdout
           format: double
-        gateIDs:
-          type: array
-          items:
-            type: string
-          example:
-          - my_gate
-          description: an array of gate IDs which this holdout is applied to
-        experimentIDs:
-          type: array
-          items:
-            type: string
-          example:
-          - my_experiment
-          description: an array of experiment IDs which this holdout is applied to
-        layerIDs:
-          type: array
-          items:
-            type: string
-          example:
-          - my_layer
-          description: an array of layer IDs which this holdout is applied to
-        isGlobal:
-          type: boolean
-          example: false
-          description: whether the holdout is being applied to all new gates
-        targetingGateID:
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
           type:
           - string
           - 'null'
-          example: my_targeting_gate
-          description: the ID of the gate that the holdout is targeting; an empty string clears it, null leaves it unchanged
-        monitoringMetrics:
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
           type: array
           items:
             type: object
-            properties:
-              name:
-                type: string
-              type:
-                type: string
-            required:
-            - name
-            - type
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    UpdateOverridesContractDto:
+      oneOf:
+      - type: object
+        properties:
+          environmentOverrides:
+            type: array
+            items:
+              type: object
+              properties:
+                environment:
+                  type:
+                  - string
+                  - 'null'
+                  description: Environment
+                  example: staging
+                unitID:
+                  type:
+                  - string
+                  - 'null'
+                  description: Unit ID
+                  example: unit123
+                passingIDs:
+                  type: array
+                  items:
+                    type: string
+                  description: List of passing IDs
+                  example:
+                  - id1
+                  - id2
+                failingIDs:
+                  type: array
+                  items:
+                    type: string
+                  description: List of failing IDs
+                  example:
+                  - id3
+                  - id4
+              required:
+              - unitID
+              - passingIDs
+              - failingIDs
+              description: Contract for environment override
+              example:
+                environment: staging
+                unitID: unit123
+                passingIDs:
+                - id1
+                - id2
+                failingIDs:
+                - id3
+                - id4
+        required:
+        - environmentOverrides
+        description: Contract for updating environment overrides
+        example:
+          environmentOverrides:
+          - environment: staging
+            unitID: unit123
+            passingIDs:
+            - id1
+            - id2
+            failingIDs:
+            - id3
+            - id4
+      - type: object
+        properties:
+          passingUserIDs:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              description: User ID
+              example: user123
+            maxItems: 2000
+            description: List of user IDs
+            example:
+            - user123
+            - user456
+            - user789
+          failingUserIDs:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              description: User ID
+              example: user123
+            maxItems: 2000
+            description: List of user IDs
+            example:
+            - user123
+            - user456
+            - user789
+          passingCustomIDs:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              description: Custom ID
+              example: custom123
+            maxItems: 2000
+            description: Optional list of custom IDs
+            example:
+            - custom123
+            - custom456
+          failingCustomIDs:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              description: Custom ID
+              example: custom123
+            maxItems: 2000
+            description: Optional list of custom IDs
+            example:
+            - custom123
+            - custom456
+        required:
+        - passingUserIDs
+        - failingUserIDs
+        description: Contract for updating ID overrides
+        example:
+          passingUserIDs:
+          - user123
+          - user456
+          failingUserIDs:
+          - user789
+          - user012
+          passingCustomIDs:
+          - custom123
+          failingCustomIDs:
+          - custom456
+      description: Contract for updating overrides
+    HoldoutCreateContractDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_\- ]*$
+          example: team holdout
+          description: name of the holdout
+        description:
+          type: string
+          maxLength: 1000
+          example: holdout for this team
+          description: description of the holdout
+        idType:
+          type: string
+          example: userID
+          description: type of id
+        teamID:
+          type:
+          - string
+          - 'null'
+          example: 4pjeXYDjC2WinSgOiII7wh
+          description: id of the team
+      required:
+      - name
     GatePulseResultsDto:
       type: object
       properties:
@@ -1989,186 +2002,173 @@ components:
       required:
       - ds
       - monitoringMetrics
-    PaginationResponseMetadataDto:
+    HoldoutPartialUpdateContractDto:
       type: object
       properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
+        isEnabled:
+          type: boolean
+          example: true
+          description: enable or disable the holdout
+        description:
           type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
-    UpdateOverridesContractDto:
-      oneOf:
-      - type: object
-        properties:
-          environmentOverrides:
-            type: array
-            items:
-              type: object
-              properties:
-                environment:
-                  type:
-                  - string
-                  - 'null'
-                  description: Environment
-                  example: staging
-                unitID:
-                  type:
-                  - string
-                  - 'null'
-                  description: Unit ID
-                  example: unit123
-                passingIDs:
-                  type: array
-                  items:
-                    type: string
-                  description: List of passing IDs
-                  example:
-                  - id1
-                  - id2
-                failingIDs:
-                  type: array
-                  items:
-                    type: string
-                  description: List of failing IDs
-                  example:
-                  - id3
-                  - id4
-              required:
-              - unitID
-              - passingIDs
-              - failingIDs
-              description: Contract for environment override
-              example:
-                environment: staging
-                unitID: unit123
-                passingIDs:
-                - id1
-                - id2
-                failingIDs:
-                - id3
-                - id4
-        required:
-        - environmentOverrides
-        description: Contract for updating environment overrides
-        example:
-          environmentOverrides:
-          - environment: staging
-            unitID: unit123
-            passingIDs:
-            - id1
-            - id2
-            failingIDs:
-            - id3
-            - id4
-      - type: object
-        properties:
-          passingUserIDs:
-            type: array
-            items:
-              type: string
-              minLength: 1
-              description: User ID
-              example: user123
-            maxItems: 2000
-            description: List of user IDs
-            example:
-            - user123
-            - user456
-            - user789
-          failingUserIDs:
-            type: array
-            items:
-              type: string
-              minLength: 1
-              description: User ID
-              example: user123
-            maxItems: 2000
-            description: List of user IDs
-            example:
-            - user123
-            - user456
-            - user789
-          passingCustomIDs:
-            type: array
-            items:
-              type: string
-              minLength: 1
-              description: Custom ID
-              example: custom123
-            maxItems: 2000
-            description: Optional list of custom IDs
-            example:
-            - custom123
-            - custom456
-          failingCustomIDs:
-            type: array
-            items:
-              type: string
-              minLength: 1
-              description: Custom ID
-              example: custom123
-            maxItems: 2000
-            description: Optional list of custom IDs
-            example:
-            - custom123
-            - custom456
-        required:
-        - passingUserIDs
-        - failingUserIDs
-        description: Contract for updating ID overrides
-        example:
-          passingUserIDs:
+          maxLength: 1000
+          example: example holdout description
+          description: brief summary of what the holdout is being used for
+        passPercentage:
+          type: number
+          minimum: 0
+          maximum: 10
+          example: 5
+          description: percentage of users between 0-10% to pass through the holdout
+          format: double
+        gateIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_gate
+          description: an array of gate IDs which this holdout is applied to
+        experimentIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_experiment
+          description: an array of experiment IDs which this holdout is applied to
+        layerIDs:
+          type: array
+          items:
+            type: string
+          example:
+          - my_layer
+          description: an array of layer IDs which this holdout is applied to
+        isGlobal:
+          type: boolean
+          example: false
+          description: whether the holdout is being applied to all new gates
+        targetingGateID:
+          type:
+          - string
+          - 'null'
+          example: my_targeting_gate
+          description: the ID of the gate that the holdout is targeting; an empty string clears it, null leaves it unchanged
+        monitoringMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+            required:
+            - name
+            - type
+    OverrideDto:
+      type: object
+      properties:
+        passingUserIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: User ID
+            example: user123
+          maxItems: 2000
+          description: List of user IDs
+          example:
           - user123
           - user456
-          failingUserIDs:
           - user789
-          - user012
-          passingCustomIDs:
+        failingUserIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: User ID
+            example: user123
+          maxItems: 2000
+          description: List of user IDs
+          example:
+          - user123
+          - user456
+          - user789
+        passingCustomIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: Custom ID
+            example: custom123
+          maxItems: 2000
+          description: Optional list of custom IDs
+          example:
           - custom123
-          failingCustomIDs:
           - custom456
-      description: Contract for updating overrides
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
+        failingCustomIDs:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            description: Custom ID
+            example: custom123
+          maxItems: 2000
+          description: Optional list of custom IDs
+          example:
+          - custom123
+          - custom456
+        environmentOverrides:
+          type: array
+          items:
             type: object
             properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Environment
+                example: staging
+              unitID:
+                type:
+                - string
+                - 'null'
+                description: Unit ID
+                example: unit123
+              passingIDs:
+                type: array
+                items:
+                  type: string
+                description: List of passing IDs
+                example:
+                - id1
+                - id2
+              failingIDs:
+                type: array
+                items:
+                  type: string
+                description: List of failing IDs
+                example:
+                - id3
+                - id4
+            required:
+            - unitID
+            - passingIDs
+            - failingIDs
+            description: Contract for environment override
+            example:
+              environment: staging
+              unitID: unit123
+              passingIDs:
+              - id1
+              - id2
+              failingIDs:
+              - id3
+              - id4
+      required:
+      - passingUserIDs
+      - failingUserIDs
+      - environmentOverrides
+      description: Contract for overrides
   parameters:
     ApiVersion:
       name: STATSIG-API-VERSION

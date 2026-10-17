@@ -1219,32 +1219,6 @@ paths:
       operationId: deleteConsoleV1UsersTeamsById
       x-operation-id-source: derived
 components:
-  parameters:
-    Limit:
-      name: limit
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-      description: Maximum number of items to return per page.
-    ApiVersion:
-      name: STATSIG-API-VERSION
-      in: header
-      required: false
-      schema:
-        type: string
-        default: '20240601'
-      description: The Console API version. Currently the only version is 20240601.
-    Page:
-      name: page
-      in: query
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-      description: Page number for paginated results.
   responses:
     Unauthorized:
       description: Missing or invalid API key
@@ -1287,7 +1261,32 @@ components:
         properties:
           type: object
           description: Custom properties associated with the user.
-    TeamCreationDto:
+    UserContractDto:
+      type: object
+      properties:
+        userID:
+          type: string
+          description: The user's unique ID.
+        email:
+          type: string
+          format: email
+          description: The email address of the user.
+        firstName:
+          type: string
+          description: The user's first name.
+        lastName:
+          type: string
+          description: The user's last name.
+        role:
+          type: string
+          description: The user's role, which can be 'Admin', 'Read Only', 'Member', or any custom role name.
+      required:
+      - userID
+      - email
+      - firstName
+      - lastName
+      - role
+    TeamDtoWithoutMembersDto:
       type: object
       properties:
         name:
@@ -1296,6 +1295,134 @@ components:
         description:
           type: string
           description: Description of the team.
+        id:
+          type: string
+          description: The ID of the team.
+        defaultGateMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the metric.
+              type:
+                type: string
+                description: The type of the metric.
+            required:
+            - name
+            - type
+          description: Default gate metrics for the team.
+        defaultExperimentPrimaryMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the metric.
+              type:
+                type: string
+                description: The type of the metric.
+            required:
+            - name
+            - type
+          description: Default primary metrics for experiments in the team.
+        defaultExperimentSecondaryMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the metric.
+              type:
+                type: string
+                description: The type of the metric.
+            required:
+            - name
+            - type
+          description: Default secondary metrics for experiments in the team.
+        defaultHoldoutMetrics:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the metric.
+              type:
+                type: string
+                description: The type of the metric.
+            required:
+            - name
+            - type
+          description: Default holdout metrics for the team.
+        changeTeamConfigs:
+          type: string
+          enum:
+          - anyone
+          - team_only
+          description: 'Who can change team configurations: "anyone" or "team_only".'
+        reviewApproval:
+          type: string
+          enum:
+          - anyone
+          - team_only
+          - admin_only
+          description: 'Who can review and approve changes: "anyone", "team_only", or "admin_only".'
+        defaultTargetApplications:
+          type: array
+          items:
+            type: string
+          description: Default target applications for the team.
+        defaultHoldoutID:
+          type:
+          - string
+          - 'null'
+          description: Default holdout ID for the team, if applicable.
+        requireReviews:
+          type:
+          - boolean
+          - 'null'
+          description: Whether reviews are required for changes, if applicable.
+        requireGateTemplates:
+          type:
+          - boolean
+          - 'null'
+          description: Whether gate templates are required for the team, if applicable.
+        requireExperimentTemplates:
+          type:
+          - boolean
+          - 'null'
+          description: Whether experiment templates are required for the team, if applicable.
+        requireDynamicConfigTemplates:
+          type:
+          - boolean
+          - 'null'
+          description: Whether dynamic config templates are required for the team, if applicable.
+      required:
+      - name
+      - id
+      - defaultGateMetrics
+      - defaultExperimentPrimaryMetrics
+      - defaultExperimentSecondaryMetrics
+      - defaultHoldoutMetrics
+      - changeTeamConfigs
+      - reviewApproval
+      - defaultTargetApplications
+    TeamPartialUpdateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the team.
+        description:
+          type: string
+          description: Description of the team.
+        id:
+          type: string
+          description: The ID of the team.
         members:
           type: array
           items:
@@ -1409,36 +1536,6 @@ components:
           - boolean
           - 'null'
           description: Whether dynamic config templates are required for the team, if applicable.
-      required:
-      - name
-      - members
-      - admins
-      - defaultGateMetrics
-      - defaultExperimentPrimaryMetrics
-      - defaultExperimentSecondaryMetrics
-      - defaultHoldoutMetrics
-      - changeTeamConfigs
-      - reviewApproval
-      - defaultTargetApplications
-    PaginationResponseWithMessage:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
-      required:
-      - message
-      - data
-      - pagination
     TeamDto:
       type: object
       properties:
@@ -1620,7 +1717,98 @@ components:
       - defaultTargetApplications
       - members
       - admins
-    TeamPartialUpdateDto:
+    SingleDataResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          type: object
+          description: A single result.
+      required:
+      - message
+      - data
+    UserUpdateDto:
+      type: object
+      properties:
+        role:
+          type: string
+          description: Update the user's role. Can be 'Admin', 'Read Only', 'Member', or any custom role name.
+        firstName:
+          type: string
+          description: Update the user's first name.
+        lastName:
+          type: string
+          description: Update the user's last name.
+      description: Schema for updating user information.
+    UserInvitesDto:
+      type: object
+      properties:
+        role:
+          type: string
+          description: Role assigned to the invited users. Can be 'Admin', 'Read Only', 'Member', or any custom role name.
+        emails:
+          type: array
+          items:
+            type: string
+            format: email
+          description: List of email addresses to send invitations to. Invitee Emails must have the same domain to your company email domain.
+        teams:
+          type: array
+          items:
+            type: string
+          description: Optional list of teams that the invited users will be associated with.
+      required:
+      - role
+      - emails
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    TeamCreationDto:
       type: object
       properties:
         name:
@@ -1629,9 +1817,6 @@ components:
         description:
           type: string
           description: Description of the team.
-        id:
-          type: string
-          description: The ID of the team.
         members:
           type: array
           items:
@@ -1745,136 +1930,10 @@ components:
           - boolean
           - 'null'
           description: Whether dynamic config templates are required for the team, if applicable.
-    SingleDataResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          type: object
-          description: A single result.
-      required:
-      - message
-      - data
-    TeamDtoWithoutMembersDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the team.
-        description:
-          type: string
-          description: Description of the team.
-        id:
-          type: string
-          description: The ID of the team.
-        defaultGateMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the metric.
-              type:
-                type: string
-                description: The type of the metric.
-            required:
-            - name
-            - type
-          description: Default gate metrics for the team.
-        defaultExperimentPrimaryMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the metric.
-              type:
-                type: string
-                description: The type of the metric.
-            required:
-            - name
-            - type
-          description: Default primary metrics for experiments in the team.
-        defaultExperimentSecondaryMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the metric.
-              type:
-                type: string
-                description: The type of the metric.
-            required:
-            - name
-            - type
-          description: Default secondary metrics for experiments in the team.
-        defaultHoldoutMetrics:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The name of the metric.
-              type:
-                type: string
-                description: The type of the metric.
-            required:
-            - name
-            - type
-          description: Default holdout metrics for the team.
-        changeTeamConfigs:
-          type: string
-          enum:
-          - anyone
-          - team_only
-          description: 'Who can change team configurations: "anyone" or "team_only".'
-        reviewApproval:
-          type: string
-          enum:
-          - anyone
-          - team_only
-          - admin_only
-          description: 'Who can review and approve changes: "anyone", "team_only", or "admin_only".'
-        defaultTargetApplications:
-          type: array
-          items:
-            type: string
-          description: Default target applications for the team.
-        defaultHoldoutID:
-          type:
-          - string
-          - 'null'
-          description: Default holdout ID for the team, if applicable.
-        requireReviews:
-          type:
-          - boolean
-          - 'null'
-          description: Whether reviews are required for changes, if applicable.
-        requireGateTemplates:
-          type:
-          - boolean
-          - 'null'
-          description: Whether gate templates are required for the team, if applicable.
-        requireExperimentTemplates:
-          type:
-          - boolean
-          - 'null'
-          description: Whether experiment templates are required for the team, if applicable.
-        requireDynamicConfigTemplates:
-          type:
-          - boolean
-          - 'null'
-          description: Whether dynamic config templates are required for the team, if applicable.
       required:
       - name
-      - id
+      - members
+      - admins
       - defaultGateMetrics
       - defaultExperimentPrimaryMetrics
       - defaultExperimentSecondaryMetrics
@@ -1882,91 +1941,32 @@ components:
       - changeTeamConfigs
       - reviewApproval
       - defaultTargetApplications
-    UserInvitesDto:
-      type: object
-      properties:
-        role:
-          type: string
-          description: Role assigned to the invited users. Can be 'Admin', 'Read Only', 'Member', or any custom role name.
-        emails:
-          type: array
-          items:
-            type: string
-            format: email
-          description: List of email addresses to send invitations to. Invitee Emails must have the same domain to your company email domain.
-        teams:
-          type: array
-          items:
-            type: string
-          description: Optional list of teams that the invited users will be associated with.
-      required:
-      - role
-      - emails
-    PaginationResponseMetadataDto:
-      type: object
-      properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
-          type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
-    UserUpdateDto:
-      type: object
-      properties:
-        role:
-          type: string
-          description: Update the user's role. Can be 'Admin', 'Read Only', 'Member', or any custom role name.
-        firstName:
-          type: string
-          description: Update the user's first name.
-        lastName:
-          type: string
-          description: Update the user's last name.
-      description: Schema for updating user information.
-    UserContractDto:
-      type: object
-      properties:
-        userID:
-          type: string
-          description: The user's unique ID.
-        email:
-          type: string
-          format: email
-          description: The email address of the user.
-        firstName:
-          type: string
-          description: The user's first name.
-        lastName:
-          type: string
-          description: The user's last name.
-        role:
-          type: string
-          description: The user's role, which can be 'Admin', 'Read Only', 'Member', or any custom role name.
-      required:
-      - userID
-      - email
-      - firstName
-      - lastName
-      - role
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Page number for paginated results.
+    ApiVersion:
+      name: STATSIG-API-VERSION
+      in: header
+      required: false
+      schema:
+        type: string
+        default: '20240601'
+      description: The Console API version. Currently the only version is 20240601.
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      description: Maximum number of items to return per page.
   securitySchemes:
     consoleApiKey:
       type: apiKey

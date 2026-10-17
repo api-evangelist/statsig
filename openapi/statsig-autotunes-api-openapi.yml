@@ -2101,35 +2101,28 @@ paths:
       operationId: putConsoleV1AutotunesByIdStart
       x-operation-id-source: derived
 components:
-  schemas:
-    AutotuneCreate:
-      type: object
-      description: Request body for creating a new autotune configuration.
-      required:
-      - name
-      - successMetric
-      properties:
-        name:
-          type: string
-          description: The name of the autotune to create.
-        description:
-          type: string
-          description: A human-readable description.
-        variants:
-          type: array
-          items:
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
             type: object
             properties:
-              name:
+              message:
                 type: string
-                description: The name of the variant.
-              parameterValues:
-                type: object
-                description: The parameter values for this variant.
-          description: The variants to optimize.
-        successMetric:
-          type: string
-          description: The metric to optimize for.
+                description: Error message describing the authentication failure.
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message describing what was wrong with the request.
+  schemas:
     Autotune:
       type: object
       description: An autotune configuration that automatically optimizes parameter values based on a target metric.
@@ -2161,25 +2154,224 @@ components:
         successMetric:
           type: string
           description: The metric being optimized for.
-    PaginationResponseWithMessage:
+    AutotuneCreate:
       type: object
+      description: Request body for creating a new autotune configuration.
+      required:
+      - name
+      - successMetric
       properties:
-        message:
+        name:
           type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
+          description: The name of the autotune to create.
+        description:
+          type: string
+          description: A human-readable description.
+        variants:
           type: array
           items:
             type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+            properties:
+              name:
+                type: string
+                description: The name of the variant.
+              parameterValues:
+                type: object
+                description: The parameter values for this variant.
+          description: The variants to optimize.
+        successMetric:
+          type: string
+          description: The metric to optimize for.
+    ExperimentReviewEnvelopeDto:
+      type: object
+      properties:
+        review_id:
+          type: string
+          description: Unique ID of the review.
+        status:
+          type: string
+          enum:
+          - pending
+          - accepted
+          - rejected
+          - committed
+          - changes_requested
+          - pending_webhook_validation
+          - failed_webhook_validation
+          - approved_webhook_validation
+          description: Lifecycle status of the review.
+        type:
+          type: string
+          enum:
+          - start
+          - stop
+          - pause
+          - restart
+          - abandon
+          - archive
+          - delete
+          - make_decision
+          - update_settings
+          - update_overrides
+          - update_target_applications
+          - update_allowed_reviewers
+          - update_default_impact_multiplier
+          - scheduled_start
+          - scheduled_start_edit
+          - disable_reviews_locally
+          - rollout
+          - schedule_rollout
+          - reallocate
+          - change_enabled_groups
+          - unarchive
+          - update_owners
+          - update_team
+          description: Kind of change the review proposes.
+        author:
+          type: object
+          properties:
+            id:
+              type: string
+            email:
+              type:
+              - string
+              - 'null'
+          required:
+          - id
+          - email
+          description: The user who created the review.
+        reviewers:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              kind:
+                type: string
+                enum:
+                - user
+                - group
+            required:
+            - id
+            - kind
+          description: Requested reviewers (users and groups).
+        description:
+          type: string
+          description: Human-readable description of the proposed change.
+        created_at:
+          type: string
+          description: ISO-8601 timestamp of when the review was created.
+        content:
+          type:
+          - object
+          - 'null'
+          properties:
+            type:
+              type: string
+              enum:
+              - start
+              - stop
+              - pause
+              - restart
+              - abandon
+              - archive
+              - delete
+              - make_decision
+              - update_settings
+              - update_overrides
+              - update_target_applications
+              - update_allowed_reviewers
+              - update_default_impact_multiplier
+              - scheduled_start
+              - scheduled_start_edit
+              - disable_reviews_locally
+              - rollout
+              - schedule_rollout
+              - reallocate
+              - change_enabled_groups
+              - unarchive
+              - update_owners
+              - update_team
+              description: Same value as the envelope `type`, repeated for self-containment.
+            current:
+              type: object
+              additionalProperties: {}
+              description: 'The entity''s live value at read time, for each field this review type updates. Matches the Console''s "Original Version (Before)" column for pending reviews. This is NOT status-dependent: for a committed or rejected review it is still the live entity as it stands now, which for a committed review normally equals `proposed`.'
+            proposed:
+              type: object
+              additionalProperties: {}
+              description: The value this review proposes — what commit will apply. Carries exactly the same keys as `current`. Array-valued fields carry the full array on both sides, never only the changed elements.
+            unavailable_reason:
+              type: string
+              enum:
+              - review_data_unavailable
+              - content_unreadable
+              description: 'Present ONLY when the change could not be read back, in which case `current` and `proposed` are both empty objects and carry no meaning. This exists so that "this review type has nothing to propose" (`content: null`) is never confused with "we could not tell you what this review would do". `review_data_unavailable`: the review''s stored change data is missing, or does not match the type the review declares — expected on legacy rows. `content_unreadable`: the data is present but the before/after could not be assembled; that is a server-side fault and is logged.'
+          required:
+          - type
+          - current
+          - proposed
+          title: ExperimentReviewContent
+          description: 'The proposed change this review would apply, as `{ current, proposed }` over exactly the fields committing the review would write. `current` is the live value read at request time; where commit treats an unset argument as "leave unchanged", `proposed` repeats the live value rather than a default. Populated on single-review responses only — list responses omit it so a page of reviews does not pay an extra read per row. When the review does propose something but it could not be read back, `content` is PRESENT with `unavailable_reason` set and both value objects empty, never `null` — so "this type proposes nothing" stays distinguishable from "we cannot tell you what this would do". This surface''s reasons are `review_data_unavailable` (the stored change data is missing or does not match the type the review declares; expected on legacy rows) and `content_unreadable` (the data is present but the before/after could not be assembled; a logged server-side fault). `null` when the review type is a bare action with no recoverable proposed value: `stop`, `pause`, `restart`, `reallocate`, `delete`, `disable_reviews_locally` (always), `start` (unless the review carries a backdated start date that commit will actually write — analysis-only experiments on warehouse-native projects), `scheduled_start_edit` when `new_time` is `ignore` (commit is a no-op), and `update_settings` on an autotune (the stored settings have no experiment-contract shape). Every other type carries content, including `archive`, `unarchive`, `update_owners`, `update_team`, `change_enabled_groups` and `update_allowed_reviewers`, for which the Console currently shows no before/after. Keys by type: `archive`/`unarchive` -> `archived`, `allocation` (archiving a layer-bound experiment zeroes its allocation); `abandon` -> `decision_note_title`, `decision_reason`; `start` -> `start_time`; `scheduled_start`/`scheduled_start_edit` -> `start_time`; `rollout` -> `group_id`, `rollout_percentage`, `rollout_phases`, `has_upcoming_automated_rollout`; `schedule_rollout` -> `group_id`, `rollout_phases`; `make_decision` -> `winning_group_id`, `decision_note_title`, `decision_reason`, and on experiments `overrides`, `id_overrides`, `inline_targeting_rules_json`, `targeting_gate_id`; `update_overrides` -> `overrides`, `id_overrides`, `allow_overrides_in_pulse`; `update_target_applications` -> `target_app_ids`; `update_default_impact_multiplier` -> `default_impact_multiplier`; `update_owners` -> `owners`; `update_team` -> `team_id`, `allowed_reviewer_user_ids`, `allowed_reviewer_group_ids` (moving to a team whose approval mode is `admin_only`/`team_only` widens who may approve future reviews); `update_allowed_reviewers` -> `allowed_reviewer_user_ids`, `allowed_reviewer_group_ids`; `change_enabled_groups` -> `groups` (the full list, with the delta applied); `update_settings` -> a single `settings` object holding the full resolved settings set, including `overrides`, `idOverrides`, `allowOverridesInPulse` and `customScorecardSections`.'
       required:
-      - message
-      - data
-      - pagination
+      - review_id
+      - status
+      - type
+      - author
+      - reviewers
+      - description
+      - created_at
+      title: ExperimentReview
+    ScheduleExperimentStartParamDto:
+      type: object
+      properties:
+        scheduledTime:
+          type: number
+          description: Unix timestamp (in milliseconds) to schedule the experiment to start
+          format: double
+      required:
+      - scheduledTime
+    ExperimentStatusUpdateDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the group to launch
+          example: groupid123
+        decisionReason:
+          type: string
+          description: The reason for making the decision to update the experiment status
+          example: Your reason for stopping early
+        removeTargeting:
+          default: false
+          type: boolean
+          description: Indicates whether to remove targeting from the experiment
+          example: false
+        holdout:
+          type: integer
+          minimum: 0
+          maximum: 50
+          description: 'Integer percentage of users to hold back when shipping with holdback. Must be an integer between 0 and 50 (inclusive): the launched group size is computed as 100 - holdout * 2, so values above 50 would produce a negative-sized launched group. When set, the experiment remains live with a holdback group so long-term impact can be measured before making a final decision. Requires the ship_experiment_with_holdout gate to be enabled for the project.'
+          example: 10
+          format: int64
+      required:
+      - id
+      - decisionReason
+      description: Schema for updating the status of an experiment
+      example:
+        id: experiment123
+        decisionReason: Your reason for stopping early
+        removeTargeting: false
+    ApproveReviewRequestDto:
+      type: object
+      properties:
+        reason:
+          type: string
+          maxLength: 2000
+          description: Optional comment recorded with the approval.
+      additionalProperties: false
+      title: ApproveReviewRequest
     AutotuneFullUpdateDto:
       type: object
       properties:
@@ -2333,190 +2525,6 @@ components:
         attributionWindow: 2hrs
         winnerThreshold: 99%
         idType: userID
-    ExperimentStatusUpdateDto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the group to launch
-          example: groupid123
-        decisionReason:
-          type: string
-          description: The reason for making the decision to update the experiment status
-          example: Your reason for stopping early
-        removeTargeting:
-          default: false
-          type: boolean
-          description: Indicates whether to remove targeting from the experiment
-          example: false
-        holdout:
-          type: integer
-          minimum: 0
-          maximum: 50
-          description: 'Integer percentage of users to hold back when shipping with holdback. Must be an integer between 0 and 50 (inclusive): the launched group size is computed as 100 - holdout * 2, so values above 50 would produce a negative-sized launched group. When set, the experiment remains live with a holdback group so long-term impact can be measured before making a final decision. Requires the ship_experiment_with_holdout gate to be enabled for the project.'
-          example: 10
-          format: int64
-      required:
-      - id
-      - decisionReason
-      description: Schema for updating the status of an experiment
-      example:
-        id: experiment123
-        decisionReason: Your reason for stopping early
-        removeTargeting: false
-    ExperimentReviewEnvelopeDto:
-      type: object
-      properties:
-        review_id:
-          type: string
-          description: Unique ID of the review.
-        status:
-          type: string
-          enum:
-          - pending
-          - accepted
-          - rejected
-          - committed
-          - changes_requested
-          - pending_webhook_validation
-          - failed_webhook_validation
-          - approved_webhook_validation
-          description: Lifecycle status of the review.
-        type:
-          type: string
-          enum:
-          - start
-          - stop
-          - pause
-          - restart
-          - abandon
-          - archive
-          - delete
-          - make_decision
-          - update_settings
-          - update_overrides
-          - update_target_applications
-          - update_allowed_reviewers
-          - update_default_impact_multiplier
-          - scheduled_start
-          - scheduled_start_edit
-          - disable_reviews_locally
-          - rollout
-          - schedule_rollout
-          - reallocate
-          - change_enabled_groups
-          - unarchive
-          - update_owners
-          - update_team
-          description: Kind of change the review proposes.
-        author:
-          type: object
-          properties:
-            id:
-              type: string
-            email:
-              type:
-              - string
-              - 'null'
-          required:
-          - id
-          - email
-          description: The user who created the review.
-        reviewers:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              kind:
-                type: string
-                enum:
-                - user
-                - group
-            required:
-            - id
-            - kind
-          description: Requested reviewers (users and groups).
-        description:
-          type: string
-          description: Human-readable description of the proposed change.
-        created_at:
-          type: string
-          description: ISO-8601 timestamp of when the review was created.
-        content:
-          type:
-          - object
-          - 'null'
-          properties:
-            type:
-              type: string
-              enum:
-              - start
-              - stop
-              - pause
-              - restart
-              - abandon
-              - archive
-              - delete
-              - make_decision
-              - update_settings
-              - update_overrides
-              - update_target_applications
-              - update_allowed_reviewers
-              - update_default_impact_multiplier
-              - scheduled_start
-              - scheduled_start_edit
-              - disable_reviews_locally
-              - rollout
-              - schedule_rollout
-              - reallocate
-              - change_enabled_groups
-              - unarchive
-              - update_owners
-              - update_team
-              description: Same value as the envelope `type`, repeated for self-containment.
-            current:
-              type: object
-              additionalProperties: {}
-              description: 'The entity''s live value at read time, for each field this review type updates. Matches the Console''s "Original Version (Before)" column for pending reviews. This is NOT status-dependent: for a committed or rejected review it is still the live entity as it stands now, which for a committed review normally equals `proposed`.'
-            proposed:
-              type: object
-              additionalProperties: {}
-              description: The value this review proposes — what commit will apply. Carries exactly the same keys as `current`. Array-valued fields carry the full array on both sides, never only the changed elements.
-            unavailable_reason:
-              type: string
-              enum:
-              - review_data_unavailable
-              - content_unreadable
-              description: 'Present ONLY when the change could not be read back, in which case `current` and `proposed` are both empty objects and carry no meaning. This exists so that "this review type has nothing to propose" (`content: null`) is never confused with "we could not tell you what this review would do". `review_data_unavailable`: the review''s stored change data is missing, or does not match the type the review declares — expected on legacy rows. `content_unreadable`: the data is present but the before/after could not be assembled; that is a server-side fault and is logged.'
-          required:
-          - type
-          - current
-          - proposed
-          title: ExperimentReviewContent
-          description: 'The proposed change this review would apply, as `{ current, proposed }` over exactly the fields committing the review would write. `current` is the live value read at request time; where commit treats an unset argument as "leave unchanged", `proposed` repeats the live value rather than a default. Populated on single-review responses only — list responses omit it so a page of reviews does not pay an extra read per row. When the review does propose something but it could not be read back, `content` is PRESENT with `unavailable_reason` set and both value objects empty, never `null` — so "this type proposes nothing" stays distinguishable from "we cannot tell you what this would do". This surface''s reasons are `review_data_unavailable` (the stored change data is missing or does not match the type the review declares; expected on legacy rows) and `content_unreadable` (the data is present but the before/after could not be assembled; a logged server-side fault). `null` when the review type is a bare action with no recoverable proposed value: `stop`, `pause`, `restart`, `reallocate`, `delete`, `disable_reviews_locally` (always), `start` (unless the review carries a backdated start date that commit will actually write — analysis-only experiments on warehouse-native projects), `scheduled_start_edit` when `new_time` is `ignore` (commit is a no-op), and `update_settings` on an autotune (the stored settings have no experiment-contract shape). Every other type carries content, including `archive`, `unarchive`, `update_owners`, `update_team`, `change_enabled_groups` and `update_allowed_reviewers`, for which the Console currently shows no before/after. Keys by type: `archive`/`unarchive` -> `archived`, `allocation` (archiving a layer-bound experiment zeroes its allocation); `abandon` -> `decision_note_title`, `decision_reason`; `start` -> `start_time`; `scheduled_start`/`scheduled_start_edit` -> `start_time`; `rollout` -> `group_id`, `rollout_percentage`, `rollout_phases`, `has_upcoming_automated_rollout`; `schedule_rollout` -> `group_id`, `rollout_phases`; `make_decision` -> `winning_group_id`, `decision_note_title`, `decision_reason`, and on experiments `overrides`, `id_overrides`, `inline_targeting_rules_json`, `targeting_gate_id`; `update_overrides` -> `overrides`, `id_overrides`, `allow_overrides_in_pulse`; `update_target_applications` -> `target_app_ids`; `update_default_impact_multiplier` -> `default_impact_multiplier`; `update_owners` -> `owners`; `update_team` -> `team_id`, `allowed_reviewer_user_ids`, `allowed_reviewer_group_ids` (moving to a team whose approval mode is `admin_only`/`team_only` widens who may approve future reviews); `update_allowed_reviewers` -> `allowed_reviewer_user_ids`, `allowed_reviewer_group_ids`; `change_enabled_groups` -> `groups` (the full list, with the delta applied); `update_settings` -> a single `settings` object holding the full resolved settings set, including `overrides`, `idOverrides`, `allowOverridesInPulse` and `customScorecardSections`.'
-      required:
-      - review_id
-      - status
-      - type
-      - author
-      - reviewers
-      - description
-      - created_at
-      title: ExperimentReview
-    RejectReviewRequestDto:
-      type: object
-      properties:
-        reason:
-          type: string
-          minLength: 1
-          maxLength: 2000
-          description: Required reason for rejecting the review.
-      required:
-      - reason
-      additionalProperties: false
-      title: RejectReviewRequest
     AutotunePartialUpdateDto:
       type: object
       properties:
@@ -2643,74 +2651,6 @@ components:
           items:
             type: string
           description: List of features that should be included in the analysis
-    ScheduleExperimentStartParamDto:
-      type: object
-      properties:
-        scheduledTime:
-          type: number
-          description: Unix timestamp (in milliseconds) to schedule the experiment to start
-          format: double
-      required:
-      - scheduledTime
-    CreateAutotuneReviewRequestDto:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - start
-          - scheduled_start
-          - scheduled_start_edit
-          - reallocate
-          - make_decision
-          - delete
-          - disable_reviews_locally
-          description: The kind of autotune change the review proposes.
-        description:
-          type: string
-          maxLength: 2000
-          description: Human-readable description of the proposed change. Optional; recorded empty when omitted.
-        reviewer_ids:
-          default: []
-          type: array
-          items:
-            type: string
-          description: User IDs to request review from.
-        reviewer_group_ids:
-          default: []
-          type: array
-          items:
-            type: string
-          description: Reviewer group IDs to request review from.
-        reason:
-          type: string
-          maxLength: 2000
-          description: Optional reason recorded with the change, applied when committed (e.g. reset / decision reason).
-        winning_group_id:
-          type: string
-          description: 'For `make_decision`: the group to ship. Required.'
-        remove_targeting:
-          type: boolean
-          description: 'For `make_decision`: drop targeting on ship (default false).'
-        remove_overrides:
-          type: boolean
-          description: 'For `make_decision`: drop overrides on ship (default false).'
-        start_date:
-          type: string
-          description: 'For `start`: optional scheduled start date.'
-        start_time:
-          type: integer
-          description: 'For `scheduled_start`: epoch-ms time to schedule the start. Required.'
-          format: int64
-        new_time:
-          type: integer
-          description: 'For `scheduled_start_edit`: epoch-ms time to reschedule the start to. Required.'
-          format: int64
-      required:
-      - type
-      additionalProperties: false
-      title: CreateAutotuneReviewRequest
-      description: Request body for POST /console/v1/autotunes/:id/reviews
     SingleDataResponse:
       type: object
       properties:
@@ -2723,15 +2663,107 @@ components:
       required:
       - message
       - data
-    ApproveReviewRequestDto:
+    AutotuneOverridesDto:
       type: object
       properties:
-        reason:
+        overrides:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - gate
+                - segment
+              id:
+                type: string
+                description: The id of the segment or gate
+              groupID:
+                type: string
+                description: The autotune variant which user will be forced into
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Optional environment designation (e.g., production, staging) for the autotune.
+            required:
+            - type
+            - id
+            - groupID
+          maxItems: 1000
+          description: Array of autotune overrides, each specifying type, ID, and variant ID.
+        userIDOverrides:
+          type: array
+          items:
+            type: object
+            properties:
+              groupID:
+                type: string
+                description: The autotune variant the user will be forced into.
+              ids:
+                type: array
+                items:
+                  type: string
+                maxItems: 1000
+                description: Array of user IDs to be assigned to the specified autotune variant.
+              environment:
+                type:
+                - string
+                - 'null'
+                description: Optional environment designation (e.g., production, staging) for the autotune.
+              unitType:
+                type:
+                - string
+                - 'null'
+                description: Optional type of unit for the autotune, defining the scope of the override.
+            required:
+            - groupID
+            - ids
+          description: Array of user ID overrides, specifying which users to force into autotune variants.
+      required:
+      - overrides
+      - userIDOverrides
+    EditAutotuneReviewRequestDto:
+      type: object
+      properties:
+        description:
           type: string
+          minLength: 1
           maxLength: 2000
-          description: Optional comment recorded with the approval.
+          description: New description. Omit to keep the current value.
+        reviewer_ids:
+          type: array
+          items:
+            type: string
+          description: Replacement reviewer user IDs. Omit to keep the current set.
+        reviewer_group_ids:
+          type: array
+          items:
+            type: string
+          description: Replacement reviewer group IDs. Omit to keep the current set.
       additionalProperties: false
-      title: ApproveReviewRequest
+      title: EditAutotuneReviewRequest
+      description: Request body for PUT /console/v1/autotunes/:id/reviews/:reviewID
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
     AutotuneCreateDto:
       type: object
       properties:
@@ -2871,115 +2903,6 @@ components:
       - attributionWindow
       - winnerThreshold
       - name
-    EditAutotuneReviewRequestDto:
-      type: object
-      properties:
-        description:
-          type: string
-          minLength: 1
-          maxLength: 2000
-          description: New description. Omit to keep the current value.
-        reviewer_ids:
-          type: array
-          items:
-            type: string
-          description: Replacement reviewer user IDs. Omit to keep the current set.
-        reviewer_group_ids:
-          type: array
-          items:
-            type: string
-          description: Replacement reviewer group IDs. Omit to keep the current set.
-      additionalProperties: false
-      title: EditAutotuneReviewRequest
-      description: Request body for PUT /console/v1/autotunes/:id/reviews/:reviewID
-    AutotuneOverridesDto:
-      type: object
-      properties:
-        overrides:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-                enum:
-                - gate
-                - segment
-              id:
-                type: string
-                description: The id of the segment or gate
-              groupID:
-                type: string
-                description: The autotune variant which user will be forced into
-              environment:
-                type:
-                - string
-                - 'null'
-                description: Optional environment designation (e.g., production, staging) for the autotune.
-            required:
-            - type
-            - id
-            - groupID
-          maxItems: 1000
-          description: Array of autotune overrides, each specifying type, ID, and variant ID.
-        userIDOverrides:
-          type: array
-          items:
-            type: object
-            properties:
-              groupID:
-                type: string
-                description: The autotune variant the user will be forced into.
-              ids:
-                type: array
-                items:
-                  type: string
-                maxItems: 1000
-                description: Array of user IDs to be assigned to the specified autotune variant.
-              environment:
-                type:
-                - string
-                - 'null'
-                description: Optional environment designation (e.g., production, staging) for the autotune.
-              unitType:
-                type:
-                - string
-                - 'null'
-                description: Optional type of unit for the autotune, defining the scope of the override.
-            required:
-            - groupID
-            - ids
-          description: Array of user ID overrides, specifying which users to force into autotune variants.
-      required:
-      - overrides
-      - userIDOverrides
-    PaginationResponseMetadataDto:
-      type: object
-      properties:
-        itemsPerPage:
-          type: number
-          format: double
-        pageNumber:
-          type: number
-          format: double
-        nextPage:
-          type:
-          - string
-          - 'null'
-        previousPage:
-          type:
-          - string
-          - 'null'
-        totalItems:
-          type: number
-          format: double
-        all:
-          type: string
-      required:
-      - itemsPerPage
-      - pageNumber
-      - nextPage
-      - previousPage
     AutotuneExperimentDto:
       type: object
       properties:
@@ -3372,6 +3295,104 @@ components:
       - creatorEmail
       - isStarted
       - winner
+    CreateAutotuneReviewRequestDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - start
+          - scheduled_start
+          - scheduled_start_edit
+          - reallocate
+          - make_decision
+          - delete
+          - disable_reviews_locally
+          description: The kind of autotune change the review proposes.
+        description:
+          type: string
+          maxLength: 2000
+          description: Human-readable description of the proposed change. Optional; recorded empty when omitted.
+        reviewer_ids:
+          default: []
+          type: array
+          items:
+            type: string
+          description: User IDs to request review from.
+        reviewer_group_ids:
+          default: []
+          type: array
+          items:
+            type: string
+          description: Reviewer group IDs to request review from.
+        reason:
+          type: string
+          maxLength: 2000
+          description: Optional reason recorded with the change, applied when committed (e.g. reset / decision reason).
+        winning_group_id:
+          type: string
+          description: 'For `make_decision`: the group to ship. Required.'
+        remove_targeting:
+          type: boolean
+          description: 'For `make_decision`: drop targeting on ship (default false).'
+        remove_overrides:
+          type: boolean
+          description: 'For `make_decision`: drop overrides on ship (default false).'
+        start_date:
+          type: string
+          description: 'For `start`: optional scheduled start date.'
+        start_time:
+          type: integer
+          description: 'For `scheduled_start`: epoch-ms time to schedule the start. Required.'
+          format: int64
+        new_time:
+          type: integer
+          description: 'For `scheduled_start_edit`: epoch-ms time to reschedule the start to. Required.'
+          format: int64
+      required:
+      - type
+      additionalProperties: false
+      title: CreateAutotuneReviewRequest
+      description: Request body for POST /console/v1/autotunes/:id/reviews
+    PaginationResponseMetadataDto:
+      type: object
+      properties:
+        itemsPerPage:
+          type: number
+          format: double
+        pageNumber:
+          type: number
+          format: double
+        nextPage:
+          type:
+          - string
+          - 'null'
+        previousPage:
+          type:
+          - string
+          - 'null'
+        totalItems:
+          type: number
+          format: double
+        all:
+          type: string
+      required:
+      - itemsPerPage
+      - pageNumber
+      - nextPage
+      - previousPage
+    RejectReviewRequestDto:
+      type: object
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: Required reason for rejecting the review.
+      required:
+      - reason
+      additionalProperties: false
+      title: RejectReviewRequest
   parameters:
     ApiVersion:
       name: STATSIG-API-VERSION
@@ -3381,27 +3402,6 @@ components:
         type: string
         default: '20240601'
       description: The Console API version. Currently the only version is 20240601.
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing the authentication failure.
-    BadRequest:
-      description: Invalid request parameters
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message describing what was wrong with the request.
   securitySchemes:
     consoleApiKey:
       type: apiKey

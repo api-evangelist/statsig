@@ -362,25 +362,31 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PaginationResponseWithMessage:
+    SingleDataResponse:
       type: object
       properties:
         message:
           type: string
           description: A simple string explaining the result of the operation.
         data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+          type: object
+          description: A single result.
       required:
       - message
       - data
-      - pagination
+    TargetAppDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: string
+          description: id of target app
+        name:
+          type: string
+          example: a tag
+          description: name of the target app
+      required:
+      - name
     TargetAppCreateDto:
       type: object
       properties:
@@ -420,31 +426,61 @@ components:
       required:
       - name
       - description
-    TargetAppDto:
-      type: object
-      properties:
-        id:
-          type: string
-          example: string
-          description: id of target app
-        name:
-          type: string
-          example: a tag
-          description: name of the target app
-      required:
-      - name
-    SingleDataResponse:
+    PaginationResponseWithMessage:
       type: object
       properties:
         message:
           type: string
           description: A simple string explaining the result of the operation.
         data:
-          type: object
-          description: A single result.
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
       required:
       - message
       - data
+      - pagination
+    BulkAssignConfigTargetAppDto:
+      type: object
+      properties:
+        targetApps:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          description: target app ids
+        gates:
+          type: array
+          items:
+            type: string
+          description: Gate IDs to assign to target app(s)
+        dynamicConfigs:
+          type: array
+          items:
+            type: string
+          description: Dynamic Config IDs to assign to target app(s)
+        experiments:
+          type: array
+          items:
+            type: string
+          description: Experiment IDs to assign to target app(s)
+        layers:
+          type: array
+          items:
+            type: string
+          description: Layer IDs to assign to target app(s)
+        parameterStores:
+          type: array
+          items:
+            type: string
+          description: Parameter Store IDs to assign to target app(s)
+      required:
+      - targetApps
     UpdateTargetAppDto:
       type: object
       properties:
@@ -483,42 +519,6 @@ components:
       - pageNumber
       - nextPage
       - previousPage
-    BulkAssignConfigTargetAppDto:
-      type: object
-      properties:
-        targetApps:
-          type: array
-          items:
-            type: string
-          minItems: 1
-          description: target app ids
-        gates:
-          type: array
-          items:
-            type: string
-          description: Gate IDs to assign to target app(s)
-        dynamicConfigs:
-          type: array
-          items:
-            type: string
-          description: Dynamic Config IDs to assign to target app(s)
-        experiments:
-          type: array
-          items:
-            type: string
-          description: Experiment IDs to assign to target app(s)
-        layers:
-          type: array
-          items:
-            type: string
-          description: Layer IDs to assign to target app(s)
-        parameterStores:
-          type: array
-          items:
-            type: string
-          description: Parameter Store IDs to assign to target app(s)
-      required:
-      - targetApps
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey

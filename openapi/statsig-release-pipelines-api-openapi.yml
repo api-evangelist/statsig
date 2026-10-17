@@ -833,186 +833,14 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PaginationResponseWithMessage:
+    ReleasePipelineTriggerActionBodyDto:
       type: object
       properties:
-        message:
+        phaseID:
           type: string
-          description: A simple string explaining the result of the operation.
-        data:
-          description: Array of results returned by pagination limit.
-          type: array
-          items:
-            type: object
-        pagination:
-          description: Pagination metadata for checking if there is next page for example.
-          allOf:
-          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+          description: Phase ID to ensure the correct state of the pipeline is updated
       required:
-      - message
-      - data
-      - pagination
-    ReleasePipelineDto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Pipeline ID
-        name:
-          type: string
-          description: Pipeline Name
-        creatorID:
-          type: string
-          description: Pipeline Creator ID
-        createdTime:
-          type: number
-          description: Pipeline Creation Time
-          format: double
-        lastModifierID:
-          type: string
-          description: Last Modifier ID
-        lastModifiedTime:
-          type: number
-          description: Last Modification Time
-          format: double
-        phases:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: Phase ID
-              name:
-                type: string
-                description: Phase Name
-              timeIntervalMs:
-                type: number
-                description: Time interval in milliseconds for this phase
-              requiredReview:
-                type: boolean
-                description: Whether this phase requires review to proceed
-              rules:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      description: The Statsig ID of this rule.
-                    name:
-                      type: string
-                      description: The name of this rule.
-                    conditions:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          targetValue:
-                            oneOf:
-                            - type: array
-                              items:
-                                type: string
-                            - type: array
-                              items:
-                                type: number
-                            - type: string
-                            - type: number
-                          operator:
-                            type: string
-                            enum:
-                            - any
-                            - none
-                            - any_case_sensitive
-                            - none_case_sensitive
-                            - str_contains_any
-                            - str_contains_none
-                            - gt
-                            - lt
-                            - lte
-                            - gte
-                            - version_gt
-                            - version_lt
-                            - version_gte
-                            - version_lte
-                            - version_eq
-                            - after
-                            - before
-                            - 'on'
-                            - is_null
-                            - is_not_null
-                            - str_matches
-                            - encoded_any
-                            - array_contains_any
-                            - array_contains_none
-                            - array_contains_all
-                            - not_array_contains_all
-                          field:
-                            type:
-                            - string
-                            - 'null'
-                          customID:
-                            type:
-                            - string
-                            - 'null'
-                          type:
-                            type: string
-                            enum:
-                            - app_version
-                            - browser_name
-                            - browser_version
-                            - country
-                            - custom_field
-                            - email
-                            - environment_tier
-                            - fails_gate
-                            - fails_segment
-                            - ip_address
-                            - locale
-                            - os_name
-                            - os_version
-                            - passes_gate
-                            - passes_segment
-                            - public
-                            - time
-                            - unit_id
-                            - user_id
-                            - user_agent
-                            - url
-                            - javascript
-                            - device_model
-                            - target_app
-                            - experiment_group
-                        required:
-                        - type
-                      description: An array of Condition objects.
-                    environments:
-                      type:
-                      - array
-                      - 'null'
-                      items:
-                        type: string
-                      description: The environments this rule is enabled for.
-                  required:
-                  - name
-                  - conditions
-                description: Rules to apply in this phase
-            required:
-            - name
-            - timeIntervalMs
-            - requiredReview
-            - rules
-          description: Phases of the release pipeline that will be executed in order.
-        triggerNotice:
-          type: string
-          description: A notice that will be displayed to the user on the config page when the release pipeline is triggered
-      required:
-      - id
-      - name
-      - creatorID
-      - createdTime
-      - lastModifierID
-      - lastModifiedTime
+      - phaseID
     ReleasePipelineTriggerResponseDto:
       type: object
       properties:
@@ -1264,6 +1092,186 @@ components:
           description: A notice that will be displayed to the user on the config page when the release pipeline is triggered
       required:
       - name
+    PaginationResponseWithMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A simple string explaining the result of the operation.
+        data:
+          description: Array of results returned by pagination limit.
+          type: array
+          items:
+            type: object
+        pagination:
+          description: Pagination metadata for checking if there is next page for example.
+          allOf:
+          - $ref: '#/components/schemas/PaginationResponseMetadataDto'
+      required:
+      - message
+      - data
+      - pagination
+    ReleasePipelineDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Pipeline ID
+        name:
+          type: string
+          description: Pipeline Name
+        creatorID:
+          type: string
+          description: Pipeline Creator ID
+        createdTime:
+          type: number
+          description: Pipeline Creation Time
+          format: double
+        lastModifierID:
+          type: string
+          description: Last Modifier ID
+        lastModifiedTime:
+          type: number
+          description: Last Modification Time
+          format: double
+        phases:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Phase ID
+              name:
+                type: string
+                description: Phase Name
+              timeIntervalMs:
+                type: number
+                description: Time interval in milliseconds for this phase
+              requiredReview:
+                type: boolean
+                description: Whether this phase requires review to proceed
+              rules:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The Statsig ID of this rule.
+                    name:
+                      type: string
+                      description: The name of this rule.
+                    conditions:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          targetValue:
+                            oneOf:
+                            - type: array
+                              items:
+                                type: string
+                            - type: array
+                              items:
+                                type: number
+                            - type: string
+                            - type: number
+                          operator:
+                            type: string
+                            enum:
+                            - any
+                            - none
+                            - any_case_sensitive
+                            - none_case_sensitive
+                            - str_contains_any
+                            - str_contains_none
+                            - gt
+                            - lt
+                            - lte
+                            - gte
+                            - version_gt
+                            - version_lt
+                            - version_gte
+                            - version_lte
+                            - version_eq
+                            - after
+                            - before
+                            - 'on'
+                            - is_null
+                            - is_not_null
+                            - str_matches
+                            - encoded_any
+                            - array_contains_any
+                            - array_contains_none
+                            - array_contains_all
+                            - not_array_contains_all
+                          field:
+                            type:
+                            - string
+                            - 'null'
+                          customID:
+                            type:
+                            - string
+                            - 'null'
+                          type:
+                            type: string
+                            enum:
+                            - app_version
+                            - browser_name
+                            - browser_version
+                            - country
+                            - custom_field
+                            - email
+                            - environment_tier
+                            - fails_gate
+                            - fails_segment
+                            - ip_address
+                            - locale
+                            - os_name
+                            - os_version
+                            - passes_gate
+                            - passes_segment
+                            - public
+                            - time
+                            - unit_id
+                            - user_id
+                            - user_agent
+                            - url
+                            - javascript
+                            - device_model
+                            - target_app
+                            - experiment_group
+                        required:
+                        - type
+                      description: An array of Condition objects.
+                    environments:
+                      type:
+                      - array
+                      - 'null'
+                      items:
+                        type: string
+                      description: The environments this rule is enabled for.
+                  required:
+                  - name
+                  - conditions
+                description: Rules to apply in this phase
+            required:
+            - name
+            - timeIntervalMs
+            - requiredReview
+            - rules
+          description: Phases of the release pipeline that will be executed in order.
+        triggerNotice:
+          type: string
+          description: A notice that will be displayed to the user on the config page when the release pipeline is triggered
+      required:
+      - id
+      - name
+      - creatorID
+      - createdTime
+      - lastModifierID
+      - lastModifiedTime
     ReleasePipelineUpdateDto:
       type: object
       properties:
@@ -1430,14 +1438,6 @@ components:
       - pageNumber
       - nextPage
       - previousPage
-    ReleasePipelineTriggerActionBodyDto:
-      type: object
-      properties:
-        phaseID:
-          type: string
-          description: Phase ID to ensure the correct state of the pipeline is updated
-      required:
-      - phaseID
   securitySchemes:
     STATSIG-API-KEY:
       type: apiKey
