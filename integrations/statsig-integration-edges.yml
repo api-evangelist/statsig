@@ -29,6 +29,9 @@ checked:
 - https://officialskills.sh/sitemap.xml
 - https://skillsmp.com/sitemap.xml
 - https://www.skills.sh/sitemap.xml
+- opentofu/integrations/opentofu-integration-edges.yml
+- pulumi/integrations/pulumi-integration-edges.yml
+- terraform/integrations/terraform-integration-edges.yml
 marketplace_apps: []
 edges:
 - partner_name: Microsoft Azure Marketplace
@@ -81,61 +84,6 @@ edges:
   publisher_name: Statsig
   detected_by: sweep-devtools.py
   detected: '2026-10-14'
-- partner_name: Datadog (own)
-  partner: datadog
-  partner_match: mirror
-  mirror_match: domain
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://github.com/DataDog/integrations-extras/tree/master/statsig
-  mirror_of: datadog/integrations/datadog-integration-edges.yml
-  apps:
-  - Statsig
-  - Statsig - RUM
-  listing_count: 2
-  detected: '2026-10-14'
-  detected_by: mirror-platform-listings.py
-  category: Configuration & Deployment
-- partner_name: Okta (own)
-  partner: okta
-  partner_match: mirror
-  mirror_match: domain
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://www.okta.com/integrations/statsig/
-  mirror_of: okta/integrations/okta-integration-edges.yml
-  apps:
-  - Statsig
-  listing_count: 1
-  detected: '2026-10-14'
-  detected_by: mirror-platform-listings.py
-  category: Single Sign-On
-  badges:
-  - OKTA_VERIFIED
-  features:
-  - OIDC
-- partner_name: Contentful (own)
-  partner: contentful
-  partner_match: mirror
-  mirror_match: domain
-  type: marketplace
-  relationship: platform-app
-  direction: third-party
-  channel: partner-built
-  marketplace: own
-  evidence: https://www.contentful.com/marketplace/statsig/
-  mirror_of: contentful/integrations/contentful-integration-edges.yml
-  apps:
-  - Statsig
-  listing_count: 1
-  detected: '2026-10-15'
-  detected_by: mirror-platform-listings.py
 - partner_name: Go module proxy
   partner: null
   partner_match: null
@@ -579,6 +527,112 @@ edges:
     detected: '2026-10-20'
   detected_by: sweep-agent-skills.py
   first_seen: '2026-10-20'
+- partner_name: Datadog (own)
+  partner: datadog
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://github.com/DataDog/integrations-extras/tree/master/statsig
+  mirror_of: datadog/integrations/datadog-integration-edges.yml
+  apps:
+  - Statsig
+  - Statsig - RUM
+  listing_count: 2
+  detected: '2026-10-14'
+  detected_by: mirror-platform-listings.py
+  category: Configuration & Deployment
+- partner_name: Okta (own)
+  partner: okta
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.okta.com/integrations/statsig/
+  mirror_of: okta/integrations/okta-integration-edges.yml
+  apps:
+  - Statsig
+  listing_count: 1
+  detected: '2026-10-14'
+  detected_by: mirror-platform-listings.py
+  category: Single Sign-On
+  badges:
+  - OKTA_VERIFIED
+  features:
+  - OIDC
+- partner_name: Contentful (own)
+  partner: contentful
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.contentful.com/marketplace/statsig/
+  mirror_of: contentful/integrations/contentful-integration-edges.yml
+  apps:
+  - Statsig
+  listing_count: 1
+  detected: '2026-10-15'
+  detected_by: mirror-platform-listings.py
+- partner_name: OpenTofu (opentofu-registry)
+  partner: opentofu
+  partner_match: mirror
+  mirror_match: register
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: opentofu-registry
+  evidence: https://search.opentofu.org/provider/statsig-io/statsig
+  mirror_of: opentofu/integrations/opentofu-integration-edges.yml
+  apps:
+  - statsig-io/statsig
+  listing_count: 1
+  detected: '2026-10-21'
+  detected_by: mirror-platform-listings.py
+  category: infrastructure-as-code provider registry listing
+- partner_name: Pulumi (pulumi-registry)
+  partner: pulumi
+  partner_match: mirror
+  mirror_match: register
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: pulumi-registry
+  evidence: https://www.pulumi.com/registry/packages/statsig/
+  mirror_of: pulumi/integrations/pulumi-integration-edges.yml
+  apps:
+  - Statsig
+  listing_count: 1
+  detected: '2026-10-21'
+  detected_by: mirror-platform-listings.py
+  category: infrastructure-as-code provider registry listing
+- partner_name: Terraform (terraform-registry)
+  partner: terraform
+  partner_match: mirror
+  mirror_match: register
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: terraform-registry
+  evidence: https://registry.terraform.io/providers/statsig-io/statsig
+  mirror_of: terraform/integrations/terraform-integration-edges.yml
+  apps:
+  - statsig-io/statsig
+  listing_count: 1
+  detected: '2026-10-21'
+  detected_by: mirror-platform-listings.py
+  category: infrastructure-as-code provider registry listing
 source:
 - https://docs.mparticle.com/integrations/statsig/event/
 - https://fivetran.com/docs/activations/destinations/available-destinations/statsig

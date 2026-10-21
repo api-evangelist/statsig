@@ -39,44 +39,6 @@
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
-- slug: statsig-datadog-own
-  label: Datadog (own)
-  partner: datadog
-  partner_name: Datadog (own)
-  category: Configuration & Deployment
-  type: marketplace
-  marketplace: own
-  channel: partner-built
-  evidence: https://github.com/DataDog/integrations-extras/tree/master/statsig
-  source: edge
-  relationship: platform-app
-  status: not-a-workflow
-  arazzo: null
-- slug: statsig-okta-own
-  label: Okta (own)
-  partner: okta
-  partner_name: Okta (own)
-  category: Single Sign-On
-  type: marketplace
-  marketplace: own
-  channel: partner-built
-  evidence: https://www.okta.com/integrations/statsig/
-  source: edge
-  relationship: platform-app
-  status: not-a-workflow
-  arazzo: null
-- slug: statsig-contentful-own
-  label: Contentful (own)
-  partner: contentful
-  partner_name: Contentful (own)
-  type: marketplace
-  marketplace: own
-  channel: partner-built
-  evidence: https://www.contentful.com/marketplace/statsig/
-  source: edge
-  relationship: platform-app
-  status: not-a-workflow
-  arazzo: null
 - slug: statsig-go-module-proxy
   label: Go module proxy
   partner_name: Go module proxy
@@ -444,5 +406,82 @@
     matched_by: org-profile-domain:statsig.com
     detected_by: sweep-agent-skills.py
     detected: '2026-10-20'
+  status: not-a-workflow
+  arazzo: null
+- slug: statsig-datadog-own
+  label: Datadog (own)
+  partner: datadog
+  partner_name: Datadog (own)
+  category: Configuration & Deployment
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://github.com/DataDog/integrations-extras/tree/master/statsig
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: statsig-okta-own
+  label: Okta (own)
+  partner: okta
+  partner_name: Okta (own)
+  category: Single Sign-On
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://www.okta.com/integrations/statsig/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: statsig-contentful-own
+  label: Contentful (own)
+  partner: contentful
+  partner_name: Contentful (own)
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://www.contentful.com/marketplace/statsig/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: statsig-opentofu-opentofu-registry
+  label: OpenTofu (opentofu-registry)
+  partner: opentofu
+  partner_name: OpenTofu (opentofu-registry)
+  category: infrastructure-as-code provider registry listing
+  type: marketplace
+  marketplace: opentofu-registry
+  channel: partner-built
+  evidence: https://search.opentofu.org/provider/statsig-io/statsig
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: statsig-pulumi-pulumi-registry
+  label: Pulumi (pulumi-registry)
+  partner: pulumi
+  partner_name: Pulumi (pulumi-registry)
+  category: infrastructure-as-code provider registry listing
+  type: marketplace
+  marketplace: pulumi-registry
+  channel: partner-built
+  evidence: https://www.pulumi.com/registry/packages/statsig/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: statsig-terraform-terraform-registry
+  label: Terraform (terraform-registry)
+  partner: terraform
+  partner_name: Terraform (terraform-registry)
+  category: infrastructure-as-code provider registry listing
+  type: marketplace
+  marketplace: terraform-registry
+  channel: partner-built
+  evidence: https://registry.terraform.io/providers/statsig-io/statsig
+  source: edge
+  relationship: platform-app
   status: not-a-workflow
   arazzo: null
