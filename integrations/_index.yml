@@ -525,3 +525,53 @@
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
+- slug: statsig-packagist
+  label: Packagist
+  partner: packagist
+  partner_name: Packagist
+  category: official SDK (PHP)
+  type: register
+  channel: package-registry
+  evidence: https://packagist.org/packages/statsig/statsig-core-php
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: Packagist (public registry JSON)
+    spec_file: null
+    language: PHP
+    packages:
+    - name: statsig/statsig-core-php
+      version: 0.0.3
+      released: '2025-01-27'
+      released_field: time
+      lapsed: true
+      page: https://packagist.org/packages/statsig/statsig-core-php
+      repo_leg: github-org:statsig-io
+      publisher_leg: org:statsig
+      matched_by: github-org
+      abandoned: true
+    - name: statsig/statsig-php-core
+      version: 0.23.2
+      released: '2026-10-07'
+      released_field: time
+      lapsed: false
+      page: https://packagist.org/packages/statsig/statsig-php-core
+      repo_leg: github-org:statsig-io
+      publisher_leg: org:statsig
+      matched_by: github-org
+    - name: statsig/statsigsdk
+      version: 3.7.2
+      released: '2025-11-06'
+      released_field: time
+      lapsed: false
+      page: https://packagist.org/packages/statsig/statsigsdk
+      repo_leg: github-org:statsig-io
+      publisher_leg: email:statsig.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-php-dart-elixir-package-registries.py
+    detected: '2026-10-22'
+  status: not-a-workflow
+  arazzo: null
