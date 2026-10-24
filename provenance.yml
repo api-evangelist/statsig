@@ -12,6 +12,9 @@ artifacts:
   authentication/statsig-authentication.yml:
     method: derived
     evidence: declared in the artifact
+  capabilities/statsig-capability-edges.yml:
+    method: unknown
+    evidence: no authorship recorded
   changelog/statsig-changelog.yml:
     method: searched
     evidence: declared in the artifact
@@ -43,11 +46,11 @@ artifacts:
     method: derived
     evidence: openapi/statsig-configuration-api
   collections/statsig-console-api.opencollection.json:
-    method: derived
-    evidence: openapi/statsig-console-api
+    method: unknown
+    evidence: no authorship recorded
   collections/statsig-console-api.postman_collection.json:
-    method: derived
-    evidence: openapi/statsig-console-api
+    method: unknown
+    evidence: no authorship recorded
   collections/statsig-dynamic-configs-api.opencollection.json:
     method: derived
     evidence: openapi/statsig-dynamic-configs-api
@@ -198,6 +201,12 @@ artifacts:
   grpc/statsig-grpc-health.proto:
     method: unknown
     evidence: no authorship recorded
+  integrations/_index.yml:
+    method: generated
+    evidence: carries an API Evangelist house phrase
+  integrations/statsig-integration-edges.yml:
+    method: searched
+    evidence: declared in the artifact
   json-ld/statsig-context.jsonld:
     method: unknown
     evidence: no authorship recorded
@@ -219,127 +228,7 @@ artifacts:
   json-structure/statsig-feature-gate-structure.json:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-24T161608.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T125852.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T133943.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T143147.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T154045.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-26T215308.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T094438.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T103455.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T123021.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T132314.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T140727.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-28T221322.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T213958.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T230545.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T203505.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T220315.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-31T223420.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T063623.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T210448.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T222808.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T224043.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T161828.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T174231.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T062714.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T212454.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T224856.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T055819.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T072335.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T144739.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T195450.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T211839.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T011047.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T224210.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T200636.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T213054.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T214843.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T232836.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T204815.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T222408.yml:
+  kin/checks-2026-10-11T110117.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-12T062655.yml:
@@ -423,6 +312,21 @@ artifacts:
   kin/score-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T210408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T232841.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T000835.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T024842.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-11T110117.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   lifecycle/statsig-lifecycle.yml:
     method: searched
     evidence: declared in the artifact
@@ -454,61 +358,238 @@ artifacts:
     method: harvested
     evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
       to the provider's source is unverified
+  openapi/statsig-alerts-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-audit-logs-api-openapi.yml:
-    method: derived
-    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-autotunes-api-openapi.yml:
-    method: derived
-    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-change-validation-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-company-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-configs-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-configuration-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/statsig-console-api-openapi.json:
+  openapi/statsig-dashboards-api-openapi.yml:
     method: unknown
     evidence: no authorship recorded
   openapi/statsig-dynamic-configs-api-openapi.yml:
-    method: derived
-    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-environments-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-events-api-openapi.yml:
-    method: derived
-    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-experiments-api-openapi.yml:
-    method: derived
-    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-experiments-warehouse-native-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-feature-gates-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/statsig-gates-api-openapi.yml:
-    method: derived
-    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-holdouts-api-openapi.yml:
-    method: derived
-    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-ingestions-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-initialization-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/statsig-keys-api-openapi.yml:
-    method: derived
-    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-layers-api-openapi.yml:
-    method: derived
-    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-logs-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-metrics-api-openapi.yml:
-    method: derived
-    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-overrides-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-param-store-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-project-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-prompts-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-release-pipelines-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-reports-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-roles-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-segments-api-openapi.yml:
-    method: derived
-    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-settings-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-tags-api-openapi.yml:
-    method: derived
-    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-target-app-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-target-apps-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/statsig-unit-id-types-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-usage-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
   openapi/statsig-users-api-openapi.yml:
-    method: derived
-    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+    method: unknown
+    evidence: no authorship recorded
+  openapi/statsig-warehouse-connections-api-openapi.yml:
+    method: unknown
+    evidence: no authorship recorded
+  overlays/statsig-alerts-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-audit-logs-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-autotunes-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-change-validation-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-company-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-configs-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-configuration-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/statsig-console-api-overlay.yaml:
+    method: derived
+    evidence: an API Evangelist overlay (title) over the provider's contract
+  overlays/statsig-dashboards-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-dynamic-configs-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-environments-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-events-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-experiments-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-experiments-warehouse-native-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-feature-gates-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-gates-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-holdouts-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-ingestions-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-initialization-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-keys-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-layers-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-logs-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-metrics-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-metrics-warehouse-native-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-overrides-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-param-store-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-project-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-prompts-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-release-pipelines-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-reports-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-roles-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-segments-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-settings-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-tags-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-target-app-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-target-apps-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-unit-id-types-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-usage-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-users-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/statsig-warehouse-connections-api-phrasing-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   packages/statsig-packages.yml:
