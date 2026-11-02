@@ -1,0 +1,69 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://www.statsig.com/pricing
+sources:
+- https://www.statsig.com/pricing
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T120612
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: tiered-subscription
+delivery:
+  delivery: managed+licensed
+  method: page
+  read: '2026-10-28'
+  evidence: Warehouse-native implementation Deploy Statsig in your data warehouse, including Snowflake,
+    Databricks, BigQuery, Redshift, Athena, and Fabric
+  managed_tier: Pro
+published: true
+note: Tiered SaaS pricing with usage-based metered events overage; Enterprise is custom/contact us.
+plan_count: 3
+currency: USD
+plans:
+- name: Developer
+  price_text: Free (no credit card required)
+  period: month
+  included_quota: 2M events per month, Unlimited flag & config checks, 50,000 session replays per month,
+    1-year analytics retention, unlimited seats
+- name: Pro
+  price_text: $150 /mo
+  price: 150
+  currency: USD
+  period: month
+  included_quota: 5M events included, Unlimited flag & config checks, 100,000 session replays per month,
+    unlimited analytics retention
+  overage: then $0.05 per 1K events
+- name: Enterprise
+  price_text: Custom
+  period: none
+  included_quota: Event or Experiment based contracts, large volume discounts, warehouse native deployment
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - hybrid
+  units: []
+  plans:
+  - name: Developer
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Pro
+    access: other
+    model: hybrid
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Enterprise
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
